@@ -30,7 +30,7 @@ export default function HomePage() {
         <div className="w-[85vw] max-w-7xl mx-auto h-full relative border-2 border-black overflow-hidden ">
           <div 
             className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat object-cover"
-            style={{ backgroundImage: "url(/images/banner.png)", backgroundPosition: "center 69%" }}
+            style={{ backgroundImage: "url(/images/Banner.png)", backgroundPosition: "center 69%" }}
           />
           <div className="absolute right-12 md:right-20 top-1/2 -translate-y-1/2 text-right max-w-lg ml-auto pr-8">
             <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} className="mb-12">
