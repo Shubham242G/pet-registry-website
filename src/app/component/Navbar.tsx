@@ -9,15 +9,21 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 100 }}
-      className="bg-white fixed w-full z-20 top-0 shadow-lg"
-    >
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Link href="/" className="flex items-center space-x-3">
-          <span className="self-center text-2xl font-bold text-gray-800 whitespace-nowrap">Pet Registry</span>
-        </Link>
+  initial={{ y: -100 }}
+  animate={{ y: 0 }}
+  transition={{ type: "spring", stiffness: 100 }}
+  className="bg-white fixed w-full z-20 top-0 shadow-sm h-20 overflow-hidden" // Fixed 80px height, clip logo
+>
+  <div className="max-w-screen-xl flex items-center justify-between mx-auto px-3 py-1 h-full"> {/* py-1 + flex center */}
+    <Link href="/" className="flex items-center space-x-1 -mt-2 mr-20"> {/* Negative margin pulls logo up */}
+      <img 
+        src='/images/tailio.png' 
+        alt="Tailio logo" 
+        className="h-70 w-70 flex-shrink-0" // YOUR EXACT SIZE - 200px
+      />
+    </Link>
+
+
         
         <div className="md:hidden">
           <button 
@@ -28,18 +34,19 @@ export default function Navbar() {
           </button>
         </div>
 
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden absolute top-16 left-0 w-full bg-white shadow-md"
-            >
-              <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          className="md:hidden absolute top-20 left-0 w-full bg-white shadow-lg border-t z-10" // top-20 = 80px
+        >
+          <MobileMenu isOpen={isOpen} setIsOpen={setIsOpen} />
+        </motion.div>
+      )}
+    </AnimatePresence>
+
 
         <div className="hidden md:block md:w-auto">
           <DesktopMenu />

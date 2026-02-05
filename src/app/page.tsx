@@ -26,7 +26,7 @@ export default function HomePage() {
     <main className="bg-white text-gray-900">
 
       {/* Your Banner - Keep as is */}
-      <section className="relative h-[65vh] py-12 px-8 md:px-16 flex items-center justify-center">
+      <section className="relative h-[65vh]  px-8 md:px-16 flex items-center justify-center">
         <div className="w-[85vw] max-w-7xl mx-auto h-full relative border-2 border-black overflow-hidden ">
           <div 
             className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat object-cover"
@@ -34,20 +34,12 @@ export default function HomePage() {
           />
           <div className="absolute right-12 md:right-20 top-1/2 -translate-y-1/2 text-right max-w-lg ml-auto pr-8">
             <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} className="mb-12">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-none tracking-tight mb-0">
+              <h1 className="mr-25 text-5xl md:text-6xl lg:text-7xl font-black leading-none tracking-tight mb-0">
                 <div className="text-orange-400 mb-[-0.5rem]">#Own</div>
                 <div className="text-orange-400 mb-[-0.5rem]">Your</div>
-                <div className="text-orange-400 ">Pets</div>
+                <div className="text-orange-400 ">Pet</div>
               </h1>
             </motion.div>
-            {/* <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row gap-4">
-              <Link href="/register" className="flex-1 bg-black text-white hover:bg-white hover:text-black px-8 py-4 rounded-xl font-bold text-lg border-2 border-black transition-all duration-300 shadow-lg hover:shadow-black/25 hover:-translate-y-1 whitespace-nowrap">
-                Register Pet
-              </Link>
-              <Link href="/login" className="flex-1 bg-white text-black hover:bg-black hover:text-white px-8 py-4 rounded-xl font-bold text-lg border-2 border-black transition-all duration-300 shadow-lg hover:shadow-black/25 hover:-translate-y-1 whitespace-nowrap">
-                Login
-              </Link>
-            </motion.div> */}
           </div>
         </div>
       </section>
@@ -55,13 +47,13 @@ export default function HomePage() {
 
       {/* ================= PET ID CHECK ================= */}
       <Section>
-  <div className="max-w-6xl mx-auto px-6 py-20">
+  <div className="max-w-6xl mx-auto px-6">
     <div className="grid md:grid-cols-2 gap-12 items-stretch">
       {/* Left: Text + Picture Space */}
       <div className="flex flex-col h-96 p-8 justify-between bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-white/50">
         <div className="flex-1 flex items-center justify-center text-center">
           <h3 className="text-4xl font-black text-orange-400 leading-tight tracking-tight">
-            Love them,<br/>Own them
+            Love them,<br/>Register them
           </h3>
         </div>
         
@@ -105,7 +97,7 @@ export default function HomePage() {
       {/* ================= HOW IT WORKS ================= */}
       <Section>
         <h2 className="text-3xl font-bold text-center mb-12">
-          How Pet Registry Works
+          Why is Pet Registry important?
         </h2>
         <div className="grid md:grid-cols-3 gap-8 text-center">
           {[
