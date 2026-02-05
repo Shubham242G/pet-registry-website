@@ -29,7 +29,7 @@ export default function Navbar() {
       {/* Menu items */}
       <div className="hidden md:flex items-center space-x-8">
         <Link href="/how-it-works" className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors">
-          How tailio works?
+          How Tailio Works?
         </Link>
         <Link href="/about" className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors">
           About Us
@@ -42,7 +42,7 @@ export default function Navbar() {
       {/* Register button */}
       <Link 
         href="/register"
-        className="px-6 py-2 text-gray-700 font-medium border border-gray-300 rounded-lg hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all duration-200 whitespace-nowrap"
+        className="px-6 py-2 text-white font-medium border border-gray-300 rounded-lg bg-orange-400 hover:bg-orange-150 hover:text-white hover:border-orange-500 transition-all duration-200 whitespace-nowrap"
       >
         Register
       </Link>

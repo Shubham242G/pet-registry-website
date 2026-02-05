@@ -48,61 +48,60 @@ export default function HomePage() {
 
       {/* ================= PET ID CHECK ================= */}
       <Section>
-  <div className="max-w-5xl mx-auto px-4 sm:px-6"> {/* Smaller container */}
-    <div className="grid md:grid-cols-2 gap-8 items-stretch"> {/* Reduced gap-12→gap-8 */}
-      {/* Left: Hero Text + Pet Image Space */}
-      <div className="flex flex-col h-80 p-6 justify-between bg-gradient-to-br from-orange-50/90 to-yellow-50/90 backdrop-blur-sm rounded-xl shadow-2xl border border-orange-100/50"> {/* Smaller h-96→h-80, attractive gradient */}
-        <div className="flex-1 flex items-center justify-center text-center">
-          <h3 className="text-3xl sm:text-4xl font-black text-orange-500 leading-tight tracking-tight drop-shadow-sm">
-            Love them,<br/>Register them 🐾
-          </h3>
-        </div>
+  <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+    <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center"> {/* Increased gap */}
+      {/* Left: Clean Text + Image - NO background/box */}
+      <div className="space-y-8">
+        <h3 className="text-3xl sm:text-3xl lg:text-3xl font-black text-black leading-tight tracking-tight">
+          Love them, Register them 
+        </h3>
         
-        {/* Pet Image Space */}
-        <div className="flex-1 bg-gradient-to-r from-gray-50 to-white rounded-lg border-2 border-dashed border-orange-200 flex items-center justify-center mt-4 shadow-inner">
-          <div className="text-center p-4">
-            <div className="w-20 h-20 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-3 border-4 border-white drop-shadow-md">
-              <span className="text-3xl">🐕</span>
-            </div>
-            <p className="text-xs font-semibold text-gray-600 tracking-wide">Upload Pet Photo</p>
-          </div>
-          {/* <Image src="/your-pet.jpg" alt="Pet" className="w-full h-full object-cover rounded-lg" /> */}
+        {/* Real image from /images/image1.png - NO box/background */}
+        <div className="w-full max-w-md h-70 sm:h-90 bg-cover bg-center ">
+          <img 
+            src="/images/image1.png" 
+            alt="Pet registration" 
+            className="w-full h-full object-cover"
+          />
         </div>
       </div>
 
-      {/* Right: Attractive Signup Form */}
-      <div className="bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl border border-orange-100/50 h-80 flex flex-col justify-between">
-        <div className="text-center mb-4">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-1">Join </h2>
+      {/* Right: Signup Form - Same content, clean white */}
+      <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-2xl border border-gray-100 max-w-md mx-auto md:ml-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Join Tailio</h2>
           <p className="text-sm text-gray-600">Create account in seconds 🐾</p>
         </div>
         
-        <div className="space-y-3 flex-1 flex flex-col justify-center"> {/* space-y-4→space-y-3 */}
+        <div className="space-y-4">
           <input
             type="email"
             placeholder="Email address"
-            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-gradient-to-r from-white to-gray-50 shadow-sm"
+            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-white shadow-sm"
           />
           <input
             type="password"
             placeholder="Password"
-            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-gradient-to-r from-white to-gray-50 shadow-sm"
+            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-white shadow-sm"
           />
           <button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:from-orange-600 hover:to-orange-700 hover:shadow-xl hover:scale-[1.02] transition-all duration-200 active:scale-[0.98]">
             Sign Up Free
           </button>
         </div>
         
-        <div className="text-center space-y-1">
+        <div className="text-center space-y-2 mt-6 pt-6 border-t border-gray-100">
           <p className="text-xs text-gray-500">
             ✔ No credit card needed • Instant access
           </p>
-          <p className="text-xs text-orange-500 font-medium">Already registered? <span className="underline hover:text-orange-600 cursor-pointer">Login</span></p>
+          <p className="text-xs text-orange-500 font-medium">
+            Already registered? <span className="underline hover:text-orange-600 cursor-pointer">Login</span>
+          </p>
         </div>
       </div>
     </div>
   </div>
 </Section>
+
 
 
 
