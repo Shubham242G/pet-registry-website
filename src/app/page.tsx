@@ -26,23 +26,24 @@ export default function HomePage() {
     <main className="bg-white text-gray-900">
 
       {/* Your Banner - Keep as is */}
-      <section className="relative h-[65vh]  px-8 md:px-16 flex items-center justify-center">
-        <div className="w-[85vw] max-w-7xl mt-10 h-full relative border-2 border-black overflow-hidden ">
-          <div 
-            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat object-cover"
-            style={{ backgroundImage: "url(/images/Banner.jpeg)" }}
-          />
-          <div className="absolute right-12 md:right-20 top-1/2 -translate-y-1/2 text-right max-w-lg ml-auto pr-8">
-            {/* <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} className="mb-12">
-              <h1 className="mr-25 text-5xl md:text-6xl lg:text-7xl font-black leading-none tracking-tight mb-0">
-                <div className="text-orange-400 mb-[-0.5rem]">#Own</div>
-                <div className="text-orange-400 mb-[-0.5rem]">Your</div>
-                <div className="text-orange-400 ">Pet</div>
-              </h1>
-            </motion.div> */}
-          </div>
-        </div>
-      </section>
+      <section className="relative h-[65vh] px-8 md:px-16 flex items-center justify-center">
+  <div className="w-[85vw] max-w-7xl mt-10 h-full relative border-2 border-black">
+    {/* Remove overflow-hidden to prevent clipping */}
+    <div 
+      className="absolute inset-0 w-full h-full bg-no-repeat bg-center"
+      style={{ 
+        backgroundImage: "url(/images/Banner.jpeg)",
+        backgroundSize: "cover",  // Keep cover, but control with padding
+        backgroundPosition: "center"
+      }}
+    />
+    {/* Text overlay with higher z-index and padding buffer */}
+    <div className="absolute right-4 md:right-12 lg:right-20 top-1/2 -translate-y-1/2 text-right max-w-lg z-10 px-4 md:px-8 py-4 bg-white/90 backdrop-blur-sm rounded-lg">
+      {/* Your commented text here - now won't get cut */}
+    </div>
+  </div>
+</section>
+
 
 
       {/* ================= PET ID CHECK ================= */}
@@ -72,7 +73,7 @@ export default function HomePage() {
       {/* Right: Attractive Signup Form */}
       <div className="bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl border border-orange-100/50 h-80 flex flex-col justify-between">
         <div className="text-center mb-4">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-1">Join Tailio</h2>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-1">Join </h2>
           <p className="text-sm text-gray-600">Create account in seconds 🐾</p>
         </div>
         
