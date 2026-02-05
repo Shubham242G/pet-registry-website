@@ -47,51 +47,62 @@ export default function HomePage() {
 
       {/* ================= PET ID CHECK ================= */}
       <Section>
-  <div className="max-w-6xl mx-auto px-6">
-    <div className="grid md:grid-cols-2 gap-12 items-stretch">
-      {/* Left: Text + Picture Space */}
-      <div className="flex flex-col h-96 p-8 justify-between bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-white/50">
+  <div className="max-w-5xl mx-auto px-4 sm:px-6"> {/* Smaller container */}
+    <div className="grid md:grid-cols-2 gap-8 items-stretch"> {/* Reduced gap-12→gap-8 */}
+      {/* Left: Hero Text + Pet Image Space */}
+      <div className="flex flex-col h-80 p-6 justify-between bg-gradient-to-br from-orange-50/90 to-yellow-50/90 backdrop-blur-sm rounded-xl shadow-2xl border border-orange-100/50"> {/* Smaller h-96→h-80, attractive gradient */}
         <div className="flex-1 flex items-center justify-center text-center">
-          <h3 className="text-4xl font-black text-orange-400 leading-tight tracking-tight">
-            Love them,<br/>Register them
+          <h3 className="text-3xl sm:text-4xl font-black text-orange-500 leading-tight tracking-tight drop-shadow-sm">
+            Love them,<br/>Register them 🐾
           </h3>
         </div>
         
-        {/* Picture Space */}
-        <div className="flex-1 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center mt-6">
-          <div className="text-center">
-            <div className="w-24 h-24 bg-white rounded-lg shadow flex items-center justify-center mx-auto mb-2">
-              <span className="text-2xl">🐕</span>
+        {/* Pet Image Space */}
+        <div className="flex-1 bg-gradient-to-r from-gray-50 to-white rounded-lg border-2 border-dashed border-orange-200 flex items-center justify-center mt-4 shadow-inner">
+          <div className="text-center p-4">
+            <div className="w-20 h-20 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-3 border-4 border-white drop-shadow-md">
+              <span className="text-3xl">🐕</span>
             </div>
-            <p className="text-sm text-gray-500 font-medium">Picture space</p>
+            <p className="text-xs font-semibold text-gray-600 tracking-wide">Upload Pet Photo</p>
           </div>
-          {/* Add your image: <Image src="/your-pet.jpg" alt="Pet" className="w-full h-full object-cover rounded-xl" /> */}
+          {/* <Image src="/your-pet.jpg" alt="Pet" className="w-full h-full object-cover rounded-lg" /> */}
         </div>
       </div>
 
-      {/* Right: Simple Sober Form */}
-      <div className="bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-white/50 h-96 flex flex-col justify-between">
-        <h2 className="text-2xl font-bold text-gray-800 text-center">Enter Pet ID</h2>
+      {/* Right: Attractive Signup Form */}
+      <div className="bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl border border-orange-100/50 h-80 flex flex-col justify-between">
+        <div className="text-center mb-4">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-1">Join Pet Registry</h2>
+          <p className="text-sm text-gray-600">Create account in seconds 🐾</p>
+        </div>
         
-        <div className="space-y-4 flex-1 flex flex-col justify-center">
+        <div className="space-y-3 flex-1 flex flex-col justify-center"> {/* space-y-4→space-y-3 */}
           <input
-            type="text"
-            placeholder="Enter 12-digit Pet ID / Microchip ID"
-            maxLength={12}
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100"
+            type="email"
+            placeholder="Email address"
+            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-gradient-to-r from-white to-gray-50 shadow-sm"
           />
-          <button className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
-            Check Pet Details
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-gradient-to-r from-white to-gray-50 shadow-sm"
+          />
+          <button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:from-orange-600 hover:to-orange-700 hover:shadow-xl hover:scale-[1.02] transition-all duration-200 active:scale-[0.98]">
+            Sign Up Free
           </button>
         </div>
         
-        <p className="text-xs text-gray-500 text-center">
-          ✔ No login required
-        </p>
+        <div className="text-center space-y-1">
+          <p className="text-xs text-gray-500">
+            ✔ No credit card needed • Instant access
+          </p>
+          <p className="text-xs text-orange-500 font-medium">Already registered? <span className="underline hover:text-orange-600 cursor-pointer">Login</span></p>
+        </div>
       </div>
     </div>
   </div>
 </Section>
+
 
 
       {/* ================= HOW IT WORKS ================= */}
@@ -106,7 +117,7 @@ export default function HomePage() {
             "Anyone can scan to help reunite lost pets",
           ].map((step, i) => (
             <div key={i} className="p-6 bg-white rounded-xl shadow">
-              <div className="text-emerald-600 text-3xl font-bold mb-2">
+              <div className="text-orange-400 text-3xl font-bold mb-2">
                 {i + 1}
               </div>
               <p>{step}</p>

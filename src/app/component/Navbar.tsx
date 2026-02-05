@@ -19,7 +19,7 @@ export default function Navbar() {
       <img 
         src='/images/tailio.png' 
         alt="Tailio logo" 
-        className="h-70 w-70 flex-shrink-0" // YOUR EXACT SIZE - 200px
+        className="h-70 w-70 flex-shrink-0 mt-4" // YOUR EXACT SIZE - 200px
       />
     </Link>
 
