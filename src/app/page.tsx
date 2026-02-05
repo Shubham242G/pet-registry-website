@@ -27,19 +27,19 @@ export default function HomePage() {
 
       {/* Your Banner - Keep as is */}
       <section className="relative h-[65vh]  px-8 md:px-16 flex items-center justify-center">
-        <div className="w-[85vw] max-w-7xl mx-auto h-full relative border-2 border-black overflow-hidden ">
+        <div className="w-[85vw] max-w-7xl mt-10 h-full relative border-2 border-black overflow-hidden ">
           <div 
             className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat object-cover"
-            style={{ backgroundImage: "url(/images/Banner.png)", backgroundPosition: "center 69%" }}
+            style={{ backgroundImage: "url(/images/Banner.jpeg)" }}
           />
           <div className="absolute right-12 md:right-20 top-1/2 -translate-y-1/2 text-right max-w-lg ml-auto pr-8">
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} className="mb-12">
+            {/* <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} className="mb-12">
               <h1 className="mr-25 text-5xl md:text-6xl lg:text-7xl font-black leading-none tracking-tight mb-0">
                 <div className="text-orange-400 mb-[-0.5rem]">#Own</div>
                 <div className="text-orange-400 mb-[-0.5rem]">Your</div>
                 <div className="text-orange-400 ">Pet</div>
               </h1>
-            </motion.div>
+            </motion.div> */}
           </div>
         </div>
       </section>
