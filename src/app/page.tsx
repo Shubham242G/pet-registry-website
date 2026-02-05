@@ -72,7 +72,7 @@ export default function HomePage() {
       {/* Right: Attractive Signup Form */}
       <div className="bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-2xl border border-orange-100/50 h-80 flex flex-col justify-between">
         <div className="text-center mb-4">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-1">Join Pet Registry</h2>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-1">Join Tailio</h2>
           <p className="text-sm text-gray-600">Create account in seconds 🐾</p>
         </div>
         
