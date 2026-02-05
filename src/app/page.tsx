@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -21,7 +22,45 @@ const Section = ({ children }: { children: React.ReactNode }) => (
   </motion.section>
 );
 
+const testimonials = [
+  {
+    id: 1,
+    name: "Sarah Johnson",
+    text: "Tailio helped me register my Golden Retriever in minutes. Now I have peace of mind knowing he's protected!",
+    image: "/images/image3.png"
+  },
+  {
+    id: 2,
+    name: "Mike Chen",
+    text: "Perfect for my 3 fur babies! The process was so simple and the app is beautiful.",
+    image: "/images/image4.png"
+  },
+  {
+    id: 3,
+    name: "Emma Davis", 
+    text: "Lost my pug once, never again! Tailio gives me complete confidence with their registration system.",
+    image: "/images/image5.png"
+  },
+  {
+    id: 4,
+    name: "Raj Patel",
+    text: "Registered both my Labradors easily. Great support and super user-friendly interface.",
+    image: "/images/image6.png"
+  }
+];
+
 export default function HomePage() {
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 4000); // Auto slide every 4 seconds
+
+    return () => clearInterval(interval);
+  }, []);
   return (
     <main className="bg-white text-gray-900">
 
@@ -48,51 +87,59 @@ export default function HomePage() {
 
       {/* ================= PET ID CHECK ================= */}
       <Section>
-  <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
-    <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center"> {/* Increased gap */}
-      {/* Left: Clean Text + Image - NO background/box */}
-      <div className="space-y-8">
-        <h3 className="text-3xl sm:text-3xl lg:text-3xl font-black text-black leading-tight tracking-tight">
-          Love them, Register them 
-        </h3>
+  <div className="max-w-5xl mt-10 mx-auto px-4 sm:px-6 ">
+    <div className="grid md:grid-cols-2 gap-16 lg:gap-24 xl:gap-32 items-stretch"> {/* More gap */}
+      {/* Left: Big bold heading + Smaller image - Matches right height */}
+      <div className="flex flex-col justify-between h-[420px] p-4 sm:p-6"> {/* Fixed height to match right */}
+        <div className="flex-1 flex flex-col items-start justify-center">
+  <h3 className="text-4xl sm:text-4xl lg:text-4xl font-black text-black leading-tight tracking-tight mb-4">
+    <span>Love them,</span>
+    <br />
+    <span>Register them!</span>
+  </h3>
+  
+  {/* Small subtext below main heading */}
+  <p className="text-xs sm:text-sm text-gray-600 font-medium leading-relaxed max-w-md">
+    Love means never losing them. Register your pet and give yourself peace of mind.
+  </p>
+</div>
         
-        {/* Real image from /images/image1.png - NO box/background */}
-        <div className="w-full max-w-md h-70 sm:h-90 bg-cover bg-center ">
+        {/* Smaller image - No cropping, full visibility */}
+        <div className="w-full max-w-sm h-48 sm:h-56 lg:h-64 flex-shrink-0 ">
           <img 
             src="/images/image1.png" 
             alt="Pet registration" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"  
           />
         </div>
       </div>
 
-      {/* Right: Signup Form - Same content, clean white */}
-      <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-2xl border border-gray-100 max-w-md mx-auto md:ml-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Join Tailio</h2>
-          <p className="text-sm text-gray-600">Create account in seconds 🐾</p>
+      {/* Right: Signup Form - Fixed height */}
+      <div className="bg-white p-8 sm:p-10 rounded-2xl border border-gray-100 max-w-md mx-auto md:ml-auto h-[420px] flex flex-col justify-between">
+        <div>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Join Tailio</h2>
+            <p className="text-sm text-gray-600">Create account in seconds </p>
+          </div>
+          
+          <div className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email address"
+              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-white shadow-sm"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-white shadow-sm"
+            />
+            <button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:from-orange-600 hover:to-orange-700 hover:shadow-xl hover:scale-[1.02] transition-all duration-200 active:scale-[0.98]">
+              Sign Up Free
+            </button>
+          </div>
         </div>
         
-        <div className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email address"
-            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-white shadow-sm"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100/50 transition-all duration-200 hover:border-orange-300 bg-white shadow-sm"
-          />
-          <button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:from-orange-600 hover:to-orange-700 hover:shadow-xl hover:scale-[1.02] transition-all duration-200 active:scale-[0.98]">
-            Sign Up Free
-          </button>
-        </div>
-        
-        <div className="text-center space-y-2 mt-6 pt-6 border-t border-gray-100">
-          <p className="text-xs text-gray-500">
-            ✔ No credit card needed • Instant access
-          </p>
+        <div className="text-center space-y-2 pt-6 border-t border-gray-100">
           <p className="text-xs text-orange-500 font-medium">
             Already registered? <span className="underline hover:text-orange-600 cursor-pointer">Login</span>
           </p>
@@ -101,6 +148,43 @@ export default function HomePage() {
     </div>
   </div>
 </Section>
+
+<div className="max-w-4xl mx-auto px-4 sm:px-6 sm:mb-30">
+  <div className="bg-white p-8 sm:p-12 lg:p-16 rounded-2xl flex flex-col lg:flex-row items-center lg:items-center gap-8 lg:gap-12 max-w-3xl mx-auto h-80 lg:h-72">
+    {/* Left: Image - Perfect center alignment */}
+    <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto lg:mx-0">
+      <img 
+        src="/images/image2.png" 
+        className="w-full h-full object-cover rounded-xl"
+        alt="Fur babies" 
+      />
+    </div>
+
+    {/* Right: Text + CTA - Perfect center alignment with image */}
+    <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-2 h-full flex items-center">
+      <div className="space-y-1">
+        <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-black leading-none">
+          Do You Have Many
+          <br />
+          Fur Babies?
+        </h3>
+        <p className="text-sm sm:text-base text-black font-medium leading-none">
+          Don't Worry, We got you covered!
+        </p>
+      </div>
+      
+      <a 
+        href="/contact" 
+        className="text-orange-400 font-bold text-sm sm:text-base hover:text-orange-500 transition-colors inline-flex items-center"
+      >
+        Contact us →
+      </a>
+    </div>
+  </div>
+</div>
+
+
+
 
 
 
@@ -126,8 +210,89 @@ export default function HomePage() {
         </div>
       </Section>
 
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Title */}
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl sm:text-5xl font-black text-black text-center mb-20 tracking-tight"
+        >
+          Happy Pets
+        </motion.h2>
+
+        {/* Continuous sliding slider */}
+        <div className="overflow-hidden relative">
+          <div 
+            className="flex transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+          >
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={testimonial.id}
+                className="min-w-full flex-shrink-0 px-4"
+                initial={{ opacity: 0.7, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="bg-white/80 backdrop-blur-sm p-10 sm:p-12 rounded-3xl border border-gray-200/50 max-w-lg mx-auto text-center">
+                  {/* Dog Image */}
+                  <div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-8 rounded-2xl overflow-hidden border-4 border-white/50 shadow-2xl">
+                    <img 
+                      src={testimonial.image} 
+                      alt={testimonial.name}
+                      className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
+                    />
+                  </div>
+
+                  {/* Testimonial Quote */}
+                  <div className="space-y-4">
+                    <p className="text-lg sm:text-xl font-medium text-gray-800 italic leading-relaxed">
+                      &quot;{testimonial.text}&quot;
+                    </p>
+                    <h4 className="text-2xl font-black text-black tracking-tight">
+                      {testimonial.name}
+                    </h4>
+                  </div>
+
+                  {/* Doodle decoration */}
+                  <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-r from-black/10 to-white rounded-full opacity-30"></div>
+                  <div className="absolute -bottom-6 -left-6 w-20 h-20 border-4 border-dashed border-black/20 rounded-full opacity-50"></div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Duplicate slides for seamless loop */}
+          <div className="flex absolute top-0 left-full w-full transition-transform duration-700 ease-in-out">
+            {testimonials.map((testimonial) => (
+              <div key={`dup-${testimonial.id}`} className="min-w-full flex-shrink-0 px-4">
+                <div className="bg-white/80 backdrop-blur-sm p-10 sm:p-12 rounded-3xl border border-gray-200/50 max-w-lg mx-auto text-center">
+                  <div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-8 rounded-2xl overflow-hidden border-4 border-white/50 shadow-2xl">
+                    <img 
+                      src={testimonial.image} 
+                      alt={testimonial.name}
+                      className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <p className="text-lg sm:text-xl font-medium text-gray-800 italic leading-relaxed">
+                      &quot;{testimonial.text}&quot;
+                    </p>
+                    <h4 className="text-2xl font-black text-black tracking-tight">
+                      {testimonial.name}
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
       {/* ================= PARTNERS ================= */}
-      <Section>
+      {/* <Section>
         <h2 className="text-3xl font-bold text-center mb-10">
           Trusted Partners
         </h2>
@@ -141,10 +306,10 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-      </Section>
+      </Section> */}
 
       {/* ================= BLOGS ================= */}
-      <Section>
+      {/* <Section>
         <h2 className="text-3xl font-bold text-center mb-10">
           Pet Registry Blogs
         </h2>
@@ -163,10 +328,10 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-      </Section>
+      </Section> */}
 
       {/* ================= NEWS ================= */}
-      <Section>
+      {/* <Section>
         <h2 className="text-3xl font-bold text-center mb-10">
           Latest Media and News
         </h2>
@@ -186,10 +351,10 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-      </Section>
+      </Section> */}
 
       {/* ================= VERIFICATION ================= */}
-      <Section>
+      {/* <Section>
         <h2 className="text-3xl font-bold text-center mb-8">
           Verified Pet Registry & Resolution
         </h2>
@@ -204,7 +369,7 @@ export default function HomePage() {
             <li>✔ View adoption or shelter status</li>
           </ul>
         </div>
-      </Section>
+      </Section> */}
 
     </main>
   );
