@@ -149,9 +149,9 @@ export default function HomePage() {
   </div>
 </Section>
 
-<div className="max-w-4xl mx-auto px-4 sm:px-6 sm:mb-30">
+<div className="max-w-4xl mx-auto sm:px-6 sm:mb-30">
   <div className="bg-white p-8 sm:p-12 lg:p-16 rounded-2xl flex flex-col lg:flex-row items-center lg:items-center gap-8 lg:gap-12 max-w-3xl mx-auto h-80 lg:h-72">
-    {/* Left: Image - Perfect center alignment */}
+    {/* Left: Image */}
     <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto lg:mx-0">
       <img 
         src="/images/image2.png" 
@@ -160,22 +160,22 @@ export default function HomePage() {
       />
     </div>
 
-    {/* Right: Text + CTA - Perfect center alignment with image */}
-    <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-2 h-full flex items-center">
-      <div className="space-y-1">
-        <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-black leading-none">
-          Do You Have Many
-          <br />
-          Fur Babies?
-        </h3>
-        <p className="text-sm sm:text-base text-black font-medium leading-none">
-          Don't Worry, We got you covered!
-        </p>
-      </div>
+    {/* Right: Perfect 3-line stack - ONE LINE heading, ONE LINE subtext, CTA */}
+    <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center space-y-2">
+      {/* HEADING - SINGLE LINE */}
+      <h3 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-black text-black whitespace-nowrap">
+        Do You Have Many Fur Babies?
+      </h3>
       
+      {/* SUBTEXT - SINGLE LINE */}
+      <p className="text-xs sm:text-sm lg:text-base text-black font-medium text-center lg:text-left max-w-xs">
+        Don't Worry, We got you covered !
+      </p>
+      
+      {/* CTA BELOW */}
       <a 
         href="/contact" 
-        className="text-orange-400 font-bold text-sm sm:text-base hover:text-orange-500 transition-colors inline-flex items-center"
+        className="text-orange-400 font-bold text-xs sm:text-sm lg:text-base hover:text-orange-500 transition-colors inline-flex items-center self-center lg:self-start"
       >
         Contact us →
       </a>
@@ -189,26 +189,37 @@ export default function HomePage() {
 
 
 
+
       {/* ================= HOW IT WORKS ================= */}
       <Section>
-        <h2 className="text-3xl font-bold text-center mb-12">
-          Why is Pet Registry important?
-        </h2>
-        <div className="grid md:grid-cols-3 gap-8 text-center">
-          {[
-            "Register your pet with photo & details",
-            "Get a digital Pet ID with QR tag",
-            "Anyone can scan to help reunite lost pets",
-          ].map((step, i) => (
-            <div key={i} className="p-6 bg-white rounded-xl shadow">
-              <div className="text-orange-400 text-3xl font-bold mb-2">
-                {i + 1}
-              </div>
-              <p>{step}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
+  <h2 className="text-3xl font-bold text-center mb-12">
+    Why is Pet Registry important?
+  </h2>
+  <div className="flex flex-wrap justify-center md:grid md:grid-cols-4 gap-12 lg:gap-16">
+    {[
+      "/images/image3.png",
+      "/images/image4.png",
+      "/images/image5.png", 
+      "/images/image6.png"
+    ].map((image, i) => (
+      <div key={i} className="group relative w-48 sm:w-52 lg:w-60 h-48 sm:h-52 lg:h-60 mx-4 sm:mx-0">
+        {/* Base image - NO container/border/shadow */}
+        <img 
+          src={image} 
+          alt="Pet" 
+          className="w-full h-full object-contain rounded-full group-hover:scale-105 transition-all duration-300"
+        />
+        
+        {/* Orange hover border overlay - matches natural circular border */}
+        <div className="absolute inset-0 rounded-full border-8 border-transparent group-hover:border-orange-400 transition-all duration-300 pointer-events-none"></div>
+      </div>
+    ))}
+  </div>
+</Section>
+
+
+
+
 
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
