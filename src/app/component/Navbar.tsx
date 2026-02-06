@@ -34,7 +34,7 @@ export default function Navbar() {
         <Link href="/about" className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors">
           Blogs
         </Link>
-        <Link href="/contact" className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors">
+        <Link href="/pages/contact" className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors">
           Contact
         </Link>
       </div>

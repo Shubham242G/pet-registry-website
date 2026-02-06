@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import ContactForm from "./component/ContactForm";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -25,25 +26,25 @@ const Section = ({ children }: { children: React.ReactNode }) => (
 const testimonials = [
   {
     id: 1,
-    name: "Sarah Johnson",
+    name: "Milo",
     text: "Tailio helped me register my Golden Retriever in minutes. Now I have peace of mind knowing he's protected!",
     image: "/images/image6.jpeg"
   },
   {
     id: 2,
-    name: "Mike Chen",
+    name: "Lambo",
     text: "Perfect for my 3 fur babies! The process was so simple and the app is beautiful.",
     image: "/images/image7.jpeg"
   },
   {
     id: 3,
-    name: "Emma Davis", 
+    name: "Cheenu", 
     text: "Lost my pug once, never again! Tailio gives me complete confidence with their registration system.",
     image: "/images/image8.jpeg"
   },
   {
     id: 4,
-    name: "Raj Patel",
+    name: "White one",
     text: "Registered both my Labradors easily. Great support and super user-friendly interface.",
     image: "/images/image9.jpeg"
   }
@@ -149,39 +150,6 @@ export default function HomePage() {
   </div>
 </Section>
 
-<div className="max-w-4xl mx-auto sm:px-6 sm:mb-30">
-  <div className="bg-white p-8 sm:p-12 lg:p-16 rounded-2xl flex flex-col lg:flex-row items-center lg:items-center gap-8 lg:gap-12 max-w-3xl mx-auto h-80 lg:h-72">
-    {/* Left: Image */}
-    <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto lg:mx-0">
-      <img 
-        src="/images/image2.png" 
-        className="w-full h-full object-cover rounded-xl"
-        alt="Fur babies" 
-      />
-    </div>
-
-    {/* Right: Perfect 3-line stack - ONE LINE heading, ONE LINE subtext, CTA */}
-    <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center space-y-2">
-      {/* HEADING - SINGLE LINE */}
-      <h3 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-black text-black whitespace-nowrap">
-        Do You Have Many Fur Babies?
-      </h3>
-      
-      {/* SUBTEXT - SINGLE LINE */}
-      <p className="text-xs sm:text-sm lg:text-base text-black font-medium text-center lg:text-left max-w-xs">
-        Don't Worry, We got you covered !
-      </p>
-      
-      {/* CTA BELOW */}
-      <a 
-        href="/contact" 
-        className="text-orange-400 font-bold text-xs sm:text-sm lg:text-base hover:text-orange-500 transition-colors inline-flex items-center self-center lg:self-start"
-      >
-        Contact us →
-      </a>
-    </div>
-  </div>
-</div>
 
 
 
@@ -192,25 +160,26 @@ export default function HomePage() {
 
       {/* ================= HOW IT WORKS ================= */}
       <Section>
-  <h2 className="text-3xl font-bold text-center mb-12">
+  <h2 className="text-3xl font-bold text-center mb-16">
     Why is Pet Registry important?
   </h2>
-  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 xl:gap-16 px-4 md:px-0">
-    {[
-      "/images/image3.png",
-      "/images/image4.png",
-      "/images/image5.png", 
-      "/images/image6.png"
-    ].map((image, i) => (
-      <div key={i} className="group relative w-56 sm:w-64 lg:w-72 xl:w-80 h-56 sm:h-64 lg:h-72 xl:h-80 mx-auto">
-        {/* Image with orange outline on hover */}
-        <img 
-          src={image} 
-          alt="Pet" 
-          className="w-full h-full object-contain rounded-full group-hover:scale-105 transition-all duration-300 group-hover:drop-shadow-[0_0_0_4px_#fb923c] group-hover:[filter:drop-shadow(0_0_0_4px_#fb923c)]"
-        />
-      </div>
-    ))}
+  <div className="max-w-7xl mx-auto px-8 md:px-12 lg:px-20">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-24 lg:gap-32 xl:gap-40 2xl:gap-48 justify-items-center">
+      {[
+        "/images/image3.png",
+        "/images/image4.png",
+        "/images/image5.png", 
+        "/images/image6.png"
+      ].map((image, i) => (
+        <div key={i} className="group relative w-72 sm:w-80 lg:w-96 xl:w-[28rem] 2xl:w-[32rem] h-72 sm:h-80 lg:h-96 xl:h-[28rem] 2xl:h-[32rem]">
+          <img 
+            src={image} 
+            alt="Pet" 
+            className="w-full h-full object-contain rounded-full group-hover:scale-105 transition-all duration-300 group-hover:drop-shadow-[0_0_0_6px_#fb923c]"
+          />
+        </div>
+      ))}
+    </div>
   </div>
 </Section>
 
@@ -221,76 +190,71 @@ export default function HomePage() {
 
 
 
+
+
+
   <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Title */}
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl sm:text-5xl font-black text-black text-center mb-20 tracking-tight"
-        >
-          Happy Pets
-        </motion.h2>
+  <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    {/* Title */}
+    <motion.h2 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="text-4xl sm:text-5xl font-black text-black text-center mb-20 tracking-tight"
+    >
+      Happy Pets
+    </motion.h2>
 
-        {/* Continuous sliding slider */}
-        <div className="overflow-hidden relative py-8 -mx-4 lg:-mx-8">
-  <div 
-    className="flex animate-slide"
-    style={{ 
-      animationDuration: '18s',  // Faster: 30s → 18s
-      animationIterationCount: 'infinite',
-      animationTimingFunction: 'linear'
-    }}
-  >
-    {/* 12 slides for perfect infinite loop - 3 visible x 4 cycles */}
-    {Array.from({ length: 12 }, (_, i) => testimonials[i % 4]).map((testimonial, index) => (
-      <motion.div
-        key={`slide-${index}`}
-        className="w-[33.333%] flex-shrink-0 px-4 lg:px-8"
-        whileHover={{ scale: 1.02 }}
+    {/* Continuous sliding slider - SAME AS BEFORE */}
+    <div className="overflow-hidden relative py-8 -mx-4 lg:-mx-8">
+      <div 
+        className="flex animate-slide"
+        style={{ 
+          animationDuration: '18s',
+          animationIterationCount: 'infinite',
+          animationTimingFunction: 'linear'
+        }}
       >
-        <div className="bg-white/70 backdrop-blur-xl p-8 lg:p-10 rounded-2xl border border-black/5 shadow-sm hover:shadow-xl transition-all duration-300 max-w-sm mx-auto text-center h-[420px] flex flex-col justify-between">
-          {/* BIG uncropped circular images */}
-          <div className="w-36 h-36 sm:w-40 sm:h-40 lg:w-44 lg:h-44 xl:w-48 xl:h-48 mx-auto mb-8 rounded-full overflow-hidden">
-            <img 
-              src={testimonial.image} 
-              alt={testimonial.name}
-              className="w-full h-full object-contain rounded-full grayscale-[65%] hover:grayscale-0 transition-all duration-500"
-            />
-          </div>
+        {/* 12 slides for perfect infinite loop - 3 visible x 4 cycles */}
+        {Array.from({ length: 12 }, (_, i) => testimonials[i % 4]).map((testimonial, index) => (
+          <motion.div
+            key={`slide-${index}`}
+            className="w-[33.333%] flex-shrink-0 px-8 lg:px-12 flex items-center justify-center"
+            whileHover={{ scale: 1.02 }}
+          >
+            <div className="flex flex-col items-center space-y-4 text-center h-[400px] flex items-center justify-center">
+              {/* JUST PICTURE - NO CONTAINER, BIGGER SIZE */}
+              <div className="w-85 h-60 sm:w-52 sm:h-67 lg:w-85 lg:h-75 xl:w-75  mb-6">
+                <img 
+                  src={testimonial.image} 
+                  alt={testimonial.name}
+                  className="w-full h-full object-cover grayscale-[65%] hover:grayscale-0 transition-all duration-500 rounded-lg"
+                />
+              </div>
 
-          {/* Content */}
-          <div className="flex-1 flex flex-col justify-end space-y-4 px-2">
-            <p className="text-base sm:text-lg lg:text-xl font-medium text-gray-900 italic leading-tight line-clamp-3">
-              "{testimonial.text}"
-            </p>
-            <h4 className="text-xl sm:text-2xl lg:text-3xl font-black text-black tracking-tight">
-              {testimonial.name}
-            </h4>
-          </div>
-
-          {/* Doodle accents */}
-          <div className="absolute top-4 right-4 w-4 h-4 bg-orange-400/50 rounded-full"></div>
-          <div className="absolute bottom-4 left-4 w-2 h-10 border-l-2 border-black/20 -rotate-12"></div>
-        </div>
-      </motion.div>
-    ))}
-  </div>
-
-  <style jsx>{`
-    @keyframes slide {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-25%); }
-    }
-    .animate-slide {
-      animation: slide 18s linear infinite;
-    }
-  `}</style>
-</div>
-
-
+              {/* Name below */}
+              <h4 className="text-lg sm:text-xl font-black text-black tracking-tight">
+                {testimonial.name}
+              </h4>
+            </div>
+          </motion.div>
+        ))}
       </div>
-    </section>
+
+      <style jsx>{`
+        @keyframes slide {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-25%); }
+        }
+        .animate-slide {
+          animation: slide 18s linear infinite;
+        }
+      `}</style>
+    </div>
+  </div>
+</section>
+
+
+
 
       {/* ================= PARTNERS ================= */}
       {/* <Section>
@@ -372,6 +336,44 @@ export default function HomePage() {
         </div>
       </Section> */}
 
+
+<div className="max-w-4xl mx-auto sm:px-6 sm:mb-30">
+  <div className="bg-white p-8 sm:p-12 lg:p-16 rounded-2xl flex flex-col lg:flex-row items-center lg:items-center gap-8 lg:gap-12 max-w-3xl mx-auto h-80 lg:h-72">
+    {/* Left: Image */}
+    <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto lg:mx-0">
+      <img 
+        src="/images/image2.png" 
+        className="w-full h-full object-cover rounded-xl"
+        alt="Fur babies" 
+      />
+    </div>
+
+    {/* Right: Perfect 3-line stack - ONE LINE heading, ONE LINE subtext, CTA */}
+    <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center space-y-2">
+      {/* HEADING - SINGLE LINE */}
+      <h3 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-black text-black whitespace-nowrap">
+        Do You Have Many Fur Babies?
+      </h3>
+      
+      {/* SUBTEXT - SINGLE LINE */}
+      <p className="text-xs sm:text-sm lg:text-base text-black font-medium text-center lg:text-left max-w-xs">
+        Don't Worry, We got you covered !
+      </p>
+      
+      {/* CTA BELOW */}
+      <a 
+        href="/contact" 
+        className="text-orange-400 font-bold text-xs sm:text-sm lg:text-base hover:text-orange-500 transition-colors inline-flex items-center self-center lg:self-start"
+      >
+        Contact us →
+      </a>
+    </div>
+  </div>
+</div>
+
+<div className="mt-70">
+  <ContactForm/>
+</div>
     </main>
   );
 }
