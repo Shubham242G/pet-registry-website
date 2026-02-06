@@ -27,25 +27,25 @@ const testimonials = [
     id: 1,
     name: "Sarah Johnson",
     text: "Tailio helped me register my Golden Retriever in minutes. Now I have peace of mind knowing he's protected!",
-    image: "/images/image3.png"
+    image: "/images/image6.jpeg"
   },
   {
     id: 2,
     name: "Mike Chen",
     text: "Perfect for my 3 fur babies! The process was so simple and the app is beautiful.",
-    image: "/images/image4.png"
+    image: "/images/image7.jpeg"
   },
   {
     id: 3,
     name: "Emma Davis", 
     text: "Lost my pug once, never again! Tailio gives me complete confidence with their registration system.",
-    image: "/images/image5.png"
+    image: "/images/image8.jpeg"
   },
   {
     id: 4,
     name: "Raj Patel",
     text: "Registered both my Labradors easily. Great support and super user-friendly interface.",
-    image: "/images/image6.png"
+    image: "/images/image9.jpeg"
   }
 ];
 
@@ -195,23 +195,20 @@ export default function HomePage() {
   <h2 className="text-3xl font-bold text-center mb-12">
     Why is Pet Registry important?
   </h2>
-  <div className="flex flex-wrap justify-center md:grid md:grid-cols-4 gap-12 lg:gap-16">
+  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 xl:gap-16 px-4 md:px-0">
     {[
       "/images/image3.png",
       "/images/image4.png",
       "/images/image5.png", 
       "/images/image6.png"
     ].map((image, i) => (
-      <div key={i} className="group relative w-48 sm:w-52 lg:w-60 h-48 sm:h-52 lg:h-60 mx-4 sm:mx-0">
-        {/* Base image - NO container/border/shadow */}
+      <div key={i} className="group relative w-56 sm:w-64 lg:w-72 xl:w-80 h-56 sm:h-64 lg:h-72 xl:h-80 mx-auto">
+        {/* Image with orange outline on hover */}
         <img 
           src={image} 
           alt="Pet" 
-          className="w-full h-full object-contain rounded-full group-hover:scale-105 transition-all duration-300"
+          className="w-full h-full object-contain rounded-full group-hover:scale-105 transition-all duration-300 group-hover:drop-shadow-[0_0_0_4px_#fb923c] group-hover:[filter:drop-shadow(0_0_0_4px_#fb923c)]"
         />
-        
-        {/* Orange hover border overlay - matches natural circular border */}
-        <div className="absolute inset-0 rounded-full border-8 border-transparent group-hover:border-orange-400 transition-all duration-300 pointer-events-none"></div>
       </div>
     ))}
   </div>
@@ -221,7 +218,10 @@ export default function HomePage() {
 
 
 
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+
+
+
+  <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Title */}
         <motion.h2 
@@ -233,72 +233,62 @@ export default function HomePage() {
         </motion.h2>
 
         {/* Continuous sliding slider */}
-        <div className="overflow-hidden relative">
-          <div 
-            className="flex transition-transform duration-700 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-          >
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.id}
-                className="min-w-full flex-shrink-0 px-4"
-                initial={{ opacity: 0.7, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="bg-white/80 backdrop-blur-sm p-10 sm:p-12 rounded-3xl border border-gray-200/50 max-w-lg mx-auto text-center">
-                  {/* Dog Image */}
-                  <div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-8 rounded-2xl overflow-hidden border-4 border-white/50 shadow-2xl">
-                    <img 
-                      src={testimonial.image} 
-                      alt={testimonial.name}
-                      className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
-                    />
-                  </div>
-
-                  {/* Testimonial Quote */}
-                  <div className="space-y-4">
-                    <p className="text-lg sm:text-xl font-medium text-gray-800 italic leading-relaxed">
-                      &quot;{testimonial.text}&quot;
-                    </p>
-                    <h4 className="text-2xl font-black text-black tracking-tight">
-                      {testimonial.name}
-                    </h4>
-                  </div>
-
-                  {/* Doodle decoration */}
-                  <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-r from-black/10 to-white rounded-full opacity-30"></div>
-                  <div className="absolute -bottom-6 -left-6 w-20 h-20 border-4 border-dashed border-black/20 rounded-full opacity-50"></div>
-                </div>
-              </motion.div>
-            ))}
+        <div className="overflow-hidden relative py-8 -mx-4 lg:-mx-8">
+  <div 
+    className="flex animate-slide"
+    style={{ 
+      animationDuration: '18s',  // Faster: 30s → 18s
+      animationIterationCount: 'infinite',
+      animationTimingFunction: 'linear'
+    }}
+  >
+    {/* 12 slides for perfect infinite loop - 3 visible x 4 cycles */}
+    {Array.from({ length: 12 }, (_, i) => testimonials[i % 4]).map((testimonial, index) => (
+      <motion.div
+        key={`slide-${index}`}
+        className="w-[33.333%] flex-shrink-0 px-4 lg:px-8"
+        whileHover={{ scale: 1.02 }}
+      >
+        <div className="bg-white/70 backdrop-blur-xl p-8 lg:p-10 rounded-2xl border border-black/5 shadow-sm hover:shadow-xl transition-all duration-300 max-w-sm mx-auto text-center h-[420px] flex flex-col justify-between">
+          {/* BIG uncropped circular images */}
+          <div className="w-36 h-36 sm:w-40 sm:h-40 lg:w-44 lg:h-44 xl:w-48 xl:h-48 mx-auto mb-8 rounded-full overflow-hidden">
+            <img 
+              src={testimonial.image} 
+              alt={testimonial.name}
+              className="w-full h-full object-contain rounded-full grayscale-[65%] hover:grayscale-0 transition-all duration-500"
+            />
           </div>
 
-          {/* Duplicate slides for seamless loop */}
-          <div className="flex absolute top-0 left-full w-full transition-transform duration-700 ease-in-out">
-            {testimonials.map((testimonial) => (
-              <div key={`dup-${testimonial.id}`} className="min-w-full flex-shrink-0 px-4">
-                <div className="bg-white/80 backdrop-blur-sm p-10 sm:p-12 rounded-3xl border border-gray-200/50 max-w-lg mx-auto text-center">
-                  <div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-8 rounded-2xl overflow-hidden border-4 border-white/50 shadow-2xl">
-                    <img 
-                      src={testimonial.image} 
-                      alt={testimonial.name}
-                      className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
-                    />
-                  </div>
-                  <div className="space-y-4">
-                    <p className="text-lg sm:text-xl font-medium text-gray-800 italic leading-relaxed">
-                      &quot;{testimonial.text}&quot;
-                    </p>
-                    <h4 className="text-2xl font-black text-black tracking-tight">
-                      {testimonial.name}
-                    </h4>
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* Content */}
+          <div className="flex-1 flex flex-col justify-end space-y-4 px-2">
+            <p className="text-base sm:text-lg lg:text-xl font-medium text-gray-900 italic leading-tight line-clamp-3">
+              "{testimonial.text}"
+            </p>
+            <h4 className="text-xl sm:text-2xl lg:text-3xl font-black text-black tracking-tight">
+              {testimonial.name}
+            </h4>
           </div>
+
+          {/* Doodle accents */}
+          <div className="absolute top-4 right-4 w-4 h-4 bg-orange-400/50 rounded-full"></div>
+          <div className="absolute bottom-4 left-4 w-2 h-10 border-l-2 border-black/20 -rotate-12"></div>
         </div>
+      </motion.div>
+    ))}
+  </div>
+
+  <style jsx>{`
+    @keyframes slide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-25%); }
+    }
+    .animate-slide {
+      animation: slide 18s linear infinite;
+    }
+  `}</style>
+</div>
+
+
       </div>
     </section>
 
