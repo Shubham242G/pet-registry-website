@@ -5,6 +5,7 @@ import Navbar from './component/Navbar'; // Adjust alias if needed
 
 
 import { Archivo_Black } from 'next/font/google'
+import ClientNavbar from './component/ClientNavbar';
 
 
 const archive = Archivo_Black({ 
@@ -27,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
        <body className={`${archive.variable} font-sans`}>
-        <Navbar />
+        <ClientNavbar /> 
         <main className="pt-20">{children}</main>
       </body>
     </html>

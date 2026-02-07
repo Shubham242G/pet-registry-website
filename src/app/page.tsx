@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ContactForm from "./component/ContactForm";
+import Image from 'next/image';
+
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -22,6 +24,9 @@ const Section = ({ children }: { children: React.ReactNode }) => (
     {children}
   </motion.section>
 );
+
+
+
 
 const testimonials = [
   {
@@ -53,6 +58,14 @@ const testimonials = [
 export default function HomePage() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState<'Tailio' | 'Government'>('Tailio');
+
+  const governmentPoints = [
+    'Complex registration process',
+    'Multiple forms and documents required',
+    'Limited guidance and support',
+    'Delayed approvals and unclear timelines',
+  ];
 
   useEffect(() => {
 
@@ -160,8 +173,8 @@ export default function HomePage() {
 
       {/* ================= HOW IT WORKS ================= */}
       <Section>
-  <h2 className="text-3xl font-bold text-center mb-16">
-    Why is Pet Registry important?
+  <h2 className="text-6xl font-bold text-center mb-16">
+    Why Is Pet Registry Important?
   </h2>
   <div className="max-w-7xl mx-auto px-8 md:px-12 lg:px-20">
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-24 lg:gap-32 xl:gap-40 2xl:gap-48 justify-items-center">
@@ -192,67 +205,174 @@ export default function HomePage() {
 
 
 
-
-  <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-  <div className="max-w-6xl mx-auto px-4 sm:px-6">
-    {/* Title */}
-    <motion.h2 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="text-4xl sm:text-5xl font-black text-black text-center mb-20 tracking-tight"
-    >
-      Happy Pets
-    </motion.h2>
-
-    {/* Continuous sliding slider - SAME AS BEFORE */}
-    <div className="overflow-hidden relative py-8 -mx-4 lg:-mx-8">
-      <div 
-        className="flex animate-slide"
-        style={{ 
-          animationDuration: '18s',
-          animationIterationCount: 'infinite',
-          animationTimingFunction: 'linear'
-        }}
-      >
-        {/* 12 slides for perfect infinite loop - 3 visible x 4 cycles */}
-        {Array.from({ length: 12 }, (_, i) => testimonials[i % 4]).map((testimonial, index) => (
-          <motion.div
-            key={`slide-${index}`}
-            className="w-[33.333%] flex-shrink-0 px-8 lg:px-12 flex items-center justify-center"
-            whileHover={{ scale: 1.02 }}
-          >
-            <div className="flex flex-col items-center space-y-4 text-center h-[400px] flex items-center justify-center">
-              {/* JUST PICTURE - NO CONTAINER, BIGGER SIZE */}
-              <div className="w-85 h-60 sm:w-52 sm:h-67 lg:w-85 lg:h-75 xl:w-75  mb-6">
-                <img 
-                  src={testimonial.image} 
-                  alt={testimonial.name}
-                  className="w-full h-full object-cover grayscale-[65%] hover:grayscale-0 transition-all duration-500 rounded-lg"
-                />
-              </div>
-
-              {/* Name below */}
-              <h4 className="text-lg sm:text-xl font-black text-black tracking-tight">
-                {testimonial.name}
-              </h4>
-            </div>
-          </motion.div>
-        ))}
+<section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+  <div className="w-full">
+    {/* Orange box with heading and slider */}
+    <div className="bg-[#ff7200] w-full py-12 md:py-16">
+      {/* Heading */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-12">
+        <h2 className="text-4xl sm:text-5xl font-black text-black text-center tracking-tight">
+          Official records. Unofficial cuddles
+        </h2>
       </div>
 
-      <style jsx>{`
-        @keyframes slide {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-25%); }
-        }
-        .animate-slide {
-          animation: slide 18s linear infinite;
-        }
-      `}</style>
+      {/* Performance optimized slider */}
+      <div className="relative overflow-hidden">
+        <div className="flex">
+          {/* First slide set */}
+          <div className="flex animate-slide-optimized">
+            {[...testimonials, ...testimonials].map((testimonial, index) => (
+              <div key={`opt-1-${index}`} className="flex-shrink-0 w-[300px] md:w-[350px] lg:w-[400px] px-6">
+                <div className="flex flex-col items-center">
+                  <div className="w-full aspect-[4/5]">
+                    <img 
+                      src={testimonial.image} 
+                      alt={testimonial.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover grayscale-[30%] hover:grayscale-0 transition-all duration-300 rounded-xl shadow-2xl border-4 border-white/40"
+                    />
+                  </div>
+                  <h4 className="text-xl md:text-2xl font-black text-white mt-4">
+                    {testimonial.name}
+                  </h4>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Second slide set for seamless loop */}
+          <div className="flex animate-slide-optimized" aria-hidden="true">
+            {[...testimonials, ...testimonials].map((testimonial, index) => (
+              <div key={`opt-2-${index}`} className="flex-shrink-0 w-[300px] md:w-[350px] lg:w-[400px] px-6">
+                <div className="flex flex-col items-center">
+                  <div className="w-full aspect-[4/5]">
+                    <img 
+                      src={testimonial.image} 
+                      alt=""
+                      loading="lazy"
+                      className="w-full h-full object-cover grayscale-[30%] rounded-xl shadow-2xl border-4 border-white/40"
+                    />
+                  </div>
+                  <h4 className="text-xl md:text-2xl font-black text-white mt-4">
+                    {testimonial.name}
+                  </h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Edge gradients */}
+        <div className="absolute left-0 top-0 bottom-0 w-48 bg-gradient-to-r from-[#ff7200] to-transparent z-10"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-48 bg-gradient-to-l from-[#ff7200] to-transparent z-10"></div>
+      </div>
+    </div>
+  </div>
+
+  <style jsx>{`
+    @keyframes slide-optimized {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+    
+    .animate-slide-optimized {
+      animation: slide-optimized 25s linear infinite;
+      display: flex;
+    }
+    
+    /* Performance optimizations */
+    .animate-slide-optimized {
+      transform: translateZ(0);
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    
+    /* Responsive sizing */
+    @media (max-width: 640px) {
+      .animate-slide-optimized {
+        animation-duration: 20s;
+      }
+    }
+    
+    /* Prevent hover on mobile */
+    @media (hover: hover) {
+      .animate-slide-optimized:hover {
+        animation-play-state: paused;
+      }
+    }
+  `}</style>
+</section>
+
+
+<section id="whyTailio" className="w-full  bg-white py-16 px-6 md:px-12 lg:px-24 flex flex-col items-center">
+  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-12 tracking-wide">
+    Why Tailio?
+  </h2>
+
+  {/* Tabs */}
+  <div className="flex space-x-4 mb-8 border-b border-gray-200">
+    <button
+      onClick={() => setActiveTab('Tailio')}
+      className={`px-6 py-2 text-lg font-semibold transition-colors duration-300 ${
+        activeTab === 'Tailio'
+          ? 'text-white bg-orange-500'
+          : 'text-gray-600 bg-transparent'
+      } rounded-t-md`}
+    >
+      Tailio
+    </button>
+    <button
+      onClick={() => setActiveTab('Government')}
+      className={`px-6 py-2 text-lg font-semibold transition-colors duration-300 ${
+        activeTab === 'Government'
+          ? 'text-white bg-orange-500'
+          : 'text-gray-600 bg-transparent'
+      } rounded-t-md`}
+    >
+      Government Facilities
+    </button>
+  </div>
+
+  {/* Content */}
+  <div className="w-full flex flex-col lg:flex-row items-center gap-12">
+    {/* Left content */}
+    <div className="flex-1">
+      {activeTab === 'Tailio' ? (
+        <div>
+          <h3 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
+            One form for you. Everything else? On us.              
+          </h3>
+          <p className="text-gray-600 text-lg leading-relaxed">
+            Tailio simplifies the entire pet registration process. No complicated forms or government hurdles. Register once and let us handle the rest for you.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {governmentPoints.map((point, index) => (
+            <div key={index} className="text-gray-800 text-lg">
+              <span className="font-bold mr-2">{index + 1}.</span>
+              {point}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+    {/* Right image - Dynamic based on active tab */}
+    <div className="flex-1 flex justify-center items-center relative w-full h-64 md:h-80 lg:h-96">
+      <Image
+        src={activeTab === 'Tailio' ? "/images/happy.png" : "/images/sad.png"}
+        alt={activeTab === 'Tailio' ? "Tailio illustration" : "Government facilities illustration"}
+        fill
+        className="object-cover rounded-lg transition-opacity duration-300"
+      />
     </div>
   </div>
 </section>
-
 
 
 
@@ -337,9 +457,9 @@ export default function HomePage() {
       </Section> */}
 
 
-<div className="max-w-4xl mx-auto sm:px-6 sm:mb-30">
-  <div className="bg-white p-8 sm:p-12 lg:p-16 rounded-2xl flex flex-col lg:flex-row items-center lg:items-center gap-8 lg:gap-12 max-w-3xl mx-auto h-80 lg:h-72">
-    {/* Left: Image */}
+<div className="max-w-4xl mx-auto px-4 sm:px-6 mb-4 lg:mb-6">
+  <div className="bg-white p-6 sm:p-8 lg:p-10 rounded-2xl flex flex-col lg:flex-row items-center lg:items-center gap-6 lg:gap-10 max-w-3xl mx-auto h-auto lg:h-72">
+    {/* Left: Image - Optimized size */}
     <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto lg:mx-0">
       <img 
         src="/images/image2.png" 
@@ -348,22 +468,22 @@ export default function HomePage() {
       />
     </div>
 
-    {/* Right: Perfect 3-line stack - ONE LINE heading, ONE LINE subtext, CTA */}
-    <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center space-y-2">
-      {/* HEADING - SINGLE LINE */}
-      <h3 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-black text-black whitespace-nowrap">
+    {/* Right: All text in single lines */}
+    <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center">
+      {/* HEADING - Ensured single line */}
+      <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-black whitespace-nowrap text-center lg:text-left leading-tight">
         Do You Have Many Fur Babies?
       </h3>
       
-      {/* SUBTEXT - SINGLE LINE */}
-      <p className="text-xs sm:text-sm lg:text-base text-black font-medium text-center lg:text-left max-w-xs">
-        Don't Worry, We got you covered !
+      {/* SUBTEXT - Single line with small spacing */}
+      <p className="text-sm sm:text-base text-black font-medium whitespace-nowrap text-center lg:text-left mt-2">
+        Don't Worry, We got you covered!
       </p>
       
-      {/* CTA BELOW */}
+      {/* CTA - Single line with spacing */}
       <a 
         href="/contact" 
-        className="text-orange-400 font-bold text-xs sm:text-sm lg:text-base hover:text-orange-500 transition-colors inline-flex items-center self-center lg:self-start"
+        className="text-orange-500 font-bold text-base sm:text-lg hover:text-orange-600 transition-colors whitespace-nowrap inline-flex items-center self-center lg:self-start mt-3"
       >
         Contact us →
       </a>
