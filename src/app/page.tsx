@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import ContactForm from "./component/ContactForm";
-import Image from 'next/image';
 
 
 const fadeUp = {
@@ -60,12 +59,34 @@ export default function HomePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<'Tailio' | 'Government'>('Tailio');
 
+  const [isSliderInView, setIsSliderInView] = useState(false);
+  const sliderRef = useRef(null);
+
   const governmentPoints = [
     'Complex registration process',
     'Multiple forms and documents required',
     'Limited guidance and support',
     'Delayed approvals and unclear timelines',
   ];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSliderInView(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sliderRef.current) {
+      observer.observe(sliderRef.current);
+    }
+
+    return () => {
+      if (sliderRef.current) {
+        observer.unobserve(sliderRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
 
@@ -205,24 +226,21 @@ export default function HomePage() {
 
 
 
-<section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+<section ref={sliderRef} className="py-20 bg-gradient-to-b from-gray-50 to-white">
   <div className="w-full">
-    {/* Orange box with heading and slider */}
     <div className="bg-[#ff7200] w-full py-12 md:py-16">
-      {/* Heading */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-12">
         <h2 className="text-4xl sm:text-5xl font-black text-black text-center tracking-tight">
           Official records. Unofficial cuddles
         </h2>
       </div>
 
-      {/* Performance optimized slider */}
       <div className="relative overflow-hidden">
         <div className="flex">
           {/* First slide set */}
           <div className="flex animate-slide-optimized">
             {[...testimonials, ...testimonials].map((testimonial, index) => (
-              <div key={`opt-1-${index}`} className="flex-shrink-0 w-[300px] md:w-[350px] lg:w-[400px] px-6">
+              <div key={`slide1-${testimonial.id}-${index}`} className="flex-shrink-0 w-[300px] md:w-[350px] lg:w-[400px] px-6">
                 <div className="flex flex-col items-center">
                   <div className="w-full aspect-[4/5]">
                     <img 
@@ -243,7 +261,7 @@ export default function HomePage() {
           {/* Second slide set for seamless loop */}
           <div className="flex animate-slide-optimized" aria-hidden="true">
             {[...testimonials, ...testimonials].map((testimonial, index) => (
-              <div key={`opt-2-${index}`} className="flex-shrink-0 w-[300px] md:w-[350px] lg:w-[400px] px-6">
+              <div key={`slide2-${testimonial.id}-${index}`} className="flex-shrink-0 w-[300px] md:w-[350px] lg:w-[400px] px-6">
                 <div className="flex flex-col items-center">
                   <div className="w-full aspect-[4/5]">
                     <img 
@@ -262,7 +280,6 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Edge gradients */}
         <div className="absolute left-0 top-0 bottom-0 w-48 bg-gradient-to-r from-[#ff7200] to-transparent z-10"></div>
         <div className="absolute right-0 top-0 bottom-0 w-48 bg-gradient-to-l from-[#ff7200] to-transparent z-10"></div>
       </div>
@@ -284,21 +301,18 @@ export default function HomePage() {
       display: flex;
     }
     
-    /* Performance optimizations */
     .animate-slide-optimized {
       transform: translateZ(0);
       will-change: transform;
       backface-visibility: hidden;
     }
     
-    /* Responsive sizing */
     @media (max-width: 640px) {
       .animate-slide-optimized {
         animation-duration: 20s;
       }
     }
     
-    /* Prevent hover on mobile */
     @media (hover: hover) {
       .animate-slide-optimized:hover {
         animation-play-state: paused;
@@ -363,12 +377,11 @@ export default function HomePage() {
     </div>
 
     {/* Right image - Dynamic based on active tab */}
-    <div className="flex-1 flex justify-center items-center relative w-full h-64 md:h-80 lg:h-96">
-      <Image
+    <div className="flex-1 flex justify-center items-center w-full h-64 md:h-80 lg:h-96">
+      <img
         src={activeTab === 'Tailio' ? "/images/happy.png" : "/images/sad.png"}
         alt={activeTab === 'Tailio' ? "Tailio illustration" : "Government facilities illustration"}
-        fill
-        className="object-cover rounded-lg transition-opacity duration-300"
+        className="object-cover rounded-lg transition-opacity duration-300 w-full h-full"
       />
     </div>
   </div>
@@ -491,7 +504,7 @@ export default function HomePage() {
   </div>
 </div>
 
-<div className="mt-70">
+<div >
   <ContactForm/>
 </div>
     </main>
