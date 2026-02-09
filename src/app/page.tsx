@@ -194,22 +194,30 @@ export default function HomePage() {
 
       {/* ================= HOW IT WORKS ================= */}
       <Section>
-  <h2 className="text-6xl font-bold text-center mb-16">
-    Why Is Pet Registry Important?
-  </h2>
-  <div className="max-w-7xl mx-auto px-8 md:px-12 lg:px-20">
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-24 lg:gap-32 xl:gap-40 2xl:gap-48 justify-items-center">
+  <div className="text-center mb-16">
+    <h2 className="text-5xl md:text-6xl font-bold">
+      Didn’t Register Your Pet?
+    </h2>
+    <p className="mt-4 text-2xl md:text-3xl font-semibold text-gray-600">
+      Here’s the Not-So-Fun Part
+    </p>
+  </div>
+
+  <div className="max-w-6xl mx-auto px-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-16 justify-items-center">
       {[
         "/images/image3.png",
         "/images/image4.png",
-        "/images/image5.png", 
-        "/images/image6.png"
+        "/images/image5.png",
       ].map((image, i) => (
-        <div key={i} className="group relative w-72 sm:w-80 lg:w-96 xl:w-[28rem] 2xl:w-[32rem] h-72 sm:h-80 lg:h-96 xl:h-[28rem] 2xl:h-[32rem]">
-          <img 
-            src={image} 
-            alt="Pet" 
-            className="w-full h-full object-contain rounded-full group-hover:scale-105 transition-all duration-300 group-hover:drop-shadow-[0_0_0_6px_#fb923c]"
+        <div
+          key={i}
+          className="group relative w-64 md:w-72 lg:w-80 h-64 md:h-72 lg:h-80"
+        >
+          <img
+            src={image}
+            alt="Pet"
+            className="w-full h-full object-contain rounded-full transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_0_6px_#fb923c]"
           />
         </div>
       ))}
@@ -218,6 +226,40 @@ export default function HomePage() {
 </Section>
 
 
+
+
+
+
+<Section> 
+<div className="py-10 md:py-12">
+  <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+    <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+      
+      {/* Left Image */}
+      <div className="w-full md:w-1/2 flex justify-center">
+        <img
+          src="/images/image11.png"
+          alt="Dog registration mandated"
+          className="w-full max-w-sm md:max-w-md object-contain"
+        />
+      </div>
+
+      {/* Right Text */}
+      <div className="w-full md:w-1/2 text-center md:text-left">
+        <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold leading-snug">
+          <span className="block whitespace-nowrap">
+            Supreme Court: Dog Registration Mandated by Municipal Laws,
+          </span>
+          <span className="block whitespace-nowrap">
+            Unregistered Pets Face Pickup
+          </span>
+        </h2>
+      </div>
+
+    </div>
+  </div>
+  </div>
+</Section>
 
 
 
