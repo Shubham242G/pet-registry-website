@@ -194,7 +194,7 @@ export default function HomePage() {
 
       {/* ================= HOW IT WORKS ================= */}
       <Section>
-  <div className="text-center mb-16">
+  <div className="text-center">
     <h2 className="text-5xl md:text-6xl font-bold">
       Didn’t Register Your Pet?
     </h2>
@@ -230,34 +230,40 @@ export default function HomePage() {
 
 
 
-<Section> 
-<div className="py-10 md:py-12">
-  <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
-    <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-      
-      {/* Left Image */}
-      <div className="w-full md:w-1/2 flex justify-center">
-        <img
-          src="/images/image11.png"
-          alt="Dog registration mandated"
-          className="w-full max-w-sm md:max-w-md object-contain"
-        />
-      </div>
+<Section>
+  <div>
+    <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+      <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
+        
+        {/* Left Image */}
+        <div className="w-full md:w-2/5 flex justify-center">
+          <img
+            src="/images/image11.png"
+            alt="Dog registration mandated"
+            className="w-full max-w-md md:max-w-lg lg:max-w-xl object-contain"
+          />
+        </div>
 
-      {/* Right Text */}
-      <div className="w-full md:w-1/2 text-center md:text-left">
-        <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold leading-snug">
-          <span className="block whitespace-nowrap">
-            Supreme Court: Dog Registration Mandated by Municipal Laws,
-          </span>
-          <span className="block whitespace-nowrap">
-            Unregistered Pets Face Pickup
-          </span>
-        </h2>
-      </div>
+        {/* Right Text - Moved more to the left */}
+        <div className="w-full md:w-3/5 text-center md:text-left md:-ml-8">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight md:leading-tight lg:leading-snug">
+            <span className="block">
+              Supreme Court: Dog Registration Mandated by Municipal Laws,
+            </span>
+            <span className="block mt-2 md:mt-3">
+              Unregistered Pets Face Pickup
+            </span>
+          </h2>
+          
+          {/* Optional additional text */}
+          <p className="mt-4 md:mt-6 text-base md:text-lg text-gray-600 max-w-2xl">
+            The Supreme Court has affirmed that municipal laws require all pet dogs to be registered. 
+            Owners of unregistered dogs risk having their pets picked up by municipal authorities.
+          </p>
+        </div>
 
+      </div>
     </div>
-  </div>
   </div>
 </Section>
 
@@ -268,7 +274,7 @@ export default function HomePage() {
 
 
 
-<section ref={sliderRef} className="py-20 bg-gradient-to-b from-gray-50 to-white">
+<section ref={sliderRef} className="bg-gradient-to-b from-gray-50 to-white">
   <div className="w-full">
     <div className="bg-[#ff7200] w-full py-12 md:py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-12">
