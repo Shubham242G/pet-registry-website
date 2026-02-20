@@ -2,42 +2,32 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
+import { useRouter } from 'next/navigation'; // Add this
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
-import { useRouter } from 'next/navigation'; // ✅ FIXED import
 
 interface User {
   username: string;
 }
 
 export default function Navbar() {
+  const router = useRouter(); // Add this
   const [isOpen, setIsOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
-  const router = useRouter();
+  const { user, logout, isAuthenticated, loading } = useAuth();
 
   useEffect(() => {
     setIsMounted(true);
-    
-    // Check localStorage for user
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
-    if (token && username) {
-      setUser({ username });
-    }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    localStorage.removeItem('userRole');
-    setUser(null);
-    if (isMounted) {
-      router.push('/');
-    }
+    logout();
+    setIsOpen(false);
+    router.push('/'); // Redirect to home page on logout
   };
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -51,14 +41,19 @@ export default function Navbar() {
     }
   };
 
-  // ✅ Handle successful auth (called from modals)
-  const handleAuthSuccess = () => {
-    if (isMounted) {
-      router.push('/pages/dashboard');
-    }
-  };
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isOpen && !(event.target as Element).closest('.mobile-menu')) {
+        setIsOpen(false);
+      }
+    };
 
-  if (!isMounted) {
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isOpen]);
+
+  if (!isMounted || loading) {
     return <nav className="bg-white fixed w-full z-20 top-0 shadow-sm h-20" />;
   }
 
@@ -83,18 +78,28 @@ export default function Navbar() {
           {/* DESKTOP MENU + AUTH */}
           <div className="flex items-center space-x-6 md:space-x-8">
             <div className="hidden md:flex items-center space-x-8">
-              <Link  href="whyTailio" onClick={(e) => handleScroll(e, 'whyTailio')}  className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors">
+              <Link  
+                href="whyTailio" 
+                onClick={(e) => handleScroll(e, 'whyTailio')}  
+                className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              >
                 Why Tailio?
               </Link>
-              <Link href="/pages/blogs" className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors">
+              <Link 
+                href="/pages/blogs" 
+                className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              >
                 Blogs
               </Link>
-              <Link href="/pages/contact" className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors">
+              <Link 
+                href="/pages/contact" 
+                className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              >
                 Contact
               </Link>
-              {user && (
+              {isAuthenticated && user && (
                 <Link 
-                  href="/pages/dashboard" 
+                  href="/pages/dashboard"
                   className="text-lg font-bold text-orange-500 bg-orange-100 px-6 py-2 rounded-xl hover:bg-orange-200 transition-all duration-200"
                 >
                   Dashboard
@@ -102,16 +107,16 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* AUTH BUTTONS */}
-            <div className="flex items-center space-x-2">
-              {user ? (
+            {/* AUTH BUTTONS - REDESIGNED TO MATCH */}
+            <div className="flex items-center space-x-3">
+              {isAuthenticated && user ? (
                 <>
-                  <span className="font-semibold text-gray-900 hidden sm:block">
+                  <span className="font-semibold text-gray-900 hidden sm:block text-sm">
                     Hi, {user.username}
                   </span>
                   <button
                     onClick={handleLogout}
-                    className="px-4 py-2 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-all duration-200 whitespace-nowrap text-sm"
+                    className="px-4 py-2 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200 whitespace-nowrap text-sm"
                   >
                     Logout
                   </button>
@@ -152,12 +157,13 @@ export default function Navbar() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="md:hidden absolute top-20 left-0 w-full bg-white shadow-lg border-t z-10"
+                className="md:hidden absolute top-20 left-0 w-full bg-white shadow-lg border-t z-10 mobile-menu"
               >
                 <MobileMenu 
                   isOpen={isOpen} 
                   setIsOpen={setIsOpen} 
                   user={user}
+                  isAuthenticated={isAuthenticated}
                   showLogin={showLogin}
                   setShowLogin={setShowLogin}
                   showRegister={showRegister}
@@ -170,50 +176,124 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* ✅ MODALS - NO onSuccess prop needed */}
+      {/* MODALS */}
       <AnimatePresence>
-        {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
-        {showRegister && <RegisterModal onClose={() => setShowRegister(false)} />}
+        {showLogin && (
+          <LoginModal 
+            isOpen={showLogin}
+            onClose={() => setShowLogin(false)}
+            onSwitchToRegister={() => {
+              setShowLogin(false);
+              setShowRegister(true);
+            }}
+          />
+        )}
+        {showRegister && (
+          <RegisterModal 
+            isOpen={showRegister}
+            onClose={() => setShowRegister(false)}
+            onSwitchToLogin={() => {
+              setShowRegister(false);
+              setShowLogin(true);
+            }}
+          />
+        )}
       </AnimatePresence>
     </>
   );
 }
 
-// MobileMenu unchanged
+// MobileMenu - Updated with matching styles
 function MobileMenu({ 
-  isOpen, setIsOpen, user, showLogin, setShowLogin, 
-  showRegister, setShowRegister, onLogout 
+  isOpen, 
+  setIsOpen, 
+  user,
+  isAuthenticated,
+  showLogin, 
+  setShowLogin, 
+  showRegister, 
+  setShowRegister, 
+  onLogout 
 }: { 
   isOpen: boolean; 
   setIsOpen: (open: boolean) => void;
-  user: User | null;
+  user: any;
+  isAuthenticated: boolean;
   showLogin: boolean;
   setShowLogin: (show: boolean) => void;
   showRegister: boolean;
   setShowRegister: (show: boolean) => void;
   onLogout: () => void;
 }) {
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+      setIsOpen(false);
+    }
+  };
+
   return (
     <ul className="font-medium flex flex-col p-4 space-y-4">
-      <li><Link href="/how-it-works" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100" onClick={() => setIsOpen(false)}>How tailio works?</Link></li>
-      <li><Link href="/about" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100" onClick={() => setIsOpen(false)}>About Us</Link></li>
-      <li><Link href="/contact" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100" onClick={() => setIsOpen(false)}>Contact</Link></li>
+      {/* Mobile menu items */}
+      <li>
+        <Link 
+          href="whyTailio" 
+          onClick={(e) => handleScroll(e, 'whyTailio')}
+          className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100"
+        >
+          Why Tailio?
+        </Link>
+      </li>
+      <li>
+        <Link 
+          href="/pages/blogs" 
+          className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100" 
+          onClick={() => setIsOpen(false)}
+        >
+          Blogs
+        </Link>
+      </li>
+      <li>
+        <Link 
+          href="/pages/contact" 
+          className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100" 
+          onClick={() => setIsOpen(false)}
+        >
+          Contact
+        </Link>
+      </li>
       
-      {user && (
+      {/* Dashboard link for authenticated users */}
+      {isAuthenticated && user && (
         <li>
-          <Link href="/pages/dashboard" className="block py-2 px-3 text-orange-600 font-bold bg-orange-100 rounded hover:bg-orange-200" onClick={() => setIsOpen(false)}>
+          <Link 
+            href="/pages/dashboard" 
+            className="block py-2 px-3 text-orange-600 font-bold bg-orange-100 rounded hover:bg-orange-200" 
+            onClick={() => setIsOpen(false)}
+          >
             Dashboard
           </Link>
         </li>
       )}
 
-      {user ? (
+      {/* Auth section - Updated to match desktop styles */}
+      {isAuthenticated && user ? (
         <>
           <li className="border-t pt-2">
-            <span className="block py-2 px-3 text-gray-900 font-semibold">Hi, {user.username}</span>
+            <span className="block py-2 px-3 text-gray-900 font-semibold">
+              Hi, {user.username}
+            </span>
           </li>
           <li>
-            <button onClick={() => { onLogout(); setIsOpen(false); }} className="w-full text-left py-2 px-3 bg-red-500 text-white rounded hover:bg-red-600 font-medium">
+            <button 
+              onClick={() => { onLogout(); setIsOpen(false); }} 
+              className="w-full text-center py-2 px-3 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200"
+            >
               Logout
             </button>
           </li>
@@ -221,12 +301,18 @@ function MobileMenu({
       ) : (
         <>
           <li className="border-t pt-2">
-            <button onClick={() => { setShowRegister(true); setIsOpen(false); }} className="w-full text-left py-2 px-3 bg-orange-500 text-white rounded hover:bg-orange-600 font-medium">
+            <button 
+              onClick={() => { setShowRegister(true); setIsOpen(false); }} 
+              className="w-full text-center py-2 px-3 bg-white border border-orange-400 text-orange-500 font-medium rounded-lg hover:bg-orange-50 hover:border-orange-500 transition-all duration-200"
+            >
               Register
             </button>
           </li>
           <li>
-            <button onClick={() => { setShowLogin(true); setIsOpen(false); }} className="w-full text-left py-2 px-3 border border-orange-400 text-orange-500 bg-orange-50 rounded hover:bg-orange-100 font-medium">
+            <button 
+              onClick={() => { setShowLogin(true); setIsOpen(false); }} 
+              className="w-full text-center py-2 px-3 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200"
+            >
               Login
             </button>
           </li>
