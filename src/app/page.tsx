@@ -114,24 +114,38 @@ export default function HomePage() {
 
       {/* ================= SUPREME COURT ================= */}
       <Section>
-        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
-          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
-            <div className="w-full md:w-2/5 flex justify-center">
-              <img src="/images/image11.png" alt="Dog registration mandated" className="w-full max-w-md md:max-w-lg lg:max-w-xl object-contain" />
-            </div>
-            <div className="w-full md:w-3/5 text-center md:text-left md:-ml-8">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
-                <span className="block">Supreme Court: Dog Registration Mandated by Municipal Laws,</span>
-                <span className="block mt-2 md:mt-3">Unregistered Pets Face Pickup</span>
-              </h2>
-              <p className="mt-4 md:mt-6 text-base md:text-lg text-gray-600 max-w-2xl">
-                The Supreme Court has affirmed that municipal laws require all pet dogs to be registered.
-                Owners of unregistered dogs risk having their pets picked up by municipal authorities.
-              </p>
-            </div>
-          </div>
-        </div>
-      </Section>
+  <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+    <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
+      
+      {/* Image */}
+      <div className="w-full md:w-1/2 flex justify-center">
+        <img
+          src="/images/image11.png"
+          alt="Dog registration mandated"
+          className="w-full max-w-xl md:max-w-2xl lg:max-w-3xl object-contain"
+        />
+      </div>
+
+      {/* Text */}
+      <div className="w-full md:w-3/5 text-center md:text-left md:-ml-8">
+        <h2 className="text-lg md:text-xl lg:text-2xl font-semibold leading-snug">
+          <span className="block">
+            Supreme Court: Dog Registration Mandated by Municipal Laws,
+          </span>
+          <span className="block mt-2 md:mt-3">
+            Unregistered Pets Face Pickup
+          </span>
+        </h2>
+
+        <p className="mt-4 md:mt-6 text-sm md:text-base text-gray-600 max-w-2xl">
+          The Supreme Court has affirmed that municipal laws require all pet dogs to be registered.
+          Owners of unregistered dogs risk having their pets picked up by municipal authorities.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</Section>
 
       {/* ================= TESTIMONIALS SLIDER ================= */}
       {/* 
