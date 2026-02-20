@@ -97,55 +97,61 @@ export default function HomePage() {
 
       {/* ================= HOW IT WORKS ================= */}
       <Section>
-        <div className="text-center">
-          <h2 className="text-5xl md:text-6xl font-bold">Didn't Register Your Pet?</h2>
-          <p className="mt-4 text-2xl md:text-3xl font-semibold text-gray-600">Here's the Not-So-Fun Part</p>
-        </div>
-        <div className="max-w-6xl mx-auto px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-16 justify-items-center">
-            {["/images/image3.png", "/images/image4.png", "/images/image5.png"].map((image, i) => (
-              <div key={i} className="group relative w-64 md:w-72 lg:w-80 h-64 md:h-72 lg:h-80">
-                <img src={image} alt="Pet" className="w-full h-full object-contain rounded-full transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_0_6px_#fb923c]" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </Section>
+  <div className="text-center">
+    <h2 className="text-4xl md:text-5xl font-black text-black leading-tight tracking-tight">
+      Didn't Register Your Pet?
+    </h2>
+
+    <p className="mt-4 text-xl md:text-2xl font-black text-gray-900 leading-tight tracking-tight">
+      Here's the Not-So-Fun Part
+    </p>
+  </div>
+
+  <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div className="flex gap-8 md:gap-12 justify-center items-center">
+    {["/images/image3.png", "/images/image4.png", "/images/image5.png","/images/image12.png"].map((image, i) => (
+      <div key={i} className="group relative w-48 md:w-56 lg:w-64 h-48 md:h-56 lg:h-64 flex-shrink-0">
+        <img
+          src={image}
+          alt="Pet"
+          className="w-full h-full object-contain rounded-full transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_0_6px_#fb923c]"
+        />
+      </div>
+    ))}
+  </div>
+</div>
+
+
+</Section>
 
       {/* ================= SUPREME COURT ================= */}
-      <Section>
+<Section>
   <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
     <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
       
       {/* Image */}
-      <div className="w-full md:w-1/2 flex justify-center">
+      <div className="w-full md:w-[50%] flex justify-center">
         <img
           src="/images/image11.png"
           alt="Dog registration mandated"
-          className="w-full max-w-xl md:max-w-2xl lg:max-w-3xl object-contain"
+          className="w-full max-w-4xl md:max-w-5xl object-contain"
         />
       </div>
 
       {/* Text */}
-      <div className="w-full md:w-3/5 text-center md:text-left md:-ml-8">
-        <h2 className="text-lg md:text-xl lg:text-2xl font-semibold leading-snug">
-          <span className="block">
-            Supreme Court: Dog Registration Mandated by Municipal Laws,
-          </span>
-          <span className="block mt-2 md:mt-3">
-            Unregistered Pets Face Pickup
-          </span>
+      <div className="w-full md:w-[50%] flex items-center justify-center md:justify-start">
+        <h2 className="text-xl md:text-2xl font-black leading-tight tracking-tight">
+          Supreme Court Mandates Dog Registration ,
+          Across All Municipal Limits
         </h2>
-
-        <p className="mt-4 md:mt-6 text-sm md:text-base text-gray-600 max-w-2xl">
-          The Supreme Court has affirmed that municipal laws require all pet dogs to be registered.
-          Owners of unregistered dogs risk having their pets picked up by municipal authorities.
-        </p>
       </div>
 
     </div>
   </div>
 </Section>
+
+
+
 
       {/* ================= TESTIMONIALS SLIDER ================= */}
       {/* 
@@ -242,23 +248,24 @@ export default function HomePage() {
 
       {/* ================= FUR BABIES CTA ================= */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-4 lg:mb-6">
-        <div className="bg-white p-6 sm:p-8 lg:p-10 rounded-2xl flex flex-col lg:flex-row items-center gap-6 lg:gap-10 max-w-3xl mx-auto h-auto lg:h-72">
-          <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto lg:mx-0">
-            <img src="/images/image2.png" className="w-full h-full object-cover rounded-xl" alt="Fur babies" />
-          </div>
-          <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center">
-            <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-black whitespace-nowrap text-center lg:text-left leading-tight">
-              Do You Have Many Fur Babies?
-            </h3>
-            <p className="text-sm sm:text-base text-black font-medium whitespace-nowrap text-center lg:text-left mt-2">
-              Don't Worry, We got you covered!
-            </p>
-            <a href="/contact" className="text-orange-500 font-bold text-base sm:text-lg hover:text-orange-600 transition-colors whitespace-nowrap inline-flex items-center self-center lg:self-start mt-3">
-              Contact us →
-            </a>
-          </div>
-        </div>
-      </div>
+  <div className="bg-orange-50/50 p-6 sm:p-8 lg:p-10 rounded-2xl flex flex-col lg:flex-row items-center gap-6 lg:gap-10 max-w-3xl mx-auto h-auto lg:h-72">
+    <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto lg:mx-0">
+      <img src="/images/image2.png" className="w-full h-full object-cover rounded-xl" alt="Fur babies" />
+    </div>
+    <div className="w-full flex-1 flex flex-col items-center lg:items-start justify-center">
+      <h3 className="text-lg sm:text-xl lg:text-2xl font-black text-black whitespace-nowrap text-center lg:text-left leading-tight">
+        Do You Have Many Fur Babies?
+      </h3>
+      <p className="text-sm sm:text-base text-black font-medium whitespace-nowrap text-center lg:text-left mt-2">
+        Don't Worry, We got you covered!
+      </p>
+      <a href="/contact" className="text-orange-500 font-bold text-base sm:text-lg hover:text-orange-600 transition-colors whitespace-nowrap inline-flex items-center self-center lg:self-start mt-3">
+        Contact us →
+      </a>
+    </div>
+  </div>
+</div>
+
 
       <div>
         <ContactForm />
