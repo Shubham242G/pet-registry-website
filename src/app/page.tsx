@@ -248,7 +248,7 @@ export default function HomePage() {
 
       {/* ================= FUR BABIES CTA ================= */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-4 lg:mb-6">
-  <div className="bg-orange-50/50 p-6 sm:p-8 lg:p-10 rounded-2xl flex flex-col lg:flex-row items-center gap-6 lg:gap-10 max-w-3xl mx-auto h-auto lg:h-72">
+  <div className="p-6 sm:p-8 lg:p-10 rounded-2xl flex flex-col lg:flex-row items-center gap-6 lg:gap-10 max-w-3xl mx-auto h-auto lg:h-72">
     <div className="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto lg:mx-0">
       <img src="/images/image2.png" className="w-full h-full object-cover rounded-xl" alt="Fur babies" />
     </div>
