@@ -4,6 +4,7 @@ import './globals.css';
 import { Archivo_Black } from 'next/font/google';
 import Navbar from './component/Navbar';
 import Providers from './providers'; // Make sure this path is correct
+import LiveJoinStrip from './component/LiveJoiningStrip';
 
 const archive = Archivo_Black({ 
   subsets: ['latin'], 
@@ -27,6 +28,9 @@ export default function RootLayout({
       <body className={`${archive.variable} font-sans`}>
         <Providers>
           <Navbar />
+          <div className="pt-20">
+            <LiveJoinStrip/>
+          </div>
           <div className="h-20" /> 
           <main>{children}</main>
         </Providers>
