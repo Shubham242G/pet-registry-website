@@ -1,5 +1,3 @@
-const API = "http://localhost:5000/api";
-
 // In your api.ts file, update the apiFetch function:
 export async function apiFetch(endpoint: string, method: string = "GET", body: any = null, token?: string) {
   const headers: HeadersInit = {
