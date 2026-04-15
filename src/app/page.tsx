@@ -43,15 +43,18 @@ export default function HomePage() {
     <main className="bg-white text-gray-900">
 
       {/* ================= BANNER ================= */}
-      <section className="relative h-[65vh] px-8 md:px-16 flex items-center justify-center">
-        <div className="w-[85vw] max-w-7xl mt-10 h-full relative border-2 border-black">
-          <div
-            className="absolute inset-0 w-full h-full bg-no-repeat bg-center"
-            style={{ backgroundImage: "url(/images/Banner.jpeg)", backgroundSize: "cover", backgroundPosition: "center" }}
-          />
-          <div className="absolute right-4 md:right-12 lg:right-20 top-1/2 -translate-y-1/2 text-right max-w-lg z-10 px-4 md:px-8 py-4 bg-white/90 backdrop-blur-sm rounded-lg" />
-        </div>
-      </section>
+<section className="relative h-[65vh] px-8 md:px-16 flex items-center justify-center">
+  <div className="w-[85vw] max-w-7xl mt-10 h-full relative border-2 border-black overflow-hidden">
+    <div
+      className="absolute inset-0 w-full h-full bg-no-repeat bg-center"
+      style={{ backgroundImage: "url(/images/Banner.jpeg)", backgroundSize: "cover", backgroundPosition: "center" }}
+    />
+    {/* Hidden overlay div - add content or remove if not needed */}
+    <div className="absolute right-4 md:right-12 lg:right-20 top-1/2 -translate-y-1/2 text-right max-w-lg z-10 px-4 md:px-8 py-4 bg-white/90 backdrop-blur-sm rounded-lg hidden">
+      {/* Add your content here when needed */}
+    </div>
+  </div>
+</section>
 
       {/* ================= JOIN TAILIO ================= */}
       <Section>
