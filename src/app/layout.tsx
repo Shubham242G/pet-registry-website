@@ -31,7 +31,6 @@ export default function RootLayout({
           <div className="pt-20">
             <LiveJoinStrip/>
           </div>
-          <div className="h-20" /> 
           <main>{children}</main>
         </Providers>
       </body>
