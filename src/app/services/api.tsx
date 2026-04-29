@@ -1,4 +1,6 @@
-// In your api.ts file, update the apiFetch function:
+// utils/api.ts
+import { logger } from '../../../utils/logger';
+
 export async function apiFetch(endpoint: string, method: string = "GET", body: any = null, token?: string) {
   const headers: HeadersInit = {
     "Content-Type": "application/json",
@@ -22,7 +24,7 @@ export async function apiFetch(endpoint: string, method: string = "GET", body: a
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error("API Error Response:", {
+      logger.error("API Error Response:", {
         status: response.status,
         statusText: response.statusText,
         data: errorData
@@ -33,7 +35,7 @@ export async function apiFetch(endpoint: string, method: string = "GET", body: a
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("API Fetch Error:", error);
+    logger.error("API Fetch Error:", error);
     throw error;
   }
 }
