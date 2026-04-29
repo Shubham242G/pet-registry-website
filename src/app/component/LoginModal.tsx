@@ -11,7 +11,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: any)
   const [isLoading, setIsLoading] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
-  // Redirect when authentication state changes
+  // Redirect when authentication is successful
   useEffect(() => {
     if (loginSuccess && isAuthenticated) {
       router.push('/pages/dashboard');
@@ -26,7 +26,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: any)
     setIsLoading(true);
     try {
       await login(email, password);
-      setLoginSuccess(true);
+      setLoginSuccess(true); // This triggers the redirect
     } catch (error) {
       console.error("Login failed:", error);
     } finally {
@@ -37,7 +37,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: any)
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-xl w-96 space-y-4 relative shadow-xl">
-        {/* Close Button (X) */}
+        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200"

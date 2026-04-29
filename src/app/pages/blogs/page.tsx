@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function BlogPage() {
   const blogs = [
@@ -33,27 +34,52 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
-      {/* Hero Section */}
-      <section className="relative py-20 px-6 text-center border-b-4 border-black">
-        <motion.h1
-          initial={{ y: 40, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="text-5xl md:text-6xl font-extrabold tracking-tight"
-        >
-          Pet Registry <span className="text-orange-500">Blog</span>
-        </motion.h1>
+      {/* Hero Section with Image on Right */}
+      <section className="relative h-[50vh] px-6 border-b-4 border-black overflow-hidden">
+  <div className="max-w-6xl mx-auto h-full flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
+    
+    {/* Left Side - Heading Content */}
+    <div className="flex-1 text-center md:text-left">
+      <motion.h1
+        initial={{ y: 40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight"
+      >
+        <span className="text-[#f88013]">Blogs</span>
+      </motion.h1>
 
-        <p className="mt-6 text-lg max-w-2xl mx-auto text-gray-700">
-          Stories, guides, and ideas about keeping your pets safe, registered,
-          and always protected.
-        </p>
+      {/* Doodle underline */}
+      <motion.div
+        initial={{ width: 0 }}
+        animate={{ width: "7rem" }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="mt-4 flex justify-center md:justify-start"
+      >
+        <div className="w-28 h-2.5 bg-[#f88013] rounded-full rotate-2"></div>
+      </motion.div>
+    </div>
 
-        {/* Doodle underline */}
-        <div className="mt-6 flex justify-center">
-          <div className="w-32 h-2 bg-orange-500 rounded-full rotate-2"></div>
-        </div>
-      </section>
+    {/* Right Side - Image/Illustration */}
+    <motion.div
+      initial={{ x: 40, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.6, delay: 0.1 }}
+      className="flex-1 flex justify-center"
+    >
+      <div className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80">
+        <Image
+          src="/images/blogPage.png"
+          alt="Pet registry blog illustration"
+          fill
+          className="object-contain"
+          priority
+        />
+      </div>
+    </motion.div>
+
+  </div>
+</section>
 
       {/* Blog Grid */}
       <section className="px-6 py-16 max-w-6xl mx-auto">
@@ -68,7 +94,7 @@ export default function BlogPage() {
               className="border-4 border-black rounded-3xl p-6 hover:-rotate-1 hover:shadow-[8px_8px_0px_black] transition-all duration-300 bg-white"
             >
               <div className="mb-4">
-                <span className="bg-orange-500 text-white text-xs px-3 py-1 rounded-full font-bold tracking-wide">
+                <span className="bg-[#f88013] text-white text-xs px-3 py-1 rounded-full font-bold tracking-wide">
                   {blog.category}
                 </span>
               </div>
@@ -86,7 +112,7 @@ export default function BlogPage() {
 
                 <Link
                   href={`/blog/${blog.id}`}
-                  className="bg-black text-white px-4 py-2 rounded-full hover:bg-orange-500 transition-all"
+                  className="bg-black text-white px-4 py-2 rounded-full hover:bg-[#f88013] transition-all"
                 >
                   Read →
                 </Link>
@@ -99,7 +125,7 @@ export default function BlogPage() {
       {/* Newsletter Section */}
       <section className="bg-black text-white py-20 px-6 text-center">
         <h2 className="text-4xl font-bold">
-          Stay Updated on Pet Safety 🐶
+          Stay Updated on Pet Safety 
         </h2>
 
         <p className="mt-4 text-gray-300 max-w-xl mx-auto">
@@ -111,9 +137,9 @@ export default function BlogPage() {
           <input
             type="email"
             placeholder="Enter your email"
-            className="px-4 py-3 rounded-full text-black w-full focus:outline-none"
+            className="px-4 py-3 rounded-full text-black w-full focus:outline-none focus:ring-2 focus:ring-[#f88013]"
           />
-          <button className="bg-orange-500 hover:bg-orange-600 transition px-6 py-3 rounded-full font-semibold">
+          <button className="bg-[#f88013] hover:bg-[#e06a0a] transition px-6 py-3 rounded-full font-semibold">
             Subscribe
           </button>
         </div>

@@ -1,13 +1,25 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation"; // Add this import
 
 export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: any) {
-  const { register } = useAuth();
+  const { register, isAuthenticated } = useAuth(); // Add isAuthenticated
+  const router = useRouter(); // Add router
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState(false); // Add this
+
+  // Redirect when authentication is successful
+  useEffect(() => {
+    if (registerSuccess && isAuthenticated) {
+      router.push('/pages/dashboard');
+      onClose();
+      setRegisterSuccess(false);
+    }
+  }, [registerSuccess, isAuthenticated, router, onClose]);
 
   if (!isOpen) return null;
 
@@ -15,7 +27,8 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: any)
     setIsLoading(true);
     try {
       await register(username, email, password);
-      onClose();
+      setRegisterSuccess(true); // This triggers the redirect
+      // Don't call onClose here - let the useEffect handle it
     } catch (error) {
       console.error("Registration failed:", error);
     } finally {
