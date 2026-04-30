@@ -25,9 +25,7 @@ export default function Navbar() {
   useEffect(() => {
     if (user && user.username) {
       setDisplayName(user.username);
-      console.log("Navbar - User username:", user.username); // Debug log
     } else if (user) {
-      console.log("Navbar - User object:", user); // Debug log
       setDisplayName("User");
     } else {
       setDisplayName("");
@@ -122,7 +120,7 @@ export default function Navbar() {
               {isAuthenticated && user ? (
                 <>
                   <span className="font-semibold text-gray-900 hidden sm:block text-sm">
-                    Hi, {displayName || user.username || user.name || "User"}!
+                    Hi, {displayName || user.username || "User"}!
                   </span>
                   <button
                     onClick={handleLogout}
@@ -170,14 +168,11 @@ export default function Navbar() {
                 className="md:hidden absolute top-20 left-0 w-full bg-white shadow-lg border-t z-10 mobile-menu"
               >
                 <MobileMenu 
-                  isOpen={isOpen} 
                   setIsOpen={setIsOpen} 
                   user={user}
                   displayName={displayName}
                   isAuthenticated={isAuthenticated}
-                  showLogin={showLogin}
                   setShowLogin={setShowLogin}
-                  showRegister={showRegister}
                   setShowRegister={setShowRegister}
                   onLogout={handleLogout}
                 />
@@ -188,53 +183,41 @@ export default function Navbar() {
       </motion.nav>
 
       {/* MODALS */}
-      <AnimatePresence>
-        {showLogin && (
-          <LoginModal 
-            isOpen={showLogin}
-            onClose={() => setShowLogin(false)}
-            onSwitchToRegister={() => {
-              setShowLogin(false);
-              setShowRegister(true);
-            }}
-          />
-        )}
-        {showRegister && (
-          <RegisterModal 
-            isOpen={showRegister}
-            onClose={() => setShowRegister(false)}
-            onSwitchToLogin={() => {
-              setShowRegister(false);
-              setShowLogin(true);
-            }}
-          />
-        )}
-      </AnimatePresence>
+      <LoginModal 
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        onSwitchToRegister={() => {
+          setShowLogin(false);
+          setShowRegister(true);
+        }}
+      />
+      <RegisterModal 
+        isOpen={showRegister}
+        onClose={() => setShowRegister(false)}
+        onSwitchToLogin={() => {
+          setShowRegister(false);
+          setShowLogin(true);
+        }}
+      />
     </>
   );
 }
 
-// MobileMenu - Updated with display name
+// MobileMenu - Fixed version without isOpen prop
 function MobileMenu({ 
-  isOpen, 
   setIsOpen, 
   user,
   displayName,
   isAuthenticated,
-  showLogin, 
   setShowLogin, 
-  showRegister, 
   setShowRegister, 
   onLogout 
 }: { 
-  isOpen: boolean; 
   setIsOpen: (open: boolean) => void;
   user: any;
   displayName: string;
   isAuthenticated: boolean;
-  showLogin: boolean;
   setShowLogin: (show: boolean) => void;
-  showRegister: boolean;
   setShowRegister: (show: boolean) => void;
   onLogout: () => void;
 }) {

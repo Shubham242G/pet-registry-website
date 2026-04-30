@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import AddPetModal from "../../component/AddPetModal";
 import RegistrationForm from "../../component/RegistrationForm";
+import ProtectedRoute from "@/app/component/ProtectedRoute";
 
 interface Pet {
   _id: string;
@@ -43,13 +44,13 @@ interface Pet {
 }
 
 export default function Dashboard() {
-  const { token, isAuthenticated, loading: authLoading, validateSession, logout } = useAuth();
+  const { token, isAuthenticated, loading: authLoading, logout } = useAuth();
   const router = useRouter();
   const [pets, setPets] = useState<Pet[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [sessionValid, setSessionValid] = useState(true);
+ 
   
   // Registration states
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
@@ -64,36 +65,23 @@ export default function Dashboard() {
 
   // Validate session on mount and protect route
   useEffect(() => {
-    const checkSession = async () => {
-      if (!authLoading) {
-        const isValid = await validateSession();
-        if (!isValid) {
-          setSessionValid(false);
-          logout(); // Force logout
-          router.push('/'); // Redirect to home
-        }
-      }
-    };
-    
-    checkSession();
-  }, [authLoading, validateSession, router, logout]);
+  if (!authLoading && !isAuthenticated) {
+    router.push("/");
+  }
+}, [authLoading, isAuthenticated, router]);
 
   useEffect(() => {
-    if (token && sessionValid) {
+    if (token ) {
       loadPets();
     }
-  }, [token, sessionValid]);
+  }, [token]);
 
   const loadPets = async () => {
     try {
       setLoading(true);
       setError("");
       
-      // Validate token before making request
-      const isValid = await validateSession();
-      if (!isValid) {
-        throw new Error("Session expired");
-      }
+      
       
       const data = await apiFetch("/pets", "GET", null, token!);
       setPets(Array.isArray(data) ? data : []);
@@ -114,16 +102,16 @@ export default function Dashboard() {
   const fixInconsistentRegistrations = async () => {
     try {
       setLoading(true);
-      const isValid = await validateSession();
-      if (!isValid) throw new Error("Session expired");
       
-      const allPets = await apiFetch("/pets", "GET", null, token!);
+      
+      const allPets = await apiFetch<Pet[]>("/pets", "GET", null, token!);
       let fixedCount = 0;
       
       for (const pet of allPets) {
         if (pet.isRegistered) {
           try {
-            const registration = await apiFetch(`/registration/${pet._id}`, "GET", null, token!);
+           const registration = await apiFetch<any>(`/registration/${pet._id}`, "GET", null, token!);
+
             if (!registration) {
               console.log(`Fixing: ${pet.name} - marked as registered but no registration found`);
               await apiFetch(`/pets/${pet._id}`, "PUT", { isRegistered: false }, token!);
@@ -154,8 +142,7 @@ export default function Dashboard() {
   const handleDeletePet = async (petId: string) => {
     try {
       setLoading(true);
-      const isValid = await validateSession();
-      if (!isValid) throw new Error("Session expired");
+     
       
       await apiFetch(`/pets/${petId}`, "DELETE", null, token!);
       await loadPets();
@@ -174,8 +161,7 @@ export default function Dashboard() {
 
   const handleViewRegistration = async (pet: Pet) => {
     try {
-      const isValid = await validateSession();
-      if (!isValid) throw new Error("Session expired");
+      
       
       const registration = await apiFetch(`/registration/${pet._id}`, "GET", null, token!);
       console.log("Fetched registration for view:", registration);
@@ -201,13 +187,12 @@ export default function Dashboard() {
   const handleEditRegistration = async (pet: Pet) => {
     try {
       setLoading(true);
-      const isValid = await validateSession();
-      if (!isValid) throw new Error("Session expired");
       
-      const registration = await apiFetch(`/registration/${pet._id}`, "GET", null, token!);
+      
+      const registration = await apiFetch<any>(`/registration/${pet._id}`, "GET", null, token!);
       console.log("API Response - Full registration object:", registration);
       
-      if (registration && registration.applicantDetails) {
+      if (registration && (registration as any).applicantDetails){
         console.log("Found existing registration, opening edit mode");
         setSelectedPet(pet);
         setExistingRegistration(registration);
@@ -258,7 +243,7 @@ export default function Dashboard() {
   };
 
   // Show loading state while checking auth
-  if (authLoading || !sessionValid) {
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
@@ -270,11 +255,12 @@ export default function Dashboard() {
   }
 
   // If not authenticated, don't render anything (will redirect)
-  if (!isAuthenticated || !sessionValid) {
+  if (!isAuthenticated) {
     return null;
   }
 
   return (
+     <ProtectedRoute>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
@@ -580,5 +566,6 @@ export default function Dashboard() {
         </div>
       )}
     </div>
+    </ProtectedRoute>
   );
 }
