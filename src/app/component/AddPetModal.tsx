@@ -149,7 +149,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
           </div>
 
           {/* Species */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Species <span className="text-red-500">*</span>
             </label>
@@ -170,7 +170,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Breed & Age */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -234,7 +234,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
           </div>
 
           {/* Microchip */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Microchip Number
             </label>
@@ -245,7 +245,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
               placeholder="Enter microchip number"
             />
-          </div>
+          </div> */}
 
           {/* Notes */}
           <div>
