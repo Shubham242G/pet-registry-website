@@ -58,7 +58,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: any)
             Username
           </label>
           <input 
-            className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
+            className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white" 
             placeholder="Choose a username" 
             onChange={e => setUsername(e.target.value)} 
             disabled={isLoading}
@@ -71,7 +71,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: any)
             Email Address
           </label>
           <input 
-            className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
+            className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white" 
             type="email"
             placeholder="Enter your email" 
             onChange={e => setEmail(e.target.value)} 
@@ -85,7 +85,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: any)
             Password
           </label>
           <input 
-            className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
+            className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white" 
             type="password" 
             placeholder="Create a password" 
             onChange={e => setPassword(e.target.value)} 

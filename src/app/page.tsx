@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ContactForm from "./component/ContactForm";
+import Image from 'next/image';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -33,6 +34,8 @@ const testimonials = [
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<'Tailio' | 'Government'>('Tailio');
+  const [sliderIndex, setSliderIndex] = useState(0);
+const visibleCount = 3; // shows 3 cards at a time on desktop
 
   const governmentPoints = [
     'Long queues and wait times',
@@ -155,53 +158,49 @@ export default function HomePage() {
       </section>
 
       {/* ================= OFFICIAL RECORDS SLIDER ================= */}
-      <section className="py-20 px-4 md:px-12 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto">
+<section className="py-20 px-4 md:px-12 bg-white overflow-hidden">
+  <div className="max-w-7xl mx-auto">
 
-          {/* Top Label */}
-          <div className="text-center mb-4">
-            <span className="bg-[#d9e7e3] text-[#3c6f68] text-xs px-4 py-1 rounded-full font-semibold tracking-wide">
-              OUR COMMUNITY
-            </span>
+    <div className="text-center mb-4">
+      <span className="bg-[#d9e7e3] text-[#3c6f68] text-xs px-4 py-1 rounded-full font-semibold tracking-wide">
+        OUR COMMUNITY
+      </span>
+    </div>
+
+    <div className="text-center mb-14">
+      <h2 className="text-5xl md:text-6xl font-black text-[#2d2a26] leading-tight tracking-tight">
+        Official records.
+      </h2>
+      <h3 className="text-4xl md:text-5xl font-black text-[#f88013] italic leading-tight tracking-tight mt-2">
+        Unofficial cuddles.
+      </h3>
+    </div>
+
+    <div className="relative overflow-hidden">
+      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+      <div className="flex animate-marquee">
+        {[...testimonials, ...testimonials].map((t, i) => (
+          <div
+            key={i}
+            className="relative w-[220px] md:w-[260px] h-[300px] mx-3 rounded-2xl overflow-hidden shadow-md bg-white flex-shrink-0"
+          >
+            <Image
+              src={t.image}
+              alt={t.name}
+              fill
+              priority
+              sizes="260px"
+              className="object-cover"
+            />
           </div>
+        ))}
+      </div>
+    </div>
 
-          {/* Heading - Orange text with italic font */}
-          <div className="text-center mb-14">
-            <h2 className="text-5xl md:text-6xl font-black text-[#2d2a26] leading-tight tracking-tight">
-              Official records.
-            </h2>
-            <h3 className="text-4xl md:text-5xl font-black text-[#f88013] italic leading-tight tracking-tight mt-2">
-              Unofficial cuddles.
-            </h3>
-          </div>
-
-          {/* Slider - No names overlay */}
-          <div className="relative overflow-hidden">
-
-            {/* Fade edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10" />
-            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10" />
-
-            <div className="flex w-max animate-marquee">
-              {[...testimonials, ...testimonials].map((t, i) => (
-                <div
-                  key={i}
-                  className="w-[220px] md:w-[260px] h-[300px] mx-3 rounded-2xl overflow-hidden shadow-md bg-white flex-shrink-0"
-                >
-                  <div className="relative w-full h-full">
-                    <img
-                      src={t.image}
-                      alt={t.name}
-                      className="w-full h-full object-cover"
-                    />
-                    {/* Removed the name overlay since images already have names */}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+  </div>
+</section>
 
       {/* ================= ONE FORM FOR YOU SECTION ================= */}
       <section className="w-full bg-white py-20 px-6 md:px-12 lg:px-24">

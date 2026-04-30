@@ -3,20 +3,17 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { useRouter } from 'next/navigation'; // Add this
+import { useRouter } from 'next/navigation';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
 
-interface User {
-  username: string;
-}
-
 export default function Navbar() {
-  const router = useRouter(); // Add this
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [displayName, setDisplayName] = useState<string>("");
 
   const { user, logout, isAuthenticated, loading } = useAuth();
 
@@ -24,10 +21,23 @@ export default function Navbar() {
     setIsMounted(true);
   }, []);
 
+  // Update display name when user changes
+  useEffect(() => {
+    if (user && user.username) {
+      setDisplayName(user.username);
+      console.log("Navbar - User username:", user.username); // Debug log
+    } else if (user) {
+      console.log("Navbar - User object:", user); // Debug log
+      setDisplayName("User");
+    } else {
+      setDisplayName("");
+    }
+  }, [user]);
+
   const handleLogout = () => {
     logout();
     setIsOpen(false);
-    router.push('/'); // Redirect to home page on logout
+    router.push('/');
   };
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -107,12 +117,12 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* AUTH BUTTONS - REDESIGNED TO MATCH */}
+            {/* AUTH BUTTONS */}
             <div className="flex items-center space-x-3">
               {isAuthenticated && user ? (
                 <>
                   <span className="font-semibold text-gray-900 hidden sm:block text-sm">
-                    Hi, {user.username}
+                    Hi, {displayName || user.username || user.name || "User"}!
                   </span>
                   <button
                     onClick={handleLogout}
@@ -163,6 +173,7 @@ export default function Navbar() {
                   isOpen={isOpen} 
                   setIsOpen={setIsOpen} 
                   user={user}
+                  displayName={displayName}
                   isAuthenticated={isAuthenticated}
                   showLogin={showLogin}
                   setShowLogin={setShowLogin}
@@ -203,11 +214,12 @@ export default function Navbar() {
   );
 }
 
-// MobileMenu - Updated with matching styles
+// MobileMenu - Updated with display name
 function MobileMenu({ 
   isOpen, 
   setIsOpen, 
   user,
+  displayName,
   isAuthenticated,
   showLogin, 
   setShowLogin, 
@@ -218,6 +230,7 @@ function MobileMenu({
   isOpen: boolean; 
   setIsOpen: (open: boolean) => void;
   user: any;
+  displayName: string;
   isAuthenticated: boolean;
   showLogin: boolean;
   setShowLogin: (show: boolean) => void;
@@ -239,7 +252,6 @@ function MobileMenu({
 
   return (
     <ul className="font-medium flex flex-col p-4 space-y-4">
-      {/* Mobile menu items */}
       <li>
         <Link 
           href="#whyTailio" 
@@ -268,7 +280,6 @@ function MobileMenu({
         </Link>
       </li>
       
-      {/* Dashboard link for authenticated users */}
       {isAuthenticated && user && (
         <li>
           <Link 
@@ -281,12 +292,11 @@ function MobileMenu({
         </li>
       )}
 
-      {/* Auth section - Updated to match desktop styles */}
       {isAuthenticated && user ? (
         <>
           <li className="border-t pt-2">
             <span className="block py-2 px-3 text-gray-900 font-semibold">
-              Hi, {user.username}
+              Hi, {displayName || user.username || user.name || "User"}!
             </span>
           </li>
           <li>

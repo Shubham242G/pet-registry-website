@@ -5,6 +5,7 @@ import { Archivo_Black } from 'next/font/google';
 import Navbar from './component/Navbar';
 import Providers from './providers'; // Make sure this path is correct
 import LiveJoinStrip from './component/LiveJoiningStrip';
+import RouteGuard from './component/RouteGuard'; // Add this import
 
 const archive = Archivo_Black({ 
   subsets: ['latin'], 
@@ -27,11 +28,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${archive.variable} font-sans`}>
         <Providers>
-          <Navbar />
-          <div className="pt-20">
-            <LiveJoinStrip/>
-          </div>
-          <main>{children}</main>
+          <RouteGuard> {/* Wrap with RouteGuard */}
+            <Navbar />
+            <div className="pt-20">
+              <LiveJoinStrip/>
+            </div>
+            <main>{children}</main>
+          </RouteGuard>
         </Providers>
       </body>
     </html>

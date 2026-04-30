@@ -43,12 +43,13 @@ interface Pet {
 }
 
 export default function Dashboard() {
-  const { token, isAuthenticated, loading: authLoading } = useAuth();
+  const { token, isAuthenticated, loading: authLoading, validateSession, logout } = useAuth();
   const router = useRouter();
   const [pets, setPets] = useState<Pet[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [sessionValid, setSessionValid] = useState(true);
   
   // Registration states
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
@@ -61,68 +62,111 @@ export default function Dashboard() {
     petName: ''
   });
 
+  // Validate session on mount and protect route
   useEffect(() => {
-    if (token) {
+    const checkSession = async () => {
+      if (!authLoading) {
+        const isValid = await validateSession();
+        if (!isValid) {
+          setSessionValid(false);
+          logout(); // Force logout
+          router.push('/'); // Redirect to home
+        }
+      }
+    };
+    
+    checkSession();
+  }, [authLoading, validateSession, router, logout]);
+
+  useEffect(() => {
+    if (token && sessionValid) {
       loadPets();
     }
-  }, [token]);
+  }, [token, sessionValid]);
 
   const loadPets = async () => {
     try {
       setLoading(true);
       setError("");
+      
+      // Validate token before making request
+      const isValid = await validateSession();
+      if (!isValid) {
+        throw new Error("Session expired");
+      }
+      
       const data = await apiFetch("/pets", "GET", null, token!);
       setPets(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error loading pets:", error);
       setError("Failed to load pets. Please try again.");
+      
+      // If error is due to auth, logout
+      if (error instanceof Error && error.message === "Session expired") {
+        logout();
+        router.push('/');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const fixInconsistentRegistrations = async () => {
-  try {
-    setLoading(true);
-    const allPets = await apiFetch("/pets", "GET", null, token!);
-    let fixedCount = 0;
-    
-    for (const pet of allPets) {
-      if (pet.isRegistered) {
-        try {
-          const registration = await apiFetch(`/registration/${pet._id}`, "GET", null, token!);
-          if (!registration) {
-            console.log(`Fixing: ${pet.name} - marked as registered but no registration found`);
+    try {
+      setLoading(true);
+      const isValid = await validateSession();
+      if (!isValid) throw new Error("Session expired");
+      
+      const allPets = await apiFetch("/pets", "GET", null, token!);
+      let fixedCount = 0;
+      
+      for (const pet of allPets) {
+        if (pet.isRegistered) {
+          try {
+            const registration = await apiFetch(`/registration/${pet._id}`, "GET", null, token!);
+            if (!registration) {
+              console.log(`Fixing: ${pet.name} - marked as registered but no registration found`);
+              await apiFetch(`/pets/${pet._id}`, "PUT", { isRegistered: false }, token!);
+              fixedCount++;
+            }
+          } catch (e) {
+            console.log(`Fixing: ${pet.name} - error fetching registration`);
             await apiFetch(`/pets/${pet._id}`, "PUT", { isRegistered: false }, token!);
             fixedCount++;
           }
-        } catch (e) {
-          console.log(`Fixing: ${pet.name} - error fetching registration`);
-          await apiFetch(`/pets/${pet._id}`, "PUT", { isRegistered: false }, token!);
-          fixedCount++;
         }
       }
+      
+      await loadPets();
+      alert(`Fixed ${fixedCount} inconsistent pet(s). They are now correctly marked as unregistered.`);
+    } catch (error) {
+      console.error("Error fixing registrations:", error);
+      setError("Failed to fix inconsistent data");
+      if (error instanceof Error && error.message === "Session expired") {
+        logout();
+        router.push('/');
+      }
+    } finally {
+      setLoading(false);
     }
-    
-    await loadPets();
-    alert(`Fixed ${fixedCount} inconsistent pet(s). They are now correctly marked as unregistered.`);
-  } catch (error) {
-    console.error("Error fixing registrations:", error);
-    setError("Failed to fix inconsistent data");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleDeletePet = async (petId: string) => {
     try {
       setLoading(true);
+      const isValid = await validateSession();
+      if (!isValid) throw new Error("Session expired");
+      
       await apiFetch(`/pets/${petId}`, "DELETE", null, token!);
       await loadPets();
       setShowDeleteConfirm({ show: false, petId: '', petName: '' });
     } catch (error) {
       console.error("Error deleting pet:", error);
       setError("Failed to delete pet");
+      if (error instanceof Error && error.message === "Session expired") {
+        logout();
+        router.push('/');
+      }
     } finally {
       setLoading(false);
     }
@@ -130,6 +174,9 @@ export default function Dashboard() {
 
   const handleViewRegistration = async (pet: Pet) => {
     try {
+      const isValid = await validateSession();
+      if (!isValid) throw new Error("Session expired");
+      
       const registration = await apiFetch(`/registration/${pet._id}`, "GET", null, token!);
       console.log("Fetched registration for view:", registration);
       
@@ -144,39 +191,41 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Error loading registration:", error);
       setError("Failed to load registration");
+      if (error instanceof Error && error.message === "Session expired") {
+        logout();
+        router.push('/');
+      }
     }
   };
 
   const handleEditRegistration = async (pet: Pet) => {
     try {
       setLoading(true);
+      const isValid = await validateSession();
+      if (!isValid) throw new Error("Session expired");
+      
       const registration = await apiFetch(`/registration/${pet._id}`, "GET", null, token!);
       console.log("API Response - Full registration object:", registration);
       
-      // Check if registration exists AND has data
       if (registration && registration.applicantDetails) {
-        // We have real registration data
         console.log("Found existing registration, opening edit mode");
         setSelectedPet(pet);
         setExistingRegistration(registration);
         setShowRegistrationForm(true);
       } else {
-        // No registration exists - create new one
         console.log("No existing registration found, creating new one");
         setSelectedPet(pet);
         setExistingRegistration(null);
         setShowRegistrationForm(true);
         
-        // Fix the inconsistent data - pet is marked as registered but no registration exists
         if (pet.isRegistered) {
           console.log(`Fixing inconsistent data for ${pet.name}`);
           await apiFetch(`/pets/${pet._id}`, "PUT", { isRegistered: false }, token!);
-          await loadPets(); // Refresh the list to show correct status
+          await loadPets();
         }
       }
     } catch (error) {
       console.error("Error loading registration:", error);
-      // If error, still allow creating new registration
       setSelectedPet(pet);
       setExistingRegistration(null);
       setShowRegistrationForm(true);
@@ -208,18 +257,20 @@ export default function Dashboard() {
     }
   };
 
-  if (authLoading) {
+  // Show loading state while checking auth
+  if (authLoading || !sessionValid) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-16 h-16 text-orange-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading dashboard...</p>
+          <p className="text-gray-600">Verifying session...</p>
         </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
+  // If not authenticated, don't render anything (will redirect)
+  if (!isAuthenticated || !sessionValid) {
     return null;
   }
 
@@ -239,23 +290,24 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <button
-    onClick={fixInconsistentRegistrations}
-    className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
-  >
-    Fix Data
-  </button>
-
-            
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-semibold 
-                       flex items-center space-x-2 transition-all duration-200 transform hover:scale-105 
-                       shadow-lg shadow-orange-200"
-            >
-              <Plus className="w-5 h-5" />
-              <span>Add New Pet</span>
-            </button>
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={fixInconsistentRegistrations}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+              >
+                Fix Data
+              </button>
+              
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-semibold 
+                         flex items-center space-x-2 transition-all duration-200 transform hover:scale-105 
+                         shadow-lg shadow-orange-200"
+              >
+                <Plus className="w-5 h-5" />
+                <span>Add New Pet</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -448,41 +500,25 @@ export default function Dashboard() {
 
       {/* Registration Form Modal */}
       {showRegistrationForm && selectedPet && (
-  <RegistrationForm
-    key={selectedPet._id + (existingRegistration ? 'edit' : 'new')}
-    petId={selectedPet._id}
-    token={token!}
-    petName={selectedPet.name}
-    onSuccess={async () => {
-      setShowRegistrationForm(false);
-      setSelectedPet(null);
-      setExistingRegistration(null);
-      
-      // Reload pets to get updated status
-      await loadPets();
-      
-      // Verify the registration was actually created
-      try {
-        const checkRegistration = await apiFetch(`/registration/${selectedPet._id}`, "GET", null, token!);
-        console.log("Verification - Registration after success:", checkRegistration);
-        if (!checkRegistration) {
-          console.error("Warning: Registration was not created successfully!");
-          // Fix the inconsistency
-          await apiFetch(`/pets/${selectedPet._id}`, "PUT", { isRegistered: false }, token!);
-          await loadPets();
-        }
-      } catch (verifyError) {
-        console.error("Error verifying registration:", verifyError);
-      }
-    }}
-    onCancel={() => {
-      setShowRegistrationForm(false);
-      setSelectedPet(null);
-      setExistingRegistration(null);
-    }}
-    existingRegistration={existingRegistration}
-  />
-)}
+        <RegistrationForm
+          key={selectedPet._id + (existingRegistration ? 'edit' : 'new')}
+          petId={selectedPet._id}
+          token={token!}
+          petName={selectedPet.name}
+          onSuccess={async () => {
+            setShowRegistrationForm(false);
+            setSelectedPet(null);
+            setExistingRegistration(null);
+            await loadPets();
+          }}
+          onCancel={() => {
+            setShowRegistrationForm(false);
+            setSelectedPet(null);
+            setExistingRegistration(null);
+          }}
+          existingRegistration={existingRegistration}
+        />
+      )}
 
       {/* View Registration Modal */}
       {showRegistrationView && selectedPet && existingRegistration && (
