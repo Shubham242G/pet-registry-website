@@ -87,7 +87,8 @@ export default function Navbar() {
           <div className="flex items-center space-x-6 md:space-x-8">
             <div className="hidden md:flex items-center space-x-8">
               <Link  
-                href="#whyTailio" 
+                href="/#whyTailio"
+
                 onClick={(e) => handleScroll(e, 'whyTailio')}  
                 className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
               >

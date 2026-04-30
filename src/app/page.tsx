@@ -203,7 +203,7 @@ const visibleCount = 3; // shows 3 cards at a time on desktop
 </section>
 
       {/* ================= ONE FORM FOR YOU SECTION ================= */}
-      <section className="w-full bg-white py-20 px-6 md:px-12 lg:px-24">
+      <section id="whyTailio" className="w-full bg-white py-20 px-6 md:px-12 lg:px-24">
         <div className="max-w-6xl mx-auto">
 
           {/* Heading - Orange text with italic font */}
