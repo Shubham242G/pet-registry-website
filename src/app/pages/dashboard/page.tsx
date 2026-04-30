@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import AddPetModal from "../../component/AddPetModal";
 import RegistrationForm from "../../component/RegistrationForm";
-import ProtectedRoute from "@/app/component/ProtectedRoute";
+// import ProtectedRoute from "@/app/component/ProtectedRoute";
 
 interface Pet {
   _id: string;
@@ -260,7 +260,7 @@ export default function Dashboard() {
   }
 
   return (
-     <ProtectedRoute>
+    //  <ProtectedRoute>
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
@@ -566,6 +566,6 @@ export default function Dashboard() {
         </div>
       )}
     </div>
-    </ProtectedRoute>
+
   );
 }
