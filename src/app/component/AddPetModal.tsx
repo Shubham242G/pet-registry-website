@@ -4,10 +4,6 @@ import { apiFetch } from "../services/api";
 import { 
   X, 
   PawPrint, 
-  Dog, 
-  Cat, 
-  Bird, 
-  Rabbit, 
   AlertCircle,
   Loader2,
   CheckCircle
@@ -24,7 +20,7 @@ interface AddPetModalProps {
 export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToEdit }: AddPetModalProps) {
   const [form, setForm] = useState({
     name: petToEdit?.name || "",
-    species: petToEdit?.species || "",
+    species: petToEdit?.species || "dog", // Set default species
     breed: petToEdit?.breed || "",
     age: petToEdit?.age || "",
     gender: petToEdit?.gender || "",
@@ -49,8 +45,14 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       const ageNumber = form.age ? parseInt(form.age) : undefined;
       
       const petData = {
-        ...form,
-        age: ageNumber
+        name: form.name,
+        species: form.species,
+        breed: form.breed,
+        age: ageNumber,
+        gender: form.gender,
+        color: form.color,
+        notes: form.notes,
+        isRegistered: form.isRegistered
       };
 
       if (petToEdit) {
@@ -63,9 +65,8 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       onPetAdded();
       setTimeout(() => {
         onClose();
-        // Reset form
         setForm({
-          name: "", species: "", breed: "", age: "", 
+          name: "", species: "dog", breed: "", age: "", 
           gender: "", color: "", microchip: "", notes: "",
           isRegistered: false
         });
@@ -76,14 +77,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       setLoading(false);
     }
   };
-
-  const species = [
-    { value: "dog", label: "Dog", icon: Dog },
-    { value: "cat", label: "Cat", icon: Cat },
-    { value: "bird", label: "Bird", icon: Bird },
-    { value: "rabbit", label: "Rabbit", icon: Rabbit },
-    { value: "other", label: "Other", icon: PawPrint },
-  ];
 
   const genders = ["Male", "Female", "Unknown"];
 
@@ -148,29 +141,8 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             />
           </div>
 
-          {/* Species */}
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Species <span className="text-red-500">*</span>
-            </label>
-            <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
-              {species.map(({ value, label, icon: Icon }) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setForm({ ...form, species: value })}
-                  className={`p-3 border rounded-xl flex flex-col items-center space-y-1 transition-all
-                    ${form.species === value 
-                      ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                      : 'border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50'
-                    }`}
-                >
-                  <Icon className={`w-6 h-6 ${form.species === value ? 'text-orange-500' : 'text-gray-500'}`} />
-                  <span className="text-xs font-medium">{label}</span>
-                </button>
-              ))}
-            </div>
-          </div> */}
+          {/* Species - Hidden but required */}
+          <input type="hidden" value={form.species} />
 
           {/* Breed & Age */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -233,20 +205,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             </div>
           </div>
 
-          {/* Microchip */}
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Microchip Number
-            </label>
-            <input
-              type="text"
-              value={form.microchip}
-              onChange={(e) => setForm({ ...form, microchip: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
-              placeholder="Enter microchip number"
-            />
-          </div> */}
-
           {/* Notes */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -262,7 +220,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
           </div>
 
           {/* Registration Status */}
-          <div>
+          {/* <div>
             <label className="flex items-center space-x-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -272,7 +230,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
               />
               <span className="text-sm font-medium text-gray-700">Pet is already registered</span>
             </label>
-          </div>
+          </div> */}
 
           {/* Actions */}
           <div className="sticky bottom-0 bg-white pt-4 flex space-x-3 border-t border-gray-200">
@@ -285,7 +243,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             </button>
             <button
               type="submit"
-              disabled={loading || !form.name || !form.species}
+              disabled={loading || !form.name}
               className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-medium 
                        disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2"
             >
