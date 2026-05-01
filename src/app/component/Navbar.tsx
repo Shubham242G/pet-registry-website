@@ -3,12 +3,13 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -38,15 +39,24 @@ export default function Navbar() {
     router.push('/');
   };
 
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
+    
+    // If we're not on the home page, navigate to home page first
+    if (pathname !== '/') {
+      router.push(`/#${id}`);
+      // After navigation, the scroll will happen automatically via the hash
+    } else {
+      // We're on home page, scroll smoothly
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
     }
+    setIsOpen(false);
   };
 
   // Close mobile menu when clicking outside
@@ -88,8 +98,7 @@ export default function Navbar() {
             <div className="hidden md:flex items-center space-x-8">
               <Link  
                 href="/#whyTailio"
-
-                onClick={(e) => handleScroll(e, 'whyTailio')}  
+                onClick={(e) => handleScrollToSection(e, 'whyTailio')}  
                 className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
               >
                 Why Tailio?
@@ -171,6 +180,8 @@ export default function Navbar() {
                   setShowLogin={setShowLogin}
                   setShowRegister={setShowRegister}
                   onLogout={handleLogout}
+                  onScrollToSection={handleScrollToSection}
+                  pathname={pathname}
                 />
               </motion.div>
             )}
@@ -199,7 +210,7 @@ export default function Navbar() {
   );
 }
 
-// MobileMenu - Fixed version without isOpen prop
+// MobileMenu - Updated with scroll function
 function MobileMenu({ 
   setIsOpen, 
   user,
@@ -207,7 +218,9 @@ function MobileMenu({
   isAuthenticated,
   setShowLogin, 
   setShowRegister, 
-  onLogout 
+  onLogout,
+  onScrollToSection,
+  pathname
 }: { 
   setIsOpen: (open: boolean) => void;
   user: any;
@@ -216,15 +229,13 @@ function MobileMenu({
   setShowLogin: (show: boolean) => void;
   setShowRegister: (show: boolean) => void;
   onLogout: () => void;
+  onScrollToSection: (e: React.MouseEvent<HTMLAnchorElement>, id: string) => void;
+  pathname: string;
 }) {
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, id?: string) => {
+    if (id) {
+      onScrollToSection(e, id);
+    } else {
       setIsOpen(false);
     }
   };
@@ -233,8 +244,8 @@ function MobileMenu({
     <ul className="font-medium flex flex-col p-4 space-y-4">
       <li>
         <Link 
-          href="#whyTailio" 
-          onClick={(e) => handleScroll(e, 'whyTailio')}
+          href="/#whyTailio" 
+          onClick={(e) => handleLinkClick(e, '/#whyTailio', 'whyTailio')}
           className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100"
         >
           Why Tailio?
