@@ -119,17 +119,12 @@ export default function Navbar() {
             {/* AUTH BUTTONS */}
             <div className="flex items-center space-x-3">
               {isAuthenticated && user ? (
-                <>
-                  <span className="font-semibold text-gray-900 hidden sm:block text-sm">
-                    Hi, {displayName || user.username || "User"}!
-                  </span>
-                  <button
-                    onClick={handleLogout}
-                    className="px-4 py-2 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200 whitespace-nowrap text-sm"
-                  >
-                    Logout
-                  </button>
-                </>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200 whitespace-nowrap text-sm"
+                >
+                  Logout
+                </button>
               ) : (
                 <>
                   <button
@@ -279,9 +274,7 @@ function MobileMenu({
       {isAuthenticated && user ? (
         <>
           <li className="border-t pt-2">
-            <span className="block py-2 px-3 text-gray-900 font-semibold">
-              Hi, {displayName || user.username || user.name || "User"}!
-            </span>
+            {/* Greeting removed from here */}
           </li>
           <li>
             <button 

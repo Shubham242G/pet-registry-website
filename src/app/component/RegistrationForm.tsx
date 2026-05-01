@@ -18,7 +18,6 @@ import {
   Edit,
   Save,
   FileCheck,
-  Camera,
 } from "lucide-react";
 
 interface RegistrationFormProps {
@@ -72,7 +71,6 @@ export default function RegistrationForm({
         },
         dogDetails: {
           gender: existingRegistration.dogDetails?.gender || "",
-          photo: existingRegistration.dogDetails?.photo || "",
           breed: existingRegistration.dogDetails?.breed || "",
           ageYears: existingRegistration.dogDetails?.ageYears || "",
           ageMonths: existingRegistration.dogDetails?.ageMonths || ""
@@ -105,7 +103,6 @@ export default function RegistrationForm({
       },
       dogDetails: {
         gender: "",
-        photo: "",
         breed: "",
         ageYears: "",
         ageMonths: ""
@@ -119,50 +116,30 @@ export default function RegistrationForm({
     };
   });
 
-  const handleFileUpload = async (file: File, field: string, section: 'dogDetails' | 'documents') => {
+  const handleFileUpload = async (file: File, field: string, section: 'documents') => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
       const base64String = reader.result as string;
       
-      if (section === 'dogDetails') {
-        setFormData({
-          ...formData,
-          dogDetails: {
-            ...formData.dogDetails,
-            [field]: base64String
-          }
-        });
-      } else {
-        setFormData({
-          ...formData,
-          documents: {
-            ...formData.documents,
-            [field]: base64String
-          }
-        });
-      }
-    };
-  };
-
-  const removeFile = (field: string, section: 'dogDetails' | 'documents') => {
-    if (section === 'dogDetails') {
-      setFormData({
-        ...formData,
-        dogDetails: {
-          ...formData.dogDetails,
-          [field]: ""
-        }
-      });
-    } else {
       setFormData({
         ...formData,
         documents: {
           ...formData.documents,
-          [field]: ""
+          [field]: base64String
         }
       });
-    }
+    };
+  };
+
+  const removeFile = (field: string) => {
+    setFormData({
+      ...formData,
+      documents: {
+        ...formData.documents,
+        [field]: ""
+      }
+    });
   };
 
   // SIMPLIFIED SUBMIT - Just shows success and closes
@@ -349,20 +326,20 @@ export default function RegistrationForm({
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">First Name <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.applicantDetails.firstName} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, firstName: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="John" />
+                  <input type="text" required value={formData.applicantDetails.firstName} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, firstName: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="John" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Middle Name</label>
-                  <input type="text" value={formData.applicantDetails.middleName} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, middleName: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="William" />
+                  <input type="text" value={formData.applicantDetails.middleName} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, middleName: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="William" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Last Name <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.applicantDetails.lastName} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, lastName: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Doe" />
+                  <input type="text" required value={formData.applicantDetails.lastName} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, lastName: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Doe" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth <span className="text-red-500">*</span></label>
-                <input type="date" required value={formData.applicantDetails.dob} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, dob: e.target.value } })} className="w-full md:w-1/3 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" />
+                <input type="date" required value={formData.applicantDetails.dob} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, dob: e.target.value } })} className="w-full md:w-1/3 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" />
               </div>
             </div>
           )}
@@ -377,27 +354,27 @@ export default function RegistrationForm({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Plot/House No. <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.address.plot} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, plot: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="123" />
+                  <input type="text" required value={formData.address.plot} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, plot: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="123" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Street</label>
-                  <input type="text" value={formData.address.street} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, street: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Main Street" />
+                  <input type="text" value={formData.address.street} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, street: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Main Street" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Colony/Locality <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.address.colony} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, colony: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Green Park" />
+                  <input type="text" required value={formData.address.colony} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, colony: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Green Park" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Ward</label>
-                  <input type="text" value={formData.address.ward} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, ward: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Ward 12" />
+                  <input type="text" value={formData.address.ward} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, ward: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Ward 12" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Zone</label>
-                  <input type="text" value={formData.address.zone} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, zone: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="North Zone" />
+                  <input type="text" value={formData.address.zone} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, zone: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="North Zone" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">PIN Code <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.address.pin} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, pin: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="110001" />
+                  <input type="text" required value={formData.address.pin} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, pin: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="110001" />
                 </div>
               </div>
               
@@ -408,48 +385,28 @@ export default function RegistrationForm({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number <span className="text-red-500">*</span></label>
-                  <input type="tel" required value={formData.address.mobile} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, mobile: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="9876543210" />
+                  <input type="tel" required value={formData.address.mobile} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, mobile: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="9876543210" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email <span className="text-red-500">*</span></label>
-                  <input type="email" required value={formData.address.email} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, email: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="john@example.com" />
+                  <input type="email" required value={formData.address.email} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, email: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="john@example.com" />
                 </div>
               </div>
             </div>
           )}
 
-          {/* Step 3: Dog Details */}
+          {/* Step 3: Dog Details - REMOVED PHOTO FIELD */}
           {currentStep === 3 && (
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                 <Dog className="w-5 h-5 mr-2 text-orange-500" />
                 Dog Information
               </h3>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Dog Photo</label>
-                <div className="flex items-center space-x-4">
-                  {formData.dogDetails.photo ? (
-                    <div className="relative">
-                      <img src={formData.dogDetails.photo} alt="Dog" className="w-24 h-24 object-cover rounded-xl border-2 border-orange-500" />
-                      <button type="button" onClick={() => removeFile('photo', 'dogDetails')} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
-                        <XCircle className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="w-24 h-24 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition-colors">
-                      <Camera className="w-8 h-8 text-gray-400" />
-                      <span className="text-xs text-gray-500 mt-1">Upload</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={async (e) => { const file = e.target.files?.[0]; if (file) await handleFileUpload(file, 'photo', 'dogDetails'); }} />
-                    </label>
-                  )}
-                </div>
-              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Gender <span className="text-red-500">*</span></label>
-                  <select required value={formData.dogDetails.gender} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, gender: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white">
+                  <select required value={formData.dogDetails.gender} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, gender: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white text-gray-900">
                     <option value="">Select Gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
@@ -457,18 +414,18 @@ export default function RegistrationForm({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Breed</label>
-                  <input type="text" value={formData.dogDetails.breed} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, breed: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="Labrador" />
+                  <input type="text" value={formData.dogDetails.breed} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, breed: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Labrador" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Age (Years)</label>
-                  <input type="number" min="0" max="30" value={formData.dogDetails.ageYears} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, ageYears: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="2" />
+                  <input type="number" min="0" max="30" value={formData.dogDetails.ageYears} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, ageYears: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="2" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Age (Months)</label>
-                  <input type="number" min="0" max="11" value={formData.dogDetails.ageMonths} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, ageMonths: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all" placeholder="6" />
+                  <input type="number" min="0" max="11" value={formData.dogDetails.ageMonths} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, ageMonths: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="6" />
                 </div>
               </div>
             </div>
@@ -491,7 +448,7 @@ export default function RegistrationForm({
                         <FileCheck className="w-8 h-8 text-green-500 mr-2" />
                         <span className="text-sm text-gray-600">Certificate uploaded</span>
                       </div>
-                      <button type="button" onClick={() => removeFile('antiRabiesCertificate', 'documents')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
+                      <button type="button" onClick={() => removeFile('antiRabiesCertificate')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
                         <XCircle className="w-4 h-4 mr-1" /> Remove
                       </button>
                     </div>
@@ -513,7 +470,7 @@ export default function RegistrationForm({
                         <FileCheck className="w-8 h-8 text-green-500 mr-2" />
                         <span className="text-sm text-gray-600">ID Proof uploaded</span>
                       </div>
-                      <button type="button" onClick={() => removeFile('idProof', 'documents')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
+                      <button type="button" onClick={() => removeFile('idProof')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
                         <XCircle className="w-4 h-4 mr-1" /> Remove
                       </button>
                     </div>
@@ -535,7 +492,7 @@ export default function RegistrationForm({
                         <FileCheck className="w-8 h-8 text-green-500 mr-2" />
                         <span className="text-sm text-gray-600">Residence Proof uploaded</span>
                       </div>
-                      <button type="button" onClick={() => removeFile('residenceProof', 'documents')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
+                      <button type="button" onClick={() => removeFile('residenceProof')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
                         <XCircle className="w-4 h-4 mr-1" /> Remove
                       </button>
                     </div>
@@ -557,7 +514,7 @@ export default function RegistrationForm({
                         <FileCheck className="w-8 h-8 text-green-500 mr-2" />
                         <span className="text-sm text-gray-600">Photo uploaded</span>
                       </div>
-                      <button type="button" onClick={() => removeFile('ownerWithPetPhoto', 'documents')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
+                      <button type="button" onClick={() => removeFile('ownerWithPetPhoto')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
                         <XCircle className="w-4 h-4 mr-1" /> Remove
                       </button>
                     </div>

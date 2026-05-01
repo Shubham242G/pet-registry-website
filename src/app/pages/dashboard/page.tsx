@@ -44,7 +44,7 @@ interface Pet {
 }
 
 export default function Dashboard() {
-  const { token, isAuthenticated, loading: authLoading, logout } = useAuth();
+  const { token, isAuthenticated, loading: authLoading, logout, user } = useAuth();
   const router = useRouter();
   const [pets, setPets] = useState<Pet[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -271,8 +271,9 @@ export default function Dashboard() {
                 <PawPrint className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Pet Registry Dashboard</h1>
-                <p className="text-gray-500 mt-1">Manage your furry friends</p>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Hi, {user?.username || "Pet Lover"}!
+                </h1>
               </div>
             </div>
 
