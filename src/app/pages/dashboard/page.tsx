@@ -22,11 +22,11 @@ import {
   Edit,
   Trash2,
   FileText,
-  Eye
+  Eye,
+  ArrowRight
 } from "lucide-react";
 import AddPetModal from "../../component/AddPetModal";
 import RegistrationForm from "../../component/RegistrationForm";
-// import ProtectedRoute from "@/app/component/ProtectedRoute";
 
 interface Pet {
   _id: string;
@@ -50,7 +50,6 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
- 
   
   // Registration states
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
@@ -65,13 +64,13 @@ export default function Dashboard() {
 
   // Validate session on mount and protect route
   useEffect(() => {
-  if (!authLoading && !isAuthenticated) {
-    router.push("/");
-  }
-}, [authLoading, isAuthenticated, router]);
+    if (!authLoading && !isAuthenticated) {
+      router.push("/");
+    }
+  }, [authLoading, isAuthenticated, router]);
 
   useEffect(() => {
-    if (token ) {
+    if (token) {
       loadPets();
     }
   }, [token]);
@@ -81,15 +80,12 @@ export default function Dashboard() {
       setLoading(true);
       setError("");
       
-      
-      
       const data = await apiFetch("/pets", "GET", null, token!);
       setPets(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error loading pets:", error);
       setError("Failed to load pets. Please try again.");
       
-      // If error is due to auth, logout
       if (error instanceof Error && error.message === "Session expired") {
         logout();
         router.push('/');
@@ -103,15 +99,13 @@ export default function Dashboard() {
     try {
       setLoading(true);
       
-      
       const allPets = await apiFetch<Pet[]>("/pets", "GET", null, token!);
       let fixedCount = 0;
       
       for (const pet of allPets) {
         if (pet.isRegistered) {
           try {
-           const registration = await apiFetch<any>(`/registration/${pet._id}`, "GET", null, token!);
-
+            const registration = await apiFetch<any>(`/registration/${pet._id}`, "GET", null, token!);
             if (!registration) {
               console.log(`Fixing: ${pet.name} - marked as registered but no registration found`);
               await apiFetch(`/pets/${pet._id}`, "PUT", { isRegistered: false }, token!);
@@ -142,7 +136,6 @@ export default function Dashboard() {
   const handleDeletePet = async (petId: string) => {
     try {
       setLoading(true);
-     
       
       await apiFetch(`/pets/${petId}`, "DELETE", null, token!);
       await loadPets();
@@ -161,10 +154,7 @@ export default function Dashboard() {
 
   const handleViewRegistration = async (pet: Pet) => {
     try {
-      
-      
       const registration = await apiFetch(`/registration/${pet._id}`, "GET", null, token!);
-      console.log("Fetched registration for view:", registration);
       
       if (!registration) {
         setError(`No registration found for ${pet.name}`);
@@ -188,23 +178,18 @@ export default function Dashboard() {
     try {
       setLoading(true);
       
-      
       const registration = await apiFetch<any>(`/registration/${pet._id}`, "GET", null, token!);
-      console.log("API Response - Full registration object:", registration);
       
-      if (registration && (registration as any).applicantDetails){
-        console.log("Found existing registration, opening edit mode");
+      if (registration && registration.applicantDetails) {
         setSelectedPet(pet);
         setExistingRegistration(registration);
         setShowRegistrationForm(true);
       } else {
-        console.log("No existing registration found, creating new one");
         setSelectedPet(pet);
         setExistingRegistration(null);
         setShowRegistrationForm(true);
         
         if (pet.isRegistered) {
-          console.log(`Fixing inconsistent data for ${pet.name}`);
           await apiFetch(`/pets/${pet._id}`, "PUT", { isRegistered: false }, token!);
           await loadPets();
         }
@@ -220,7 +205,6 @@ export default function Dashboard() {
   };
 
   const handleRegisterPet = (pet: Pet) => {
-    console.log("Opening new registration form for:", pet.name);
     setSelectedPet(pet);
     setExistingRegistration(null);
     setShowRegistrationForm(true);
@@ -247,7 +231,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-16 h-16 text-orange-500 animate-spin mx-auto mb-4" />
+          <Loader2 className="w-16 h-16 text-[#f88013] animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Verifying session...</p>
         </div>
       </div>
@@ -260,34 +244,34 @@ export default function Dashboard() {
   }
 
   return (
-    //  <ProtectedRoute>
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
+    <div className="min-h-screen bg-white">
+      {/* Header with website theme */}
+      <div className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-orange-500 p-3 rounded-xl shadow-lg shadow-orange-200">
+              <div className="bg-gradient-to-br from-[#f88013] to-[#ff9a44] p-3 rounded-xl shadow-lg shadow-orange-200">
                 <PawPrint className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-black text-[#2d2a26]">
                   Hi, {user?.username || "Pet Lover"}!
                 </h1>
+                <p className="text-sm text-gray-500 mt-1">Manage your furry family members</p>
               </div>
             </div>
 
             <div className="flex items-center space-x-3">
               <button
                 onClick={fixInconsistentRegistrations}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
               >
                 Fix Data
               </button>
               
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-semibold 
+                className="bg-gradient-to-r from-[#f88013] to-[#ff9a44] hover:from-[#e06a0a] hover:to-[#f88013] text-white px-6 py-3 rounded-xl font-semibold 
                          flex items-center space-x-2 transition-all duration-200 transform hover:scale-105 
                          shadow-lg shadow-orange-200"
               >
@@ -301,26 +285,26 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Cards */}
+        {/* Stats Cards - styled like website */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500">Total Pets</p>
-                <p className="text-4xl font-bold text-gray-900 mt-2">{stats.total}</p>
+                <p className="text-4xl font-black text-[#2d2a26] mt-2">{stats.total}</p>
                 <p className="text-sm text-gray-500 mt-2">Registered companions</p>
               </div>
               <div className="bg-orange-100 p-4 rounded-xl">
-                <Users className="w-8 h-8 text-orange-500" />
+                <Users className="w-8 h-8 text-[#f88013]" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500">Registered</p>
-                <p className="text-4xl font-bold text-green-600 mt-2">{stats.registered}</p>
+                <p className="text-4xl font-black text-green-600 mt-2">{stats.registered}</p>
                 <p className="text-sm text-green-600 mt-2">✓ Fully registered</p>
               </div>
               <div className="bg-green-100 p-4 rounded-xl">
@@ -329,15 +313,15 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+          <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500">Not Registered</p>
-                <p className="text-4xl font-bold text-orange-500 mt-2">{stats.notRegistered}</p>
-                <p className="text-sm text-orange-500 mt-2">Pending registration</p>
+                <p className="text-4xl font-black text-[#f88013] mt-2">{stats.notRegistered}</p>
+                <p className="text-sm text-[#f88013] mt-2">Pending registration</p>
               </div>
               <div className="bg-orange-100 p-4 rounded-xl">
-                <AlertCircle className="w-8 h-8 text-orange-500" />
+                <AlertCircle className="w-8 h-8 text-[#f88013]" />
               </div>
             </div>
           </div>
@@ -354,26 +338,26 @@ export default function Dashboard() {
         {/* Pets Grid */}
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Your Pets</h2>
-            <span className="bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-medium">
+            <h2 className="text-2xl font-black text-[#2d2a26]">Your Pets</h2>
+            <span className="bg-orange-100 text-[#f88013] px-4 py-2 rounded-full text-sm font-semibold">
               {pets.length} {pets.length === 1 ? 'pet' : 'pets'} total
             </span>
           </div>
 
           {loading ? (
             <div className="flex justify-center items-center py-20">
-              <Loader2 className="w-12 h-12 text-orange-500 animate-spin" />
+              <Loader2 className="w-12 h-12 text-[#f88013] animate-spin" />
             </div>
           ) : pets.length === 0 ? (
-            <div className="bg-white rounded-2xl p-12 text-center border border-gray-100">
+            <div className="bg-gray-50 rounded-2xl p-12 text-center border border-gray-100">
               <div className="bg-orange-100 p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <PawPrint className="w-10 h-10 text-orange-500" />
+                <PawPrint className="w-10 h-10 text-[#f88013]" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No pets yet</h3>
+              <h3 className="text-xl font-black text-[#2d2a26] mb-2">No pets yet</h3>
               <p className="text-gray-500 mb-6">Add your first pet to get started with the registry</p>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-medium inline-flex items-center space-x-2"
+                className="bg-gradient-to-r from-[#f88013] to-[#ff9a44] hover:from-[#e06a0a] hover:to-[#f88013] text-white px-6 py-3 rounded-xl font-semibold inline-flex items-center space-x-2 transition-all duration-200"
               >
                 <Plus className="w-5 h-5" />
                 <span>Add Your First Pet</span>
@@ -382,24 +366,24 @@ export default function Dashboard() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {pets.map((pet) => (
-                <div key={pet._id} className="bg-white rounded-2xl border border-gray-200 hover:border-orange-300 hover:shadow-xl transition-all duration-200 group h-full flex flex-col">
+                <div key={pet._id} className="bg-white rounded-2xl border border-gray-100 hover:border-orange-200 hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
                   <div className="p-6 flex-1">
                     <div className="flex items-start justify-between mb-4">
                       <Link href={`/pages/pets/${pet._id}`} className="flex items-center space-x-3 flex-1">
-                        <div className="bg-gray-100 group-hover:bg-orange-100 p-3 rounded-xl transition-colors">
+                        <div className="bg-gray-100 group-hover:bg-orange-100 p-3 rounded-xl transition-colors duration-300">
                           {getSpeciesIcon(pet.species)}
                         </div>
                         <div>
-                          <h3 className="font-bold text-lg text-gray-900 group-hover:text-orange-500 transition-colors">
+                          <h3 className="font-black text-lg text-[#2d2a26] group-hover:text-[#f88013] transition-colors">
                             {pet.name}
                           </h3>
                           <p className="text-sm text-gray-500">{pet.breed || 'Mixed'}</p>
                         </div>
                       </Link>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         pet.isRegistered 
                           ? 'bg-green-100 text-green-700' 
-                          : 'bg-orange-100 text-orange-700'
+                          : 'bg-orange-100 text-[#f88013]'
                       }`}>
                         {pet.isRegistered ? 'Registered' : 'Not Registered'}
                       </span>
@@ -407,12 +391,12 @@ export default function Dashboard() {
                     
                     <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100">
                       <div>
-                        <p className="text-xs text-gray-500">Age</p>
-                        <p className="font-medium text-gray-900">{pet.age ? `${pet.age} years` : 'Unknown'}</p>
+                        <p className="text-xs text-gray-500 font-medium">Age</p>
+                        <p className="font-semibold text-[#2d2a26]">{pet.age ? `${pet.age} years` : 'Unknown'}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Gender</p>
-                        <p className="font-medium text-gray-900 capitalize">{pet.gender || 'Unknown'}</p>
+                        <p className="text-xs text-gray-500 font-medium">Gender</p>
+                        <p className="font-semibold text-[#2d2a26] capitalize">{pet.gender || 'Unknown'}</p>
                       </div>
                     </div>
 
@@ -437,7 +421,7 @@ export default function Dashboard() {
                             </button>
                             <button
                               onClick={() => handleEditRegistration(pet)}
-                              className="flex-1 bg-orange-50 hover:bg-orange-100 text-orange-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-1"
+                              className="flex-1 bg-orange-50 hover:bg-orange-100 text-[#f88013] px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-1"
                             >
                               <Edit className="w-4 h-4" />
                               <span>Edit Reg</span>
@@ -446,7 +430,7 @@ export default function Dashboard() {
                         ) : (
                           <button
                             onClick={() => handleRegisterPet(pet)}
-                            className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-1"
+                            className="flex-1 bg-gradient-to-r from-[#f88013] to-[#ff9a44] hover:from-[#e06a0a] hover:to-[#f88013] text-white px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1"
                           >
                             <Plus className="w-4 h-4" />
                             <span>Register</span>
@@ -530,7 +514,7 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Delete Pet Confirmation Modal */}
+      {/* Delete Pet Confirmation Modal - Styled with website theme */}
       {showDeleteConfirm.show && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
@@ -538,7 +522,7 @@ export default function Dashboard() {
               <div className="bg-red-100 p-3 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                 <AlertCircle className="w-8 h-8 text-red-600" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Delete Pet?</h2>
+              <h2 className="text-2xl font-black text-[#2d2a26] mb-2">Delete Pet?</h2>
               <p className="text-gray-500 mb-6">
                 Are you sure you want to delete {showDeleteConfirm.petName}? This action cannot be undone and will also delete all registration data.
               </p>
@@ -567,6 +551,5 @@ export default function Dashboard() {
         </div>
       )}
     </div>
-
   );
 }
