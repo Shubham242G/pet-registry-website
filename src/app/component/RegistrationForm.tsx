@@ -1,23 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   PawPrint,
-  Dog,
-  User,
-  MapPin,
-  Phone,
-  FileText,
   CheckCircle,
   XCircle,
   AlertCircle,
   Loader2,
-  ArrowLeft,
-  ArrowRight,
   Upload,
   Trash2,
-  Edit,
-  Save,
+  FileText,
+  Image as ImageIcon,
   FileCheck,
+  Send,
+  RefreshCw,
+  Info,
+  Eye
 } from "lucide-react";
 
 interface RegistrationFormProps {
@@ -39,230 +36,256 @@ export default function RegistrationForm({
   existingRegistration,
   viewOnly = false
 }: RegistrationFormProps) {
-  const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  
-  const [viewMode, setViewMode] = useState<'view' | 'edit'>(
-    viewOnly ? 'view' : 'edit'
-  );
+  const [success, setSuccess] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [registrationStatus, setRegistrationStatus] = useState<any>(null);
+  const [triggeringRegistration, setTriggeringRegistration] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const [formData, setFormData] = useState(() => {
-    if (existingRegistration) {
-      return {
-        applicantDetails: {
-          firstName: existingRegistration.applicantDetails?.firstName || "",
-          middleName: existingRegistration.applicantDetails?.middleName || "",
-          lastName: existingRegistration.applicantDetails?.lastName || "",
-          dob: existingRegistration.applicantDetails?.dob?.split('T')[0] || ""
-        },
-        address: {
-          plot: existingRegistration.address?.plot || "",
-          street: existingRegistration.address?.street || "",
-          pin: existingRegistration.address?.pin || "",
-          colony: existingRegistration.address?.colony || "",
-          ward: existingRegistration.address?.ward || "",
-          zone: existingRegistration.address?.zone || "",
-          mobile: existingRegistration.address?.mobile || "",
-          email: existingRegistration.address?.email || ""
-        },
-        dogDetails: {
-          gender: existingRegistration.dogDetails?.gender || "",
-          breed: existingRegistration.dogDetails?.breed || "",
-          ageYears: existingRegistration.dogDetails?.ageYears || "",
-          ageMonths: existingRegistration.dogDetails?.ageMonths || ""
-        },
-        documents: {
-          antiRabiesCertificate: existingRegistration.documents?.antiRabiesCertificate || "",
-          idProof: existingRegistration.documents?.idProof || "",
-          residenceProof: existingRegistration.documents?.residenceProof || "",
-          ownerWithPetPhoto: existingRegistration.documents?.ownerWithPetPhoto || ""
-        }
-      };
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+  // Document configuration
+  const documents = [
+    { 
+      name: 'antiRabiesCertificate', 
+      label: 'Anti-Rabies Certificate',
+      icon: FileText,
+      accept: '.pdf,image/*',
+      description: 'Upload your pet\'s anti-rabies vaccination certificate'
+    },
+    { 
+      name: 'idProof', 
+      label: 'ID Proof',
+      icon: FileText,
+      accept: '.pdf,image/*',
+      description: 'Aadhar card, Passport, or any government ID'
+    },
+    { 
+      name: 'residenceProof', 
+      label: 'Residence Proof',
+      icon: FileText,
+      accept: '.pdf,image/*',
+      description: 'Electricity bill, Rental agreement, or any address proof'
+    },
+    { 
+      name: 'ownerWithPetPhoto', 
+      label: 'Owner with Pet Photo',
+      icon: ImageIcon,
+      accept: 'image/*',
+      description: 'Recent photo of owner with the pet'
     }
-    
-    return {
-      applicantDetails: {
-        firstName: "",
-        middleName: "",
-        lastName: "",
-        dob: ""
-      },
-      address: {
-        plot: "",
-        street: "",
-        pin: "",
-        colony: "",
-        ward: "",
-        zone: "",
-        mobile: "",
-        email: ""
-      },
-      dogDetails: {
-        gender: "",
-        breed: "",
-        ageYears: "",
-        ageMonths: ""
-      },
-      documents: {
-        antiRabiesCertificate: "",
-        idProof: "",
-        residenceProof: "",
-        ownerWithPetPhoto: ""
-      }
-    };
-  });
+  ];
 
-  const handleFileUpload = async (file: File, field: string, section: 'documents') => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const base64String = reader.result as string;
-      
-      setFormData({
-        ...formData,
-        documents: {
-          ...formData.documents,
-          [field]: base64String
+  // Fetch registration status
+  const fetchStatus = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/registration/${petId}/status`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
-    };
-  };
-
-  const removeFile = (field: string) => {
-    setFormData({
-      ...formData,
-      documents: {
-        ...formData.documents,
-        [field]: ""
+      
+      if (response.ok) {
+        const data = await response.json();
+        setRegistrationStatus(data);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to fetch status');
       }
-    });
+    } catch (err) {
+      console.error('Error fetching status:', err);
+      setError('Failed to load registration status');
+    }
   };
 
-  // SIMPLIFIED SUBMIT - Just shows success and closes
-  const handleSubmit = async () => {
+  useEffect(() => {
+    if (petId && token) {
+      fetchStatus();
+    }
+  }, [petId, token]);
+
+  // Handle file upload with Base64
+  const handleFileUpload = async (file: File, documentName: string) => {
+    if (!file) return;
+    
+    setUploading(true);
+    setError("");
+    setSuccess("");
+    
+    // Convert file to Base64
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result as string;
+      
+      try {
+        const response = await fetch(`${API_BASE}/registration/${petId}/documents`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            documentName: documentName,
+            fileData: base64String,
+            fileName: file.name,
+            fileSize: file.size,
+            mimeType: file.type
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          setSuccess(data.message);
+          await fetchStatus();
+          
+          if (data.registrationTriggered) {
+            setSuccess('🎉 Congratulations! All documents uploaded and registration process triggered!');
+            setFormSubmitted(true);
+            setTimeout(() => {
+              onSuccess();
+            }, 3000);
+          }
+        } else {
+          setError(data.message || 'Upload failed');
+        }
+      } catch (err) {
+        console.error('Upload error:', err);
+        setError('Failed to upload document');
+      } finally {
+        setUploading(false);
+      }
+    };
+    
+    reader.readAsDataURL(file);
+  };
+
+  // Handle document deletion
+  const handleDeleteDocument = async (documentName: string) => {
+    if (!confirm('Are you sure you want to delete this document?')) return;
+    
     setLoading(true);
     setError("");
     
-    // Simulate a short delay
-    setTimeout(() => {
-      setSuccess(true);
-      setLoading(false);
+    try {
+      const response = await fetch(`${API_BASE}/registration/${petId}/documents/${documentName}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       
-      // Close modal after success
-      setTimeout(() => {
-        onSuccess(); // This will close the modal and go back to dashboard
-      }, 1500);
-    }, 1000);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setSuccess('Document deleted successfully');
+        await fetchStatus();
+      } else {
+        setError(data.message || 'Delete failed');
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+      setError('Failed to delete document');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDelete = async () => {
-    setDeleting(true);
-    setTimeout(() => {
-      setShowDeleteConfirm(false);
-      onSuccess();
-      setDeleting(false);
-    }, 1000);
+  // Manually trigger registration
+  const handleTriggerRegistration = async () => {
+    setTriggeringRegistration(true);
+    setError("");
+    
+    try {
+      const response = await fetch(`${API_BASE}/registration/${petId}/trigger-registration`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setSuccess(data.message);
+        setFormSubmitted(true);
+        await fetchStatus();
+        setTimeout(() => {
+          onSuccess();
+        }, 2000);
+      } else {
+        setError(data.message || 'Failed to trigger registration');
+      }
+    } catch (err) {
+      console.error('Trigger error:', err);
+      setError('Failed to trigger registration process');
+    } finally {
+      setTriggeringRegistration(false);
+    }
   };
 
-  const steps = [
-    { number: 1, title: "Applicant Details", icon: User },
-    { number: 2, title: "Address", icon: MapPin },
-    { number: 3, title: "Dog Details", icon: Dog },
-    { number: 4, title: "Documents", icon: FileText }
-  ];
+  // Handle view document
+  const handleViewDocument = (fileData: string, mimeType: string) => {
+    // Create a blob from base64 and open in new tab
+    const byteCharacters = atob(fileData.split(',')[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    URL.revokeObjectURL(url);
+  };
 
-  // If in view mode, show the registration details
-  if (viewMode === 'view' && existingRegistration) {
+  // Check if document is uploaded
+  const isDocumentUploaded = (documentName: string) => {
+    return registrationStatus?.documents?.some((doc: any) => doc.documentName === documentName) || false;
+  };
+
+  // Get document details
+  const getDocument = (documentName: string) => {
+    return registrationStatus?.documents?.find((doc: any) => doc.documentName === documentName);
+  };
+
+  const uploadedCount = registrationStatus?.uploadedDocumentsCount || 0;
+  const totalRequired = 4;
+  const hasAllDocuments = registrationStatus?.hasAllDocuments || false;
+  const registrationTriggered = registrationStatus?.registrationTriggered || false;
+
+  // If form is submitted successfully, show success message
+  if (formSubmitted || (registrationTriggered && !viewOnly)) {
     return (
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-        <div className="bg-white rounded-3xl max-w-4xl w-full my-8 shadow-2xl">
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-3xl flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="bg-orange-500 p-2 rounded-lg">
-                <PawPrint className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">Registration Details</h2>
-                <p className="text-sm text-gray-500">{petName}</p>
-              </div>
-            </div>
-            <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <XCircle className="w-6 h-6" />
-            </button>
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-3xl max-w-md w-full p-8 text-center">
+          <div className="bg-green-100 p-4 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+            <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
-
-          <div className="p-6 space-y-6">
-            <div className="flex space-x-3">
-              <button onClick={() => setViewMode('edit')} className="flex-1 bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-xl font-medium flex items-center justify-center space-x-2 transition-colors">
-                <Edit className="w-5 h-5" />
-                <span>Edit Registration</span>
-              </button>
-              <button onClick={() => setShowDeleteConfirm(true)} className="flex-1 bg-white hover:bg-red-50 text-red-600 border border-red-200 px-4 py-3 rounded-xl font-medium flex items-center justify-center space-x-2 transition-colors">
-                <Trash2 className="w-5 h-5" />
-                <span>Delete Registration</span>
-              </button>
-            </div>
-
-            {/* Display registration details - simplified view */}
-            <div className="bg-gray-50 rounded-xl p-4">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                <User className="w-4 h-4 mr-2 text-orange-500" />
-                Applicant Details
-              </h3>
-              <p className="text-gray-600">
-                {existingRegistration.applicantDetails?.firstName} {existingRegistration.applicantDetails?.lastName}
-              </p>
-            </div>
-
-            <div className="bg-gray-50 rounded-xl p-4">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                <MapPin className="w-4 h-4 mr-2 text-orange-500" />
-                Address
-              </h3>
-              <p className="text-gray-600">{existingRegistration.address?.colony}, {existingRegistration.address?.pin}</p>
-            </div>
-
-            <div className="bg-gray-50 rounded-xl p-4">
-              <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                <Dog className="w-4 h-4 mr-2 text-orange-500" />
-                Dog Details
-              </h3>
-              <p className="text-gray-600 capitalize">{existingRegistration.dogDetails?.gender}</p>
-            </div>
-          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Complete!</h2>
+          <p className="text-gray-600 mb-6">
+            Your pet registration has been successfully submitted. You will receive the license within 7-10 business days.
+          </p>
+          <button
+            onClick={onSuccess}
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-medium"
+          >
+            Done
+          </button>
         </div>
-
-        {showDeleteConfirm && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
-            <div className="bg-white rounded-2xl max-w-md w-full p-6">
-              <div className="text-center">
-                <div className="bg-red-100 p-3 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <AlertCircle className="w-8 h-8 text-red-600" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Delete Registration?</h2>
-                <p className="text-gray-500 mb-6">This action cannot be undone.</p>
-                <div className="flex space-x-3">
-                  <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-colors">Cancel</button>
-                  <button onClick={handleDelete} disabled={deleting} className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2">
-                    {deleting ? <><Loader2 className="w-5 h-5 animate-spin" /><span>Deleting...</span></> : <><Trash2 className="w-5 h-5" /><span>Delete</span></>}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 
-  // Edit/Create Mode
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-4xl w-full my-8 shadow-2xl">
+      <div className="bg-white rounded-3xl max-w-5xl w-full my-8 shadow-2xl">
+        {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-3xl flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="bg-orange-500 p-2 rounded-lg">
@@ -270,315 +293,259 @@ export default function RegistrationForm({
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900">
-                {existingRegistration ? 'Edit Registration' : 'New Registration'}
+                {viewOnly ? 'Registration Details' : 'Complete Registration'}
               </h2>
-              <p className="text-sm text-gray-500">{existingRegistration ? 'Update registration for' : 'Register'} {petName}</p>
+              <p className="text-sm text-gray-500">
+                {petName} • {uploadedCount}/{totalRequired} Documents Uploaded
+              </p>
             </div>
           </div>
-          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <XCircle className="w-6 h-6" />
-          </button>
-        </div>
-
-        {/* Progress Steps */}
-        <div className="px-6 pt-6">
-          <div className="flex items-center justify-between">
-            {steps.map((step) => (
-              <div key={step.number} className="flex flex-col items-center flex-1">
-                <div className="flex items-center w-full">
-                  <div className={`flex-1 h-1 ${step.number <= currentStep ? 'bg-orange-500' : 'bg-gray-200'}`} />
-                </div>
-                <div className="flex items-center mt-2">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${step.number === currentStep ? 'bg-orange-500 text-white' : step.number < currentStep ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'}`}>
-                    {step.number < currentStep ? <CheckCircle className="w-5 h-5" /> : <step.icon className="w-4 h-4" />}
-                  </div>
-                  <span className={`ml-2 text-sm font-medium ${step.number === currentStep ? 'text-orange-600' : 'text-gray-500'}`}>{step.title}</span>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center space-x-2">
+            {!viewOnly && (
+              <button 
+                onClick={fetchStatus} 
+                className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                title="Refresh status"
+              >
+                <RefreshCw className="w-5 h-5" />
+              </button>
+            )}
+            <button 
+              onClick={onCancel} 
+              className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <XCircle className="w-6 h-6" />
+            </button>
           </div>
         </div>
 
-        {/* Success Message */}
+        {/* Progress Section */}
+        <div className="px-6 pt-6">
+          <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Registration Progress</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {hasAllDocuments 
+                    ? registrationTriggered 
+                      ? "✅ Registration completed successfully!" 
+                      : "🎉 All documents uploaded! Ready to submit."
+                    : `📄 ${uploadedCount} out of ${totalRequired} documents uploaded`}
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-orange-600">{uploadedCount}</div>
+                <div className="text-sm text-gray-500">of {totalRequired}</div>
+              </div>
+            </div>
+            
+            {/* Progress Bar */}
+            <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+              <div 
+                className="bg-orange-500 h-3 rounded-full transition-all duration-500"
+                style={{ width: `${(uploadedCount / totalRequired) * 100}%` }}
+              />
+            </div>
+
+            {/* Status Message */}
+            {hasAllDocuments && !registrationTriggered && !viewOnly && (
+              <div className="mt-4 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <FileCheck className="w-5 h-5" />
+                  <span className="font-medium">All documents uploaded successfully!</span>
+                </div>
+                <button
+                  onClick={handleTriggerRegistration}
+                  disabled={triggeringRegistration}
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center space-x-2 transition-colors disabled:opacity-50"
+                >
+                  {triggeringRegistration ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /><span>Submitting...</span></>
+                  ) : (
+                    <><Send className="w-4 h-4" /><span>Submit Registration</span></>
+                  )}
+                </button>
+              </div>
+            )}
+
+            {registrationTriggered && (
+              <div className="mt-4 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg flex items-center space-x-2">
+                <CheckCircle className="w-5 h-5" />
+                <span className="font-medium">Registration submitted on {registrationStatus.registrationTriggeredAt ? new Date(registrationStatus.registrationTriggeredAt).toLocaleDateString() : 'recently'}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Success/Error Messages */}
         {success && (
-          <div className="mx-6 mt-6 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg flex items-center space-x-2">
-            <CheckCircle className="w-5 h-5" />
-            <p className="text-sm font-medium">Registration submitted successfully!</p>
+          <div className="mx-6 mt-4 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg flex items-center space-x-2">
+            <CheckCircle className="w-5 h-5 flex-shrink-0" />
+            <p className="text-sm">{success}</p>
           </div>
         )}
 
-        {/* Error Message */}
         {error && (
-          <div className="mx-6 mt-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg flex items-center space-x-2">
-            <AlertCircle className="w-5 h-5" />
+          <div className="mx-6 mt-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg flex items-center space-x-2">
+            <AlertCircle className="w-5 h-5 flex-shrink-0" />
             <p className="text-sm">{error}</p>
           </div>
         )}
 
+        {/* Document Upload Cards */}
         <div className="p-6">
-          {/* Step 1: Applicant Details */}
-          {currentStep === 1 && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <User className="w-5 h-5 mr-2 text-orange-500" />
-                Applicant Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">First Name <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.applicantDetails.firstName} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, firstName: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="John" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Middle Name</label>
-                  <input type="text" value={formData.applicantDetails.middleName} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, middleName: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="William" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Last Name <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.applicantDetails.lastName} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, lastName: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Doe" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth <span className="text-red-500">*</span></label>
-                <input type="date" required value={formData.applicantDetails.dob} onChange={(e) => setFormData({ ...formData, applicantDetails: { ...formData.applicantDetails, dob: e.target.value } })} className="w-full md:w-1/3 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" />
-              </div>
-            </div>
-          )}
-
-          {/* Step 2: Address */}
-          {currentStep === 2 && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <MapPin className="w-5 h-5 mr-2 text-orange-500" />
-                Address Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Plot/House No. <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.address.plot} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, plot: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="123" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Street</label>
-                  <input type="text" value={formData.address.street} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, street: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Main Street" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Colony/Locality <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.address.colony} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, colony: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Green Park" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Ward</label>
-                  <input type="text" value={formData.address.ward} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, ward: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Ward 12" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Zone</label>
-                  <input type="text" value={formData.address.zone} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, zone: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="North Zone" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">PIN Code <span className="text-red-500">*</span></label>
-                  <input type="text" required value={formData.address.pin} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, pin: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="110001" />
-                </div>
-              </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <Upload className="w-5 h-5 mr-2 text-orange-500" />
+            Required Documents
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {documents.map((doc) => {
+              const uploaded = isDocumentUploaded(doc.name);
+              const documentData = getDocument(doc.name);
+              const DocIcon = doc.icon;
               
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center mt-6">
-                <Phone className="w-5 h-5 mr-2 text-orange-500" />
-                Contact Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number <span className="text-red-500">*</span></label>
-                  <input type="tel" required value={formData.address.mobile} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, mobile: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="9876543210" />
+              return (
+                <div key={doc.name} className="border rounded-xl p-5 hover:shadow-lg transition-shadow">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center space-x-3">
+                      <div className={`p-2 rounded-lg ${uploaded ? 'bg-green-100' : 'bg-gray-100'}`}>
+                        <DocIcon className={`w-5 h-5 ${uploaded ? 'text-green-600' : 'text-gray-600'}`} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">{doc.label}</h4>
+                        <p className="text-xs text-gray-500 mt-1">{doc.description}</p>
+                      </div>
+                    </div>
+                    {uploaded && (
+                      <div className="flex items-center space-x-1">
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      </div>
+                    )}
+                  </div>
+
+                  {uploaded && documentData ? (
+                    <div className="mt-3">
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2 flex-1">
+                            <FileCheck className="w-4 h-4 text-green-600 flex-shrink-0" />
+                            <span className="text-sm text-gray-700 truncate max-w-[150px]">
+                              {documentData.fileName}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => handleViewDocument(documentData.fileData, documentData.mimeType)}
+                              className="text-blue-600 hover:text-blue-700 p-1 transition-colors"
+                              title="View document"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                            {!viewOnly && !registrationTriggered && (
+                              <button
+                                onClick={() => handleDeleteDocument(doc.name)}
+                                disabled={loading}
+                                className="text-red-600 hover:text-red-700 p-1 transition-colors disabled:opacity-50"
+                                title="Delete document"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {(documentData.fileSize / 1024).toFixed(2)} KB • Uploaded on {new Date(documentData.uploadedAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    !viewOnly && !registrationTriggered && (
+                      <label className={`mt-3 border-2 border-dashed rounded-lg p-4 flex flex-col items-center cursor-pointer transition-all hover:border-orange-500 hover:bg-orange-50`}>
+                        <Upload className="w-8 h-8 text-gray-400" />
+                        <span className="text-sm text-gray-500 mt-2">Click to upload</span>
+                        <span className="text-xs text-gray-400 mt-1">{doc.accept.includes('pdf') ? 'PDF or Image' : 'Image'} (Max 5MB)</span>
+                        <input 
+                          type="file" 
+                          accept={doc.accept}
+                          className="hidden" 
+                          disabled={uploading}
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              await handleFileUpload(file, doc.name);
+                            }
+                            e.target.value = ''; // Reset input
+                          }}
+                        />
+                      </label>
+                    )
+                  )}
+
+                  {viewOnly && !uploaded && (
+                    <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                      <p className="text-sm text-gray-500">Document not uploaded</p>
+                    </div>
+                  )}
+
+                  {!viewOnly && registrationTriggered && !uploaded && (
+                    <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                      <p className="text-sm text-orange-600">Registration already submitted. Document cannot be uploaded.</p>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email <span className="text-red-500">*</span></label>
-                  <input type="email" required value={formData.address.email} onChange={(e) => setFormData({ ...formData, address: { ...formData.address, email: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="john@example.com" />
-                </div>
+              );
+            })}
+          </div>
+
+          {/* Info Section */}
+          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div className="flex items-start space-x-3">
+              <Info className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium mb-1">Important Information:</p>
+                <ul className="list-disc list-inside space-y-1 text-blue-700">
+                  <li>All 4 documents are required to complete the registration process</li>
+                  <li>Documents can be uploaded in any order and can be replaced before submission</li>
+                  <li>Once registration is submitted, documents cannot be modified</li>
+                  <li>Registration will be automatically submitted when all documents are uploaded</li>
+                  <li>You can also manually submit after uploading all documents</li>
+                </ul>
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Step 3: Dog Details - REMOVED PHOTO FIELD */}
-          {currentStep === 3 && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <Dog className="w-5 h-5 mr-2 text-orange-500" />
-                Dog Information
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Gender <span className="text-red-500">*</span></label>
-                  <select required value={formData.dogDetails.gender} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, gender: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white text-gray-900">
-                    <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Breed</label>
-                  <input type="text" value={formData.dogDetails.breed} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, breed: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="Labrador" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Age (Years)</label>
-                  <input type="number" min="0" max="30" value={formData.dogDetails.ageYears} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, ageYears: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="2" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Age (Months)</label>
-                  <input type="number" min="0" max="11" value={formData.dogDetails.ageMonths} onChange={(e) => setFormData({ ...formData, dogDetails: { ...formData.dogDetails, ageMonths: e.target.value } })} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 bg-white" placeholder="6" />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Step 4: Documents */}
-          {currentStep === 4 && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                <FileText className="w-5 h-5 mr-2 text-orange-500" />
-                Document Upload
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="border rounded-xl p-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Anti-Rabies Certificate</label>
-                  {formData.documents.antiRabiesCertificate ? (
-                    <div className="relative">
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center">
-                        <FileCheck className="w-8 h-8 text-green-500 mr-2" />
-                        <span className="text-sm text-gray-600">Certificate uploaded</span>
-                      </div>
-                      <button type="button" onClick={() => removeFile('antiRabiesCertificate')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
-                        <XCircle className="w-4 h-4 mr-1" /> Remove
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition-colors">
-                      <Upload className="w-8 h-8 text-gray-400" />
-                      <span className="text-sm text-gray-500 mt-1">Click to upload</span>
-                      <span className="text-xs text-gray-400">PDF or Image (Max 2MB)</span>
-                      <input type="file" accept=".pdf,image/*" className="hidden" onChange={async (e) => { const file = e.target.files?.[0]; if (file) await handleFileUpload(file, 'antiRabiesCertificate', 'documents'); }} />
-                    </label>
-                  )}
-                </div>
-
-                <div className="border rounded-xl p-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">ID Proof</label>
-                  {formData.documents.idProof ? (
-                    <div className="relative">
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center">
-                        <FileCheck className="w-8 h-8 text-green-500 mr-2" />
-                        <span className="text-sm text-gray-600">ID Proof uploaded</span>
-                      </div>
-                      <button type="button" onClick={() => removeFile('idProof')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
-                        <XCircle className="w-4 h-4 mr-1" /> Remove
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition-colors">
-                      <Upload className="w-8 h-8 text-gray-400" />
-                      <span className="text-sm text-gray-500 mt-1">Click to upload</span>
-                      <span className="text-xs text-gray-400">PDF or Image (Max 2MB)</span>
-                      <input type="file" accept=".pdf,image/*" className="hidden" onChange={async (e) => { const file = e.target.files?.[0]; if (file) await handleFileUpload(file, 'idProof', 'documents'); }} />
-                    </label>
-                  )}
-                </div>
-
-                <div className="border rounded-xl p-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Residence Proof</label>
-                  {formData.documents.residenceProof ? (
-                    <div className="relative">
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center">
-                        <FileCheck className="w-8 h-8 text-green-500 mr-2" />
-                        <span className="text-sm text-gray-600">Residence Proof uploaded</span>
-                      </div>
-                      <button type="button" onClick={() => removeFile('residenceProof')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
-                        <XCircle className="w-4 h-4 mr-1" /> Remove
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition-colors">
-                      <Upload className="w-8 h-8 text-gray-400" />
-                      <span className="text-sm text-gray-500 mt-1">Click to upload</span>
-                      <span className="text-xs text-gray-400">PDF or Image (Max 2MB)</span>
-                      <input type="file" accept=".pdf,image/*" className="hidden" onChange={async (e) => { const file = e.target.files?.[0]; if (file) await handleFileUpload(file, 'residenceProof', 'documents'); }} />
-                    </label>
-                  )}
-                </div>
-
-                <div className="border rounded-xl p-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Owner with Pet Photo</label>
-                  {formData.documents.ownerWithPetPhoto ? (
-                    <div className="relative">
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center">
-                        <FileCheck className="w-8 h-8 text-green-500 mr-2" />
-                        <span className="text-sm text-gray-600">Photo uploaded</span>
-                      </div>
-                      <button type="button" onClick={() => removeFile('ownerWithPetPhoto')} className="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center">
-                        <XCircle className="w-4 h-4 mr-1" /> Remove
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition-colors">
-                      <Upload className="w-8 h-8 text-gray-400" />
-                      <span className="text-sm text-gray-500 mt-1">Click to upload</span>
-                      <span className="text-xs text-gray-400">Image only (Max 2MB)</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={async (e) => { const file = e.target.files?.[0]; if (file) await handleFileUpload(file, 'ownerWithPetPhoto', 'documents'); }} />
-                    </label>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Navigation Buttons */}
+          {/* Action Buttons */}
           <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
-            <div>
-              {currentStep > 1 && (
-                <button type="button" onClick={() => setCurrentStep(currentStep - 1)} className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-colors flex items-center space-x-2">
-                  <ArrowLeft className="w-5 h-5" />
-                  <span>Previous</span>
-                </button>
-              )}
-            </div>
-            <div className="flex space-x-3">
-              {existingRegistration && (
-                <button type="button" onClick={() => setShowDeleteConfirm(true)} disabled={loading} className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-colors flex items-center space-x-2 disabled:opacity-50">
-                  <Trash2 className="w-5 h-5" />
-                  <span>Delete</span>
-                </button>
-              )}
-              {currentStep < steps.length ? (
-                <button type="button" onClick={() => setCurrentStep(currentStep + 1)} className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium transition-colors flex items-center space-x-2">
-                  <span>Next</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-              ) : (
-                <button type="button" onClick={handleSubmit} disabled={loading} className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-colors flex items-center space-x-2 disabled:opacity-50">
-                  {loading ? <><Loader2 className="w-5 h-5 animate-spin" /><span>{existingRegistration ? 'Updating...' : 'Submitting...'}</span></> : <><Save className="w-5 h-5" /><span>{existingRegistration ? 'Update Registration' : 'Submit Registration'}</span></>}
-                </button>
-              )}
-            </div>
+            <button
+              onClick={onCancel}
+              className="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+            >
+              {viewOnly ? 'Close' : 'Cancel'}
+            </button>
+            {!viewOnly && hasAllDocuments && !registrationTriggered && (
+              <button
+                onClick={handleTriggerRegistration}
+                disabled={triggeringRegistration}
+                className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl font-medium flex items-center space-x-2 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+              >
+                {triggeringRegistration ? (
+                  <><Loader2 className="w-5 h-5 animate-spin" /><span>Submitting...</span></>
+                ) : (
+                  <><Send className="w-5 h-5" /><span>Submit Registration</span></>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6">
-            <div className="text-center">
-              <div className="bg-red-100 p-3 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <AlertCircle className="w-8 h-8 text-red-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Delete Registration?</h2>
-              <p className="text-gray-500 mb-6">This action cannot be undone.</p>
-              <div className="flex space-x-3">
-                <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-colors">Cancel</button>
-                <button onClick={handleDelete} disabled={deleting} className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center space-x-2">
-                  {deleting ? <><Loader2 className="w-5 h-5 animate-spin" /><span>Deleting...</span></> : <><Trash2 className="w-5 h-5" /><span>Delete</span></>}
-                </button>
-              </div>
-            </div>
+      {/* Loading Overlay */}
+      {uploading && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[70]">
+          <div className="bg-white rounded-2xl p-8 flex flex-col items-center space-y-4">
+            <Loader2 className="w-12 h-12 animate-spin text-orange-500" />
+            <p className="text-gray-700 font-medium">Uploading document...</p>
           </div>
         </div>
       )}

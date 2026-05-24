@@ -1,4 +1,3 @@
-// components/Sidebar.tsx
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -16,7 +15,7 @@ import { useAuth } from "../context/AuthContext";
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { logout, user } = useAuth();
+  const { logout, user, isAuthenticated } = useAuth();
 
   const menuItems = [
     { name: "Overview", icon: LayoutDashboard, href: "/dashboard" },
@@ -30,6 +29,16 @@ export default function Sidebar() {
     router.push("/");
   };
 
+  // Don't render sidebar if not authenticated
+  if (!isAuthenticated || !user) {
+    return null;
+  }
+
+  // Get user display info
+  const displayName = user?.username || user?.name || "User";
+  const displayEmail = user?.email || "";
+  const userInitial = displayName.charAt(0).toUpperCase();
+
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex flex-col">
       {/* Logo */}
@@ -42,20 +51,26 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* User Section */}
+      {/* User Section - Shows actual logged in user */}
       <div className="px-4 mb-6">
         <div className="bg-gray-50 rounded-xl p-3">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-gray-600 to-gray-800 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
               <span className="text-white font-medium text-sm">
-                {user?.username?.charAt(0).toUpperCase() || "R"}
+                {userInitial}
               </span>
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900">{user?.username || "Rahul Sharma"}</p>
-              <p className="text-xs text-gray-500">rahul.sharma@example.com</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {displayName}
+              </p>
+              {displayEmail && (
+                <p className="text-xs text-gray-500 truncate">
+                  {displayEmail}
+                </p>
+              )}
             </div>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
           </div>
         </div>
       </div>
