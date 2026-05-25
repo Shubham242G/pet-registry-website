@@ -31,7 +31,6 @@ export default function RootLayout({
           <RouteGuard>
             <Navbar />
             <div className="pt-20">
-              <StripWrapper /> {/* This will only show strip on non-dashboard pages */}
             </div>
             <main>{children}</main>
           </RouteGuard>

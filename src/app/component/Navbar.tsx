@@ -72,7 +72,18 @@ export default function Navbar() {
   }, [isOpen]);
 
   if (!isMounted || loading) {
-    return <nav className="bg-white fixed w-full z-20 top-0 shadow-sm h-20" />;
+    return (
+      <>
+        <nav className="bg-white fixed w-full z-20 top-0 shadow-sm h-20" />
+        <div className="fixed top-20 left-0 w-full z-10 bg-[#2C1A0E] py-3.5">
+          <div className="text-center">
+            <span className="text-[#FFDBB8] text-sm font-bold">
+              Supreme Court of India mandate: Pet registration is now legally required PAN India. Non-compliance fines up to ₹10,000.
+            </span>
+          </div>
+        </div>
+      </>
+    );
   }
 
   return (
@@ -188,6 +199,15 @@ export default function Navbar() {
           </AnimatePresence>
         </div>
       </motion.nav>
+
+      {/* SUPREME COURT BANNER - Added just below the navbar */}
+      <div className="fixed top-20 left-0 w-full z-10 bg-[#2C1A0E] py-3.5">
+        <div className="text-center">
+          <span className="text-[#FFDBB8] text-sm font-bold">
+            Supreme Court of India mandate: Pet registration is now legally required PAN India. Non-compliance fines up to ₹10,000.
+          </span>
+        </div>
+      </div>
 
       {/* MODALS */}
       <LoginModal 
