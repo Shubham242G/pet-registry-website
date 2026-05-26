@@ -18,10 +18,10 @@ export default function Sidebar() {
   const { logout, user, isAuthenticated } = useAuth();
 
   const menuItems = [
-    { name: "Overview", icon: LayoutDashboard, href: "/dashboard" },
-    { name: "Documents", icon: FileText, href: "/dashboard/documents" },
-    { name: "Settings", icon: Settings, href: "/dashboard/settings" },
-    { name: "Help", icon: HelpCircle, href: "/dashboard/help" },
+    { name: "Overview", icon: LayoutDashboard, href: "/pages/dashboard" },
+    { name: "Documents", icon: FileText, href: "/pages/documents" },
+    // { name: "Settings", icon: Settings, href: "/dashboard/settings" },
+    // { name: "Help", icon: HelpCircle, href: "/dashboard/help" },
   ];
 
   const handleLogout = () => {

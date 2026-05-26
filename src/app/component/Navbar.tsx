@@ -42,12 +42,9 @@ export default function Navbar() {
   const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     
-    // If we're not on the home page, navigate to home page first
     if (pathname !== '/') {
       router.push(`/#${id}`);
-      // After navigation, the scroll will happen automatically via the hash
     } else {
-      // We're on home page, scroll smoothly
       const element = document.getElementById(id);
       if (element) {
         element.scrollIntoView({ 
@@ -59,7 +56,6 @@ export default function Navbar() {
     setIsOpen(false);
   };
 
-  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (isOpen && !(event.target as Element).closest('.mobile-menu')) {
@@ -71,19 +67,9 @@ export default function Navbar() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isOpen]);
 
-  if (!isMounted || loading) {
-    return (
-      <>
-        <nav className="bg-white fixed w-full z-20 top-0 shadow-sm h-20" />
-        <div className="fixed top-20 left-0 w-full z-10 bg-[#2C1A0E] py-3.5">
-          <div className="text-center">
-            <span className="text-[#FFDBB8] text-sm font-bold">
-              Supreme Court of India mandate: Pet registration is now legally required PAN India. Non-compliance fines up to ₹10,000.
-            </span>
-          </div>
-        </div>
-      </>
-    );
+  // DON'T RENDER NAVBAR AT ALL IF USER IS LOGGED IN
+  if (!isMounted || loading || isAuthenticated) {
+    return null;
   }
 
   return (
@@ -132,41 +118,22 @@ export default function Navbar() {
               >
                 Contact
               </Link>
-              {isAuthenticated && user && (
-                <Link 
-                  href="/pages/dashboard"
-                  className="text-lg font-bold text-orange-500 bg-orange-100 px-6 py-2 rounded-xl hover:bg-orange-200 transition-all duration-200"
-                >
-                  Dashboard
-                </Link>
-              )}
             </div>
 
-            {/* AUTH BUTTONS */}
+            {/* AUTH BUTTONS - Only show when NOT authenticated */}
             <div className="flex items-center space-x-3">
-              {isAuthenticated && user ? (
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200 whitespace-nowrap text-sm"
-                >
-                  Logout
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={() => setShowRegister(true)}
-                    className="px-4 py-2 bg-white border border-orange-400 text-orange-500 font-medium rounded-lg hover:bg-orange-50 hover:border-orange-500 transition-all duration-200 whitespace-nowrap text-sm hidden sm:block"
-                  >
-                    Register
-                  </button>
-                  <button
-                    onClick={() => setShowLogin(true)}
-                    className="px-4 py-2 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200 whitespace-nowrap text-sm"
-                  >
-                    Login
-                  </button>
-                </>
-              )}
+              <button
+                onClick={() => setShowRegister(true)}
+                className="px-4 py-2 bg-white border border-orange-400 text-orange-500 font-medium rounded-lg hover:bg-orange-50 hover:border-orange-500 transition-all duration-200 whitespace-nowrap text-sm hidden sm:block"
+              >
+                Register
+              </button>
+              <button
+                onClick={() => setShowLogin(true)}
+                className="px-4 py-2 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200 whitespace-nowrap text-sm"
+              >
+                Login
+              </button>
             </div>
 
             {/* MOBILE HAMBURGER */}
@@ -191,12 +158,8 @@ export default function Navbar() {
               >
                 <MobileMenu 
                   setIsOpen={setIsOpen} 
-                  user={user}
-                  displayName={displayName}
-                  isAuthenticated={isAuthenticated}
                   setShowLogin={setShowLogin}
                   setShowRegister={setShowRegister}
-                  onLogout={handleLogout}
                   onScrollToSection={handleScrollToSection}
                   pathname={pathname}
                 />
@@ -206,7 +169,7 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* SUPREME COURT BANNER - Added just below the navbar */}
+      {/* SUPREME COURT BANNER - Only show when logged out */}
       <div className="fixed top-20 left-0 w-full z-10 bg-[#2C1A0E] py-3.5">
         <div className="text-center">
           <span className="text-[#FFDBB8] text-sm font-bold">
@@ -236,25 +199,17 @@ export default function Navbar() {
   );
 }
 
-// MobileMenu - Updated with scroll function
+// MobileMenu - Updated without auth buttons
 function MobileMenu({ 
   setIsOpen, 
-  user,
-  displayName,
-  isAuthenticated,
   setShowLogin, 
   setShowRegister, 
-  onLogout,
   onScrollToSection,
   pathname
 }: { 
   setIsOpen: (open: boolean) => void;
-  user: any;
-  displayName: string;
-  isAuthenticated: boolean;
   setShowLogin: (show: boolean) => void;
   setShowRegister: (show: boolean) => void;
-  onLogout: () => void;
   onScrollToSection: (e: React.MouseEvent<HTMLAnchorElement>, id: string) => void;
   pathname: string;
 }) {
@@ -305,52 +260,22 @@ function MobileMenu({
         </Link>
       </li>
       
-      {isAuthenticated && user && (
-        <li>
-          <Link 
-            href="/pages/dashboard" 
-            className="block py-2 px-3 text-orange-600 font-bold bg-orange-100 rounded hover:bg-orange-200" 
-            onClick={() => setIsOpen(false)}
-          >
-            Dashboard
-          </Link>
-        </li>
-      )}
-
-      {isAuthenticated && user ? (
-        <>
-          <li className="border-t pt-2">
-            {/* Greeting removed from here */}
-          </li>
-          <li>
-            <button 
-              onClick={() => { onLogout(); setIsOpen(false); }} 
-              className="w-full text-center py-2 px-3 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200"
-            >
-              Logout
-            </button>
-          </li>
-        </>
-      ) : (
-        <>
-          <li className="border-t pt-2">
-            <button 
-              onClick={() => { setShowRegister(true); setIsOpen(false); }} 
-              className="w-full text-center py-2 px-3 bg-white border border-orange-400 text-orange-500 font-medium rounded-lg hover:bg-orange-50 hover:border-orange-500 transition-all duration-200"
-            >
-              Register
-            </button>
-          </li>
-          <li>
-            <button 
-              onClick={() => { setShowLogin(true); setIsOpen(false); }} 
-              className="w-full text-center py-2 px-3 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200"
-            >
-              Login
-            </button>
-          </li>
-        </>
-      )}
+      <li className="border-t pt-2">
+        <button 
+          onClick={() => { setShowRegister(true); setIsOpen(false); }} 
+          className="w-full text-center py-2 px-3 bg-white border border-orange-400 text-orange-500 font-medium rounded-lg hover:bg-orange-50 hover:border-orange-500 transition-all duration-200"
+        >
+          Register
+        </button>
+      </li>
+      <li>
+        <button 
+          onClick={() => { setShowLogin(true); setIsOpen(false); }} 
+          className="w-full text-center py-2 px-3 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200"
+        >
+          Login
+        </button>
+      </li>
     </ul>
   );
 }
