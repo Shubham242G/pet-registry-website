@@ -38,7 +38,7 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="bg-white text-gray-900 font-sans overflow-x-hidden">
+    <main className="bg-white text-gray-900 overflow-x-hidden font-['Nunito']">
 
       {/* Hero Section */}
       <div className="bg-[#FFF3E0] pt-[100px] relative">
@@ -48,17 +48,17 @@ export default function HomePage() {
           <div className="flex-1 max-w-[55%]">
             {/* Supreme Court Button */}
             <button className="flex items-center bg-[#2C1A0E] text-left py-2 px-4 mb-4 gap-1 rounded-[999px] border-0 hover:bg-[#3d2a1c] transition-colors">
-              <span className="text-[#FFF3E0] text-[12px]">Supreme Court of India has mandated pet registration</span>
-              <span className="text-[#FFDBB8] text-[12px]">— Comply before it's too late</span>
+              <span className="text-[#FFF3E0] text-[12px] font-normal">Supreme Court of India has mandated pet registration</span>
+              <span className="text-[#FFDBB8] text-[12px] font-normal">— Comply before it's too late</span>
             </button>
 
             {/* Hero Title */}
-            <h1 className="text-[#2C1A0E] text-[56px] font-bold leading-tight mb-4">
+            <h1 className="text-[#2C1A0E] text-[56px] font-black leading-tight mb-4 tracking-[-1px]">
               Your pet deserves<br />an identity.<br />the law requires.
             </h1>
 
             {/* Hero Description */}
-            <p className="text-[#6B3A1F] text-[15px] mb-6">
+            <p className="text-[#6B3A1F] text-[15px] font-normal mb-6 leading-relaxed">
               Register your pet in just 1 minute - get a verified digital<br />ID, vaccination records, and full legal compliance. Trusted by<br />pet parents across Delhi NCR.
             </p>
 
@@ -75,20 +75,20 @@ export default function HomePage() {
             {/* Statistics Row */}
             <div className="flex items-start gap-10">
               <div>
-                <span className="text-[#D96F28] text-[36px] font-bold block leading-none">&gt;90%</span>
-                <span className="text-[#A07050] text-[13px] block mt-1 w-[90px]">Pets in Delhi<br />are unregistered</span>
+                <span className="text-[#D96F28] text-[36px] font-black block leading-none">&gt;90%</span>
+                <span className="text-[#A07050] text-[13px] font-normal block mt-1 w-[90px]">Pets in Delhi<br />are unregistered</span>
               </div>
               <div>
-                <span className="text-[#D96F28] text-[36px] font-bold block leading-none">₹10K</span>
-                <span className="text-[#A07050] text-[13px] block mt-1 w-[90px]">Fine for<br />non-compliance</span>
+                <span className="text-[#D96F28] text-[36px] font-black block leading-none">₹10K</span>
+                <span className="text-[#A07050] text-[13px] font-normal block mt-1 w-[90px]">Fine for<br />non-compliance</span>
               </div>
               <div>
-                <span className="text-[#D96F28] text-[36px] font-bold block leading-none">1 min</span>
-                <span className="text-[#A07050] text-[13px] block mt-1 w-[90px]">To register<br />on Tailio</span>
+                <span className="text-[#D96F28] text-[36px] font-black block leading-none">1 min</span>
+                <span className="text-[#A07050] text-[13px] font-normal block mt-1 w-[90px]">To register<br />on Tailio</span>
               </div>
               <div>
-                <span className="text-[#D96F28] text-[36px] font-bold block leading-none">33M+</span>
-                <span className="text-[#A07050] text-[13px] block mt-1 w-[90px]">Pet dogs<br />in India</span>
+                <span className="text-[#D96F28] text-[36px] font-black block leading-none">33M+</span>
+                <span className="text-[#A07050] text-[13px] font-normal block mt-1 w-[90px]">Pet dogs<br />in India</span>
               </div>
             </div>
           </div>
@@ -119,8 +119,8 @@ export default function HomePage() {
             {/* >90% floating badge - top-right, overlapping the card */}
             <div className="absolute -top-6 right-0 z-10">
               <div className="bg-[#FF8C42] py-[15px] px-[19px] rounded-2xl shadow-[0px_8px_32px_#D96F2840]">
-                <span className="text-white text-[28px] font-bold block leading-none">&gt; 90%</span>
-                <span className="text-white text-xs w-[113px] block mt-1">Pets Unregistered in Delhi NCR.</span>
+                <span className="text-white text-[28px] font-black block leading-none">&gt; 90%</span>
+                <span className="text-white text-xs font-normal w-[113px] block mt-1">Pets Unregistered in Delhi NCR.</span>
               </div>
             </div>
 
@@ -133,24 +133,24 @@ export default function HomePage() {
                 <div className="bg-[#FFFAF4] py-[18px] pl-[17px] pr-[20px] rounded-[14px] border border-solid border-[#F8EDE0] flex-1">
                   <img src="/images/document.png" alt="Legal" className="w-6 h-6 mb-2.5" />
                   <span className="text-[#2C1A0E] text-sm font-bold block mb-[5px]">Legal Identity and Protection</span>
-                  <span className="text-[#A07050] text-xs">Your pet gets a unique ID : Proof of ownership and legal status and helps to protect them.</span>
+                  <span className="text-[#A07050] text-xs font-normal">Your pet gets a unique ID : Proof of ownership and legal status and helps to protect them.</span>
                 </div>
                 <div className="bg-[#FFFAF4] py-[18px] px-[17px] rounded-[14px] border border-solid border-[#F8EDE0] flex-1">
                   <img src="/images/vaccine.png" alt="Vaccination" className="w-6 h-6 mb-2.5" />
                   <span className="text-[#2C1A0E] text-sm font-bold block mb-[5px]">Vaccination Tracking</span>
-                  <span className="text-[#A07050] text-xs">Digital health records ensure your pet's vaccines are always up-to-date.</span>
+                  <span className="text-[#A07050] text-xs font-normal">Digital health records ensure your pet's vaccines are always up-to-date.</span>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="bg-[#FFFAF4] pt-[19px] pb-[19px] px-[17px] rounded-[14px] border border-solid border-[#F8EDE0] flex-1">
                   <img src="/images/search.png" alt="Recovery" className="w-6 h-6 mb-2.5" />
                   <span className="text-[#2C1A0E] text-sm font-bold block mb-[5px]">Lost Pet Recovery</span>
-                  <span className="text-[#A07050] text-xs">A registered pet is 3x more likely to be returned if lost or stolen.</span>
+                  <span className="text-[#A07050] text-xs font-normal">A registered pet is 3x more likely to be returned if lost or stolen.</span>
                 </div>
                 <div className="bg-[#FFFAF4] py-[18px] pl-[17px] pr-[17px] rounded-[14px] border border-solid border-[#F8EDE0] flex-1">
                   <img src="/images/shield.png" alt="Travel" className="w-6 h-6 mb-2.5" />
                   <span className="text-[#2C1A0E] text-sm font-bold block mb-[5px]">Crucial for Travel</span>
-                  <span className="text-[#A07050] text-xs">Pet registration certificate is required for traveling with your fur baby</span>
+                  <span className="text-[#A07050] text-xs font-normal">Pet registration certificate is required for traveling with your fur baby</span>
                 </div>
               </div>
             </div>
@@ -160,10 +160,10 @@ export default function HomePage() {
         {/* Right Column */}
         <div className="flex-1 flex-col items-start">
           <div className="mb-[19px]">
-            <span className="text-[#2C1A0E] text-4xl font-bold">Pet registration isn't optional<br />anymore</span>
+            <span className="text-[#2C1A0E] text-4xl font-black">Pet registration isn't optional<br />anymore</span>
           </div>
           <div className="mb-[27px]">
-            <span className="text-[#6B3A1F] text-[15px]">
+            <span className="text-[#6B3A1F] text-[15px] font-normal leading-relaxed">
               The Supreme Court of India, through the Animal Birth Control (ABC) Rules 2023 and subsequent orders, has directed all municipal corporations in Delhi-NCR to enforce mandatory pet registration. Here's what you need to know:
             </span>
           </div>
@@ -175,7 +175,7 @@ export default function HomePage() {
             </div>
             <div>
               <span className="text-[#2C1A0E] text-[15px] font-bold block">Mandated by the Supreme Court</span>
-              <span className="text-[#6B3A1F] text-[13px]">The ABC Rules 2023 and the Supreme Court's landmark August 2025 order directed Delhi-NCR authorities to enforce registration for all pet animals — not just dogs.</span>
+              <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">The ABC Rules 2023 and the Supreme Court's landmark August 2025 order directed Delhi-NCR authorities to enforce registration for all pet animals — not just dogs.</span>
             </div>
           </div>
 
@@ -185,7 +185,7 @@ export default function HomePage() {
             </div>
             <div>
               <span className="text-[#2C1A0E] text-[15px] font-bold block">India accounts for 36% of global rabies deaths</span>
-              <span className="text-[#6B3A1F] text-[13px]">Pet registration ensures vaccination compliance, directly reducing the risk of rabies transmission in urban areas like Delhi NCR.</span>
+              <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">Pet registration ensures vaccination compliance, directly reducing the risk of rabies transmission in urban areas like Delhi NCR.</span>
             </div>
           </div>
 
@@ -195,7 +195,7 @@ export default function HomePage() {
             </div>
             <div>
               <span className="text-[#2C1A0E] text-[15px] font-bold block">Unregistered pets contribute to stray population</span>
-              <span className="text-[#6B3A1F] text-[13px]">Abandoned unregistered pets are a leading cause of Delhi's stray dog problem. Registration creates accountability for every pet owner.</span>
+              <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">Abandoned unregistered pets are a leading cause of Delhi's stray dog problem. Registration creates accountability for every pet owner.</span>
             </div>
           </div>
 
@@ -206,7 +206,7 @@ export default function HomePage() {
             </div>
             <div>
               <span className="text-[#2C1A0E] text-[15px] font-bold block">Digital ID = better care</span>
-              <span className="text-[#6B3A1F] text-[13px]">A registered pet has a verified health history that any vet can access — making emergency care faster and more accurate.</span>
+              <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">A registered pet has a verified health history that any vet can access — making emergency care faster and more accurate.</span>
             </div>
           </div>
         </div>
@@ -215,24 +215,24 @@ export default function HomePage() {
       {/* Statistics Banner */}
       <div className="flex items-center bg-[#FFF3E0] max-w-[1430px] py-[37px] px-[168px] mx-auto rounded-xl">
         <div className="flex-1 text-center">
-          <span className="text-[#D96F28] text-[40px] font-bold">~913</span>
-          <p className="text-[#6B3A1F] text-sm">Registered dogs in<br />Delhi municipality</p>
-          <p className="text-[#A07050] text-[11px]">vs. estimated lakhs of pet dogs</p>
+          <span className="text-[#D96F28] text-[40px] font-black">~913</span>
+          <p className="text-[#6B3A1F] text-sm font-normal mt-1">Registered dogs in<br />Delhi municipality</p>
+          <p className="text-[#A07050] text-[11px] font-normal mt-1">vs. estimated lakhs of pet dogs</p>
         </div>
         <div className="flex-1 text-center">
-          <span className="text-[#D96F28] text-[40px] font-bold">&lt;10%</span>
-          <p className="text-[#6B3A1F] text-sm">Pet owners who<br />have registered</p>
-          <p className="text-[#A07050] text-[11px]">Study, East Delhi urban colony</p>
+          <span className="text-[#D96F28] text-[40px] font-black">&lt;10%</span>
+          <p className="text-[#6B3A1F] text-sm font-normal mt-1">Pet owners who<br />have registered</p>
+          <p className="text-[#A07050] text-[11px] font-normal mt-1">Study, East Delhi urban colony</p>
         </div>
         <div className="flex-1 text-center">
-          <span className="text-[#D96F28] text-[40px] font-bold">86%</span>
-          <p className="text-[#6B3A1F] text-sm">Pet owners unaware<br />their pet can spread rabies</p>
-          <p className="text-[#A07050] text-[11px]">PMC / UCMS study, Delhi</p>
+          <span className="text-[#D96F28] text-[40px] font-black">86%</span>
+          <p className="text-[#6B3A1F] text-sm font-normal mt-1">Pet owners unaware<br />their pet can spread rabies</p>
+          <p className="text-[#A07050] text-[11px] font-normal mt-1">PMC / UCMS study, Delhi</p>
         </div>
         <div className="flex-1 text-center">
-          <span className="text-[#D96F28] text-[40px] font-bold">36%</span>
-          <p className="text-[#6B3A1F] text-sm">Global rabies deaths<br />happen in India</p>
-          <p className="text-[#A07050] text-[11px]">WHO / Supreme Court records</p>
+          <span className="text-[#D96F28] text-[40px] font-black">36%</span>
+          <p className="text-[#6B3A1F] text-sm font-normal mt-1">Global rabies deaths<br />happen in India</p>
+          <p className="text-[#A07050] text-[11px] font-normal mt-1">WHO / Supreme Court records</p>
         </div>
       </div>
 
@@ -243,9 +243,9 @@ export default function HomePage() {
             <button className="bg-[#FF8C4233] py-[5px] px-3.5 rounded-[999px] mb-2">
               <span className="text-[#FFDBB8] text-xs font-bold">Know the fines</span>
             </button>
-            <h2 className="text-[#FFF3E0] text-[40px] font-bold">Ignore Registration</h2>
-            <h2 className="text-[#FFF3E0] text-[40px] font-bold mb-[19px]">Pay the Penalty</h2>
-            <p className="text-[#C4906A] text-base mb-[23px]">Municipal corporations are actively enforcing registration. These are the<br />current fines across Delhi NCR.</p>
+            <h2 className="text-[#FFF3E0] text-[40px] font-black">Ignore Registration</h2>
+            <h2 className="text-[#FFF3E0] text-[40px] font-black mb-[19px]">Pay the Penalty</h2>
+            <p className="text-[#C4906A] text-base font-normal mb-[23px]">Municipal corporations are actively enforcing registration. These are the<br />current fines across Delhi NCR.</p>
           </div>
 
           {/* Fines Grid */}
@@ -259,8 +259,8 @@ export default function HomePage() {
               <div key={idx} className="flex-1 bg-[#FFFFFF0D] py-[23px] rounded-2xl border border-solid border-[#FFF3E01A] text-center">
                 <span className="text-[#FFDBB8] text-xs font-bold">{item.city}</span>
                 <img src={`/images/${item.city.toLowerCase()}.png`} className="w-[88px] h-[54px] mx-auto my-2" />
-                <span className="text-[#FF8C42] text-xl font-bold block">{item.fine}</span>
-                <p className="text-[#FFF3E0] text-xs px-4 mt-2">{item.desc}</p>
+                <span className="text-[#FF8C42] text-xl font-black block">{item.fine}</span>
+                <p className="text-[#FFF3E0] text-xs font-normal px-4 mt-2">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -268,8 +268,8 @@ export default function HomePage() {
 
         {/* Warning Box */}
         <div className="bg-[#FFDBB8] pt-[19px] px-6 mb-[45px] rounded-[14px] border border-black max-w-4xl mx-auto mt-8">
-          <h3 className="text-[#2C1A0E] text-[32px] font-bold mb-[11px]">Without proper Registration, <br />Your pet may not be legally protected during disputes.</h3>
-          <p className="text-[#6B3A1F] text-base mb-3.5">In disputes or complaints, municipal authorities may seize your pet.</p>
+          <h3 className="text-[#2C1A0E] text-[32px] font-black mb-[11px]">Without proper Registration, <br />Your pet may not be legally protected during disputes.</h3>
+          <p className="text-[#6B3A1F] text-base font-normal mb-3.5">In disputes or complaints, municipal authorities may seize your pet.</p>
           <button className="bg-[#D96F28] text-left py-2.5 px-5 rounded-lg mb-3 hover:bg-[#c05a1a] transition-colors">
             <span className="text-[#FFDBB8] text-sm font-bold">Start Registration →</span>
           </button>
@@ -277,130 +277,61 @@ export default function HomePage() {
       </div>
 
       {/* Tailio vs Municipal Portal */}
-     <div className="max-w-[1079px] mx-auto mb-[59px] text-center">
-  <button className="bg-[#FFDBB8] py-[5px] px-3.5 mb-3 rounded-[999px]">
-    <span className="text-[#D96F28] text-xs font-bold">Tailio vs Municipal Portal</span>
-  </button>
-  <h2 className="text-[#2C1A0E] text-[40px] font-bold mb-4">Why register through Tailio<br />instead of going directly?</h2>
-  <p className="text-[#6B3A1F] text-base">Both paths lead to legal registration. But only one is designed for humans — and their pets.</p>
-</div>
+      <div className="max-w-[1079px] mx-auto mb-[59px] text-center">
+        <button className="bg-[#FFDBB8] py-[5px] px-3.5 mb-3 rounded-[999px]">
+          <span className="text-[#D96F28] text-xs font-bold">Tailio vs Municipal Portal</span>
+        </button>
+        <h2 className="text-[#2C1A0E] text-[40px] font-black mb-4">Why register through Tailio<br />instead of going directly?</h2>
+        <p className="text-[#6B3A1F] text-base font-normal">Both paths lead to legal registration. But only one is designed for humans — and their pets.</p>
+      </div>
 
-{/* Comparison Table */}
-<div className="max-w-[1025px] mx-auto mb-[29px]">
-  <div className="flex items-stretch">
-    {/* Left Column - Municipal Portal */}
-    <div className="flex-1 text-center border-b border-[#F8EDE0] pb-2">
-      <span className="text-[#2C1A0E] text-[17px] font-bold">Municipal Corporation Portal</span>
-      <p className="text-[#A07050] text-xs">Direct government registration</p>
-    </div>
-    
-    {/* VS Divider */}
-    <div className="px-4 flex items-center">
-      <span className="text-[#A07050] text-[13px] font-bold">VS</span>
-    </div>
-    
-    {/* Right Column - Tailio Platform */}
-    <div className="flex-1 bg-[#FF8C42] py-[22px] pl-[26px] rounded-2xl">
-      <span className="text-white text-[17px] font-bold">Tailio Platform</span>
-      <p className="text-white text-xs">Smart, digital-first registration</p>
-    </div>
-  </div>
-</div>
+      {/* Comparison Table */}
+      <div className="max-w-[1025px] mx-auto mb-[29px]">
+        <div className="flex items-stretch">
+          <div className="flex-1 text-center border-b border-[#F8EDE0] pb-2">
+            <span className="text-[#2C1A0E] text-[17px] font-bold">Municipal Corporation Portal</span>
+            <p className="text-[#A07050] text-xs font-normal">Direct government registration</p>
+          </div>
+          <div className="px-4 flex items-center">
+            <span className="text-[#A07050] text-[13px] font-bold">VS</span>
+          </div>
+          <div className="flex-1 bg-[#FF8C42] py-[22px] pl-[26px] rounded-2xl">
+            <span className="text-white text-[17px] font-bold">Tailio Platform</span>
+            <p className="text-white text-xs font-normal">Smart, digital-first registration</p>
+          </div>
+        </div>
+      </div>
 
-{/* Comparison Points */}
-<div className="max-w-4xl mx-auto space-y-4 mb-[115px]">
-  {/* Point 1 */}
-  <div className="flex items-start justify-between gap-8">
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ❌ icon/image */}
-       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">Multiple office visits required. Physical forms, queues, and manual submission.</span>
-    </div>
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ✅ icon/image */}
-      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">100% online. Register from your phone in just 1 minute, from anywhere.</span>
-    </div>
-  </div>
-
-  {/* Point 2 */}
-  <div className="flex items-start justify-between gap-8">
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ❌ icon/image */}
-       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">No digital record. Paper certificate that can be lost, damaged, or misplaced.</span>
-    </div>
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ✅ icon/image */}
-      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">Digital certificate + QR code stored on your profile, always accessible.</span>
-    </div>
-  </div>
-
-  {/* Point 3 */}
-  <div className="flex items-start justify-between gap-8">
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ❌ icon/image */}
-       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">No reminders. Miss your annual renewal and risk a fine.</span>
-    </div>
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ✅ icon/image */}
-      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">Automatic renewal reminders via WhatsApp, SMS, and email — never miss a date.</span>
-    </div>
-  </div>
-
-  {/* Point 4 */}
-  <div className="flex items-start justify-between gap-8">
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ❌ icon/image */}
-       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">No vaccination tracking. You manage records manually on your own.</span>
-    </div>
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ✅ icon/image */}
-      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">Vaccination tracker built-in — schedule, record, and share with any vet.</span>
-    </div>
-  </div>
-
-  {/* Point 5 */}
-  <div className="flex items-start justify-between gap-8">
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ❌ icon/image */}
-       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">Slow processing. Approval can take days to weeks.</span>
-    </div>
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ✅ icon/image */}
-      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">Approval. Registration processed and confirmed within 24 - 72 hours.</span>
-    </div>
-  </div>
-
-  {/* Point 6 */}
-  <div className="flex items-start justify-between gap-8">
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ❌ icon/image */}
-       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">No pet profile. No searchable ID if your pet goes missing.</span>
-    </div>
-    <div className="flex items-start gap-3 w-1/2">
-      {/* Replace with your local ✅ icon/image */}
-      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
-      <span className="text-[#2C1A0E] text-[13px] font-bold">Lost pet QR system. Anyone who scans your pet's tag can contact you instantly.</span>
-    </div>
-  </div>
-</div>
+      {/* Comparison Points */}
+      <div className="max-w-4xl mx-auto space-y-4 mb-[115px]">
+        {[
+          { gov: "Multiple office visits required. Physical forms, queues, and manual submission.", tailio: "100% online. Register from your phone in just 1 minute, from anywhere." },
+          { gov: "No digital record. Paper certificate that can be lost, damaged, or misplaced.", tailio: "Digital certificate + QR code stored on your profile, always accessible." },
+          { gov: "No reminders. Miss your annual renewal and risk a fine.", tailio: "Automatic renewal reminders via WhatsApp, SMS, and email — never miss a date." },
+          { gov: "No vaccination tracking. You manage records manually on your own.", tailio: "Vaccination tracker built-in — schedule, record, and share with any vet." },
+          { gov: "Slow processing. Approval can take days to weeks.", tailio: "Approval. Registration processed and confirmed within 24 - 72 hours." },
+          { gov: "No pet profile. No searchable ID if your pet goes missing.", tailio: "Lost pet QR system. Anyone who scans your pet's tag can contact you instantly." }
+        ].map((item, idx) => (
+          <div key={idx} className="flex items-start justify-between gap-8">
+            <div className="flex items-start gap-3 w-1/2">
+              <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
+              <span className="text-[#2C1A0E] text-[13px] font-bold leading-relaxed">{item.gov}</span>
+            </div>
+            <div className="flex items-start gap-3 w-1/2">
+              <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
+              <span className="text-[#2C1A0E] text-[13px] font-bold leading-relaxed">{item.tailio}</span>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Registration Steps */}
       <div className="text-center mb-12">
         <button className="bg-[#FFDBB8] py-[5px] px-3.5 rounded-[999px] mb-3">
           <span className="text-[#D96F28] text-xs font-bold">Simple & fast</span>
         </button>
-        <h2 className="text-[#2C1A0E] text-[40px] font-bold mb-4">Register in 2 easy steps</h2>
-        <p className="text-[#6B3A1F] text-base">We've made government compliance as easy as ordering food online.</p>
+        <h2 className="text-[#2C1A0E] text-[40px] font-black mb-4">Register in 2 easy steps</h2>
+        <p className="text-[#6B3A1F] text-base font-normal">We've made government compliance as easy as ordering food online.</p>
       </div>
 
       <div className="flex justify-center gap-[23px] mb-[73px]">
@@ -410,7 +341,7 @@ export default function HomePage() {
           </button>
           <img src="/images/user.png" className="w-[30px] h-[30px] mx-auto my-4" />
           <h3 className="text-[#2C1A0E] text-base font-bold mb-2">Create your account</h3>
-          <p className="text-[#A07050] text-[13px] mb-4">Sign up with your mobile number or<br />email. Takes 30 seconds.</p>
+          <p className="text-[#A07050] text-[13px] font-normal mb-4">Sign up with your mobile number or<br />email. Takes 30 seconds.</p>
           <span className="text-[#D96F28] text-[11px] font-bold">⏱ 30 seconds</span>
         </div>
         <div className="bg-white py-[31px] px-[21px] rounded-[20px] border border-solid border-[#F8EDE0] text-center w-80">
@@ -419,7 +350,7 @@ export default function HomePage() {
           </button>
           <img src="/images/upload-doc.png" className="w-8 h-[27px] mx-auto my-4" />
           <h3 className="text-[#2C1A0E] text-base font-bold mb-2">Upload documents</h3>
-          <p className="text-[#A07050] text-[13px] mb-4">Vaccination proof + your ID. We<br />handle the municipal filing for you.</p>
+          <p className="text-[#A07050] text-[13px] font-normal mb-4">Vaccination proof + your ID. We<br />handle the municipal filing for you.</p>
           <span className="text-[#D96F28] text-[11px] font-bold">30 Seconds</span>
         </div>
       </div>
@@ -427,20 +358,19 @@ export default function HomePage() {
       {/* Documents Section */}
       <div className="text-center mb-[47px]">
         <button className="bg-[#FFF0E4] py-1.5 px-3.5 gap-[7px] rounded-[99px] border border-solid border-[#F0D5B8] inline-flex items-center">
-          <span className="text-[#D96F28] text-xs">4 documents needed</span>
+          <span className="text-[#D96F28] text-xs font-bold">4 documents needed</span>
         </button>
       </div>
 
       <div className="text-center mb-[11px]">
-        <h2 className="text-[#2C1A0E] text-4xl font-bold">Keep these 5 documents ready.<br />That's all we need.</h2>
+        <h2 className="text-[#2C1A0E] text-4xl font-black">Keep these 5 documents ready.<br />That's all we need.</h2>
       </div>
       <div className="text-center mb-[52px]">
-        <p className="text-[#A07050] text-[15px]">Upload them digitally on Tailio — no photocopies, no office visits. We handle the rest with your municipality.</p>
+        <p className="text-[#A07050] text-[15px] font-normal">Upload them digitally on Tailio — no photocopies, no office visits. We handle the rest with your municipality.</p>
       </div>
 
       {/* Documents Cards - First Row */}
       <div className="flex gap-4 max-w-[1358px] mx-auto mb-3">
-        {/* Document 1 */}
         <div className="flex-1 bg-white pt-[1px] rounded-[18px] border border-solid border-[#F0D5B8]">
           <div className="bg-[#FF8C42] h-[3px] rounded-tl-[18px] rounded-tr-[18px]" />
           <div className="p-6">
@@ -449,7 +379,7 @@ export default function HomePage() {
               <button className="bg-[#2C1A0E] py-1 px-2.5 rounded-[14px] text-[#FFDBB8] text-[13px] font-bold">1</button>
             </div>
             <h3 className="text-[#2C1A0E] text-[17px] font-bold mb-2">Anti-Rabies Vaccination Certificate</h3>
-            <p className="text-[#A07050] text-sm mb-4">Issued by a registered veterinary practitioner or hospital, confirming your pet has received their anti-rabies vaccine.</p>
+            <p className="text-[#A07050] text-sm font-normal mb-4">Issued by a registered veterinary practitioner or hospital, confirming your pet has received their anti-rabies vaccine.</p>
             <p className="text-[#C4906A] text-[11px] font-bold mb-2">Must include</p>
             <ul className="space-y-2 mb-4">
               <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Pet's name, gender, and Age</span></li>
@@ -457,14 +387,13 @@ export default function HomePage() {
               <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Vet's signature & hospital stamp</span></li>
             </ul>
             <div className="flex gap-1.5">
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">JPG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">PNG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">PDF</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">JPG</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PNG</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PDF</button>
             </div>
           </div>
         </div>
 
-        {/* Document 2 */}
         <div className="flex-1 bg-white pt-[1px] rounded-[18px] border border-solid border-[#F0D5B8]">
           <div className="bg-[#FF8C42] h-[3px] rounded-tl-[18px] rounded-tr-[18px]" />
           <div className="p-6">
@@ -473,7 +402,7 @@ export default function HomePage() {
               <button className="bg-[#2C1A0E] py-1 px-2.5 rounded-[14px] text-[#FFDBB8] text-[13px] font-bold">2</button>
             </div>
             <h3 className="text-[#2C1A0E] text-[17px] font-bold mb-2">Applicant ID Proof</h3>
-            <p className="text-[#A07050] text-sm mb-4">Any government-issued photo identity document of the pet owner. Must be valid and clearly legible.</p>
+            <p className="text-[#A07050] text-sm font-normal mb-4">Any government-issued photo identity document of the pet owner. Must be valid and clearly legible.</p>
             <p className="text-[#C4906A] text-[11px] font-bold mb-2">Accepted documents</p>
             <ul className="space-y-2 mb-4">
               <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Aadhaar Card</span></li>
@@ -481,9 +410,9 @@ export default function HomePage() {
               <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Passport or Voter ID</span></li>
             </ul>
             <div className="flex gap-1.5">
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">JPG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">PNG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">PDF</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">JPG</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PNG</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PDF</button>
             </div>
           </div>
         </div>
@@ -491,7 +420,6 @@ export default function HomePage() {
 
       {/* Documents Cards - Second Row */}
       <div className="flex gap-4 max-w-[1358px] mx-auto mb-3">
-        {/* Document 3 */}
         <div className="flex-1 bg-white pt-[1px] rounded-[18px] border border-solid border-[#F0D5B8]">
           <div className="bg-[#FF8C42] h-[3px] rounded-tl-[18px] rounded-tr-[18px]" />
           <div className="p-6">
@@ -500,7 +428,7 @@ export default function HomePage() {
               <button className="bg-[#2C1A0E] py-1 px-2.5 rounded-[14px] text-[#FFDBB8] text-[13px] font-bold">3</button>
             </div>
             <h3 className="text-[#2C1A0E] text-[17px] font-bold mb-2">Applicant Address Proof</h3>
-            <p className="text-[#A07050] text-sm mb-4">Proof that you reside in Delhi, Noida, Ghaziabad or Gurugram. Must show your current address clearly.</p>
+            <p className="text-[#A07050] text-sm font-normal mb-4">Proof that you reside in Delhi, Noida, Ghaziabad or Gurugram. Must show your current address clearly.</p>
             <p className="text-[#C4906A] text-[11px] font-bold mb-2">Accepted documents</p>
             <ul className="space-y-2 mb-4">
               <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Aadhaar Card (serves as both)</span></li>
@@ -508,14 +436,13 @@ export default function HomePage() {
               <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Rental agreement or bank statement</span></li>
             </ul>
             <div className="flex gap-1.5">
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">JPG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">PNG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">PDF</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">JPG</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PNG</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PDF</button>
             </div>
           </div>
         </div>
 
-        {/* Document 4 - Photograph with Pet Dog */}
         <div className="flex-1 bg-white pt-[1px] rounded-[18px] border border-solid border-[#F0D5B8]">
           <div className="bg-[#FF8C42] h-[3px] rounded-tl-[18px] rounded-tr-[18px]" />
           <div className="p-6">
@@ -524,7 +451,7 @@ export default function HomePage() {
               <button className="bg-[#2C1A0E] py-1 px-2.5 rounded-[14px] text-[#FFDBB8] text-[13px] font-bold">4</button>
             </div>
             <h3 className="text-[#2C1A0E] text-[17px] font-bold mb-2">Photograph with Your Pet Dog</h3>
-            <p className="text-[#A07050] text-sm mb-4">A clear, recent photograph of you (the applicant) together with your pet dog. Both faces must be visible.</p>
+            <p className="text-[#A07050] text-sm font-normal mb-4">A clear, recent photograph of you (the applicant) together with your pet dog. Both faces must be visible.</p>
             <p className="text-[#C4906A] text-[11px] font-bold mb-2">Photo guidelines</p>
             <ul className="space-y-2 mb-4">
               <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Good natural lighting</span></li>
@@ -532,9 +459,9 @@ export default function HomePage() {
               <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Recent — taken within last 3 months</span></li>
             </ul>
             <div className="flex gap-1.5">
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">JPG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">PNG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px]">PDF</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">JPG</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PNG</button>
+              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PDF</button>
             </div>
           </div>
         </div>
@@ -543,7 +470,7 @@ export default function HomePage() {
       {/* One Form for You Section */}
       <div className="flex gap-6 max-w-[1365px] mx-auto mb-[63px]">
         <div className="flex-1 bg-[#FF8C42] py-[71px] pr-6 rounded-[14px]">
-          <h2 className="text-white text-4xl font-bold mb-[18px] ml-[22px]">Just One Form for You. <br />Everything else? On Us.</h2>
+          <h2 className="text-white text-4xl font-black mb-[18px] ml-[22px]">Just One Form for You. <br />Everything else? On Us.</h2>
           <p className="text-white text-[17px] font-bold mb-[23px] ml-6">Register your pet in under 1 minute. Upload everything digitally — no printouts, no queues.</p>
           <button className="bg-white text-left py-2.5 px-[19px] ml-6 rounded-lg text-[#D96F28] text-sm font-bold hover:bg-gray-100 transition-colors">
             Start Registration →
@@ -556,72 +483,52 @@ export default function HomePage() {
         <div className="flex justify-between items-start px-6">
           <div>
             <button className="bg-[#FF8C4226] py-1.5 px-[15px] mb-[43px] rounded-[99px] border border-solid border-[#FF8C4240]">
-              <span className="text-[#FFDBB8] text-[10px]">Simple, transparent pricing</span>
+              <span className="text-[#FFDBB8] text-[10px] font-bold">Simple, transparent pricing</span>
             </button>
-            <h2 className="text-[#FF8C42] text-[40px] font-bold">One price. <br />Everything included.</h2>
-            <p className="text-[#FFF3E0] text-base mt-4">No hidden charges, no surprise fees. ₹1,999 covers your complete pet registration <br />filing, certificate, and everything in between.</p>
+            <h2 className="text-[#FF8C42] text-[40px] font-black">One price. <br />Everything included.</h2>
+            <p className="text-[#FFF3E0] text-base font-normal mt-4">No hidden charges, no surprise fees. ₹1,999 covers your complete pet registration <br />filing, certificate, and everything in between.</p>
           </div>
           <div className="text-center mt-[55px]">
             <button className="bg-[#FF8C4226] py-1.5 px-[51px] mb-[67px] rounded-[99px] border border-solid border-[#FF8C4240]">
-              <span className="text-[#FFDBB8] text-[10px]">All Inclusive</span>
+              <span className="text-[#FFDBB8] text-[10px] font-bold">All Inclusive</span>
             </button>
-            <span className="text-[#FF8C42] text-9xl font-bold">₹1,999/-</span>
+            <span className="text-[#FF8C42] text-9xl font-black">₹1,999/-</span>
           </div>
         </div>
 
         <div className="flex items-start max-w-[1279px] mx-auto mb-[27px] gap-4">
-  {/* Box 1 - Municipal Filing */}
-  <div className="flex-1 text-center bg-[#FFFFFF08] py-[30px] rounded-[14px] border border-solid border-[#FFF3E01A]">
-    <h3 className="text-[#FF8C42] text-xl font-bold">Municipal Filing</h3>
-    {/* Add your symbol here */}
-    <div className="my-2">
-      {/* Replace with your local symbol/image */}
-      <img src="/images/office-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
-      {/* Or use an icon component */}
-      {/* <YourSymbolIcon className="w-8 h-8 mx-auto" /> */}
-    </div>
-    <p className="text-[#FFF3E0] text-sm mt-2">We handle MCD / Noida Authority / GMC paperwork</p>
-  </div>
+          <div className="flex-1 text-center bg-[#FFFFFF08] py-[30px] rounded-[14px] border border-solid border-[#FFF3E01A]">
+            <h3 className="text-[#FF8C42] text-xl font-bold">Municipal Filing</h3>
+            <div className="my-2">
+              <img src="/images/office-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
+            </div>
+            <p className="text-[#FFF3E0] text-sm font-normal mt-2">We handle MCD / Noida Authority / GMC paperwork</p>
+          </div>
 
-  {/* Box 2 - Official certificate */}
-  <div className="flex-1 text-center bg-[#FFFFFF08] py-8 rounded-[14px] border border-solid border-[#FFF3E01A]">
-    <h3 className="text-[#FF8C42] text-xl font-bold">Official certificate</h3>
-    {/* Add your symbol here */}
-    <div className="my-2">
-      {/* Replace with your local symbol/image */}
-      <img src="/images/certificate-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
-      {/* Or use an icon component */}
-      {/* <YourSymbolIcon className="w-8 h-8 mx-auto" /> */}
-    </div>
-    <p className="text-[#FFF3E0] text-sm mt-2">Govt-issued, delivered within 24 hrs - 72hrs</p>
-  </div>
+          <div className="flex-1 text-center bg-[#FFFFFF08] py-8 rounded-[14px] border border-solid border-[#FFF3E01A]">
+            <h3 className="text-[#FF8C42] text-xl font-bold">Official certificate</h3>
+            <div className="my-2">
+              <img src="/images/certificate-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
+            </div>
+            <p className="text-[#FFF3E0] text-sm font-normal mt-2">Govt-issued, delivered within 24 hrs - 72hrs</p>
+          </div>
 
-  {/* Box 3 - Vaccination tracker */}
-  <div className="flex-1 text-center bg-[#FFFFFF08] pt-8 rounded-[14px] border border-solid border-[#FFF3E01A]">
-    <h3 className="text-[#FF8C42] text-xl font-bold mb-[29px]">Vaccination tracker</h3>
-    {/* Add your symbol here */}
-    <div className="my-2">
-      {/* Replace with your local symbol/image */}
-      <img src="/images/vaccine-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
-      {/* Or use an icon component */}
-      {/* <YourSymbolIcon className="w-8 h-8 mx-auto" /> */}
-    </div>
-    <p className="text-[#FFF3E0] text-sm mb-[45px]">Digital records + auto-reminders</p>
-  </div>
+          <div className="flex-1 text-center bg-[#FFFFFF08] pt-8 rounded-[14px] border border-solid border-[#FFF3E01A]">
+            <h3 className="text-[#FF8C42] text-xl font-bold mb-[29px]">Vaccination tracker</h3>
+            <div className="my-2">
+              <img src="/images/vaccine-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
+            </div>
+            <p className="text-[#FFF3E0] text-sm font-normal mb-[45px]">Digital records + auto-reminders</p>
+          </div>
 
-  {/* Box 4 - Renewal reminders */}
-  <div className="flex-1 text-center bg-[#FFFFFF08] py-[37px] rounded-[14px] border border-solid border-[#FFF3E01A]">
-    <h3 className="text-[#FF8C42] text-xl font-bold">Renewal reminders</h3>
-    {/* Add your symbol here */}
-    <div className="my-2">
-      {/* Replace with your local symbol/image */}
-      <img src="/images/reminder.png" className="w-8 h-8 mx-auto" alt="symbol" />
-      {/* Or use an icon component */}
-      {/* <YourSymbolIcon className="w-8 h-8 mx-auto" /> */}
-    </div>
-    <p className="text-[#FFF3E0] text-sm mt-2">WhatsApp & email before expiry</p>
-  </div>
-</div>
+          <div className="flex-1 text-center bg-[#FFFFFF08] py-[37px] rounded-[14px] border border-solid border-[#FFF3E01A]">
+            <h3 className="text-[#FF8C42] text-xl font-bold">Renewal reminders</h3>
+            <div className="my-2">
+              <img src="/images/reminder.png" className="w-8 h-8 mx-auto" alt="symbol" />
+            </div>
+            <p className="text-[#FFF3E0] text-sm font-normal mt-2">WhatsApp & email before expiry</p>
+          </div>
+        </div>
       </div>
 
       {/* FAQ Section */}
@@ -630,8 +537,8 @@ export default function HomePage() {
           <button className="bg-[#FFDBB8] py-[5px] px-[13px] rounded-[999px] mb-4">
             <span className="text-[#D96F28] text-xs font-bold">Common questions</span>
           </button>
-          <h2 className="text-[#2C1A0E] text-[40px] font-bold">Everything you want to know</h2>
-          <p className="text-[#6B3A1F] text-base mt-2">If it's not here, our support team responds in under 2 hours.</p>
+          <h2 className="text-[#2C1A0E] text-[40px] font-black">Everything you want to know</h2>
+          <p className="text-[#6B3A1F] text-base font-normal mt-2">If it's not here, our support team responds in under 2 hours.</p>
         </div>
 
         <div className="space-y-4">
@@ -645,7 +552,7 @@ export default function HomePage() {
                 <span className="text-[#FF8C42] text-4xl font-bold">{faqOpen === index ? '−' : '+'}</span>
               </button>
               {faqOpen === index && (
-                <p className="text-[#6B3A1F] text-sm mt-2 pl-4">{faq.answer}</p>
+                <p className="text-[#6B3A1F] text-sm font-normal mt-2 pl-4 leading-relaxed">{faq.answer}</p>
               )}
             </div>
           ))}
@@ -655,8 +562,8 @@ export default function HomePage() {
       {/* Footer CTA */}
       <div className="bg-gradient-to-r from-[#D96F28] to-[#FF8C42] max-w-[1438px] py-[50px] mx-auto rounded-2xl mb-[21px]">
         <div className="text-center">
-          <h2 className="text-white text-[42px] font-bold">One Form<br />One Minute<br />One Year of Security !!</h2>
-          <p className="text-white text-base mt-6">Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad & Gurugram who are already compliant.</p>
+          <h2 className="text-white text-[42px] font-black">One Form<br />One Minute<br />One Year of Security !!</h2>
+          <p className="text-white text-base font-normal mt-6">Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad & Gurugram who are already compliant.</p>
         </div>
       </div>
 
@@ -665,34 +572,34 @@ export default function HomePage() {
         <div className="flex items-start gap-8">
           <div>
             <img src="/images/tailio.png" className="w-[260px] h-[260px] mb-2" />
-            <p className="text-[#D96F28] text-sm">Making pet registration simple, digital,<br />and stress-free across Delhi NCR.</p>
+            <p className="text-[#D96F28] text-sm font-normal">Making pet registration simple, digital,<br />and stress-free across Delhi NCR.</p>
           </div>
           <div className="flex-1" />
           <div>
             <h4 className="text-[#FF8C42] text-xs font-bold mb-[17px]">Platform</h4>
             <ul className="space-y-3">
-              <li className="text-[#FF8C42] text-sm">Pet Registration</li>
-              <li className="text-[#FF8C42] text-sm">Digital Pet ID</li>
-              <li className="text-[#FF8C42] text-sm">Vaccination Tracker</li>
-              <li className="text-[#FF8C42] text-sm">Lost Pet QR</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Pet Registration</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Digital Pet ID</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Vaccination Tracker</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Lost Pet QR</li>
             </ul>
           </div>
           <div>
             <h4 className="text-[#FF8C42] text-xs font-bold mb-[17px]">Cities</h4>
             <ul className="space-y-3">
-              <li className="text-[#FF8C42] text-sm">Delhi</li>
-              <li className="text-[#FF8C42] text-sm">Noida</li>
-              <li className="text-[#FF8C42] text-sm">Ghaziabad</li>
-              <li className="text-[#FF8C42] text-sm">Gurugram</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Delhi</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Noida</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Ghaziabad</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Gurugram</li>
             </ul>
           </div>
           <div>
             <h4 className="text-[#FF8C42] text-xs font-bold mb-[17px]">Company</h4>
             <ul className="space-y-3">
-              <li className="text-[#FF8C42] text-sm">About Tailio</li>
-              <li className="text-[#FF8C42] text-sm">Privacy Policy</li>
-              <li className="text-[#FF8C42] text-sm">Terms of Service</li>
-              <li className="text-[#FF8C42] text-sm">Contact Us</li>
+              <li className="text-[#FF8C42] text-sm font-normal">About Tailio</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Privacy Policy</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Terms of Service</li>
+              <li className="text-[#FF8C42] text-sm font-normal">Contact Us</li>
             </ul>
           </div>
         </div>
