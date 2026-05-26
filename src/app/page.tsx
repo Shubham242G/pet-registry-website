@@ -277,53 +277,122 @@ export default function HomePage() {
       </div>
 
       {/* Tailio vs Municipal Portal */}
-      <div className="max-w-[1079px] mx-auto mb-[59px] text-center">
-        <button className="bg-[#FFDBB8] py-[5px] px-3.5 mb-3 rounded-[999px]">
-          <span className="text-[#D96F28] text-xs font-bold">Tailio vs Municipal Portal</span>
-        </button>
-        <h2 className="text-[#2C1A0E] text-[40px] font-bold mb-4">Why register through Tailio<br />instead of going directly?</h2>
-        <p className="text-[#6B3A1F] text-base">Both paths lead to legal registration. But only one is designed for humans — and their pets.</p>
-      </div>
+     <div className="max-w-[1079px] mx-auto mb-[59px] text-center">
+  <button className="bg-[#FFDBB8] py-[5px] px-3.5 mb-3 rounded-[999px]">
+    <span className="text-[#D96F28] text-xs font-bold">Tailio vs Municipal Portal</span>
+  </button>
+  <h2 className="text-[#2C1A0E] text-[40px] font-bold mb-4">Why register through Tailio<br />instead of going directly?</h2>
+  <p className="text-[#6B3A1F] text-base">Both paths lead to legal registration. But only one is designed for humans — and their pets.</p>
+</div>
 
-      {/* Comparison Table */}
-      <div className="max-w-[1025px] mx-auto mb-[29px]">
-        <div className="flex">
-          <div className="flex-1 text-center border-b border-[#F8EDE0] pb-2">
-            <span className="text-[#2C1A0E] text-[17px] font-bold">Municipal Corporation Portal</span>
-            <p className="text-[#A07050] text-xs">Direct government registration</p>
-          </div>
-          <div className="px-4">
-            <span className="text-[#A07050] text-[13px] font-bold">VS</span>
-          </div>
-          <div className="flex-1 bg-[#FF8C42] py-[22px] pl-[26px] rounded-2xl">
-            <span className="text-white text-[17px] font-bold">Tailio Platform</span>
-            <p className="text-white text-xs">Smart, digital-first registration</p>
-          </div>
-        </div>
-      </div>
+{/* Comparison Table */}
+<div className="max-w-[1025px] mx-auto mb-[29px]">
+  <div className="flex items-stretch">
+    {/* Left Column - Municipal Portal */}
+    <div className="flex-1 text-center border-b border-[#F8EDE0] pb-2">
+      <span className="text-[#2C1A0E] text-[17px] font-bold">Municipal Corporation Portal</span>
+      <p className="text-[#A07050] text-xs">Direct government registration</p>
+    </div>
+    
+    {/* VS Divider */}
+    <div className="px-4 flex items-center">
+      <span className="text-[#A07050] text-[13px] font-bold">VS</span>
+    </div>
+    
+    {/* Right Column - Tailio Platform */}
+    <div className="flex-1 bg-[#FF8C42] py-[22px] pl-[26px] rounded-2xl">
+      <span className="text-white text-[17px] font-bold">Tailio Platform</span>
+      <p className="text-white text-xs">Smart, digital-first registration</p>
+    </div>
+  </div>
+</div>
 
-      {/* Comparison Points */}
-      <div className="max-w-4xl mx-auto space-y-4 mb-[115px]">
-        {[
-          { gov: "Multiple office visits required. Physical forms, queues, and manual submission.", tailio: "100% online. Register from your phone in just 1 minute, from anywhere." },
-          { gov: "No digital record. Paper certificate that can be lost, damaged, or misplaced.", tailio: "Digital certificate + QR code stored on your profile, always accessible." },
-          { gov: "No reminders. Miss your annual renewal and risk a fine.", tailio: "Automatic renewal reminders via WhatsApp, SMS, and email — never miss a date." },
-          { gov: "No vaccination tracking. You manage records manually on your own.", tailio: "Vaccination tracker built-in — schedule, record, and share with any vet." },
-          { gov: "Slow processing. Approval can take days to weeks.", tailio: "Approval. Registration processed and confirmed within 24 - 72 hours." },
-          { gov: "No pet profile. No searchable ID if your pet goes missing.", tailio: "Lost pet QR system. Anyone who scans your pet's tag can contact you instantly." }
-        ].map((item, idx) => (
-          <div key={idx} className="flex items-center justify-between">
-            <div className="flex items-center gap-3 w-1/2">
-              <span className="text-[#2C1A0E] text-base">❌</span>
-              <span className="text-[#2C1A0E] text-[13px] font-bold">{item.gov}</span>
-            </div>
-            <div className="flex items-center gap-3 w-1/2">
-              <span className="text-[#2C1A0E] text-base">✅</span>
-              <span className="text-[#2C1A0E] text-[13px] font-bold">{item.tailio}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+{/* Comparison Points */}
+<div className="max-w-4xl mx-auto space-y-4 mb-[115px]">
+  {/* Point 1 */}
+  <div className="flex items-start justify-between gap-8">
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ❌ icon/image */}
+       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">Multiple office visits required. Physical forms, queues, and manual submission.</span>
+    </div>
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ✅ icon/image */}
+      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">100% online. Register from your phone in just 1 minute, from anywhere.</span>
+    </div>
+  </div>
+
+  {/* Point 2 */}
+  <div className="flex items-start justify-between gap-8">
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ❌ icon/image */}
+       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">No digital record. Paper certificate that can be lost, damaged, or misplaced.</span>
+    </div>
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ✅ icon/image */}
+      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">Digital certificate + QR code stored on your profile, always accessible.</span>
+    </div>
+  </div>
+
+  {/* Point 3 */}
+  <div className="flex items-start justify-between gap-8">
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ❌ icon/image */}
+       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">No reminders. Miss your annual renewal and risk a fine.</span>
+    </div>
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ✅ icon/image */}
+      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">Automatic renewal reminders via WhatsApp, SMS, and email — never miss a date.</span>
+    </div>
+  </div>
+
+  {/* Point 4 */}
+  <div className="flex items-start justify-between gap-8">
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ❌ icon/image */}
+       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">No vaccination tracking. You manage records manually on your own.</span>
+    </div>
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ✅ icon/image */}
+      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">Vaccination tracker built-in — schedule, record, and share with any vet.</span>
+    </div>
+  </div>
+
+  {/* Point 5 */}
+  <div className="flex items-start justify-between gap-8">
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ❌ icon/image */}
+       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">Slow processing. Approval can take days to weeks.</span>
+    </div>
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ✅ icon/image */}
+      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">Approval. Registration processed and confirmed within 24 - 72 hours.</span>
+    </div>
+  </div>
+
+  {/* Point 6 */}
+  <div className="flex items-start justify-between gap-8">
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ❌ icon/image */}
+       <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">No pet profile. No searchable ID if your pet goes missing.</span>
+    </div>
+    <div className="flex items-start gap-3 w-1/2">
+      {/* Replace with your local ✅ icon/image */}
+      <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
+      <span className="text-[#2C1A0E] text-[13px] font-bold">Lost pet QR system. Anyone who scans your pet's tag can contact you instantly.</span>
+    </div>
+  </div>
+</div>
 
       {/* Registration Steps */}
       <div className="text-center mb-12">
@@ -501,23 +570,58 @@ export default function HomePage() {
         </div>
 
         <div className="flex items-start max-w-[1279px] mx-auto mb-[27px] gap-4">
-          <div className="flex-1 text-center bg-[#FFFFFF08] py-[30px] rounded-[14px] border border-solid border-[#FFF3E01A]">
-            <h3 className="text-[#FF8C42] text-xl font-bold">Municipal Filing</h3>
-            <p className="text-[#FFF3E0] text-sm mt-2">We handle MCD / Noida Authority / GMC paperwork</p>
-          </div>
-          <div className="flex-1 text-center bg-[#FFFFFF08] py-8 rounded-[14px] border border-solid border-[#FFF3E01A]">
-            <h3 className="text-[#FF8C42] text-xl font-bold">Official certificate</h3>
-            <p className="text-[#FFF3E0] text-sm mt-2">Govt-issued, delivered within 24 hrs - 72hrs</p>
-          </div>
-          <div className="flex-1 text-center bg-[#FFFFFF08] pt-8 rounded-[14px] border border-solid border-[#FFF3E01A]">
-            <h3 className="text-[#FF8C42] text-xl font-bold mb-[29px]">Vaccination tracker</h3>
-            <p className="text-[#FFF3E0] text-sm mb-[45px]">Digital records + auto-reminders</p>
-          </div>
-          <div className="flex-1 text-center bg-[#FFFFFF08] py-[37px] rounded-[14px] border border-solid border-[#FFF3E01A]">
-            <h3 className="text-[#FF8C42] text-xl font-bold">Renewal reminders</h3>
-            <p className="text-[#FFF3E0] text-sm mt-2">WhatsApp & email before expiry</p>
-          </div>
-        </div>
+  {/* Box 1 - Municipal Filing */}
+  <div className="flex-1 text-center bg-[#FFFFFF08] py-[30px] rounded-[14px] border border-solid border-[#FFF3E01A]">
+    <h3 className="text-[#FF8C42] text-xl font-bold">Municipal Filing</h3>
+    {/* Add your symbol here */}
+    <div className="my-2">
+      {/* Replace with your local symbol/image */}
+      <img src="/images/office-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
+      {/* Or use an icon component */}
+      {/* <YourSymbolIcon className="w-8 h-8 mx-auto" /> */}
+    </div>
+    <p className="text-[#FFF3E0] text-sm mt-2">We handle MCD / Noida Authority / GMC paperwork</p>
+  </div>
+
+  {/* Box 2 - Official certificate */}
+  <div className="flex-1 text-center bg-[#FFFFFF08] py-8 rounded-[14px] border border-solid border-[#FFF3E01A]">
+    <h3 className="text-[#FF8C42] text-xl font-bold">Official certificate</h3>
+    {/* Add your symbol here */}
+    <div className="my-2">
+      {/* Replace with your local symbol/image */}
+      <img src="/images/certificate-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
+      {/* Or use an icon component */}
+      {/* <YourSymbolIcon className="w-8 h-8 mx-auto" /> */}
+    </div>
+    <p className="text-[#FFF3E0] text-sm mt-2">Govt-issued, delivered within 24 hrs - 72hrs</p>
+  </div>
+
+  {/* Box 3 - Vaccination tracker */}
+  <div className="flex-1 text-center bg-[#FFFFFF08] pt-8 rounded-[14px] border border-solid border-[#FFF3E01A]">
+    <h3 className="text-[#FF8C42] text-xl font-bold mb-[29px]">Vaccination tracker</h3>
+    {/* Add your symbol here */}
+    <div className="my-2">
+      {/* Replace with your local symbol/image */}
+      <img src="/images/vaccine-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
+      {/* Or use an icon component */}
+      {/* <YourSymbolIcon className="w-8 h-8 mx-auto" /> */}
+    </div>
+    <p className="text-[#FFF3E0] text-sm mb-[45px]">Digital records + auto-reminders</p>
+  </div>
+
+  {/* Box 4 - Renewal reminders */}
+  <div className="flex-1 text-center bg-[#FFFFFF08] py-[37px] rounded-[14px] border border-solid border-[#FFF3E01A]">
+    <h3 className="text-[#FF8C42] text-xl font-bold">Renewal reminders</h3>
+    {/* Add your symbol here */}
+    <div className="my-2">
+      {/* Replace with your local symbol/image */}
+      <img src="/images/reminder.png" className="w-8 h-8 mx-auto" alt="symbol" />
+      {/* Or use an icon component */}
+      {/* <YourSymbolIcon className="w-8 h-8 mx-auto" /> */}
+    </div>
+    <p className="text-[#FFF3E0] text-sm mt-2">WhatsApp & email before expiry</p>
+  </div>
+</div>
       </div>
 
       {/* FAQ Section */}

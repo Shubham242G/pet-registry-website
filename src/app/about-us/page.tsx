@@ -173,7 +173,7 @@ export default function AboutPage() {
           {/* Icons row - using img tags */}
           <div className="flex items-center mb-2.5">
             <img src="/images/target.png" className="w-12 h-12 mr-[145px] rounded-[18px] object-fill" alt="Target icon" />
-            <img src="/images/planet.png" className="w-12 h-12 mr-[146px] rounded-[18px] object-fill" alt="Planet icon" />
+            <img src="/images/something.png" className="w-12 h-12 mr-[146px] rounded-[18px] object-fill" alt="Planet icon" />
             <img src="/images/widget.png" className="w-12 h-12 rounded-[18px] object-fill" alt="Widget icon" />
           </div>
           <div className="flex items-start mb-[34px]">
