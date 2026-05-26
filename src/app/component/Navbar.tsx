@@ -121,6 +121,12 @@ export default function Navbar() {
                 Blogs
               </Link>
               <Link 
+                href="/about-us" 
+                className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
+              >
+                About us
+              </Link>
+              <Link 
                 href="/pages/contact" 
                 className="text-lg font-medium text-gray-900 hover:text-orange-500 transition-colors"
               >
@@ -278,6 +284,15 @@ function MobileMenu({
           onClick={() => setIsOpen(false)}
         >
           Blogs
+        </Link>
+      </li>
+      <li>
+        <Link 
+          href="/about-us" 
+          className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100" 
+          onClick={() => setIsOpen(false)}
+        >
+          About Us
         </Link>
       </li>
       <li>
