@@ -129,7 +129,6 @@ export default function DocumentsPage() {
         }
       });
       
-      // Load documents from localStorage
       const storedDocs = localStorage.getItem("user_documents");
       if (storedDocs) {
         const localDocs = JSON.parse(storedDocs);
@@ -171,18 +170,18 @@ export default function DocumentsPage() {
       const selectedPet = pets.find(p => p._id === selectedPetId);
       
       const newDocument = {
-  id: Date.now().toString(),
-  name: documentName,
-  type: documentType,
-  category: documentType as "vaccination" | "medical" | "registration" | "identification" | "other",
-  uploadDate: new Date().toISOString().split('T')[0],
-  status: "pending" as "approved" | "pending" | "rejected",
-  petId: selectedPetId,
-  petName: selectedPet?.name || "Unknown",
-  fileType: file?.type || "unknown",
-  fileSize: file?.size || 0,
-  url: "#",  // Add this missing property
-};
+        id: Date.now().toString(),
+        name: documentName,
+        type: documentType,
+        category: documentType as "vaccination" | "medical" | "registration" | "identification" | "other",
+        uploadDate: new Date().toISOString().split('T')[0],
+        status: "pending" as "approved" | "pending" | "rejected",
+        petId: selectedPetId,
+        petName: selectedPet?.name || "Unknown",
+        fileType: file?.type || "unknown",
+        fileSize: file?.size || 0,
+        url: "#",
+      };
       
       allDocs.push(newDocument);
       localStorage.setItem("user_documents", JSON.stringify(allDocs));
@@ -207,26 +206,26 @@ export default function DocumentsPage() {
   const getFileIcon = (fileType: string) => {
     switch (fileType.toLowerCase()) {
       case "pdf":
-        return <FilePdf className="w-8 h-8 text-red-500" />;
+        return <FilePdf className="w-6 h-6 md:w-8 md:h-8 text-red-500" />;
       case "jpg":
       case "jpeg":
       case "png":
       case "gif":
-        return <FileImage className="w-8 h-8 text-blue-500" />;
+        return <FileImage className="w-6 h-6 md:w-8 md:h-8 text-blue-500" />;
       case "doc":
       case "docx":
-        return <FileText className="w-8 h-8 text-blue-600" />;
+        return <FileText className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />;
       case "xls":
       case "xlsx":
-        return <FileSpreadsheet className="w-8 h-8 text-green-600" />;
+        return <FileSpreadsheet className="w-6 h-6 md:w-8 md:h-8 text-green-600" />;
       case "zip":
       case "rar":
-        return <FileArchive className="w-8 h-8 text-yellow-600" />;
+        return <FileArchive className="w-6 h-6 md:w-8 md:h-8 text-yellow-600" />;
       case "json":
       case "xml":
-        return <FileCode className="w-8 h-8 text-purple-600" />;
+        return <FileCode className="w-6 h-6 md:w-8 md:h-8 text-purple-600" />;
       default:
-        return <File className="w-8 h-8 text-gray-500" />;
+        return <File className="w-6 h-6 md:w-8 md:h-8 text-gray-500" />;
     }
   };
 
@@ -275,13 +274,13 @@ export default function DocumentsPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "approved":
-        return <CheckCircle className="w-4 h-4" />;
+        return <CheckCircle className="w-3 h-3 md:w-4 md:h-4" />;
       case "pending":
-        return <Clock className="w-4 h-4" />;
+        return <Clock className="w-3 h-3 md:w-4 md:h-4" />;
       case "rejected":
-        return <XCircle className="w-4 h-4" />;
+        return <XCircle className="w-3 h-3 md:w-4 md:h-4" />;
       default:
-        return <AlertCircle className="w-4 h-4" />;
+        return <AlertCircle className="w-3 h-3 md:w-4 md:h-4" />;
     }
   };
 
@@ -324,91 +323,95 @@ export default function DocumentsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
+    <div className="flex min-h-screen bg-gray-50 font-['Nunito']">
+      {/* Sidebar - hidden on mobile */}
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
       
-      <div className="flex-1 ml-64">
-        <div className="p-8">
+      {/* Main Content - No left padding on mobile */}
+      <div className="flex-1 md:ml-64">
+        <div className="p-4 md:p-8">
           {/* Header */}
-          <div className="mb-8">
-            <div className="flex justify-between items-start">
+          <div className="mb-6 md:mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">My Documents</h1>
-                <p className="text-gray-600 mt-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">My Documents</h1>
+                <p className="text-sm md:text-base text-gray-600 mt-1">
                   Manage all your pet's important documents in one place
                 </p>
               </div>
-              {/* <button
+              <button
                 onClick={() => setShowUploadModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition"
+                className="flex items-center gap-2 px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition text-sm md:text-base w-full sm:w-auto justify-center"
               >
                 <Upload className="w-4 h-4" />
                 Upload Document
-              </button> */}
+              </button>
             </div>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          {/* Stats Cards - Responsive grid */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-6 md:mb-8">
+            <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Documents</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                  <p className="text-xs md:text-sm text-gray-600">Total</p>
+                  <p className="text-xl md:text-2xl font-bold text-gray-900">{stats.total}</p>
                 </div>
-                <FileText className="w-8 h-8 text-gray-400" />
+                <FileText className="w-5 h-5 md:w-8 md:h-8 text-gray-400" />
               </div>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Approved</p>
-                  <p className="text-2xl font-bold text-green-600">{stats.approved}</p>
+                  <p className="text-xs md:text-sm text-gray-600">Approved</p>
+                  <p className="text-xl md:text-2xl font-bold text-green-600">{stats.approved}</p>
                 </div>
-                <CheckCircle className="w-8 h-8 text-green-500" />
+                <CheckCircle className="w-5 h-5 md:w-8 md:h-8 text-green-500" />
               </div>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Pending</p>
-                  <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+                  <p className="text-xs md:text-sm text-gray-600">Pending</p>
+                  <p className="text-xl md:text-2xl font-bold text-yellow-600">{stats.pending}</p>
                 </div>
-                <Clock className="w-8 h-8 text-yellow-500" />
+                <Clock className="w-5 h-5 md:w-8 md:h-8 text-yellow-500" />
               </div>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Rejected</p>
-                  <p className="text-2xl font-bold text-red-600">{stats.rejected}</p>
+                  <p className="text-xs md:text-sm text-gray-600">Rejected</p>
+                  <p className="text-xl md:text-2xl font-bold text-red-600">{stats.rejected}</p>
                 </div>
-                <XCircle className="w-8 h-8 text-red-500" />
+                <XCircle className="w-5 h-5 md:w-8 md:h-8 text-red-500" />
               </div>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white p-3 md:p-4 rounded-lg shadow-sm border border-gray-200 col-span-2 md:col-span-1">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Expiring Soon</p>
-                  <p className="text-2xl font-bold text-orange-600">{stats.expiringSoon}</p>
+                  <p className="text-xs md:text-sm text-gray-600">Expiring Soon</p>
+                  <p className="text-xl md:text-2xl font-bold text-orange-600">{stats.expiringSoon}</p>
                 </div>
-                <AlertCircle className="w-8 h-8 text-orange-500" />
+                <AlertCircle className="w-5 h-5 md:w-8 md:h-8 text-orange-500" />
               </div>
             </div>
           </div>
 
-          {/* Filters */}
+          {/* Filters - Stack on mobile */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-            <div className="flex flex-wrap gap-4">
-              <div className="flex-1 min-w-[200px]">
+            <div className="flex flex-wrap gap-3 md:gap-4">
+              <div className="flex-1 min-w-[180px] md:min-w-[200px]">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Search by document or pet name..."
+                    placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42]"
+                    className="w-full pl-9 pr-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42]"
                   />
                 </div>
               </div>
@@ -417,7 +420,7 @@ export default function DocumentsPage() {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="appearance-none pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42] bg-white cursor-pointer"
+                  className="appearance-none pl-4 pr-10 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42] bg-white cursor-pointer"
                 >
                   <option value="all">All Categories</option>
                   <option value="vaccination">Vaccination</option>
@@ -433,7 +436,7 @@ export default function DocumentsPage() {
                 <select
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="appearance-none pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42] bg-white cursor-pointer"
+                  className="appearance-none pl-4 pr-10 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42] bg-white cursor-pointer"
                 >
                   <option value="all">All Status</option>
                   <option value="approved">Approved</option>
@@ -450,10 +453,10 @@ export default function DocumentsPage() {
                     setSelectedCategory("all");
                     setSelectedStatus("all");
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 transition"
+                  className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 transition text-sm"
                 >
                   <X className="w-4 h-4" />
-                  Clear Filters
+                  Clear
                 </button>
               )}
             </div>
@@ -461,10 +464,10 @@ export default function DocumentsPage() {
 
           {/* Documents List */}
           {filteredDocuments.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-              <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No documents found</h3>
-              <p className="text-gray-600 mb-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 md:p-12 text-center">
+              <FileText className="w-12 h-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-base md:text-lg font-medium text-gray-900 mb-2">No documents found</h3>
+              <p className="text-sm md:text-base text-gray-600 mb-6">
                 {documents.length === 0 
                   ? "You haven't uploaded any documents yet." 
                   : "Try adjusting your search or filters."}
@@ -472,37 +475,37 @@ export default function DocumentsPage() {
               {documents.length === 0 && (
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition"
+                  className="px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition text-sm md:text-base"
                 >
                   Upload Your First Document
                 </button>
               )}
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {filteredDocuments.map((doc) => (
                 <div
                   key={doc.id}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition"
+                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-4 hover:shadow-md transition"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-4">
+                  <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
+                    <div className="flex items-start gap-3 md:gap-4 w-full sm:w-auto">
                       <div className="flex-shrink-0">
                         {getFileIcon(doc.fileType)}
                       </div>
 
-                      <div>
-                        <h3 className="font-semibold text-gray-900 mb-1">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 text-sm md:text-base mb-1">
                           {doc.name}
                         </h3>
-                        <div className="flex flex-wrap gap-3 text-sm text-gray-600 mb-2">
+                        <div className="flex flex-wrap gap-2 md:gap-3 text-xs md:text-sm text-gray-600 mb-2">
                           <span>🐾 {doc.petName}</span>
                           <span>📄 {getCategoryLabel(doc.category)}</span>
-                          <span>📅 Uploaded: {formatDate(doc.uploadDate)}</span>
+                          <span>📅 {formatDate(doc.uploadDate)}</span>
                           {doc.fileSize > 0 && <span>💾 {formatFileSize(doc.fileSize)}</span>}
                         </div>
                         {doc.expiryDate && (
-                          <div className={`text-sm ${isExpired(doc.expiryDate) ? "text-red-600" : isExpiringSoon(doc.expiryDate) ? "text-orange-600" : "text-gray-500"}`}>
+                          <div className={`text-xs md:text-sm ${isExpired(doc.expiryDate) ? "text-red-600" : isExpiringSoon(doc.expiryDate) ? "text-orange-600" : "text-gray-500"}`}>
                             {isExpired(doc.expiryDate) ? (
                               <>⚠️ Expired on {formatDate(doc.expiryDate)}</>
                             ) : isExpiringSoon(doc.expiryDate) ? (
@@ -515,8 +518,8 @@ export default function DocumentsPage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(doc.status)}`}>
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                      <span className={`inline-flex items-center gap-1 px-2 py-1 text-[10px] md:text-xs font-medium rounded-full ${getStatusColor(doc.status)} flex-shrink-0`}>
                         {getStatusIcon(doc.status)}
                         {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
                       </span>
@@ -525,14 +528,14 @@ export default function DocumentsPage() {
                           setSelectedDocument(doc);
                           setShowPreview(true);
                         }}
-                        className="p-2 text-gray-600 hover:text-[#FF8C42] transition rounded-lg hover:bg-gray-50"
+                        className="p-1.5 md:p-2 text-gray-600 hover:text-[#FF8C42] transition rounded-lg hover:bg-gray-50"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-gray-600 hover:text-[#FF8C42] transition rounded-lg hover:bg-gray-50">
+                      <button className="p-1.5 md:p-2 text-gray-600 hover:text-[#FF8C42] transition rounded-lg hover:bg-gray-50">
                         <Download className="w-4 h-4" />
                       </button>
-                      <button className="p-2 text-gray-600 hover:text-red-600 transition rounded-lg hover:bg-red-50">
+                      <button className="p-1.5 md:p-2 text-gray-600 hover:text-red-600 transition rounded-lg hover:bg-red-50">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -544,12 +547,12 @@ export default function DocumentsPage() {
         </div>
       </div>
 
-      {/* Document Preview Modal */}
+      {/* Document Preview Modal - Responsive */}
       {showPreview && selectedDocument && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-hidden">
-            <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="text-lg font-semibold text-gray-900">{selectedDocument.name}</h2>
+          <div className="bg-white rounded-lg max-w-[95%] md:max-w-2xl w-full max-h-[90vh] md:max-h-[80vh] overflow-hidden">
+            <div className="flex justify-between items-center p-3 md:p-4 border-b">
+              <h2 className="text-base md:text-lg font-semibold text-gray-900 truncate">{selectedDocument.name}</h2>
               <button
                 onClick={() => setShowPreview(false)}
                 className="p-1 hover:bg-gray-100 rounded-lg transition"
@@ -557,36 +560,36 @@ export default function DocumentsPage() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6 overflow-y-auto">
+            <div className="p-4 md:p-6 overflow-y-auto">
               <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 p-3 md:p-4 bg-gray-50 rounded-lg">
                   {getFileIcon(selectedDocument.fileType)}
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">{selectedDocument.name}</p>
-                    <p className="text-sm text-gray-600">
+                  <div className="flex-1 text-center sm:text-left">
+                    <p className="font-medium text-gray-900 text-sm md:text-base">{selectedDocument.name}</p>
+                    <p className="text-xs md:text-sm text-gray-600">
                       {selectedDocument.fileSize > 0 && formatFileSize(selectedDocument.fileSize)} • {selectedDocument.fileType.toUpperCase()}
                     </p>
                   </div>
-                  <button className="px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition">
+                  <button className="px-3 md:px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition text-sm">
                     Download
                   </button>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Pet Name</p>
-                    <p className="font-medium text-gray-900">{selectedDocument.petName}</p>
+                    <p className="text-xs md:text-sm text-gray-600">Pet Name</p>
+                    <p className="font-medium text-gray-900 text-sm md:text-base">{selectedDocument.petName}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Category</p>
-                    <p className="font-medium text-gray-900">{getCategoryLabel(selectedDocument.category)}</p>
+                    <p className="text-xs md:text-sm text-gray-600">Category</p>
+                    <p className="font-medium text-gray-900 text-sm md:text-base">{getCategoryLabel(selectedDocument.category)}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Upload Date</p>
-                    <p className="font-medium text-gray-900">{formatDate(selectedDocument.uploadDate)}</p>
+                    <p className="text-xs md:text-sm text-gray-600">Upload Date</p>
+                    <p className="font-medium text-gray-900 text-sm md:text-base">{formatDate(selectedDocument.uploadDate)}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Status</p>
+                    <p className="text-xs md:text-sm text-gray-600">Status</p>
                     <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(selectedDocument.status)}`}>
                       {getStatusIcon(selectedDocument.status)}
                       {selectedDocument.status.charAt(0).toUpperCase() + selectedDocument.status.slice(1)}
@@ -595,27 +598,27 @@ export default function DocumentsPage() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-end gap-3 p-4 border-t">
+            <div className="flex justify-end gap-2 md:gap-3 p-3 md:p-4 border-t">
               <button
                 onClick={() => setShowPreview(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                className="px-3 md:px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition text-sm"
               >
                 Close
               </button>
-              <button className="px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition">
-                Download Document
+              <button className="px-3 md:px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition text-sm">
+                Download
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Upload Modal */}
+      {/* Upload Modal - Responsive */}
       {showUploadModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-md w-full">
-            <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="text-lg font-semibold text-gray-900">Upload Document</h2>
+          <div className="bg-white rounded-lg max-w-[95%] md:max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center p-3 md:p-4 border-b sticky top-0 bg-white">
+              <h2 className="text-base md:text-lg font-semibold text-gray-900">Upload Document</h2>
               <button
                 onClick={() => setShowUploadModal(false)}
                 className="p-1 hover:bg-gray-100 rounded-lg transition"
@@ -623,7 +626,7 @@ export default function DocumentsPage() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-6">
+            <div className="p-4 md:p-6">
               <form onSubmit={handleUpload} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -632,7 +635,7 @@ export default function DocumentsPage() {
                   <select
                     value={selectedPetId}
                     onChange={(e) => setSelectedPetId(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42]"
+                    className="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42]"
                     required
                   >
                     <option value="">Select a pet...</option>
@@ -653,7 +656,7 @@ export default function DocumentsPage() {
                     value={documentName}
                     onChange={(e) => setDocumentName(e.target.value)}
                     placeholder="e.g., Rabies Vaccination Certificate"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42]"
+                    className="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42]"
                     required
                   />
                 </div>
@@ -665,7 +668,7 @@ export default function DocumentsPage() {
                   <select
                     value={documentType}
                     onChange={(e) => setDocumentType(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42]"
+                    className="w-full px-3 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:outline-none focus:border-[#FF8C42]"
                     required
                   >
                     <option value="">Select type...</option>
@@ -682,14 +685,14 @@ export default function DocumentsPage() {
                     File
                   </label>
                   <div 
-                    className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#FF8C42] transition cursor-pointer"
+                    className="border-2 border-dashed border-gray-300 rounded-lg p-4 md:p-6 text-center hover:border-[#FF8C42] transition cursor-pointer"
                     onClick={() => document.getElementById("fileInput")?.click()}
                   >
-                    <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-600">
+                    <Upload className="w-6 h-6 md:w-8 md:h-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-xs md:text-sm text-gray-600">
                       {file ? file.name : "Click to select file"}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">PDF, JPG, PNG (Max 10MB)</p>
+                    <p className="text-[10px] md:text-xs text-gray-500 mt-1">PDF, JPG, PNG (Max 10MB)</p>
                   </div>
                   <input
                     id="fileInput"
@@ -703,7 +706,7 @@ export default function DocumentsPage() {
                 <button
                   type="submit"
                   disabled={uploading}
-                  className="w-full px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition disabled:opacity-50"
+                  className="w-full px-4 py-2 bg-[#FF8C42] text-white rounded-lg hover:bg-[#e07a2e] transition disabled:opacity-50 text-sm md:text-base"
                 >
                   {uploading ? "Uploading..." : "Upload Document"}
                 </button>

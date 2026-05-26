@@ -75,3 +75,45 @@ img {
     font-family: 'Nunito', sans-serif;
   }
 }
+
+/* Add these for better mobile experience */
+@layer base {
+  /* Mobile touch targets */
+  button, 
+  a,
+  [role="button"] {
+    min-height: 44px;
+    cursor: pointer;
+  }
+  
+  /* Better tap highlights on mobile */
+  button:active,
+  a:active {
+    opacity: 0.8;
+    transition: opacity 0.1s ease;
+  }
+  
+  /* Disable tap highlight on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Responsive container padding */
+.container-responsive {
+  @apply px-4 md:px-6 lg:px-8;
+}
+
+/* Mobile-first approach */
+@media (max-width: 768px) {
+  /* Reduce overall container padding */
+  .max-w-\[1200px\] {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Make sure text doesn't overflow */
+  p, h1, h2, h3, h4, span {
+    word-break: break-word;
+  }
+}
