@@ -36,7 +36,10 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     setIsOpen(false);
-    router.push('/');
+    // Force a small delay to ensure state updates before redirect
+    setTimeout(() => {
+      router.push('/');
+    }, 100);
   };
 
   const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -67,10 +70,23 @@ export default function Navbar() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isOpen]);
 
-  // DON'T RENDER NAVBAR AT ALL IF USER IS LOGGED IN
-  if (!isMounted || loading || isAuthenticated) {
+  // Check if we're on a dashboard page (where navbar should be hidden)
+  const isDashboardPage = pathname?.startsWith('/pages/dashboard');
+  
+  // Don't render navbar on dashboard pages OR when user is logged in
+  // But wait for mounting and loading to complete
+  if (!isMounted || loading) {
     return null;
   }
+
+  // On dashboard pages, don't show navbar
+  if (isDashboardPage) {
+    return null;
+  }
+
+  // If authenticated and NOT on dashboard page, still show navbar? 
+  // Actually navbar should show on all non-dashboard pages regardless of auth status
+  // So we only hide on dashboard pages, not based on isAuthenticated
 
   return (
     <>
@@ -120,20 +136,36 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* AUTH BUTTONS - Only show when NOT authenticated */}
+            {/* AUTH BUTTONS - Show logout when authenticated, otherwise show login/register */}
             <div className="flex items-center space-x-3">
-              <button
-                onClick={() => setShowRegister(true)}
-                className="px-4 py-2 bg-white border border-orange-400 text-orange-500 font-medium rounded-lg hover:bg-orange-50 hover:border-orange-500 transition-all duration-200 whitespace-nowrap text-sm hidden sm:block"
-              >
-                Register
-              </button>
-              <button
-                onClick={() => setShowLogin(true)}
-                className="px-4 py-2 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200 whitespace-nowrap text-sm"
-              >
-                Login
-              </button>
+              {isAuthenticated ? (
+                <>
+                  <div className="hidden md:block text-sm text-gray-600 mr-2">
+                    Welcome, {displayName}
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-all duration-200 whitespace-nowrap text-sm"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setShowRegister(true)}
+                    className="px-4 py-2 bg-white border border-orange-400 text-orange-500 font-medium rounded-lg hover:bg-orange-50 hover:border-orange-500 transition-all duration-200 whitespace-nowrap text-sm hidden sm:block"
+                  >
+                    Register
+                  </button>
+                  <button
+                    onClick={() => setShowLogin(true)}
+                    className="px-4 py-2 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200 whitespace-nowrap text-sm"
+                  >
+                    Login
+                  </button>
+                </>
+              )}
             </div>
 
             {/* MOBILE HAMBURGER */}
@@ -162,6 +194,9 @@ export default function Navbar() {
                   setShowRegister={setShowRegister}
                   onScrollToSection={handleScrollToSection}
                   pathname={pathname}
+                  isAuthenticated={isAuthenticated}
+                  displayName={displayName}
+                  onLogout={handleLogout}
                 />
               </motion.div>
             )}
@@ -169,14 +204,16 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* SUPREME COURT BANNER - Only show when logged out */}
-      <div className="fixed top-20 left-0 w-full z-10 bg-[#2C1A0E] py-3.5">
-        <div className="text-center">
-          <span className="text-[#FFDBB8] text-sm font-bold">
-            Supreme Court of India mandate: Pet registration is now legally required PAN India. Non-compliance fines up to ₹10,000.
-          </span>
+      {/* SUPREME COURT BANNER - Show on all pages except dashboard */}
+      {!isDashboardPage && (
+        <div className="fixed top-20 left-0 w-full z-10 bg-[#2C1A0E] py-3.5">
+          <div className="text-center">
+            <span className="text-[#FFDBB8] text-sm font-bold">
+              Supreme Court of India mandate: Pet registration is now legally required PAN India. Non-compliance fines up to ₹10,000.
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* MODALS */}
       <LoginModal 
@@ -199,19 +236,25 @@ export default function Navbar() {
   );
 }
 
-// MobileMenu - Updated without auth buttons
+// Updated MobileMenu
 function MobileMenu({ 
   setIsOpen, 
   setShowLogin, 
   setShowRegister, 
   onScrollToSection,
-  pathname
+  pathname,
+  isAuthenticated,
+  displayName,
+  onLogout
 }: { 
   setIsOpen: (open: boolean) => void;
   setShowLogin: (show: boolean) => void;
   setShowRegister: (show: boolean) => void;
   onScrollToSection: (e: React.MouseEvent<HTMLAnchorElement>, id: string) => void;
   pathname: string;
+  isAuthenticated: boolean;
+  displayName: string;
+  onLogout: () => void;
 }) {
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, id?: string) => {
     if (id) {
@@ -260,22 +303,40 @@ function MobileMenu({
         </Link>
       </li>
       
-      <li className="border-t pt-2">
-        <button 
-          onClick={() => { setShowRegister(true); setIsOpen(false); }} 
-          className="w-full text-center py-2 px-3 bg-white border border-orange-400 text-orange-500 font-medium rounded-lg hover:bg-orange-50 hover:border-orange-500 transition-all duration-200"
-        >
-          Register
-        </button>
-      </li>
-      <li>
-        <button 
-          onClick={() => { setShowLogin(true); setIsOpen(false); }} 
-          className="w-full text-center py-2 px-3 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200"
-        >
-          Login
-        </button>
-      </li>
+      {isAuthenticated ? (
+        <>
+          <li className="border-t pt-2">
+            <div className="px-3 py-2 text-gray-600">Welcome, {displayName}</div>
+          </li>
+          <li>
+            <button 
+              onClick={() => { onLogout(); setIsOpen(false); }} 
+              className="w-full text-center py-2 px-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition-all duration-200"
+            >
+              Logout
+            </button>
+          </li>
+        </>
+      ) : (
+        <>
+          <li className="border-t pt-2">
+            <button 
+              onClick={() => { setShowRegister(true); setIsOpen(false); }} 
+              className="w-full text-center py-2 px-3 bg-white border border-orange-400 text-orange-500 font-medium rounded-lg hover:bg-orange-50 hover:border-orange-500 transition-all duration-200"
+            >
+              Register
+            </button>
+          </li>
+          <li>
+            <button 
+              onClick={() => { setShowLogin(true); setIsOpen(false); }} 
+              className="w-full text-center py-2 px-3 bg-orange-400 text-white font-medium rounded-lg hover:bg-orange-500 transition-all duration-200"
+            >
+              Login
+            </button>
+          </li>
+        </>
+      )}
     </ul>
   );
 }

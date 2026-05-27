@@ -16,6 +16,10 @@ import {
   Info,
   Eye
 } from "lucide-react";
+import PaymentButton from './PaymentButton';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
 
 interface RegistrationFormProps {
   petId: string;
@@ -43,8 +47,30 @@ export default function RegistrationForm({
   const [registrationStatus, setRegistrationStatus] = useState<any>(null);
   const [triggeringRegistration, setTriggeringRegistration] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [pendingPayment, setPendingPayment] = useState<{ petId: string; petName: string } | null>(null);
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  // Then update the authFetch function:
+const authFetch = async (url: string, options: RequestInit = {}) => {
+  const storedToken = localStorage.getItem("token");
+  const authToken = storedToken || token;
+  
+  // IMPORTANT: API_BASE_URL already includes /api, so don't add it again
+  const fullUrl = `${API_BASE_URL}${url}`;
+  
+  console.log(`📡 Fetching: ${fullUrl}`);
+  
+  const response = await fetch(fullUrl, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
+      ...options.headers,
+    },
+  });
+  
+  return response;
+};
 
   // Document configuration
   const documents = [
@@ -81,15 +107,12 @@ export default function RegistrationForm({
   // Fetch registration status
   const fetchStatus = async () => {
     try {
-      const response = await fetch(`${API_BASE}/registration/${petId}/status`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      console.log('📡 Fetching status for pet:', petId);
+      const response = await authFetch(`/registration/${petId}/status`);
       
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Status data:', data);
         setRegistrationStatus(data);
       } else {
         const errorData = await response.json();
@@ -121,12 +144,10 @@ export default function RegistrationForm({
       const base64String = reader.result as string;
       
       try {
-        const response = await fetch(`${API_BASE}/registration/${petId}/documents`, {
+        console.log(`📤 Uploading ${documentName} for pet ${petId}`);
+        
+        const response = await authFetch(`/registration/${petId}/documents`, {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
           body: JSON.stringify({
             documentName: documentName,
             fileData: base64String,
@@ -142,12 +163,11 @@ export default function RegistrationForm({
           setSuccess(data.message);
           await fetchStatus();
           
-          if (data.registrationTriggered) {
-            setSuccess('🎉 Congratulations! All documents uploaded and registration process triggered!');
-            setFormSubmitted(true);
-            setTimeout(() => {
-              onSuccess();
-            }, 3000);
+          // Check if all documents are uploaded
+          if (data.hasAllDocuments) {
+            setSuccess('🎉 All documents uploaded! Please complete payment to proceed.');
+            setPendingPayment({ petId, petName });
+            setShowPaymentModal(true);
           }
         } else {
           setError(data.message || 'Upload failed');
@@ -171,12 +191,8 @@ export default function RegistrationForm({
     setError("");
     
     try {
-      const response = await fetch(`${API_BASE}/registration/${petId}/documents/${documentName}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      const response = await authFetch(`/registration/${petId}/documents/${documentName}`, {
+        method: 'DELETE'
       });
       
       const data = await response.json();
@@ -195,18 +211,30 @@ export default function RegistrationForm({
     }
   };
 
-  // Manually trigger registration
-  const handleTriggerRegistration = async () => {
+  // Show payment modal when user clicks "Submit Registration"
+  const handleTriggerRegistration = () => {
+    // Check if all documents are uploaded
+    if (!hasAllDocuments) {
+      setError('Please upload all 4 documents first');
+      return;
+    }
+    
+    // Show payment modal - DO NOT trigger registration yet
+    setPendingPayment({ petId, petName });
+    setShowPaymentModal(true);
+  };
+
+  // Actually trigger registration after payment success
+  const actuallyTriggerRegistration = async () => {
     setTriggeringRegistration(true);
     setError("");
     
     try {
-      const response = await fetch(`${API_BASE}/registration/${petId}/trigger-registration`, {
+      console.log('🎯 Triggering registration after payment for pet:', petId);
+      
+      const response = await authFetch(`/aregistration/${petId}/trigger-registration`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+        body: JSON.stringify({ paymentVerified: true })
       });
       
       const data = await response.json();
@@ -231,17 +259,21 @@ export default function RegistrationForm({
 
   // Handle view document
   const handleViewDocument = (fileData: string, mimeType: string) => {
-    // Create a blob from base64 and open in new tab
-    const byteCharacters = atob(fileData.split(',')[1]);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    try {
+      const byteCharacters = atob(fileData.split(',')[1]);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('View document error:', err);
+      setError('Failed to view document');
     }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: mimeType });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-    URL.revokeObjectURL(url);
   };
 
   // Check if document is uploaded
@@ -259,8 +291,8 @@ export default function RegistrationForm({
   const hasAllDocuments = registrationStatus?.hasAllDocuments || false;
   const registrationTriggered = registrationStatus?.registrationTriggered || false;
 
-  // If form is submitted successfully, show success message
-  if (formSubmitted || (registrationTriggered && !viewOnly)) {
+  // If registration is already triggered, show success
+  if (registrationTriggered && !viewOnly) {
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-3xl max-w-md w-full p-8 text-center">
@@ -327,9 +359,7 @@ export default function RegistrationForm({
                 <h3 className="text-lg font-semibold text-gray-900">Registration Progress</h3>
                 <p className="text-sm text-gray-600 mt-1">
                   {hasAllDocuments 
-                    ? registrationTriggered 
-                      ? "✅ Registration completed successfully!" 
-                      : "🎉 All documents uploaded! Ready to submit."
+                    ? "🎉 All documents uploaded! Ready to submit."
                     : `📄 ${uploadedCount} out of ${totalRequired} documents uploaded`}
                 </p>
               </div>
@@ -347,12 +377,12 @@ export default function RegistrationForm({
               />
             </div>
 
-            {/* Status Message */}
-            {hasAllDocuments && !registrationTriggered && !viewOnly && (
+            {/* Submit Button - Only enabled when all documents are uploaded */}
+            {hasAllDocuments && !viewOnly && (
               <div className="mt-4 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <FileCheck className="w-5 h-5" />
-                  <span className="font-medium">All documents uploaded successfully!</span>
+                  <span className="font-medium">All documents uploaded! Ready to submit.</span>
                 </div>
                 <button
                   onClick={handleTriggerRegistration}
@@ -360,18 +390,11 @@ export default function RegistrationForm({
                   className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium flex items-center space-x-2 transition-colors disabled:opacity-50"
                 >
                   {triggeringRegistration ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" /><span>Submitting...</span></>
+                    <><Loader2 className="w-4 h-4 animate-spin" /><span>Processing...</span></>
                   ) : (
-                    <><Send className="w-4 h-4" /><span>Submit Registration</span></>
+                    <><Send className="w-4 h-4" /><span>Proceed to Payment</span></>
                   )}
                 </button>
-              </div>
-            )}
-
-            {registrationTriggered && (
-              <div className="mt-4 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5" />
-                <span className="font-medium">Registration submitted on {registrationStatus.registrationTriggeredAt ? new Date(registrationStatus.registrationTriggeredAt).toLocaleDateString() : 'recently'}</span>
               </div>
             )}
           </div>
@@ -461,7 +484,7 @@ export default function RegistrationForm({
                     </div>
                   ) : (
                     !viewOnly && !registrationTriggered && (
-                      <label className={`mt-3 border-2 border-dashed rounded-lg p-4 flex flex-col items-center cursor-pointer transition-all hover:border-orange-500 hover:bg-orange-50`}>
+                      <label className="mt-3 border-2 border-dashed rounded-lg p-4 flex flex-col items-center cursor-pointer transition-all hover:border-orange-500 hover:bg-orange-50">
                         <Upload className="w-8 h-8 text-gray-400" />
                         <span className="text-sm text-gray-500 mt-2">Click to upload</span>
                         <span className="text-xs text-gray-400 mt-1">{doc.accept.includes('pdf') ? 'PDF or Image' : 'Image'} (Max 5MB)</span>
@@ -475,7 +498,7 @@ export default function RegistrationForm({
                             if (file) {
                               await handleFileUpload(file, doc.name);
                             }
-                            e.target.value = ''; // Reset input
+                            e.target.value = '';
                           }}
                         />
                       </label>
@@ -485,12 +508,6 @@ export default function RegistrationForm({
                   {viewOnly && !uploaded && (
                     <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
                       <p className="text-sm text-gray-500">Document not uploaded</p>
-                    </div>
-                  )}
-
-                  {!viewOnly && registrationTriggered && !uploaded && (
-                    <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
-                      <p className="text-sm text-orange-600">Registration already submitted. Document cannot be uploaded.</p>
                     </div>
                   )}
                 </div>
@@ -507,9 +524,9 @@ export default function RegistrationForm({
                 <ul className="list-disc list-inside space-y-1 text-blue-700">
                   <li>All 4 documents are required to complete the registration process</li>
                   <li>Documents can be uploaded in any order and can be replaced before submission</li>
-                  <li>Once registration is submitted, documents cannot be modified</li>
-                  <li>Registration will be automatically submitted when all documents are uploaded</li>
-                  <li>You can also manually submit after uploading all documents</li>
+                  <li>Once payment is completed, registration will be processed</li>
+                  <li>Payment of ₹999 is required to complete registration</li>
+                  <li>Registration will be processed only after successful payment</li>
                 </ul>
               </div>
             </div>
@@ -530,9 +547,9 @@ export default function RegistrationForm({
                 className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl font-medium flex items-center space-x-2 transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
               >
                 {triggeringRegistration ? (
-                  <><Loader2 className="w-5 h-5 animate-spin" /><span>Submitting...</span></>
+                  <><Loader2 className="w-5 h-5 animate-spin" /><span>Processing...</span></>
                 ) : (
-                  <><Send className="w-5 h-5" /><span>Submit Registration</span></>
+                  <><Send className="w-5 h-5" /><span>Proceed to Payment (₹999)</span></>
                 )}
               </button>
             )}
@@ -546,6 +563,49 @@ export default function RegistrationForm({
           <div className="bg-white rounded-2xl p-8 flex flex-col items-center space-y-4">
             <Loader2 className="w-12 h-12 animate-spin text-orange-500" />
             <p className="text-gray-700 font-medium">Uploading document...</p>
+          </div>
+        </div>
+      )}
+
+      {/* PAYMENT MODAL */}
+      {showPaymentModal && pendingPayment && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[80] p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6">
+            <div className="text-center mb-4">
+              <div className="text-5xl mb-3">💳</div>
+              <h3 className="text-xl font-bold text-gray-900">Complete Payment</h3>
+              <p className="text-gray-600 mt-2">
+                Pay ₹999 to complete registration for <strong>{pendingPayment.petName}</strong>
+              </p>
+              <p className="text-xs text-gray-500 mt-2">
+                One-time payment for lifetime registration
+              </p>
+            </div>
+            
+            <PaymentButton
+              petId={pendingPayment.petId}
+              petName={pendingPayment.petName}
+              amount={999}
+              onSuccess={() => {
+                setShowPaymentModal(false);
+                setSuccess('Payment successful! Now submitting your registration...');
+                actuallyTriggerRegistration();
+              }}
+              onFailure={(error) => {
+                setError(`Payment failed: ${error}. Please try again.`);
+                setShowPaymentModal(false);
+              }}
+            />
+            
+            <button
+              onClick={() => {
+                setShowPaymentModal(false);
+                setPendingPayment(null);
+              }}
+              className="w-full mt-3 text-gray-500 text-sm hover:text-gray-700 text-center"
+            >
+              Cancel (You can pay later from dashboard)
+            </button>
           </div>
         </div>
       )}

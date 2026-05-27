@@ -15,7 +15,7 @@ const archive = Archivo_Black({
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Pet Registry Website',
+  title: 'Tailio-Register your pet',
   description: 'Register your pets securely',
 };
 

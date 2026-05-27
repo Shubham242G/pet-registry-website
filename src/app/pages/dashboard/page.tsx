@@ -23,7 +23,6 @@ import {
 import AddPetModal from "../../component/AddPetModal";
 import RegistrationForm from "../../component/RegistrationForm";
 import Sidebar from '../../component/Sidebar'
-import RegistrationProgress from "../../component/RegistrationProgress";
 
 interface Pet {
   _id: string;
@@ -81,68 +80,83 @@ export default function Dashboard() {
   }, [token]);
 
   const loadPets = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const data = await apiFetch("/pets", "GET", null, token!);
-      
-      const petsWithStatus = await Promise.all((Array.isArray(data) ? data : []).map(async (pet: any) => {
-        try {
-          const status = await apiFetch(`/registration/${pet._id}/status`, "GET", null, token!);
-          return {
-            ...pet,
-            uploadedDocumentsCount: status?.uploadedDocumentsCount || 0,
-            hasAllDocuments: status?.hasAllDocuments || false,
-            registrationTriggered: status?.registrationTriggered || false,
-            registrationStage: pet.registrationStage || 0,
-            registrationStatus: pet.registrationStatus || 'not_started'
-          };
-        } catch {
-          return {
-            ...pet,
-            uploadedDocumentsCount: 0,
-            hasAllDocuments: false,
-            registrationTriggered: false,
-            registrationStage: pet.registrationStage || 0,
-            registrationStatus: pet.registrationStatus || 'not_started'
-          };
-        }
-      }));
-      
-      setPets(petsWithStatus);
-      if (petsWithStatus.length > 0 && !selectedPet) {
-        setSelectedPet(petsWithStatus[0]);
-      } else if (selectedPet && petsWithStatus.length > 0) {
-        const updatedSelected = petsWithStatus.find(p => p._id === selectedPet._id);
-        if (updatedSelected) {
-          setSelectedPet(updatedSelected);
-        }
+  try {
+    setLoading(true);
+    setError("");
+    
+    // Add a timestamp to prevent caching
+    const data = await apiFetch("/pets?t=" + Date.now(), "GET", null, token!);
+    
+    const petsWithStatus = await Promise.all((Array.isArray(data) ? data : []).map(async (pet: any) => {
+      try {
+        const status = await apiFetch(`/registration/${pet._id}/status?t=${Date.now()}`, "GET", null, token!);
+        return {
+          ...pet,
+          uploadedDocumentsCount: status?.uploadedDocumentsCount || 0,
+          hasAllDocuments: status?.hasAllDocuments || false,
+          registrationTriggered: status?.registrationTriggered || false,
+          registrationStage: pet.registrationStage || 0,
+          registrationStatus: pet.registrationStatus || 'not_started'
+        };
+      } catch {
+        return {
+          ...pet,
+          uploadedDocumentsCount: 0,
+          hasAllDocuments: false,
+          registrationTriggered: false,
+          registrationStage: pet.registrationStage || 0,
+          registrationStatus: pet.registrationStatus || 'not_started'
+        };
       }
-    } catch (error) {
-      console.error("Error loading pets:", error);
-      setError("Failed to load pets. Please try again.");
-      if (error instanceof Error && error.message === "Session expired") {
-        logout();
-        router.push('/');
+    }));
+    
+    setPets(petsWithStatus);
+    if (petsWithStatus.length > 0 && !selectedPet) {
+      setSelectedPet(petsWithStatus[0]);
+    } else if (selectedPet && petsWithStatus.length > 0) {
+      const updatedSelected = petsWithStatus.find(p => p._id === selectedPet._id);
+      if (updatedSelected) {
+        setSelectedPet(updatedSelected);
       }
-    } finally {
-      setLoading(false);
     }
-  }, [token, selectedPet, logout, router]);
+  } catch (error) {
+    console.error("Error loading pets:", error);
+    setError("Failed to load pets. Please try again.");
+    if (error instanceof Error && error.message === "Session expired") {
+      logout();
+      router.push('/');
+    }
+  } finally {
+    setLoading(false);
+  }
+}, [token, selectedPet, logout, router]);
 
   const handleDeletePet = async (petId: string) => {
-    try {
-      setLoading(true);
-      await apiFetch(`/pets/${petId}`, "DELETE", null, token!);
-      await loadPets();
-      setShowDeleteConfirm({ show: false, petId: '', petName: '' });
-    } catch (error) {
-      console.error("Error deleting pet:", error);
-      setError("Failed to delete pet");
-    } finally {
-      setLoading(false);
+  try {
+    setLoading(true);
+    await apiFetch(`/pets/${petId}`, "DELETE", null, token!);
+    
+    // Remove the deleted pet from pets array
+    const updatedPets = pets.filter(pet => pet._id !== petId);
+    setPets(updatedPets);
+    
+    // If no pets left, clear selected pet
+    if (updatedPets.length === 0) {
+      setSelectedPet(null);
+    } 
+    // If the deleted pet was selected, select the first available pet
+    else if (selectedPet?._id === petId) {
+      setSelectedPet(updatedPets[0]);
     }
-  };
+    
+    setShowDeleteConfirm({ show: false, petId: '', petName: '' });
+  } catch (error) {
+    console.error("Error deleting pet:", error);
+    setError("Failed to delete pet");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleViewRegistration = async (pet: Pet) => {
     try {
@@ -204,10 +218,10 @@ export default function Dashboard() {
   };
 
   const handlePetAdded = async () => {
-    await loadPets();
-    setIsModalOpen(false);
-    setEditingPet(null);
-  };
+  await loadPets();
+  setIsModalOpen(false);
+  setEditingPet(null);
+};
 
   const getFormattedAge = (pet: Pet) => {
     try {
@@ -280,12 +294,12 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-['Nunito']">
-      {/* Sidebar - hidden on mobile by default, but you can add a hamburger menu toggle */}
+      {/* Sidebar */}
       <div className="hidden md:block">
         <Sidebar />
       </div>
       
-      {/* Main Content - No left padding on mobile */}
+      {/* Main Content */}
       <div className="md:pl-64">
         
         {/* Header */}
@@ -325,7 +339,7 @@ export default function Dashboard() {
                 {/* Left Column - Main Pet Info */}
                 <div className="lg:col-span-2 space-y-6 w-full">
                   
-                  {/* Pet Selector - Horizontal scroll on mobile */}
+                  {/* Pet Selector */}
                   <div className="flex space-x-3 overflow-x-auto pb-2">
                     {pets.map((pet) => (
                       <button
@@ -342,9 +356,6 @@ export default function Dashboard() {
                             src={pet.profilePicture} 
                             alt={pet.name} 
                             className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.style.display = 'none';
-                            }}
                           />
                         ) : (
                           <PawPrint className="w-3 h-3 md:w-4 md:h-4" />
@@ -370,7 +381,6 @@ export default function Dashboard() {
                   {/* Pet Card */}
                   {currentPet && (
                     <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-6">
-                      {/* Pet Header */}
                       <div className="flex flex-col sm:flex-row items-start justify-between mb-6 gap-4">
                         <div className="flex items-center space-x-4">
                           <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -379,9 +389,6 @@ export default function Dashboard() {
                                 src={currentPet.profilePicture} 
                                 alt={currentPet.name} 
                                 className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = 'none';
-                                }}
                               />
                             ) : (
                               getSpeciesIcon(currentPet.species)
@@ -440,7 +447,7 @@ export default function Dashboard() {
                         </div>
                       </div>
 
-                      {/* Action Buttons - Stack on mobile */}
+                      {/* Action Buttons */}
                       <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t border-gray-100">
                         <button
                           onClick={() => handleEditPet(currentPet)}
@@ -486,21 +493,54 @@ export default function Dashboard() {
                     </div>
                   )}
 
-                  {/* Registration Progress Component */}
+                  {/* Registration Progress - Fixed */}
                   {currentPet && (
-                    <RegistrationProgress
-                      currentStage={currentPet.registrationStage || 0}
-                      uploadedDocumentsCount={currentPet.uploadedDocumentsCount || 0}
-                      totalDocuments={4}
-                      registrationTriggered={currentPet.registrationTriggered || false}
-                    />
+                    <div className="bg-white rounded-xl border border-gray-200 p-5">
+                      <h3 className="font-semibold text-gray-900 mb-3">Registration Progress</h3>
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span className="text-gray-600">Documents Uploaded</span>
+                            <span className="font-medium text-gray-900">{currentPet.uploadedDocumentsCount || 0}/4</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="bg-orange-500 h-2 rounded-full transition-all duration-500"
+                              style={{ width: `${((currentPet.uploadedDocumentsCount || 0) / 4) * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span className="text-gray-600">Registration Status</span>
+                            <span className={`font-medium ${getStageColor(currentPet.registrationStage || 0)}`}>
+                              {getStageLabel(currentPet.registrationStage || 0)}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="bg-orange-500 h-2 rounded-full transition-all duration-500"
+                              style={{ width: `${((currentPet.registrationStage || 0) / 4) * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                        
+                        {currentPet.registrationStage === 1 && currentPet.hasAllDocuments && !currentPet.registrationTriggered && (
+                          <div className="mt-3 p-3 bg-green-50 rounded-lg">
+                            <p className="text-sm text-green-700">
+                              ✅ All documents uploaded! Click "Complete Registration" to proceed with payment and submission.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
 
-                {/* Right Column - Stats Cards - Stacks on mobile */}
+                {/* Right Column - Stats Cards */}
                 <div className="space-y-4 w-full">
                   
-                  {/* Overview Card */}
                   <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-5 text-white">
                     <h3 className="font-semibold text-sm md:text-base mb-2">Pet Overview</h3>
                     <div className="text-2xl md:text-3xl font-bold">{stats.total}</div>
@@ -521,7 +561,6 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Documents Card */}
                   <div className="bg-white rounded-xl border border-gray-200 p-5">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-2">
@@ -536,22 +575,20 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Registration Progress Card */}
                   <div className="bg-white rounded-xl border border-gray-200 p-5">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-2">
                         <FileCheck className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
                         <h3 className="font-semibold text-sm md:text-base text-gray-900">REGISTRATION</h3>
                       </div>
-                      <span className="text-lg md:text-xl font-bold text-gray-900">{Math.round((stats.registered / stats.total) * 100)}%</span>
+                      <span className="text-lg md:text-xl font-bold text-gray-900">{stats.total === 0 ? 0 : Math.round((stats.registered / stats.total) * 100)}%</span>
                     </div>
                     <p className="text-xs md:text-sm text-gray-600 mb-3">{stats.registered} of {stats.total} pets registered</p>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
-                      <div className="bg-green-500 h-1.5 rounded-full" style={{ width: `${(stats.registered / stats.total) * 100}%` }}></div>
+                      <div className="bg-green-500 h-1.5 rounded-full" style={{ width: `${stats.total === 0 ? 0 : (stats.registered / stats.total) * 100}%` }}></div>
                     </div>
                   </div>
 
-                  {/* Timeline Card */}
                   <div className="bg-white rounded-xl border border-gray-200 p-5">
                     <h3 className="font-semibold text-sm md:text-base text-gray-900 mb-3 flex items-center">
                       <Clock className="w-4 h-4 mr-2 text-orange-500" />
@@ -591,7 +628,6 @@ export default function Dashboard() {
                     )}
                   </div>
 
-                  {/* Quick Tips Card */}
                   <div className="bg-blue-50 rounded-xl p-5 border border-blue-100">
                     <h3 className="font-semibold text-sm md:text-base text-blue-900 mb-3">💡 Quick Tips</h3>
                     <ul className="space-y-2 text-xs md:text-sm text-blue-800">
@@ -601,7 +637,7 @@ export default function Dashboard() {
                       </li>
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0 mt-0.5" />
-                        <span>Complete the registration form after document upload</span>
+                        <span>Pay ₹999 to complete registration after document upload</span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0 mt-0.5" />
@@ -616,7 +652,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Modals - Same as before but responsive */}
+      {/* Modals */}
       <AddPetModal 
         isOpen={isModalOpen}
         onClose={handlePetModalClose}
@@ -668,7 +704,7 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Delete Confirmation Modal - Responsive */}
+      {/* Delete Confirmation Modal */}
       {showDeleteConfirm.show && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-4 md:p-6 mx-4">
