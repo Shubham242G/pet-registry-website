@@ -232,7 +232,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
     try {
       console.log('🎯 Triggering registration after payment for pet:', petId);
       
-      const response = await authFetch(`/aregistration/${petId}/trigger-registration`, {
+      const response = await authFetch(`/registration/${petId}/trigger-registration`, {
         method: 'POST',
         body: JSON.stringify({ paymentVerified: true })
       });

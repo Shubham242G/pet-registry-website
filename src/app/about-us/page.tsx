@@ -241,7 +241,7 @@ export default function AboutPage() {
               </button>
               <div className="flex flex-col items-start self-stretch pt-2 mb-[45px] mx-[21px]">
                 <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">
-                  A product builder with 8 years in consumer tech and a lifelong dog parent. Frustrated by the broken pet registration system, they left their corporate role to build Tailio from scratch.
+                  Teacher by profession and devoted pet parent, inspired by Mylo and Felix to celebrate the joy, chaos, companionship, and unforgettable bond pets bring daily.
                 </span>
               </div>
             </div>
