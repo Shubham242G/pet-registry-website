@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from './context/AuthContext';
 import RegisterModal from './RegisterModal';
+import LoginModal from './LoginModal';
 
 const DM_SANS = "'DM Sans', sans-serif";
 const ARCHIVO_BLACK = "'Archivo Black', sans-serif";
@@ -27,10 +28,21 @@ export default function Navbar() {
   const [showRegister, setShowRegister] = useState(false);
   const [isMounted,    setIsMounted]    = useState(false);
   const [displayName,  setDisplayName]  = useState('');
+  const [isMobile, setIsMobile] = useState(false);
 
   const { user, logout, isAuthenticated, loading } = useAuth();
 
-  useEffect(() => { setIsMounted(true); }, []);
+  useEffect(() => { 
+    setIsMounted(true);
+    
+    // Check if mobile on mount and on resize
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (user?.username) setDisplayName(user.username);
@@ -38,10 +50,8 @@ export default function Navbar() {
     else                setDisplayName('');
   }, [user]);
 
-  /* close on route change */
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
-  /* close on outside click */
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node))
@@ -51,7 +61,6 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  /* lock body scroll when menu open */
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -61,6 +70,11 @@ export default function Navbar() {
     logout();
     setMenuOpen(false);
     setTimeout(() => router.push('/'), 100);
+  };
+
+  const handleDashboardClick = () => {
+    router.push('/pages/dashboard');
+    setMenuOpen(false);
   };
 
   const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -79,9 +93,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ══════════════════════════════════════
-          NAVBAR WRAPPER
-      ══════════════════════════════════════ */}
       <div
         ref={menuRef}
         style={{
@@ -95,7 +106,7 @@ export default function Navbar() {
           zIndex: 100,
         }}
       >
-        {/* ── MAIN NAV ROW ── */}
+        {/* MAIN NAV ROW */}
         <div style={{
           maxWidth: 1200,
           margin: '0 auto',
@@ -109,222 +120,310 @@ export default function Navbar() {
         }}>
 
           {/* LOGO */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0, height: '100%' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
             <Image
               src="/images/tailio.png"
               alt="Tailio logo"
               width={800}
               height={880}
-              style={{ width: 'auto', height: 'auto', maxHeight: '300%', objectFit: 'contain' }}
+              style={{ width: 'auto', height: 230, objectFit: 'contain' }}
               priority
             />
           </Link>
 
-          {/* DESKTOP NAV LINKS — hidden below 768px */}
-          <nav className="hidden md:flex items-center gap-8 h-full">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={link.scrollId ? (e) => handleScrollToSection(e as any, link.scrollId!) : undefined}
-                style={{
-                  color: '#7A5C40',
-                  fontSize: 14,
-                  fontFamily: ARCHIVO_BLACK,
-                  fontWeight: 500,
-                  lineHeight: '21px',
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  height: '100%',
-                }}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* RIGHT SIDE */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-
-            {/* Auth — desktop only */}
-            {isAuthenticated ? (
-              <>
-                <span className="hidden md:block text-sm mr-1" style={{ color: '#7A5C40', fontFamily: DM_SANS }}>
-                  Welcome, {displayName}
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="hidden md:inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors"
-                  style={{ background: '#ef4444', border: 'none', cursor: 'pointer', fontFamily: DM_SANS, whiteSpace: 'nowrap' }}
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              /* Register Your Pet CTA — desktop only */
-              <button
-                onClick={() => setShowRegister(true)}
-                className="hidden md:inline-flex items-center justify-center"
-                style={{
-                  padding: '9px 18px',
-                  background: '#E8600A',
-                  boxShadow: '0px 1.5px 0px #C04E06',
-                  borderRadius: 9,
-                  outline: '1px #C04E06 solid',
-                  outlineOffset: -1,
-                  color: 'white',
-                  fontSize: 13.5,
-                  fontFamily: DM_SANS,
-                  fontWeight: 600,
-                  whiteSpace: 'nowrap',
-                  cursor: 'pointer',
-                  border: 'none',
-                }}
-              >
-                Register Your Pet
-              </button>
-            )}
-
-            {/* ── HAMBURGER — mobile only ── */}
-            <button
-              type="button"
-              onClick={() => setMenuOpen((p) => !p)}
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={menuOpen}
-              className="flex md:hidden flex-col justify-center items-center gap-[5px] cursor-pointer rounded-lg"
-              style={{
-                background: 'transparent',
-                border: '1.5px solid rgba(44,26,14,0.18)',
-                padding: '9px 8px',
-                minWidth: 44,
-                minHeight: 44,
-                borderRadius: 8,
-              }}
-            >
-              {/* Bar 1 */}
-              <span style={{
-                display: 'block', width: 18, height: 2,
-                background: '#2C1A0E', borderRadius: 2,
-                transformOrigin: 'center',
-                transition: 'transform 0.22s ease, opacity 0.22s ease',
-                transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
-              }} />
-              {/* Bar 2 */}
-              <span style={{
-                display: 'block', height: 2,
-                background: '#2C1A0E', borderRadius: 2,
-                transition: 'opacity 0.22s ease, width 0.22s ease',
-                opacity: menuOpen ? 0 : 1,
-                width: menuOpen ? 0 : 18,
-              }} />
-              {/* Bar 3 */}
-              <span style={{
-                display: 'block', width: 18, height: 2,
-                background: '#2C1A0E', borderRadius: 2,
-                transformOrigin: 'center',
-                transition: 'transform 0.22s ease, opacity 0.22s ease',
-                transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
-              }} />
-            </button>
-          </div>
-        </div>
-
-        {/* ── MOBILE MENU ── */}
-        <div
-          aria-hidden={!menuOpen}
-          style={{
-            background: '#FFFCF8',
-            borderTop: menuOpen ? '1px rgba(44,26,14,0.10) solid' : 'none',
-            maxHeight: menuOpen ? 480 : 0,
-            overflow: 'hidden',
-            transition: 'max-height 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.25s ease',
-            opacity: menuOpen ? 1 : 0,
-            paddingBottom: menuOpen ? 'env(safe-area-inset-bottom)' : 0,
-          }}
-        >
-          {/* Nav links */}
-          <ul style={{ listStyle: 'none', margin: 0, padding: '12px 20px 4px', display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
+          {/* DESKTOP NAV LINKS - Hide on mobile */}
+          {!isMobile && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+              {NAV_LINKS.map((link) => (
                 <Link
+                  key={link.href}
                   href={link.href}
-                  onClick={link.scrollId
-                    ? (e) => handleScrollToSection(e as any, link.scrollId!)
-                    : () => setMenuOpen(false)}
+                  onClick={link.scrollId ? (e) => handleScrollToSection(e as any, link.scrollId!) : undefined}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    minHeight: 48,
-                    padding: '12px 8px',
-                    borderRadius: 8,
-                    borderBottom: '1px solid rgba(44,26,14,0.07)',
                     color: '#7A5C40',
-                    fontSize: 15,
+                    fontSize: 14,
                     fontFamily: ARCHIVO_BLACK,
                     fontWeight: 500,
+                    lineHeight: '21px',
                     textDecoration: 'none',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-flex',
+                    alignItems: 'center',
                   }}
                 >
                   {link.label}
                 </Link>
-              </li>
-            ))}
-          </ul>
+              ))}
+            </div>
+          )}
 
-          {/* Mobile auth section */}
-          <div style={{ padding: '12px 20px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* RIGHT SIDE - Auth Buttons */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuthenticated ? (
               <>
-                <p style={{ margin: 0, color: '#7A5C40', fontSize: 14, fontFamily: DM_SANS, padding: '4px 8px' }}>
-                  Welcome, {displayName}
-                </p>
-                <button
-                  onClick={handleLogout}
-                  style={{
-                    width: '100%', padding: '14px 20px',
-                    background: '#ef4444',
-                    border: '1px solid #dc2626',
-                    borderRadius: 9, color: 'white',
-                    fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
-                  }}
-                >
-                  Logout
-                </button>
+                {/* Desktop auth buttons - hide on mobile */}
+                {!isMobile && (
+                  <>
+                    <span style={{ color: '#7A5C40', fontSize: 14, fontFamily: DM_SANS }}>
+                      Welcome, {displayName}
+                    </span>
+                    
+                    <button
+                      onClick={handleDashboardClick}
+                      style={{
+                        padding: '9px 18px',
+                        background: '#E8600A',
+                        boxShadow: '0px 1.5px 0px #C04E06',
+                        borderRadius: 9,
+                        outline: '1px #C04E06 solid',
+                        outlineOffset: -1,
+                        color: 'white',
+                        fontSize: 13.5,
+                        fontFamily: DM_SANS,
+                        fontWeight: 600,
+                        whiteSpace: 'nowrap',
+                        cursor: 'pointer',
+                        border: 'none',
+                      }}
+                    >
+                      Dashboard
+                    </button>
+                    
+                    <button
+                      onClick={handleLogout}
+                      style={{
+                        padding: '9px 18px',
+                        background: '#ef4444',
+                        borderRadius: 9,
+                        color: 'white',
+                        fontSize: 13.5,
+                        fontFamily: DM_SANS,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        border: 'none',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
               </>
             ) : (
-              /* Register button — full width in mobile menu */
+              /* Desktop register button - hide on mobile */
+              !isMobile && (
+                <button
+                  onClick={() => setShowRegister(true)}
+                  style={{
+                    padding: '9px 18px',
+                    background: '#E8600A',
+                    boxShadow: '0px 1.5px 0px #C04E06',
+                    borderRadius: 9,
+                    outline: '1px #C04E06 solid',
+                    outlineOffset: -1,
+                    color: 'white',
+                    fontSize: 13.5,
+                    fontFamily: DM_SANS,
+                    fontWeight: 600,
+                    whiteSpace: 'nowrap',
+                    cursor: 'pointer',
+                    border: 'none',
+                  }}
+                >
+                  Register Your Pet
+                </button>
+              )
+            )}
+
+            {/* HAMBURGER MENU BUTTON - Only visible on mobile */}
+            {isMobile && (
               <button
-                onClick={() => { setShowRegister(true); setMenuOpen(false); }}
+                type="button"
+                onClick={() => setMenuOpen((p) => !p)}
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
                 style={{
-                  width: '100%',
-                  padding: '14px 20px',
-                  background: '#E8600A',
-                  boxShadow: '0px 2px 0px #C04E06',
-                  border: '1px solid #C04E06',
-                  borderRadius: 9,
-                  color: 'white',
-                  fontSize: 15,
-                  fontFamily: DM_SANS,
-                  fontWeight: 600,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '5px',
                   cursor: 'pointer',
+                  background: 'transparent',
+                  border: '1.5px solid rgba(44,26,14,0.18)',
+                  padding: '9px 8px',
+                  minWidth: 44,
+                  minHeight: 44,
+                  borderRadius: 8,
                 }}
               >
-                Register Your Pet
+                <span style={{
+                  display: 'block',
+                  width: 18,
+                  height: 2,
+                  background: '#2C1A0E',
+                  borderRadius: 2,
+                  transition: 'transform 0.22s ease, opacity 0.22s ease',
+                  transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
+                }} />
+                <span style={{
+                  display: 'block',
+                  height: 2,
+                  background: '#2C1A0E',
+                  borderRadius: 2,
+                  transition: 'opacity 0.22s ease, width 0.22s ease',
+                  opacity: menuOpen ? 0 : 1,
+                  width: menuOpen ? 0 : 18,
+                }} />
+                <span style={{
+                  display: 'block',
+                  width: 18,
+                  height: 2,
+                  background: '#2C1A0E',
+                  borderRadius: 2,
+                  transition: 'transform 0.22s ease, opacity 0.22s ease',
+                  transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
+                }} />
               </button>
             )}
           </div>
         </div>
+
+        {/* MOBILE MENU - Only shown on mobile when open */}
+        {isMobile && menuOpen && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 68,
+              left: 0,
+              right: 0,
+              background: '#FFFCF8',
+              borderTop: '1px solid rgba(44,26,14,0.10)',
+              maxHeight: 'calc(100vh - 68px)',
+              overflowY: 'auto',
+              zIndex: 101,
+            }}
+          >
+            <ul style={{ listStyle: 'none', margin: 0, padding: '12px 20px 4px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {NAV_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={link.scrollId
+                      ? (e) => handleScrollToSection(e as any, link.scrollId!)
+                      : () => setMenuOpen(false)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      minHeight: 48,
+                      padding: '12px 8px',
+                      borderRadius: 8,
+                      borderBottom: '1px solid rgba(44,26,14,0.07)',
+                      color: '#7A5C40',
+                      fontSize: 15,
+                      fontFamily: ARCHIVO_BLACK,
+                      fontWeight: 500,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <div style={{ padding: '12px 20px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {isAuthenticated ? (
+                <>
+                  <p style={{ margin: 0, color: '#7A5C40', fontSize: 14, fontFamily: DM_SANS, padding: '4px 8px' }}>
+                    Welcome, {displayName}
+                  </p>
+                  <button
+                    onClick={handleDashboardClick}
+                    style={{
+                      width: '100%',
+                      padding: '14px 20px',
+                      background: '#E8600A',
+                      boxShadow: '0px 2px 0px #C04E06',
+                      border: '1px solid #C04E06',
+                      borderRadius: 9,
+                      color: 'white',
+                      fontSize: 15,
+                      fontFamily: DM_SANS,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    style={{
+                      width: '100%',
+                      padding: '14px 20px',
+                      background: '#ef4444',
+                      border: '1px solid #dc2626',
+                      borderRadius: 9,
+                      color: 'white',
+                      fontSize: 15,
+                      fontFamily: DM_SANS,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => { setShowRegister(true); setMenuOpen(false); }}
+                    style={{
+                      width: '100%',
+                      padding: '14px 20px',
+                      background: '#E8600A',
+                      boxShadow: '0px 2px 0px #C04E06',
+                      border: '1px solid #C04E06',
+                      borderRadius: 9,
+                      color: 'white',
+                      fontSize: 15,
+                      fontFamily: DM_SANS,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Register Your Pet
+                  </button>
+                  <button
+                    onClick={() => { setShowLogin(true); setMenuOpen(false); }}
+                    style={{
+                      width: '100%',
+                      padding: '14px 20px',
+                      background: 'transparent',
+                      border: '1px solid #E8600A',
+                      borderRadius: 9,
+                      color: '#E8600A',
+                      fontSize: 15,
+                      fontFamily: DM_SANS,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Login
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Backdrop */}
-      {menuOpen && (
+      {/* Backdrop for mobile menu */}
+      {isMobile && menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
-          aria-hidden="true"
           style={{
-            position: 'fixed', inset: 0,
+            position: 'fixed',
+            inset: 0,
             background: 'rgba(44,26,14,0.35)',
             zIndex: 99,
             backdropFilter: 'blur(2px)',
@@ -336,7 +435,19 @@ export default function Navbar() {
       <RegisterModal
         isOpen={showRegister}
         onClose={() => setShowRegister(false)}
-        onSwitchToLogin={() => { setShowRegister(false); setShowLogin(true); }}
+        onSwitchToLogin={() => { 
+          setShowRegister(false); 
+          setShowLogin(true); 
+        }}
+      />
+      
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        onSwitchToRegister={() => { 
+          setShowLogin(false); 
+          setShowRegister(true); 
+        }}
       />
     </>
   );

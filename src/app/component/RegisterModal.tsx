@@ -1,255 +1,15 @@
-// // // 
-
-// // "use client";
-// // import { useState } from "react";
-// // import { useAuth } from "../context/AuthContext";
-
-// // export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: any) {
-// //   const { register } = useAuth();
-// //   const [username, setUsername] = useState("");
-// //   const [email, setEmail] = useState("");
-// //   const [password, setPassword] = useState("");
-// //   const [isLoading, setIsLoading] = useState(false);
-// //   const [errorMessage, setErrorMessage] = useState("");
-
-// //   if (!isOpen) return null;
-
-// //   const handleRegister = async () => {
-// //     setErrorMessage("");
-// //     setIsLoading(true);
-
-// //     try {
-// //       await register(username, email, password);
-// //       // Force redirect to dashboard after registration
-// //       window.location.href = "/pages/dashboard";
-// //       onClose();
-// //     } catch (err: any) {
-// //       setErrorMessage(err.message || "Registration failed");
-// //       setIsLoading(false);
-// //     }
-// //   };
-
-// //   return (
-// //     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-// //       <div className="bg-white p-6 rounded-xl w-96 space-y-4 relative shadow-xl">
-// //         <button
-// //           onClick={onClose}
-// //           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-// //           disabled={isLoading}
-// //         >
-// //           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-// //             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-// //           </svg>
-// //         </button>
-
-// //         <h2 className="text-xl font-bold text-gray-800">Create an Account</h2>
-        
-// //         {errorMessage && (
-// //           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-lg text-sm">
-// //             {errorMessage}
-// //           </div>
-// //         )}
-        
-// //         <div className="space-y-1">
-// //           <label className="block text-sm font-semibold text-gray-700">Username</label>
-// //           <input 
-// //             className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white" 
-// //             placeholder="Choose a username" 
-// //             value={username}
-// //             onChange={e => setUsername(e.target.value)} 
-// //             disabled={isLoading}
-// //           />
-// //         </div>
-
-// //         <div className="space-y-1">
-// //           <label className="block text-sm font-semibold text-gray-700">Email Address</label>
-// //           <input 
-// //             className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white" 
-// //             type="email"
-// //             placeholder="Enter your email" 
-// //             value={email}
-// //             onChange={e => setEmail(e.target.value)} 
-// //             disabled={isLoading}
-// //           />
-// //         </div>
-
-// //         <div className="space-y-1">
-// //           <label className="block text-sm font-semibold text-gray-700">Password</label>
-// //           <input 
-// //             className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white" 
-// //             type="password" 
-// //             placeholder="Create a password" 
-// //             value={password}
-// //             onChange={e => setPassword(e.target.value)} 
-// //             disabled={isLoading}
-// //           />
-// //         </div>
-
-// //         <button 
-// //           onClick={handleRegister} 
-// //           className="bg-orange-500 hover:bg-orange-600 text-white w-full py-2 rounded-lg disabled:opacity-50 font-semibold"
-// //           disabled={isLoading}
-// //         >
-// //           {isLoading ? "Creating Account..." : "Register"}
-// //         </button>
-        
-// //         <button 
-// //           onClick={onSwitchToLogin} 
-// //           className="text-sm text-orange-500 hover:text-orange-600"
-// //           disabled={isLoading}
-// //         >
-// //           Already have an account? Login
-// //         </button>
-// //       </div>
-// //     </div>
-// //   );
-// // }
-
-// "use client";
-// import { useState } from "react";
-// import { useAuth } from "../context/AuthContext";
-// import { useRouter } from "next/navigation";
-
-// export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: any) {
-//   const { register, login } = useAuth(); // Add login here
-//   const router = useRouter();
-//   const [username, setUsername] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [confirmPassword, setConfirmPassword] = useState("");
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [errorMessage, setErrorMessage] = useState("");
-
-//   if (!isOpen) return null;
-
-//   const handleRegister = async () => {
-//     setErrorMessage("");
-    
-//     // Validation
-//     if (!username || !email || !password) {
-//       setErrorMessage("All fields are required");
-//       return;
-//     }
-    
-//     if (password !== confirmPassword) {
-//       setErrorMessage("Passwords do not match");
-//       return;
-//     }
-    
-//     setIsLoading(true);
-
-//     try {
-//       // First, register the user
-//       await register(username, email, password);
-      
-//       // Then automatically log them in
-//       await login(email, password);
-      
-//       // Redirect to dashboard
-//       router.push("/pages/dashboard");
-//       onClose();
-//     } catch (err: any) {
-//       setErrorMessage(err.message || "Registration failed");
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-//       <div className="bg-white p-6 rounded-xl w-96 space-y-4 relative shadow-xl">
-//         <button
-//           onClick={onClose}
-//           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-//           disabled={isLoading}
-//         >
-//           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-//             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-//           </svg>
-//         </button>
-
-//         <h2 className="text-xl font-bold text-gray-800">Register</h2>
-        
-//         {errorMessage && (
-//           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-lg text-sm">
-//             {errorMessage}
-//           </div>
-//         )}
-        
-//         <div className="space-y-1">
-//           <label className="block text-sm font-semibold text-gray-700">Username</label>
-//           <input 
-//             className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white"
-//             type="text"
-//             placeholder="Choose a username" 
-//             value={username}
-//             onChange={e => setUsername(e.target.value)} 
-//             disabled={isLoading}
-//           />
-//         </div>
-
-//         <div className="space-y-1">
-//           <label className="block text-sm font-semibold text-gray-700">Email Address</label>
-//           <input 
-//             className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white"
-//             type="email"
-//             placeholder="Enter your email" 
-//             value={email}
-//             onChange={e => setEmail(e.target.value)} 
-//             disabled={isLoading}
-//           />
-//         </div>
-
-//         <div className="space-y-1">
-//           <label className="block text-sm font-semibold text-gray-700">Password</label>
-//           <input 
-//             className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white" 
-//             type="password" 
-//             placeholder="Create a password" 
-//             value={password}
-//             onChange={e => setPassword(e.target.value)} 
-//             disabled={isLoading}
-//           />
-//         </div>
-
-//         <div className="space-y-1">
-//           <label className="block text-sm font-semibold text-gray-700">Confirm Password</label>
-//           <input 
-//             className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white" 
-//             type="password" 
-//             placeholder="Confirm your password" 
-//             value={confirmPassword}
-//             onChange={e => setConfirmPassword(e.target.value)} 
-//             disabled={isLoading}
-//           />
-//         </div>
-
-//         <button 
-//           onClick={handleRegister} 
-//           className="bg-orange-500 hover:bg-orange-600 text-white w-full py-2 rounded-lg disabled:opacity-50 font-semibold"
-//           disabled={isLoading}
-//         >
-//           {isLoading ? "Creating Account..." : "Register"}
-//         </button>
-        
-//         <button 
-//           onClick={onSwitchToLogin} 
-//           className="text-sm text-orange-500 hover:text-orange-600 w-full text-center"
-//           disabled={isLoading}
-//         >
-//           Already have an account? Login
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 "use client";
 import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import { useRouter } from "next/navigation";
 
-export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: any) {
+interface RegisterModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSwitchToLogin: () => void;
+}
+
+export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
   const { register, login, sendWhatsAppOTP, verifyWhatsAppOTP, completeWhatsAppRegistration } = useAuth();
   const router = useRouter();
   const [authMethod, setAuthMethod] = useState<"email" | "whatsapp">("whatsapp");
@@ -644,8 +404,12 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: any)
           renderWhatsAppAuth()
         )}
         
+        {/* THIS IS THE BUTTON THAT OPENS LOGIN MODAL - MAKE SURE onSwitchToLogin IS PASSED CORRECTLY */}
         <button 
-          onClick={onSwitchToLogin} 
+          onClick={() => {
+            console.log("Switch to login clicked"); // Add this to debug
+            onSwitchToLogin();
+          }} 
           className="text-sm text-orange-500 hover:text-orange-600 transition-colors duration-200 w-full text-center"
           disabled={isLoading}
         >

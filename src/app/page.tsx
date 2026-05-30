@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import RegisterModal from './component/RegisterModal';
+import LoginModal from './component/LoginModal';
 
 const F = {
   fraunces: 'Fraunces, Georgia, serif',
@@ -117,6 +119,8 @@ function FaqItem({ question }: { question: string }) {
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -144,6 +148,24 @@ export default function HomePage() {
     if (isMobile) return mobile;
     if (isTablet) return tablet;
     return desktop;
+  };
+
+  const handleOpenRegisterModal = () => {
+    setShowRegisterModal(true);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setShowRegisterModal(false);
+  };
+
+  const handleSwitchToLogin = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
+  };
+
+  const handleSwitchToRegister = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
   };
 
   return (
@@ -240,22 +262,22 @@ export default function HomePage() {
 
             {/* CTA Buttons */}
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', paddingTop: 9.1, paddingBottom: 25.1 }}>
-              <Link href="/register" style={{ 
+              <button onClick={handleOpenRegisterModal} style={{ 
                 padding: isMobile ? '11px 20px' : '13px 26px', background: '#E8600A', 
                 boxShadow: '0px 2px 0px #C04E06', borderRadius: 9, outline: '2px #C04E06 solid', 
                 outlineOffset: -2, color: 'white', fontSize: getResponsiveFontSize(15, 14, 13), 
-                fontFamily: F.dmSans, fontWeight: 600, textDecoration: 'none' 
+                fontFamily: F.dmSans, fontWeight: 600, textDecoration: 'none', cursor: 'pointer', border: 'none'
               }}>
                 Register Your Pet →
-              </Link>
-              <Link href="#why-register" style={{ 
+              </button>
+              <a href="#why-register" style={{ 
                 padding: isMobile ? '11px 20px' : '14.25px 20px 15.25px', borderRadius: 9, 
                 outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, 
                 color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), 
-                fontFamily: F.dmSans, fontWeight: 500, textDecoration: 'none' 
+                fontFamily: F.dmSans, fontWeight: 500, textDecoration: 'none', display: 'inline-block'
               }}>
                 Why it matters
-              </Link>
+              </a>
             </div>
 
             {/* Stats Strip */}
@@ -486,9 +508,9 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-              <Link href="/register" style={{ display: 'inline-block', padding: isMobile ? '12px 24px' : '14px 28px', background: '#E8600A', borderRadius: 9, color: 'white', textDecoration: 'none', fontWeight: 600 }}>
+              <button onClick={handleOpenRegisterModal} style={{ display: 'inline-block', padding: isMobile ? '12px 24px' : '14px 28px', background: '#E8600A', borderRadius: 9, color: 'white', textDecoration: 'none', fontWeight: 600, cursor: 'pointer', border: 'none' }}>
                 Start Registration →
-              </Link>
+              </button>
             </div>
             {!isMobile && (
               <div style={{ width: 220, background: '#2C1A0E', padding: '22px 0', textAlign: 'center' }}>
@@ -568,9 +590,9 @@ export default function HomePage() {
                 <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '64.48px' }}>Three screens.</div>
                 <div style={{ color: '#E8600A', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '64.48px' }}>Sixty seconds.</div>
               </div>
-              <Link href="/register" style={{ padding: isMobile ? '12px 24px' : '14px 28px', background: '#E8600A', borderRadius: 9, color: 'white', textDecoration: 'none', fontWeight: 600 }}>
+              <button onClick={handleOpenRegisterModal} style={{ padding: isMobile ? '12px 24px' : '14px 28px', background: '#E8600A', borderRadius: 9, color: 'white', textDecoration: 'none', fontWeight: 600, cursor: 'pointer', border: 'none' }}>
                 Start Registration →
-              </Link>
+              </button>
             </div>
           </div>
 
@@ -746,9 +768,9 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <Link href="/register" style={{ display: 'block', textAlign: 'center', padding: isMobile ? '12px 20px' : '15px 20px', background: '#E8600A', borderRadius: 9, color: 'white', textDecoration: 'none', fontWeight: 600, marginTop: 24 }}>
+              <button onClick={handleOpenRegisterModal} style={{ display: 'block', textAlign: 'center', padding: isMobile ? '12px 20px' : '15px 20px', background: '#E8600A', borderRadius: 9, color: 'white', textDecoration: 'none', fontWeight: 600, marginTop: 24, cursor: 'pointer', border: 'none', width: '100%' }}>
                 Register Your Pet — ₹999 →
-              </Link>
+              </button>
 
               <div style={{ display: 'flex', gap: 20, marginTop: 18, flexWrap: 'wrap' }}>
                 {['Secure payment', 'Legally valid', '24–72 hr approval'].map((badge) => (
@@ -833,12 +855,12 @@ export default function HomePage() {
             Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad &amp; Gurugram who are already compliant.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/register" style={{ padding: isMobile ? '12px 24px' : '14px 32px', background: 'white', borderRadius: 9, color: '#C04E06', fontWeight: 600, textDecoration: 'none' }}>
+            <button onClick={handleOpenRegisterModal} style={{ padding: isMobile ? '12px 24px' : '14px 32px', background: 'white', borderRadius: 9, color: '#C04E06', fontWeight: 600, textDecoration: 'none', cursor: 'pointer', border: 'none' }}>
               Register Now
-            </Link>
-            <Link href="#why-register" style={{ padding: isMobile ? '12px 24px' : '14px 32px', borderRadius: 9, outline: '1px solid rgba(255,255,255,0.40)', color: 'rgba(255,255,255,0.85)', textDecoration: 'none' }}>
+            </button>
+            <a href="#why-register" style={{ padding: isMobile ? '12px 24px' : '14px 32px', borderRadius: 9, outline: '1px solid rgba(255,255,255,0.40)', color: 'rgba(255,255,255,0.85)', textDecoration: 'none', display: 'inline-block' }}>
               Learn More
-            </Link>
+            </a>
           </div>
         </div>
       </div>
@@ -873,6 +895,19 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <RegisterModal
+        isOpen={showRegisterModal}
+        onClose={handleCloseRegisterModal}
+        onSwitchToLogin={handleSwitchToLogin}
+      />
+      
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSwitchToRegister={handleSwitchToRegister}
+      />
     </div>
   );
 }

@@ -3,7 +3,14 @@ import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import { useRouter } from "next/navigation";
 
-export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: any) {
+// ✅ Add this interface
+interface LoginModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSwitchToRegister: () => void;
+}
+
+export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: LoginModalProps) {
   const { login, sendWhatsAppOTP, verifyWhatsAppOTP, completeWhatsAppRegistration } = useAuth();
   const router = useRouter();
   const [authMethod, setAuthMethod] = useState<"email" | "whatsapp">("whatsapp");
