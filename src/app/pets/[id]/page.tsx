@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { apiFetch } from "../../../services/api";
-import { useAuth } from "../../../context/AuthContext";
-import AddPetModal from "../../../component/AddPetModal";
-import RegistrationForm from "../../../component/RegistrationForm";
+import { apiFetch } from "../../services/api";
+import { useAuth } from "../../component/context/AuthContext";
+import AddPetModal from "../../component/AddPetModal";
+import RegistrationForm from "../../component/RegistrationForm";
 import {
   PawPrint,
   Dog,

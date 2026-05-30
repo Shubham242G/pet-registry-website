@@ -10,7 +10,7 @@ import {
   LogOut,
   ChevronDown
 } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -18,8 +18,8 @@ export default function Sidebar() {
   const { logout, user, isAuthenticated } = useAuth();
 
   const menuItems = [
-    { name: "Overview", icon: LayoutDashboard, href: "/pages/dashboard" },
-    { name: "Documents", icon: FileText, href: "/pages/documents" },
+    { name: "Overview", icon: LayoutDashboard, href: "/dashboard" },
+    { name: "Documents", icon: FileText, href: "/documents" },
     // { name: "Settings", icon: Settings, href: "/dashboard/settings" },
     // { name: "Help", icon: HelpCircle, href: "/dashboard/help" },
   ];

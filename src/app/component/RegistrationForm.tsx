@@ -17,9 +17,7 @@ import {
   Eye
 } from "lucide-react";
 import PaymentButton from './PaymentButton';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-
+import { useRouter } from 'next/navigation';
 
 interface RegistrationFormProps {
   petId: string;
@@ -48,29 +46,15 @@ export default function RegistrationForm({
   const [triggeringRegistration, setTriggeringRegistration] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [pendingPayment, setPendingPayment] = useState<{ petId: string; petName: string } | null>(null);
+  const [pendingRegistration, setPendingRegistration] = useState<{ 
+    petId: string; 
+    petName: string;
+    action: 'auto' | 'manual';
+  } | null>(null);
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
 
-  // Then update the authFetch function:
-const authFetch = async (url: string, options: RequestInit = {}) => {
-  const storedToken = localStorage.getItem("token");
-  const authToken = storedToken || token;
-  
-  // IMPORTANT: API_BASE_URL already includes /api, so don't add it again
-  const fullUrl = `${API_BASE_URL}${url}`;
-  
-  console.log(`📡 Fetching: ${fullUrl}`);
-  
-  const response = await fetch(fullUrl, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`,
-      ...options.headers,
-    },
-  });
-  
-  return response;
-};
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const router = useRouter();
 
   // Document configuration
   const documents = [
@@ -107,13 +91,21 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
   // Fetch registration status
   const fetchStatus = async () => {
     try {
-      console.log('📡 Fetching status for pet:', petId);
-      const response = await authFetch(`/registration/${petId}/status`);
+      const response = await fetch(`${API_BASE}/registration/${petId}/status`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       
       if (response.ok) {
         const data = await response.json();
-        console.log('✅ Status data:', data);
         setRegistrationStatus(data);
+        
+        // Check if payment is already completed
+        if (data.paymentStatus === 'completed') {
+          setPaymentCompleted(true);
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to fetch status');
@@ -144,10 +136,12 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
       const base64String = reader.result as string;
       
       try {
-        console.log(`📤 Uploading ${documentName} for pet ${petId}`);
-        
-        const response = await authFetch(`/registration/${petId}/documents`, {
+        const response = await fetch(`${API_BASE}/registration/${petId}/documents`, {
           method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify({
             documentName: documentName,
             fileData: base64String,
@@ -163,11 +157,22 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
           setSuccess(data.message);
           await fetchStatus();
           
-          // Check if all documents are uploaded
+          // If all documents are uploaded, check payment status
           if (data.hasAllDocuments) {
-            setSuccess('🎉 All documents uploaded! Please complete payment to proceed.');
-            setPendingPayment({ petId, petName });
-            setShowPaymentModal(true);
+            if (paymentCompleted) {
+              // Payment already done, trigger registration
+              setSuccess('All documents uploaded! Completing registration...');
+              await actuallyTriggerRegistration();
+            } else {
+              // Show payment modal
+              setSuccess('🎉 All documents uploaded! Please complete payment to finish registration.');
+              setPendingRegistration({
+                petId: petId,
+                petName: petName,
+                action: 'auto'
+              });
+              setShowPaymentModal(true);
+            }
           }
         } else {
           setError(data.message || 'Upload failed');
@@ -191,8 +196,12 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
     setError("");
     
     try {
-      const response = await authFetch(`/registration/${petId}/documents/${documentName}`, {
-        method: 'DELETE'
+      const response = await fetch(`${API_BASE}/registration/${petId}/documents/${documentName}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
       
       const data = await response.json();
@@ -211,69 +220,92 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
     }
   };
 
-  // Show payment modal when user clicks "Submit Registration"
-  const handleTriggerRegistration = () => {
-    // Check if all documents are uploaded
-    if (!hasAllDocuments) {
-      setError('Please upload all 4 documents first');
-      return;
-    }
-    
-    // Show payment modal - DO NOT trigger registration yet
-    setPendingPayment({ petId, petName });
-    setShowPaymentModal(true);
-  };
-
   // Actually trigger registration after payment success
   const actuallyTriggerRegistration = async () => {
     setTriggeringRegistration(true);
     setError("");
     
     try {
-      console.log('🎯 Triggering registration after payment for pet:', petId);
-      
-      const response = await authFetch(`/registration/${petId}/trigger-registration`, {
+      const response = await fetch(`${API_BASE}/registration/${petId}/trigger-registration`, {
         method: 'POST',
-        body: JSON.stringify({ paymentVerified: true })
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          paymentVerified: true 
+        })
       });
       
       const data = await response.json();
       
       if (response.ok) {
-        setSuccess(data.message);
+        setSuccess(data.message || 'Registration completed successfully!');
         setFormSubmitted(true);
         await fetchStatus();
+        
+        // Close the modal after 2 seconds and refresh parent
         setTimeout(() => {
           onSuccess();
+          // Optional: Redirect to dashboard or pet page
+          // router.push('/pages/dashboard');
         }, 2000);
       } else {
-        setError(data.message || 'Failed to trigger registration');
+        setError(data.message || 'Failed to complete registration');
       }
     } catch (err) {
       console.error('Trigger error:', err);
-      setError('Failed to trigger registration process');
+      setError('Failed to complete registration process. Please contact support.');
     } finally {
       setTriggeringRegistration(false);
     }
   };
 
+  // Handle payment success callback from PaymentButton
+  const handlePaymentSuccess = async () => {
+    setShowPaymentModal(false);
+    setPaymentCompleted(true);
+    
+    // Check if all documents are uploaded
+    if (registrationStatus?.hasAllDocuments) {
+      setSuccess('Payment successful! Completing registration...');
+      await actuallyTriggerRegistration();
+    } else {
+      setSuccess('Payment successful! Please upload remaining documents to complete registration.');
+      await fetchStatus();
+    }
+  };
+
+  // Show payment modal before triggering registration (manual trigger)
+  const handleTriggerRegistration = async () => {
+    // Check if payment is already completed
+    if (paymentCompleted) {
+      await actuallyTriggerRegistration();
+      return;
+    }
+    
+    // Show payment modal
+    setPendingRegistration({
+      petId: petId,
+      petName: petName,
+      action: 'manual'
+    });
+    setShowPaymentModal(true);
+  };
+
   // Handle view document
   const handleViewDocument = (fileData: string, mimeType: string) => {
-    try {
-      const byteCharacters = atob(fileData.split(',')[1]);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('View document error:', err);
-      setError('Failed to view document');
+    // Create a blob from base64 and open in new tab
+    const byteCharacters = atob(fileData.split(',')[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    URL.revokeObjectURL(url);
   };
 
   // Check if document is uploaded
@@ -291,8 +323,8 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
   const hasAllDocuments = registrationStatus?.hasAllDocuments || false;
   const registrationTriggered = registrationStatus?.registrationTriggered || false;
 
-  // If registration is already triggered, show success
-  if (registrationTriggered && !viewOnly) {
+  // If form is submitted successfully, show success message
+  if (formSubmitted || (registrationTriggered && !viewOnly)) {
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-3xl max-w-md w-full p-8 text-center">
@@ -329,6 +361,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
               </h2>
               <p className="text-sm text-gray-500">
                 {petName} • {uploadedCount}/{totalRequired} Documents Uploaded
+                {paymentCompleted && <span className="ml-2 text-green-600">• Payment Done ✓</span>}
               </p>
             </div>
           </div>
@@ -359,7 +392,11 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
                 <h3 className="text-lg font-semibold text-gray-900">Registration Progress</h3>
                 <p className="text-sm text-gray-600 mt-1">
                   {hasAllDocuments 
-                    ? "🎉 All documents uploaded! Ready to submit."
+                    ? registrationTriggered 
+                      ? "✅ Registration completed successfully!" 
+                      : paymentCompleted
+                        ? "🎉 All documents uploaded and payment done! Ready to submit."
+                        : "🎉 All documents uploaded! Payment required to complete."
                     : `📄 ${uploadedCount} out of ${totalRequired} documents uploaded`}
                 </p>
               </div>
@@ -377,12 +414,16 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
               />
             </div>
 
-            {/* Submit Button - Only enabled when all documents are uploaded */}
-            {hasAllDocuments && !viewOnly && (
+            {/* Status Message */}
+            {hasAllDocuments && !registrationTriggered && !viewOnly && (
               <div className="mt-4 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <FileCheck className="w-5 h-5" />
-                  <span className="font-medium">All documents uploaded! Ready to submit.</span>
+                  <span className="font-medium">
+                    {paymentCompleted 
+                      ? "All ready! Click below to complete registration." 
+                      : "All documents uploaded! Payment required to complete registration."}
+                  </span>
                 </div>
                 <button
                   onClick={handleTriggerRegistration}
@@ -392,9 +433,16 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
                   {triggeringRegistration ? (
                     <><Loader2 className="w-4 h-4 animate-spin" /><span>Processing...</span></>
                   ) : (
-                    <><Send className="w-4 h-4" /><span>Proceed to Payment</span></>
+                    <><Send className="w-4 h-4" /><span>{paymentCompleted ? "Complete Registration →" : "Pay ₹999 & Submit"}</span></>
                   )}
                 </button>
+              </div>
+            )}
+
+            {registrationTriggered && (
+              <div className="mt-4 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg flex items-center space-x-2">
+                <CheckCircle className="w-5 h-5" />
+                <span className="font-medium">Registration submitted on {registrationStatus.registrationTriggeredAt ? new Date(registrationStatus.registrationTriggeredAt).toLocaleDateString() : 'recently'}</span>
               </div>
             )}
           </div>
@@ -484,7 +532,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
                     </div>
                   ) : (
                     !viewOnly && !registrationTriggered && (
-                      <label className="mt-3 border-2 border-dashed rounded-lg p-4 flex flex-col items-center cursor-pointer transition-all hover:border-orange-500 hover:bg-orange-50">
+                      <label className={`mt-3 border-2 border-dashed rounded-lg p-4 flex flex-col items-center cursor-pointer transition-all hover:border-orange-500 hover:bg-orange-50`}>
                         <Upload className="w-8 h-8 text-gray-400" />
                         <span className="text-sm text-gray-500 mt-2">Click to upload</span>
                         <span className="text-xs text-gray-400 mt-1">{doc.accept.includes('pdf') ? 'PDF or Image' : 'Image'} (Max 5MB)</span>
@@ -498,7 +546,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
                             if (file) {
                               await handleFileUpload(file, doc.name);
                             }
-                            e.target.value = '';
+                            e.target.value = ''; // Reset input
                           }}
                         />
                       </label>
@@ -508,6 +556,12 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
                   {viewOnly && !uploaded && (
                     <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
                       <p className="text-sm text-gray-500">Document not uploaded</p>
+                    </div>
+                  )}
+
+                  {!viewOnly && registrationTriggered && !uploaded && (
+                    <div className="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                      <p className="text-sm text-orange-600">Registration already submitted. Document cannot be uploaded.</p>
                     </div>
                   )}
                 </div>
@@ -524,9 +578,9 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
                 <ul className="list-disc list-inside space-y-1 text-blue-700">
                   <li>All 4 documents are required to complete the registration process</li>
                   <li>Documents can be uploaded in any order and can be replaced before submission</li>
-                  <li>Once payment is completed, registration will be processed</li>
+                  <li>Once registration is submitted, documents cannot be modified</li>
                   <li>Payment of ₹999 is required to complete registration</li>
-                  <li>Registration will be processed only after successful payment</li>
+                  <li>You can pay anytime after uploading documents</li>
                 </ul>
               </div>
             </div>
@@ -549,7 +603,7 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
                 {triggeringRegistration ? (
                   <><Loader2 className="w-5 h-5 animate-spin" /><span>Processing...</span></>
                 ) : (
-                  <><Send className="w-5 h-5" /><span>Proceed to Payment (₹999)</span></>
+                  <><Send className="w-5 h-5" /><span>{paymentCompleted ? "Complete Registration" : "Pay ₹999 & Submit Registration"}</span></>
                 )}
               </button>
             )}
@@ -567,15 +621,15 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
         </div>
       )}
 
-      {/* PAYMENT MODAL */}
-      {showPaymentModal && pendingPayment && (
+      {/* Payment Modal */}
+      {showPaymentModal && pendingRegistration && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[80] p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="text-center mb-4">
               <div className="text-5xl mb-3">💳</div>
-              <h3 className="text-xl font-bold text-gray-900">Complete Payment</h3>
+              <h3 className="text-xl font-bold text-gray-900">Complete Registration</h3>
               <p className="text-gray-600 mt-2">
-                Pay ₹999 to complete registration for <strong>{pendingPayment.petName}</strong>
+                Pay ₹999 to complete registration for <strong>{pendingRegistration.petName}</strong>
               </p>
               <p className="text-xs text-gray-500 mt-2">
                 One-time payment for lifetime registration
@@ -583,24 +637,21 @@ const authFetch = async (url: string, options: RequestInit = {}) => {
             </div>
             
             <PaymentButton
-              petId={pendingPayment.petId}
-              petName={pendingPayment.petName}
+              petId={pendingRegistration.petId}
+              petName={pendingRegistration.petName}
               amount={999}
-              onSuccess={() => {
-                setShowPaymentModal(false);
-                setSuccess('Payment successful! Now submitting your registration...');
-                actuallyTriggerRegistration();
-              }}
+              onSuccess={handlePaymentSuccess}
               onFailure={(error) => {
                 setError(`Payment failed: ${error}. Please try again.`);
                 setShowPaymentModal(false);
+                setTimeout(() => setError(""), 5000);
               }}
             />
             
             <button
               onClick={() => {
                 setShowPaymentModal(false);
-                setPendingPayment(null);
+                setPendingRegistration(null);
               }}
               className="w-full mt-3 text-gray-500 text-sm hover:text-gray-700 text-center"
             >

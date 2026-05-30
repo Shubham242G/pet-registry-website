@@ -27,11 +27,13 @@ export default function PaymentButton({
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePayment = async () => {
+
+      console.log('Razorpay Key:', process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
     setIsLoading(true);
 
     try {
       const token = localStorage.getItem("token");
-      
+
       const orderResponse = await fetch("/api/payment/create-order", {
         method: "POST",
         headers: {
@@ -58,35 +60,61 @@ export default function PaymentButton({
         name: "Tailio",
         description: `Registration fee for ${petName}`,
         order_id: orderData.orderId,
+
+        // FIX: Added method config — this is what was causing QR-only display.
+        // Without this, Razorpay defaults to showing only a QR code in test mode.
+        method: {
+          upi: true,
+          card: true,
+          netbanking: true,
+          wallet: true,
+        },
+
         handler: async (response: any) => {
-          const verifyResponse = await fetch("/api/payment/verify-payment", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              petId: petId,
-              amount: amount * 100,
-            }),
-          });
+          try {
+            const verifyResponse = await fetch("/api/payment/verify-payment", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                petId: petId,
+                amount: amount * 100,
+              }),
+            });
 
-          const verifyData = await verifyResponse.json();
+            const verifyData = await verifyResponse.json();
 
-          if (verifyData.success) {
-            onSuccess();
-          } else {
-            onFailure?.(verifyData.error || "Payment verification failed");
+            if (verifyData.success) {
+              setIsLoading(false);
+              onSuccess();
+            } else {
+              setIsLoading(false);
+              onFailure?.(verifyData.error || "Payment verification failed");
+            }
+          } catch (err: any) {
+            setIsLoading(false);
+            onFailure?.(err.message || "Payment verification failed");
           }
         },
+
+        modal: {
+          ondismiss: () => {
+            setIsLoading(false);
+            onFailure?.("Payment cancelled");
+          },
+        },
+
         prefill: {
           name: "",
           email: "",
           contact: "",
         },
+
         theme: {
           color: "#FF8C42",
         },
@@ -97,7 +125,6 @@ export default function PaymentButton({
     } catch (error: any) {
       console.error("Payment error:", error);
       onFailure?.(error.message || "Payment failed");
-    } finally {
       setIsLoading(false);
     }
   };

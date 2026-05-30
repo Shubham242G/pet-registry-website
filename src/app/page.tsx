@@ -1,613 +1,868 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0 },
+const F = {
+  fraunces: 'Fraunces, Georgia, serif',
+  dmSans: "'DM Sans', sans-serif",
+  dmMono: "'DM Mono', monospace",
 };
 
-const Section = ({ children }: { children: React.ReactNode }) => (
-  <motion.section
-    variants={fadeUp}
-    initial="hidden"
-    whileInView="show"
-    viewport={{ once: true }}
-    transition={{ duration: 0.6 }}
-    className="py-12 px-4 md:px-12"
-  >
-    {children}
-  </motion.section>
-);
+/* ─── Shared badge ───────────────────────────────────────────────────────── */
+function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 768);
+  }, []);
+  
+  if (dark) {
+    return (
+      <div style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 14px', background: 'rgba(255,255,255,0.06)', borderRadius: 100, outline: '1px rgba(255,255,255,0.10) solid', outlineOffset: -1 }}>
+        <span style={{ color: 'rgba(250,246,239,0.55)', fontSize: isMobile ? 8 : 9.5, fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.24px' }}>{text}</span>
+      </div>
+    );
+  }
+  return (
+    <div style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 14px', background: '#FFF0E4', borderRadius: 100, outline: '1px #FFCCA0 solid', outlineOffset: -1 }}>
+      <span style={{ color: '#C04E06', fontSize: isMobile ? 9 : 10, fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.2px' }}>{text}</span>
+    </div>
+  );
+}
 
+/* ─── Shared CTA button ──────────────────────────────────────────────────── */
+function CtaButton({ text, href = '/register', style }: { text: string; href?: string; style?: React.CSSProperties }) {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 768);
+  }, []);
+  
+  return (
+    <Link href={href} style={{
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      padding: isMobile ? '12px 20px' : '14px 28px',
+      background: '#E8600A',
+      boxShadow: '0px 6px 20px rgba(232,96,10,0.30), 0px 2px 0px #C04E06',
+      borderRadius: 9, outline: '2px #C04E06 solid', outlineOffset: -2,
+      color: 'white', fontSize: isMobile ? 13 : 15, fontFamily: F.dmSans, fontWeight: 600,
+      textDecoration: 'none', whiteSpace: 'nowrap', gap: 8, ...style,
+    }}>
+      {text}
+    </Link>
+  );
+}
+
+/* ─── Check icon circle (dark bg) ───────────────────────────────────────── */
+function CheckDark() {
+  return (
+    <div style={{ width: 28, height: 28, background: '#2C1A0E', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <div style={{ width: 10, height: 8, left: 2, top: 3, outline: '2.2px white solid', outlineOffset: -1.1, position: 'relative' }} />
+    </div>
+  );
+}
+
+/* ─── Cross icon circle (light) ─────────────────────────────────────────── */
+function CrossLight() {
+  return (
+    <div style={{ width: 28, height: 28, borderRadius: 14, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <div style={{ width: 6, height: 6, outline: '2px #A68660 solid', outlineOffset: -1, position: 'relative' }} />
+    </div>
+  );
+}
+
+/* ─── FAQ item ───────────────────────────────────────────────────────────── */
+function FaqItem({ question }: { question: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, overflow: 'hidden' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{ width: '100%', padding: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', gap: 16 }}
+      >
+        <span style={{ color: '#2C1A0E', fontSize: 14.5, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '20.3px' }}>{question}</span>
+        <div style={{ width: 26, height: 26, background: '#FFF0E4', borderRadius: 13, outline: '1px #FFCCA0 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <span style={{ color: '#C04E06', fontSize: 16, fontFamily: F.dmSans, fontWeight: 700, lineHeight: 1 }}>{open ? '−' : '+'}</span>
+        </div>
+      </button>
+    </div>
+  );
+}
+
+/* ─── PAGE ───────────────────────────────────────────────────────────────── */
 export default function HomePage() {
-  const [faqOpen, setFaqOpen] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
-  const toggleFaq = (index: number) => {
-    setFaqOpen(faqOpen === index ? null : index);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsTablet(window.innerWidth <= 1024 && window.innerWidth > 768);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@500&display=swap';
+    document.head.appendChild(link);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const getResponsivePadding = () => {
+    if (isMobile) return '40px 20px';
+    if (isTablet) return '60px 30px';
+    return '80px 40px';
   };
 
-  const faqs = [
-    { question: "Is pet registration really mandatory in Delhi NCR?", answer: "Yes, the Supreme Court of India has mandated pet registration across all municipal limits in Delhi NCR. Non-compliance can result in fines up to ₹10,000." },
-    { question: "Is Tailio's registration legally valid?", answer: "Absolutely! Tailio handles the official municipal filing for you. Your registration is processed through the appropriate government authorities and you receive a legally valid certificate." },
-    { question: "What documents do I need to register?", answer: "You'll need: 1) Anti-Rabies Vaccination Certificate, 2) Applicant ID Proof (Aadhaar/PAN/Passport), 3) Applicant Address Proof, 4) Photograph with your pet dog." },
-    { question: "How much does registration cost on Tailio?", answer: "₹1,999/- all inclusive. This covers your complete pet registration filing, certificate, and everything in between. No hidden charges." },
-    { question: "Can I register cats and other pets — not just dogs?", answer: "Currently, we support dog registration as mandated by the Supreme Court. Support for cats and other pets is coming soon!" },
-    { question: "What happens if I don't register?", answer: "You risk paying fines up to ₹10,000, your pet may be seized in disputes, and you won't have legal proof of ownership." }
-  ];
+  const getResponsiveFontSize = (desktop: number, tablet: number, mobile: number) => {
+    if (isMobile) return mobile;
+    if (isTablet) return tablet;
+    return desktop;
+  };
 
   return (
-    <main className="bg-white text-gray-900 overflow-x-hidden font-['Nunito']">
+    <div style={{ fontFamily: F.dmSans, overflowX: 'hidden', width: '100%', background: '#FAF6EF' }}>
 
-      {/* Hero Section */}
-      <div className="bg-[#FFF3E0] pt-[100px] md:pt-[100px] pt-[80px] relative">
-        <div className="max-w-[1200px] mx-auto relative flex flex-col md:flex-row items-center justify-between px-4 md:px-8">
+      {/* ══════════════════════════════════════
+          ALERT BAR
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#2C1A0E', width: '100%', padding: isMobile ? '8px 16px' : '10px 32px', boxSizing: 'border-box', display: 'flex', justifyContent: 'center' }}>
+        <span style={{ color: '#FFDBB8', fontSize: getResponsiveFontSize(12.5, 11, 10), fontFamily: F.dmSans, fontWeight: 700, lineHeight: '18.75px', textAlign: 'center' }}>
+          Jager just got registered.
+        </span>
+      </div>
 
-          {/* Left Content */}
-          <div className="flex-1 w-full md:max-w-[55%] text-center md:text-left">
-            {/* Supreme Court Button */}
-            <button className="flex flex-wrap items-center justify-center md:justify-start bg-[#2C1A0E] text-left py-2 px-4 mb-4 gap-1 rounded-[999px] border-0 hover:bg-[#3d2a1c] transition-colors mx-auto md:mx-0">
-              <span className="text-[#FFF3E0] text-[10px] md:text-[12px] font-normal">Supreme Court of India has mandated pet registration</span>
-              <span className="text-[#FFDBB8] text-[10px] md:text-[12px] font-normal">— Comply before it's too late</span>
-            </button>
+      {/* ══════════════════════════════════════
+          HERO
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#FAF6EF', width: '100%', position: 'relative', minHeight: isMobile ? 600 : 770, overflow: 'hidden', boxSizing: 'border-box' }}>
 
-            {/* Hero Title */}
-            <h1 className="text-[#2C1A0E] text-[36px] md:text-[56px] font-black leading-tight mb-4 tracking-[-1px]">
-              Your pet deserves<br />an identity.<br />the law requires.
-            </h1>
+        {/* Background images - hide on mobile */}
+        {!isMobile && (
+          <>
+            <div style={{ position: 'absolute', left: 0, top: 0, width: '50%', height: '100%' }}>
+              <Image src="/images/hero-bg-left.png" alt="" fill style={{ objectFit: 'cover', objectPosition: 'center' }} priority />
+            </div>
+            <div style={{ position: 'absolute', right: 0, top: 0, width: '50%', height: '100%' }}>
+              <Image src="/images/hero-bg-right.png" alt="" fill style={{ objectFit: 'cover', objectPosition: 'center' }} priority />
+            </div>
+          </>
+        )}
 
-            {/* Hero Description */}
-            <p className="text-[#6B3A1F] text-[14px] md:text-[15px] font-normal mb-6 leading-relaxed">
-              Register your pet in just 1 minute - get a verified digital<br className="hidden md:block" /> ID, vaccination records, and full legal compliance. Trusted by<br className="hidden md:block" /> pet parents across Delhi NCR.
-            </p>
+        {/* Content */}
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center', gap: isMobile ? 40 : 77 }}>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start mb-8 gap-4">
-              <button className="bg-[#FF8C42] text-left py-3 px-6 rounded-[14px] border-0 text-white text-[14px] font-bold shadow-[0px_4px_20px_#FF8C4257] hover:bg-[#e07a2e] transition-colors w-full sm:w-auto">
-                Register Your Pet →
-              </button>
-              <button className="bg-white text-left py-3 px-6 rounded-[14px] border-2 border-solid border-[#F0D5B8] text-[#6B3A1F] text-[14px] font-bold hover:bg-[#FFF3E0] transition-colors w-full sm:w-auto">
-                Why it matters
-              </button>
+          {/* Left text block */}
+          <div style={{ width: isMobile ? '100%' : 652, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 14.9 }}>
+
+            {/* Compliance pill */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', padding: '7px 16px', background: '#2C1A0E', borderRadius: 100, gap: 8, alignSelf: 'flex-start', flexWrap: 'wrap' }}>
+              <span style={{ color: 'rgba(255,243,224,0.75)', fontSize: getResponsiveFontSize(11.5, 10, 9), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '17.25px' }}>
+                Supreme Court of India has mandated pet registration
+              </span>
+              <span style={{ color: '#FFDBB8', fontSize: getResponsiveFontSize(11.5, 10, 9), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '24px' }}>— Comply now</span>
             </div>
 
-            {/* Statistics Row */}
-            <div className="flex flex-wrap justify-center md:justify-start items-start gap-6 md:gap-10">
-              <div className="text-center md:text-left">
-                <span className="text-[#D96F28] text-[28px] md:text-[36px] font-black block leading-none">&gt;90%</span>
-                <span className="text-[#A07050] text-[11px] md:text-[13px] font-normal block mt-1 w-[80px] md:w-[90px]">Pets in Delhi<br />are unregistered</span>
+            {/* Headline */}
+            <div style={{ paddingTop: 5.1 }}>
+              <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(64, 48, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2 }}>Your pet deserves</div>
+              <div style={{ fontSize: getResponsiveFontSize(64, 48, 32), fontFamily: F.fraunces, lineHeight: 1.2 }}>
+                <span style={{ color: '#2C1A0E', fontWeight: 900 }}>an</span>
+                <span style={{ color: '#E8600A', fontStyle: 'italic', fontWeight: 700 }}> identity,</span>
               </div>
-              <div className="text-center md:text-left">
-                <span className="text-[#D96F28] text-[28px] md:text-[36px] font-black block leading-none">₹10K</span>
-                <span className="text-[#A07050] text-[11px] md:text-[13px] font-normal block mt-1 w-[80px] md:w-[90px]">Fine for<br />non-compliance</span>
-              </div>
-              <div className="text-center md:text-left">
-                <span className="text-[#D96F28] text-[28px] md:text-[36px] font-black block leading-none">1 min</span>
-                <span className="text-[#A07050] text-[11px] md:text-[13px] font-normal block mt-1 w-[80px] md:w-[90px]">To register<br />on Tailio</span>
-              </div>
-              <div className="text-center md:text-left">
-                <span className="text-[#D96F28] text-[28px] md:text-[36px] font-black block leading-none">33M+</span>
-                <span className="text-[#A07050] text-[11px] md:text-[13px] font-normal block mt-1 w-[80px] md:w-[90px]">Pet dogs<br />in India</span>
-              </div>
+              <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(64, 48, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2 }}>the law requires.</div>
+            </div>
+
+            {/* Subtext */}
+            <div style={{ maxWidth: isMobile ? '100%' : 480, paddingBottom: 0.85 }}>
+              <p style={{ margin: 0, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px' }}>
+                Register your pet in just 1 minute. Get a verified digital ID, vaccination records, and full legal compliance. Trusted by pet parents across Delhi NCR.
+              </p>
+            </div>
+
+            {/* CTAs */}
+            <div style={{ paddingTop: 9.1, paddingBottom: 25.1, display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+              <Link href="/register" style={{
+                padding: isMobile ? '11px 20px' : '13px 26px',
+                background: '#E8600A', boxShadow: '0px 2px 0px #C04E06',
+                borderRadius: 9, outline: '2px #C04E06 solid', outlineOffset: -2,
+                display: 'inline-flex', alignItems: 'center',
+                color: 'white', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 600,
+                lineHeight: '22.5px', textDecoration: 'none',
+              }}>Register Your Pet →</Link>
+              <Link href="#why-register" style={{
+                padding: isMobile ? '11px 20px' : '14.25px 20px 15.25px',
+                borderRadius: 9, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1,
+                display: 'inline-flex', alignItems: 'center',
+                color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 500,
+                lineHeight: '21px', textDecoration: 'none',
+              }}>Why it matters</Link>
+            </div>
+
+            {/* Stats strip */}
+            <div style={{ width: isMobile ? '100%' : 554, borderRadius: 13, overflow: 'hidden', display: 'flex', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
+              {[
+                { num: '>90%', label: 'Pets unregistered in Delhi' },
+                { num: '₹10K', label: 'Fine for non-compliance' },
+                { num: '1 min', label: 'To register on Tailio' },
+                { num: '33M+', label: 'Pet dogs in India' },
+              ].map((s, i) => (
+                <div key={i} style={{ 
+                  flex: 1, 
+                  padding: isMobile ? '12px 8px' : '16px 12px', 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  alignItems: 'center', 
+                  gap: 3, 
+                  borderRight: i < 3 && !isMobile ? '1px solid rgba(44,26,14,0.08)' : 'none',
+                  borderBottom: isMobile && i < 3 ? '1px solid rgba(44,26,14,0.08)' : 'none',
+                  minWidth: isMobile ? '50%' : 'auto'
+                }}>
+                  <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(26, 22, 20), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '26px', textAlign: 'center' }}>{s.num}</span>
+                  <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(11, 10, 9), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '15.4px', textAlign: 'center' }}>{s.label}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Right Image - Girl with dog */}
-          <div className="flex-shrink-0 mt-8 md:mt-0">
-            <img
-              src="/images/banner.png"
-              alt="Girl with dog"
-              className="w-[280px] md:w-[380px] h-auto object-contain mx-auto"
-            />
-          </div>
+          {/* Right — hero illustration */}
+          {!isMobile && (
+            <div style={{ position: 'relative', width: isMobile ? '100%' : 580, height: isMobile ? 300 : 580, flexShrink: 0 }}>
+              <Image src="/images/hero-illustration.png" alt="Happy pet with owner" fill style={{ objectFit: 'contain' }} priority />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* It's the law now button */}
-      <button className="flex flex-col items-start bg-[#FFDBB8] text-left py-1 px-3.5 mb-3.5 mx-auto md:ml-[850px] rounded-[999px] border-0 hover:bg-[#f0c896] transition-colors">
-        <span className="text-[#D96F28] text-xs font-bold">It's the law now</span>
-      </button>
+      {/* ══════════════════════════════════════
+          WHY REGISTER — two column
+      ══════════════════════════════════════ */}
+      <div id="why-register" style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 40 }}>
 
-      {/* Main Content Area */}
-      <div className="flex flex-col md:flex-row items-start max-w-[1213px] mb-[61px] mx-auto gap-[37px] px-4 md:px-0">
-        {/* Left Column */}
-        <div className="flex-1 flex-col items-start mt-[17px] w-full">
+          {/* Top: two columns */}
+          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 20, alignItems: isMobile ? 'flex-start' : 'flex-end' }}>
 
-          {/* Why Registration Matters - relative container for the floating badge */}
-          <div className="relative pt-8">
-            {/* >90% floating badge - top-right, overlapping the card */}
-            <div className="absolute -top-6 right-0 z-10">
-              <div className="bg-[#FF8C42] py-[15px] px-[19px] rounded-2xl shadow-[0px_8px_32px_#D96F2840]">
-                <span className="text-white text-[24px] md:text-[28px] font-black block leading-none">&gt; 90%</span>
-                <span className="text-white text-[10px] md:text-xs font-normal w-[100px] md:w-[113px] block mt-1">Pets Unregistered in Delhi NCR.</span>
+            {/* Left column */}
+            <div style={{ width: isMobile ? '100%' : 548, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 14.9 }}>
+              <Badge text="It's the law now" />
+              <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '41.8px' }}>
+                Pet registration isn't optional anymore
+              </div>
+              <p style={{ margin: 0, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px' }}>
+                The Supreme Court of India, through the Animal Birth Control (ABC) Rules 2023, has directed all municipal corporations in Delhi NCR to enforce mandatory pet registration.
+              </p>
+
+              {/* Feature rows */}
+              <div style={{ paddingTop: 9.09, display: 'flex', flexDirection: 'column', gap: 20 }}>
+                {[
+                  {
+                    title: 'Mandated by the Supreme Court',
+                    desc: "The ABC Rules 2023 and the SC's landmark August 2025 order directed Delhi NCR authorities to enforce registration for all pet animals — not just dogs.",
+                    img: '/images/icons/supreme-court.png',
+                  },
+                  {
+                    title: 'India accounts for 36% of global rabies deaths',
+                    desc: 'Pet registration ensures vaccination compliance, directly reducing rabies risk in urban areas like Delhi NCR.',
+                    img: '/images/icons/rabies.png',
+                  },
+                  {
+                    title: 'Unregistered pets contribute to stray population',
+                    desc: "Abandoned unregistered pets are a leading cause of Delhi's stray dog problem. Registration creates accountability.",
+                    img: '/images/icons/stray.png',
+                  },
+                  {
+                    title: 'Legal ID = Full Protection',
+                    desc: 'A registered pet has a verified health and vaccination history, making it legally protected at all times.',
+                    img: '/images/icons/legal-id.png',
+                  },
+                ].map((item) => (
+                  <div key={item.title} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                    <div style={{ width: 40, height: 40, background: '#FFF0E4', borderRadius: 9, outline: '1px #FFCCA0 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, position: 'relative' }}>
+                      <Image src={item.img} alt="" width={27} height={27} style={{ objectFit: 'contain' }} />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2.19 }}>
+                      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '21px' }}>{item.title}</span>
+                      <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 11, 10), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.38px' }}>{item.desc}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Why Registration Matters Card */}
-            <div className="bg-white pt-[35px] pb-[35px] pl-[20px] md:pl-[33px] pr-[20px] md:pr-[33px] rounded-3xl border border-solid border-[#F8EDE0] shadow-[0px_8px_32px_#D96F281F]">
-              <div className="text-left mb-[15px]">
-                <span className="text-[#A07050] text-[13px] font-bold uppercase tracking-wide">Why Registration Matters</span>
-              </div>
-              <div className="flex flex-col md:flex-row items-start mb-4 gap-3">
-                <div className="bg-[#FFFAF4] py-[18px] pl-[17px] pr-[20px] rounded-[14px] border border-solid border-[#F8EDE0] flex-1 w-full">
-                  <img src="/images/document.png" alt="Legal" className="w-6 h-6 mb-2.5" />
-                  <span className="text-[#2C1A0E] text-sm font-bold block mb-[5px]">Legal Identity and Protection</span>
-                  <span className="text-[#A07050] text-xs font-normal">Your pet gets a unique ID : Proof of ownership and legal status and helps to protect them.</span>
-                </div>
-                <div className="bg-[#FFFAF4] py-[18px] px-[17px] rounded-[14px] border border-solid border-[#F8EDE0] flex-1 w-full">
-                  <img src="/images/vaccine.png" alt="Vaccination" className="w-6 h-6 mb-2.5" />
-                  <span className="text-[#2C1A0E] text-sm font-bold block mb-[5px]">Vaccination Tracking</span>
-                  <span className="text-[#A07050] text-xs font-normal">Digital health records ensure your pet's vaccines are always up-to-date.</span>
+            {/* Right column */}
+            <div style={{ width: isMobile ? '100%' : 548, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+              {/* >90% stat card */}
+              <div style={{ background: '#2C1A0E', borderRadius: 13, padding: isMobile ? '20px' : '24px 32px', display: 'flex', alignItems: 'center', gap: 20, height: 'auto', boxSizing: 'border-box', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
+                <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(44, 36, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '66px', flexShrink: 0 }}>&gt;90%</span>
+                <div style={{ width: isMobile ? 0 : 1.5, height: 40, background: 'rgba(255,255,255,0.10)', flexShrink: 0 }} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <span style={{ color: '#F4E4CF', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '19.6px' }}>Pets Unregistered in Delhi NCR</span>
+                  <span style={{ color: 'rgba(244,228,207,0.38)', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '18px' }}>Municipal enforcement now active</span>
                 </div>
               </div>
-              <div className="flex flex-col md:flex-row items-start gap-3">
-                <div className="bg-[#FFFAF4] pt-[19px] pb-[19px] px-[17px] rounded-[14px] border border-solid border-[#F8EDE0] flex-1 w-full">
-                  <img src="/images/search.png" alt="Recovery" className="w-6 h-6 mb-2.5" />
-                  <span className="text-[#2C1A0E] text-sm font-bold block mb-[5px]">Lost Pet Recovery</span>
-                  <span className="text-[#A07050] text-xs font-normal">A registered pet is 3x more likely to be returned if lost or stolen.</span>
-                </div>
-                <div className="bg-[#FFFAF4] py-[18px] pl-[17px] pr-[17px] rounded-[14px] border border-solid border-[#F8EDE0] flex-1 w-full">
-                  <img src="/images/shield.png" alt="Travel" className="w-6 h-6 mb-2.5" />
-                  <span className="text-[#2C1A0E] text-sm font-bold block mb-[5px]">Crucial for Travel</span>
-                  <span className="text-[#A07050] text-xs font-normal">Pet registration certificate is required for traveling with your fur baby</span>
+
+              {/* Why Registration Matters card */}
+              <div style={{ background: '#FFFCF8', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, boxShadow: '0px 4px 20px rgba(44,26,14,0.08)', overflow: 'hidden' }}>
+                <div style={{ padding: isMobile ? '20px' : '24px 24px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.2px' }}>Why Registration Matters</span>
+
+                  {[
+                    { title: 'Legal Identity & Protection', desc: 'Legal ID — proof of ownership and legal status.' },
+                    { title: 'Vaccination Tracking', desc: 'Digital records — always up to date.' },
+                    { title: 'Lost Pet Recovery', desc: '3× more likely to be returned if lost or stolen.' },
+                    { title: 'Crucial for Travel', desc: 'Registration certificate is required for traveling with your pet.' },
+                  ].map((item) => (
+                    <div key={item.title} style={{ padding: 16, background: '#FAF6EF', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 3.4 }}>
+                      <div style={{ width: 32, height: 32, background: '#FFF0E4', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 14, height: 22, outline: '2px #2C1A0E solid', outlineOffset: -1 }} />
+                      </div>
+                      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '19.5px', paddingTop: 8.6 }}>{item.title}</span>
+                      <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(11.5, 10, 9), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '17.83px' }}>{item.desc}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Right Column */}
-        <div className="flex-1 flex-col items-start w-full">
-          <div className="mb-[19px] text-center md:text-left">
-            <span className="text-[#2C1A0E] text-3xl md:text-4xl font-black">Pet registration isn't optional<br className="hidden md:block" />anymore</span>
-          </div>
-          <div className="mb-[27px] text-center md:text-left">
-            <span className="text-[#6B3A1F] text-[15px] font-normal leading-relaxed">
-              The Supreme Court of India, through the Animal Birth Control (ABC) Rules 2023 and subsequent orders, has directed all municipal corporations in Delhi-NCR to enforce mandatory pet registration. Here's what you need to know:
-            </span>
-          </div>
-
-          {/* Info Items */}
-          <div className="flex flex-col sm:flex-row items-start mb-4 gap-3.5">
-            <div className="bg-[#FFF0E4] rounded-[10px] p-2 flex-shrink-0 mx-auto sm:mx-0">
-              <img src="/images/supreme-court.png" alt="Court" className="w-9 h-9 rounded-[10px]" />
-            </div>
-            <div className="text-center sm:text-left">
-              <span className="text-[#2C1A0E] text-[15px] font-bold block">Mandated by the Supreme Court</span>
-              <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">The ABC Rules 2023 and the Supreme Court's landmark August 2025 order directed Delhi-NCR authorities to enforce registration for all pet animals — not just dogs.</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-start mb-4 gap-3.5">
-            <div className="bg-[#FFF0E4] rounded-[10px] p-2 flex-shrink-0 mx-auto sm:mx-0">
-              <img src="/images/bacteria.png" alt="Rabies" className="w-8 h-8 rounded-[10px]" />
-            </div>
-            <div className="text-center sm:text-left">
-              <span className="text-[#2C1A0E] text-[15px] font-bold block">India accounts for 36% of global rabies deaths</span>
-              <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">Pet registration ensures vaccination compliance, directly reducing the risk of rabies transmission in urban areas like Delhi NCR.</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-start mb-4 gap-3.5">
-            <div className="bg-[#FFF0E4] rounded-[10px] p-2 flex-shrink-0 mx-auto sm:mx-0">
-              <img src="/images/dog-icon.png" alt="Stray" className="w-7 h-7 rounded-[10px]" />
-            </div>
-            <div className="text-center sm:text-left">
-              <span className="text-[#2C1A0E] text-[15px] font-bold block">Unregistered pets contribute to stray population</span>
-              <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">Abandoned unregistered pets are a leading cause of Delhi's stray dog problem. Registration creates accountability for every pet owner.</span>
-            </div>
-          </div>
-
-          {/* Digital ID */}
-          <div className="flex flex-col sm:flex-row items-start gap-3.5">
-            <div className="bg-[#FFF0E4] rounded-[10px] p-2 flex-shrink-0 mx-auto sm:mx-0">
-              <img src="/images/smartphone.png" alt="Digital ID" className="w-[29px] h-[29px] rounded-[10px]" />
-            </div>
-            <div className="text-center sm:text-left">
-              <span className="text-[#2C1A0E] text-[15px] font-bold block">Digital ID = better care</span>
-              <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">A registered pet has a verified health history that any vet can access — making emergency care faster and more accurate.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Statistics Banner */}
-      <div className="flex flex-wrap justify-center bg-[#FFF3E0] max-w-[1430px] py-[37px] px-4 md:px-[168px] mx-auto rounded-xl gap-6 md:gap-0">
-        <div className="flex-1 text-center min-w-[150px]">
-          <span className="text-[#D96F28] text-[32px] md:text-[40px] font-black">~913</span>
-          <p className="text-[#6B3A1F] text-sm font-normal mt-1">Registered dogs in<br />Delhi municipality</p>
-          <p className="text-[#A07050] text-[11px] font-normal mt-1">vs. estimated lakhs of pet dogs</p>
-        </div>
-        <div className="flex-1 text-center min-w-[150px]">
-          <span className="text-[#D96F28] text-[32px] md:text-[40px] font-black">&lt;10%</span>
-          <p className="text-[#6B3A1F] text-sm font-normal mt-1">Pet owners who<br />have registered</p>
-          <p className="text-[#A07050] text-[11px] font-normal mt-1">Study, East Delhi urban colony</p>
-        </div>
-        <div className="flex-1 text-center min-w-[150px]">
-          <span className="text-[#D96F28] text-[32px] md:text-[40px] font-black">86%</span>
-          <p className="text-[#6B3A1F] text-sm font-normal mt-1">Pet owners unaware<br />their pet can spread rabies</p>
-          <p className="text-[#A07050] text-[11px] font-normal mt-1">PMC / UCMS study, Delhi</p>
-        </div>
-        <div className="flex-1 text-center min-w-[150px]">
-          <span className="text-[#D96F28] text-[32px] md:text-[40px] font-black">36%</span>
-          <p className="text-[#6B3A1F] text-sm font-normal mt-1">Global rabies deaths<br />happen in India</p>
-          <p className="text-[#A07050] text-[11px] font-normal mt-1">WHO / Supreme Court records</p>
-        </div>
-      </div>
-
-      {/* Fines Section */}
-      <div className="bg-[#2C1A0E] max-w-[1437px] pt-[72px] mb-[241px] mx-auto rounded-2xl px-4">
-        <div className="max-w-[1143px] mx-auto">
-          <div className="text-center mb-[25px]">
-            <button className="bg-[#FF8C4233] py-[5px] px-3.5 rounded-[999px] mb-2">
-              <span className="text-[#FFDBB8] text-xs font-bold">Know the fines</span>
-            </button>
-            <h2 className="text-[#FFF3E0] text-[32px] md:text-[40px] font-black">Ignore Registration</h2>
-            <h2 className="text-[#FFF3E0] text-[32px] md:text-[40px] font-black mb-[19px]">Pay the Penalty</h2>
-            <p className="text-[#C4906A] text-base font-normal mb-[23px] px-4">Municipal corporations are actively enforcing registration. These are the<br className="hidden md:block" /> current fines across Delhi NCR.</p>
-          </div>
-
-          {/* Fines Grid */}
-          <div className="flex flex-wrap justify-center gap-[50px]">
+          {/* Stats strip — 4 columns */}
+          <div style={{ background: '#F3EDE0', borderRadius: 18, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, padding: isMobile ? '20px' : '33px 41px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), gap: 24 }}>
             {[
-              { city: "Gurugram", fine: "₹500", desc: "Registration encouraged strongly. Fines to be announced — act now." },
-              { city: "Delhi", fine: "₹500+", desc: "Fee enforcement underway. Fines escalating with each MCD drive." },
-              { city: "Noida", fine: "₹10,000", desc: "Highest fine in NCR. Noida authority actively penalising non-compliance." },
-              { city: "Ghaziabad", fine: "₹5,000", desc: "Registration fee raised from ₹200 to ₹1,000 in April 2024." }
-            ].map((item, idx) => (
-              <div key={idx} className="flex-1 bg-[#FFFFFF0D] py-[23px] rounded-2xl border border-solid border-[#FFF3E01A] text-center min-w-[180px]">
-                <span className="text-[#FFDBB8] text-xs font-bold">{item.city}</span>
-                <img src={`/images/${item.city.toLowerCase()}.png`} className="w-[88px] h-[54px] mx-auto my-2" />
-                <span className="text-[#FF8C42] text-xl font-black block">{item.fine}</span>
-                <p className="text-[#FFF3E0] text-xs font-normal px-4 mt-2">{item.desc}</p>
+              { num: '~913', label: 'Registered dogs in Delhi municipality', sub: 'vs. an estimated few lakhs of pet dogs' },
+              { num: '<10%', label: 'Pet owners who have registered', sub: 'Study, East Delhi urban colony' },
+              { num: '86%', label: 'Owners unaware of rabies risk', sub: 'PMC / UCMS study, Delhi' },
+              { num: '36%', label: 'Global rabies deaths happen in India', sub: 'WHO / Supreme Court records' },
+            ].map((s, i) => (
+              <div key={i} style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                gap: 3, 
+                borderRight: i < 3 && !isMobile && !isTablet ? '1px solid rgba(44,26,14,0.10)' : 'none',
+                paddingRight: i < 3 && !isMobile && !isTablet ? 24 : 0,
+                borderBottom: isMobile && i < 3 ? '1px solid rgba(44,26,14,0.10)' : 'none',
+                paddingBottom: isMobile && i < 3 ? 24 : 0
+              }}>
+                <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(36, 30, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '54px', textAlign: 'center' }}>{s.num}</span>
+                <span style={{ color: '#4A2C14', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '18.2px', textAlign: 'center' }}>{s.label}</span>
+                <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(10.5, 9, 9), fontFamily: F.dmSans, fontStyle: 'italic', fontWeight: 400, lineHeight: '15.75px', textAlign: 'center' }}>{s.sub}</span>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Warning Box */}
-        <div className="bg-[#FFDBB8] pt-[19px] px-4 md:px-6 mb-[45px] rounded-[14px] border border-black max-w-4xl mx-auto mt-8">
-          <h3 className="text-[#2C1A0E] text-[24px] md:text-[32px] font-black mb-[11px] text-center md:text-left">Without proper Registration, <br />Your pet may not be legally protected during disputes.</h3>
-          <p className="text-[#6B3A1F] text-base font-normal mb-3.5 text-center md:text-left">In disputes or complaints, municipal authorities may seize your pet.</p>
-          <button className="bg-[#D96F28] text-left py-2.5 px-5 rounded-lg mb-3 hover:bg-[#c05a1a] transition-colors w-full md:w-auto text-center">
-            <span className="text-[#FFDBB8] text-sm font-bold">Start Registration →</span>
-          </button>
-        </div>
       </div>
 
-      {/* Tailio vs Municipal Portal */}
-      <div className="max-w-[1079px] mx-auto mb-[59px] text-center px-4">
-        <button className="bg-[#FFDBB8] py-[5px] px-3.5 mb-3 rounded-[999px]">
-          <span className="text-[#D96F28] text-xs font-bold">Tailio vs Municipal Portal</span>
-        </button>
-        <h2 className="text-[#2C1A0E] text-[28px] md:text-[40px] font-black mb-4">Why register through Tailio<br />instead of going directly?</h2>
-        <p className="text-[#6B3A1F] text-base font-normal">Both paths lead to legal registration. But only one is designed for humans — and their pets.</p>
-      </div>
+      {/* ══════════════════════════════════════
+          KNOW THE FINES — dark section
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#2C1A0E', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', position: 'relative' }}>
 
-      {/* Comparison Table */}
-      <div className="max-w-[1025px] mx-auto mb-[29px] px-4">
-        <div className="flex flex-col md:flex-row items-stretch">
-          <div className="flex-1 text-center border-b md:border-b-0 border-[#F8EDE0] pb-2">
-            <span className="text-[#2C1A0E] text-[17px] font-bold">Municipal Corporation Portal</span>
-            <p className="text-[#A07050] text-xs font-normal">Direct government registration</p>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0, marginBottom: 0 }}>
+            <Badge text="Know the fines" dark />
+            <div style={{ textAlign: 'center', marginTop: 0, paddingTop: 45 }}>
+              <span style={{ color: '#FAF6EF', fontSize: getResponsiveFontSize(54, 40, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '57.24px' }}>Ignore Registration, Pay the </span>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(54, 40, 32), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 900, lineHeight: '57.24px' }}>Penalty</span>
+            </div>
+            <p style={{ maxWidth: 962, margin: '10px auto 0', color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(15, 13, 12), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '24px', textAlign: 'center' }}>
+              Municipal corporations are actively enforcing registration. These are the current fines across Delhi NCR.
+            </p>
           </div>
-          <div className="px-4 flex items-center justify-center my-2 md:my-0">
-            <span className="text-[#A07050] text-[13px] font-bold">VS</span>
+
+          {/* City fine cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), gap: 10, marginTop: isMobile ? 40 : 218 }}>
+            {[
+              { city: 'Delhi', amount: '₹500+', desc: 'Fee enforcement underway. Fines escalating with each MCD drive.', highlight: false },
+              { city: 'Gurugram', amount: 'Pending', desc: 'Registration encouraged strongly. Fines to be announced — act now.', highlight: false },
+              { city: 'Noida', amount: '₹10,000', desc: 'Highest fine in NCR. Noida authority actively penalising non-compliance.', highlight: true },
+              { city: 'Ghaziabad', amount: '₹5,000', desc: 'Registration fee raised from ₹200 to ₹1,000 in April 2024.', highlight: false },
+            ].map((c) => (
+              <div key={c.city} style={{
+                padding: '12px 10px 10px', background: 'rgba(255,140,58,0.08)',
+                boxShadow: '0px 4px 4px rgba(0,0,0,0.25)', borderRadius: 13,
+                outline: '1px rgba(255,140,58,0.22) solid', outlineOffset: -1,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5.3,
+              }}>
+                <span style={{ color: 'rgba(250,246,239,0.35)', fontSize: getResponsiveFontSize(8, 8, 7), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.12px' }}>{c.city}</span>
+                <div style={{ width: 24, height: 24, background: 'rgba(250,246,239,0.08)', borderRadius: 4 }} />
+                <span style={{ color: c.highlight ? '#FF8C3A' : c.amount === 'Pending' ? 'rgba(250,246,239,0.28)' : '#FF8C3A', fontSize: c.amount === 'Pending' ? getResponsiveFontSize(12, 11, 10) : getResponsiveFontSize(20, 18, 16), fontFamily: c.amount === 'Pending' ? F.dmSans : F.fraunces, fontWeight: 900, lineHeight: '20px', textAlign: 'center' }}>{c.amount}</span>
+                <span style={{ color: 'rgba(250,246,239,0.35)', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '14.5px', textAlign: 'center', padding: '0 10px' }}>{c.desc}</span>
+              </div>
+            ))}
           </div>
-          <div className="flex-1 bg-[#FF8C42] py-[22px] pl-[26px] rounded-2xl">
-            <span className="text-white text-[17px] font-bold">Tailio Platform</span>
-            <p className="text-white text-xs font-normal">Smart, digital-first registration</p>
-          </div>
-        </div>
-      </div>
 
-      {/* Comparison Points */}
-      <div className="max-w-4xl mx-auto space-y-4 mb-[115px] px-4">
-        {[
-          { gov: "Multiple office visits required. Physical forms, queues, and manual submission.", tailio: "100% online. Register from your phone in just 1 minute, from anywhere." },
-          { gov: "No digital record. Paper certificate that can be lost, damaged, or misplaced.", tailio: "Digital certificate + QR code stored on your profile, always accessible." },
-          { gov: "No reminders. Miss your annual renewal and risk a fine.", tailio: "Automatic renewal reminders via WhatsApp, SMS, and email — never miss a date." },
-          { gov: "No vaccination tracking. You manage records manually on your own.", tailio: "Vaccination tracker built-in — schedule, record, and share with any vet." },
-          { gov: "Slow processing. Approval can take days to weeks.", tailio: "Approval. Registration processed and confirmed within 24 - 72 hours." },
-          { gov: "No pet profile. No searchable ID if your pet goes missing.", tailio: "Lost pet QR system. Anyone who scans your pet's tag can contact you instantly." }
-        ].map((item, idx) => (
-          <div key={idx} className="flex flex-col md:flex-row items-start justify-between gap-8">
-            <div className="flex items-start gap-3 w-full md:w-1/2">
-              <img src="/images/wrong.png" className="w-4 h-4 shrink-0 mt-0.5" alt="❌" />
-              <span className="text-[#2C1A0E] text-[13px] font-bold leading-relaxed">{item.gov}</span>
+          {/* Legal warning card */}
+          <div style={{ marginTop: 10, background: '#FAF6EF', borderRadius: 20, overflow: 'hidden', position: 'relative', display: 'flex', flexDirection: isMobile ? 'column' : 'row' }}>
+            <div style={{ width: isMobile ? '100%' : 5, height: isMobile ? 5 : 'auto', background: 'linear-gradient(180deg, #C04E06 0%, #FF8C3A 100%)', borderRadius: isMobile ? '20px 20px 0 0' : '20px 0 0 20px', flexShrink: 0 }} />
+
+            <div style={{ flex: 1, padding: isMobile ? '24px' : '36px 40px 36px 48px', display: 'flex', flexDirection: 'column', gap: 11.1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 48, height: 48, background: '#FFF0E4', borderRadius: 13, outline: '1px rgba(232,96,10,0.20) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ width: 24, height: 24, position: 'relative' }}>
+                    <div style={{ width: 14, height: 14, left: 8, top: 2, position: 'absolute', outline: '1.7px #C04E06 solid', outlineOffset: -0.85 }} />
+                    <div style={{ width: 9, height: 9, left: 2, top: 9, position: 'absolute', outline: '1.7px #C04E06 solid', outlineOffset: -0.85 }} />
+                  </div>
+                </div>
+                <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.2px' }}>Legal Warning</span>
+              </div>
+
+              <div style={{ paddingTop: 4.9 }}>
+                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(30, 24, 20), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '36px' }}>Without proper Registration, your pet </span>
+                <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(30, 24, 20), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '36px' }}>can be seized</span>
+                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(30, 24, 20), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '36px' }}> by municipal authorities — no questions asked.</span>
+              </div>
+
+              <p style={{ margin: 0, maxWidth: 520, color: '#7A5C40', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.1px' }}>
+                In disputes or complaints, municipal authorities have the power to seize your pet. An unregistered pet has no legal standing and neither does its owner. Don't wait until it's too late.
+              </p>
+
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingTop: 12.91, paddingBottom: 16.9 }}>
+                {['Pet can be seized', 'No legal proof of ownership', 'Fines up to ₹10,000'].map((tag) => (
+                  <div key={tag} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '6px 14px', background: '#FFF0E4', borderRadius: 100, outline: '1px rgba(232,96,10,0.15) solid', outlineOffset: -1 }}>
+                    <div style={{ width: 11, height: 11, outline: '2px #C04E06 solid', outlineOffset: -1 }} />
+                    <span style={{ color: '#4A2C14', fontSize: getResponsiveFontSize(12.5, 11, 10), fontFamily: F.dmSans, fontWeight: 500 }}>{tag}</span>
+                  </div>
+                ))}
+              </div>
+
+              <CtaButton text="Start Registration" style={{ alignSelf: 'flex-start' }} />
             </div>
-            <div className="flex items-start gap-3 w-full md:w-1/2 mt-4 md:mt-0">
-              <img src="/images/correct.png" className="w-4 h-4 shrink-0 mt-0.5" alt="✅" />
-              <span className="text-[#2C1A0E] text-[13px] font-bold leading-relaxed">{item.tailio}</span>
-            </div>
-          </div>
-        ))}
-      </div>
 
-      {/* Registration Steps */}
-      <div className="text-center mb-12 px-4">
-        <button className="bg-[#FFDBB8] py-[5px] px-3.5 rounded-[999px] mb-3">
-          <span className="text-[#D96F28] text-xs font-bold">Simple & fast</span>
-        </button>
-        <h2 className="text-[#2C1A0E] text-[28px] md:text-[40px] font-black mb-4">Register in 2 easy steps</h2>
-        <p className="text-[#6B3A1F] text-base font-normal">We've made government compliance as easy as ordering food online.</p>
-      </div>
-
-      <div className="flex flex-col md:flex-row justify-center gap-[23px] mb-[73px] px-4">
-        <div className="bg-white pt-[29px] px-[21px] rounded-[20px] border border-solid border-[#F8EDE0] text-center w-full md:w-80">
-          <button className="bg-[#FF8C42] py-[9px] px-4 rounded-[22px] mb-1.5 shadow-[0px_4px_12px_#FF8C424D]">
-            <span className="text-white text-lg font-bold">1</span>
-          </button>
-          <img src="/images/user.png" className="w-[30px] h-[30px] mx-auto my-4" />
-          <h3 className="text-[#2C1A0E] text-base font-bold mb-2">Create your account</h3>
-          <p className="text-[#A07050] text-[13px] font-normal mb-4">Sign up with your mobile number or<br />email. Takes 30 seconds.</p>
-          <span className="text-[#D96F28] text-[11px] font-bold">⏱ 30 seconds</span>
-        </div>
-        <div className="bg-white py-[31px] px-[21px] rounded-[20px] border border-solid border-[#F8EDE0] text-center w-full md:w-80">
-          <button className="bg-[#FF8C42] py-[9px] px-4 rounded-[22px] mb-1.5 shadow-[0px_4px_12px_#FF8C424D]">
-            <span className="text-white text-lg font-bold">2</span>
-          </button>
-          <img src="/images/upload-doc.png" className="w-8 h-[27px] mx-auto my-4" />
-          <h3 className="text-[#2C1A0E] text-base font-bold mb-2">Upload documents</h3>
-          <p className="text-[#A07050] text-[13px] font-normal mb-4">Vaccination proof + your ID. We<br />handle the municipal filing for you.</p>
-          <span className="text-[#D96F28] text-[11px] font-bold">30 Seconds</span>
-        </div>
-      </div>
-
-      {/* Documents Section */}
-      <div className="text-center mb-[47px] px-4">
-        <button className="bg-[#FFF0E4] py-1.5 px-3.5 gap-[7px] rounded-[99px] border border-solid border-[#F0D5B8] inline-flex items-center">
-          <span className="text-[#D96F28] text-xs font-bold">4 documents needed</span>
-        </button>
-      </div>
-
-      <div className="text-center mb-[11px] px-4">
-        <h2 className="text-[#2C1A0E] text-2xl md:text-4xl font-black">Keep these 5 documents ready.<br />That's all we need.</h2>
-      </div>
-      <div className="text-center mb-[52px] px-4">
-        <p className="text-[#A07050] text-[13px] md:text-[15px] font-normal">Upload them digitally on Tailio — no photocopies, no office visits. We handle the rest with your municipality.</p>
-      </div>
-
-      {/* Documents Cards - First Row */}
-      <div className="flex flex-col md:flex-row gap-4 max-w-[1358px] mx-auto mb-3 px-4">
-        {/* Document Card 1 */}
-        <div className="flex-1 bg-white pt-[1px] rounded-[18px] border border-solid border-[#F0D5B8]">
-          <div className="bg-[#FF8C42] h-[3px] rounded-tl-[18px] rounded-tr-[18px]" />
-          <div className="p-6">
-            <div className="flex justify-between mb-4">
-              <img src="/images/something.png" className="w-[26px] h-[26px]" />
-              <button className="bg-[#2C1A0E] py-1 px-2.5 rounded-[14px] text-[#FFDBB8] text-[13px] font-bold">1</button>
-            </div>
-            <h3 className="text-[#2C1A0E] text-[17px] font-bold mb-2">Anti-Rabies Vaccination Certificate</h3>
-            <p className="text-[#A07050] text-sm font-normal mb-4">Issued by a registered veterinary practitioner or hospital, confirming your pet has received their anti-rabies vaccine.</p>
-            <p className="text-[#C4906A] text-[11px] font-bold mb-2">Must include</p>
-            <ul className="space-y-2 mb-4">
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Pet's name, gender, and Age</span></li>
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Vaccination date & due date</span></li>
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Vet's signature & hospital stamp</span></li>
-            </ul>
-            <div className="flex gap-1.5">
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">JPG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PNG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PDF</button>
-            </div>
-          </div>
-        </div>
-
-        {/* Document Card 2 */}
-        <div className="flex-1 bg-white pt-[1px] rounded-[18px] border border-solid border-[#F0D5B8] mt-4 md:mt-0">
-          <div className="bg-[#FF8C42] h-[3px] rounded-tl-[18px] rounded-tr-[18px]" />
-          <div className="p-6">
-            <div className="flex justify-between mb-4">
-              <img src="/images/id.png" className="w-[26px] h-[26px]" />
-              <button className="bg-[#2C1A0E] py-1 px-2.5 rounded-[14px] text-[#FFDBB8] text-[13px] font-bold">2</button>
-            </div>
-            <h3 className="text-[#2C1A0E] text-[17px] font-bold mb-2">Applicant ID Proof</h3>
-            <p className="text-[#A07050] text-sm font-normal mb-4">Any government-issued photo identity document of the pet owner. Must be valid and clearly legible.</p>
-            <p className="text-[#C4906A] text-[11px] font-bold mb-2">Accepted documents</p>
-            <ul className="space-y-2 mb-4">
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Aadhaar Card</span></li>
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">PAN Card</span></li>
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Passport or Voter ID</span></li>
-            </ul>
-            <div className="flex gap-1.5">
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">JPG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PNG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PDF</button>
-            </div>
+            {!isMobile && (
+              <div style={{ width: 220, background: '#2C1A0E', borderRadius: '0 20px 20px 0', padding: '22px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 0, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', width: 160, height: 160, top: -40, right: -20, background: 'radial-gradient(ellipse 70.71% 70.71% at 50% 50%, rgba(255,140,58,0.12) 0%, rgba(255,140,58,0) 65%)' }} />
+                {[
+                  { num: '>90%', label: 'Pets unregistered\nin Delhi NCR' },
+                  { num: '₹10K', label: 'Maximum fine\nin Noida' },
+                  { num: '7', label: 'Days to comply\nafter RWA notice' },
+                ].map((s, i) => (
+                  <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5.2, padding: '33px 0', borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.10)' : 'none', width: '100%', boxSizing: 'border-box', paddingLeft: 10, paddingRight: 10 }}>
+                    <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(40, 36, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '40px', textAlign: 'center' }}>{s.num}</span>
+                    <span style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '17.4px', textAlign: 'center', whiteSpace: 'pre-line' }}>{s.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Documents Cards - Second Row */}
-      <div className="flex flex-col md:flex-row gap-4 max-w-[1358px] mx-auto mb-3 px-4">
-        {/* Document Card 3 */}
-        <div className="flex-1 bg-white pt-[1px] rounded-[18px] border border-solid border-[#F0D5B8]">
-          <div className="bg-[#FF8C42] h-[3px] rounded-tl-[18px] rounded-tr-[18px]" />
-          <div className="p-6">
-            <div className="flex justify-between mb-4">
-              <img src="/images/location.png" className="w-[26px] h-[26px]" />
-              <button className="bg-[#2C1A0E] py-1 px-2.5 rounded-[14px] text-[#FFDBB8] text-[13px] font-bold">3</button>
-            </div>
-            <h3 className="text-[#2C1A0E] text-[17px] font-bold mb-2">Applicant Address Proof</h3>
-            <p className="text-[#A07050] text-sm font-normal mb-4">Proof that you reside in Delhi, Noida, Ghaziabad or Gurugram. Must show your current address clearly.</p>
-            <p className="text-[#C4906A] text-[11px] font-bold mb-2">Accepted documents</p>
-            <ul className="space-y-2 mb-4">
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Aadhaar Card (serves as both)</span></li>
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Electricity or water bill</span></li>
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Rental agreement or bank statement</span></li>
-            </ul>
-            <div className="flex gap-1.5">
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">JPG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PNG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PDF</button>
-            </div>
-          </div>
-        </div>
+      {/* ══════════════════════════════════════
+          TAILIO vs MUNICIPAL PORTAL — comparison table
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 52 }}>
 
-        {/* Document Card 4 */}
-        <div className="flex-1 bg-white pt-[1px] rounded-[18px] border border-solid border-[#F0D5B8] mt-4 md:mt-0">
-          <div className="bg-[#FF8C42] h-[3px] rounded-tl-[18px] rounded-tr-[18px]" />
-          <div className="p-6">
-            <div className="flex justify-between mb-4">
-              <img src="/images/photograph.png" className="w-[26px] h-[26px]" />
-              <button className="bg-[#2C1A0E] py-1 px-2.5 rounded-[14px] text-[#FFDBB8] text-[13px] font-bold">4</button>
+          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'flex-end', gap: 20 }}>
+            <div>
+              <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '54px' }}>Or, you could spend a </span>
+              <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 900, lineHeight: '54px' }}>weekend</span>
+              <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '54px' }}> at the MCD office.</span>
             </div>
-            <h3 className="text-[#2C1A0E] text-[17px] font-bold mb-2">Photograph with Your Pet Dog</h3>
-            <p className="text-[#A07050] text-sm font-normal mb-4">A clear, recent photograph of you (the applicant) together with your pet dog. Both faces must be visible.</p>
-            <p className="text-[#C4906A] text-[11px] font-bold mb-2">Photo guidelines</p>
-            <ul className="space-y-2 mb-4">
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Good natural lighting</span></li>
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Both owner & pet clearly visible</span></li>
-              <li className="flex items-center gap-2"><div className="bg-[#FF8C42] w-1.5 h-1.5 rounded-[3px]" /><span className="text-[#6B3A1F] text-[13px] font-bold">Recent — taken within last 3 months</span></li>
-            </ul>
-            <div className="flex gap-1.5">
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">JPG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PNG</button>
-              <button className="bg-[#FFF0E4] py-[3px] px-[11px] rounded-[99px] border border-solid border-[#F0D5B8] text-[#D96F28] text-[11px] font-bold">PDF</button>
+            <p style={{ maxWidth: 360, margin: 0, color: '#7A5C40', fontSize: getResponsiveFontSize(15, 13, 12), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '24.75px' }}>
+              The municipal portal works. Eventually. Probably. Here's the difference in numbers.
+            </p>
+          </div>
+
+          {/* Comparison table - make scrollable on mobile */}
+          <div style={{ overflowX: 'auto' }}>
+            <div style={{ minWidth: isMobile ? 600 : '100%', background: 'white', borderRadius: 18, outline: '1px rgba(44,26,14,0.09) solid', outlineOffset: -1, boxShadow: '0px 2px 12px rgba(44,26,14,0.06)', overflow: 'hidden' }}>
+              {/* Header row */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: '1px rgba(44,26,14,0.10) solid' }}>
+                <div style={{ padding: '18px 28px', borderRight: '1px rgba(44,26,14,0.10) solid' }}>
+                  <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.33px' }}>What you get</span>
+                </div>
+                <div style={{ padding: '18px 28px', background: '#E8600A', borderRight: '1px rgba(255,255,255,0.08) solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ color: '#401B01', fontSize: getResponsiveFontSize(22, 18, 16), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>Tailio</span>
+                </div>
+                <div style={{ padding: '18px 28px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderLeft: '1px rgba(44,26,14,0.10) solid' }}>
+                  <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.33px' }}>Municipal Portal</span>
+                </div>
+              </div>
+
+              {/* Data rows */}
+              {[
+                { label: 'Time to register', sub: 'From start to submission', tailio: 'Under 1 minute', portal: '2-3 hrs', tailioType: 'text' },
+                { label: 'Works on your phone', sub: 'No office visit needed', tailio: 'check', portal: 'cross', tailioType: 'check' },
+                { label: 'Digital certificate', sub: 'Stored on your profile', tailio: 'check', portal: 'cross', tailioType: 'check' },
+                { label: 'Vaccination reminders', sub: 'WhatsApp, SMS & email', tailio: 'check', portal: 'cross', tailioType: 'check' },
+                { label: 'Automatic Renewal Reminders', sub: "Never miss a date that matters to your pet.", tailio: 'check', portal: 'cross', tailioType: 'check' },
+                { label: 'If you wait, the fine is…', sub: 'Municipal enforcement active', tailio: 'None', portal: '₹10,000+', tailioType: 'special' },
+              ].map((row, i, arr) => (
+                <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: i < arr.length - 1 ? '1px rgba(44,26,14,0.10) solid' : 'none', minHeight: 77 }}>
+                  <div style={{ padding: '20px 28px', borderRight: '1px rgba(44,26,14,0.10) solid', display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ width: 36, height: 36, background: '#F3EDE0', borderRadius: 9, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, flexShrink: 0 }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '18.9px' }}>{row.label}</span>
+                      <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 400 }}>{row.sub}</span>
+                    </div>
+                  </div>
+                  <div style={{ padding: '20px 28px', background: 'rgba(232,96,10,0.04)', borderRight: '1px rgba(232,96,10,0.12) solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {row.tailioType === 'check' ? <CheckDark /> :
+                      row.tailioType === 'special' ? <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 12), fontFamily: F.fraunces, fontWeight: 900 }}>{row.tailio}</span> :
+                        <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 600 }}>{row.tailio}</span>}
+                  </div>
+                  <div style={{ padding: '20px 28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {row.portal === 'cross' ? <CrossLight /> :
+                      row.portal === '₹10,000+' ? <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(16, 14, 12), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>{row.portal}</span> :
+                        <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 400 }}>{row.portal}</span>}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
-      {/* One Form for You Section */}
-      <div className="flex gap-6 max-w-[1365px] mx-auto mb-[63px] px-4">
-        <div className="flex-1 bg-[#FF8C42] py-[50px] md:py-[71px] pr-4 md:pr-6 rounded-[14px]">
-          <h2 className="text-white text-2xl md:text-4xl font-black mb-[18px] ml-[15px] md:ml-[22px]">Just One Form for You. <br />Everything else? On Us.</h2>
-          <p className="text-white text-[15px] md:text-[17px] font-bold mb-[23px] ml-[15px] md:ml-6">Register your pet in under 1 minute. Upload everything digitally — no printouts, no queues.</p>
-          <button className="bg-white text-left py-2.5 px-[19px] ml-[15px] md:ml-6 rounded-lg text-[#D96F28] text-sm font-bold hover:bg-gray-100 transition-colors">
-            Start Registration →
-          </button>
+      {/* ══════════════════════════════════════
+          HOW IT WORKS — 3 steps
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#F3EDE0', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 60 }}>
+
+          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'flex-end', justifyContent: 'space-between', gap: 20 }}>
+            <div>
+              <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '64.48px' }}>Three screens.</div>
+              <div style={{ color: '#E8600A', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '64.48px' }}>Sixty seconds.</div>
+            </div>
+            <CtaButton text="Start Registration" />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {/* Step 1 */}
+            <div style={{ background: '#FFFCF8', borderRadius: 20, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, boxShadow: '0px 4px 20px rgba(44,26,14,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+              <div style={{ alignSelf: 'stretch', paddingTop: 24, paddingLeft: 28, paddingRight: 28, display: 'flex', alignItems: 'center', gap: 14 }}>
+                <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '40px' }}>1</span>
+                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '20.8px' }}>Register & add your pet's details</span>
+              </div>
+              <div style={{ width: isMobile ? 'calc(100% - 40px)' : 514, padding: '20px', background: '#FAF6EF', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[
+                  { label: "Pet's Name", value: 'Bruno', active: true },
+                  { label: 'Breed', value: 'Shih Tzu', active: false },
+                  { label: 'Age', value: '3 years', active: false },
+                ].map((field) => (
+                  <div key={field.label} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                    <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(9, 8, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.08px' }}>{field.label}</span>
+                    <div style={{ padding: '10px 14px', background: '#FFFCF8', borderRadius: 9, outline: field.active ? '1px #E8600A solid' : '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: field.active ? '0 0 0 3px rgba(232,96,10,0.12)' : 'none' }}>
+                      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 400 }}>{field.value}</span>
+                      {field.active && <div style={{ width: 1.5, height: 16, background: '#E8600A' }} />}
+                    </div>
+                  </div>
+                ))}
+                <div style={{ padding: '14px 20px 12px', background: '#2C1A0E', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <span style={{ color: '#FFFCF8', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 600 }}>Continue</span>
+                </div>
+              </div>
+              <div style={{ alignSelf: 'stretch', padding: '18px 28px 26px', display: 'flex', flexDirection: 'column', gap: 5.13 }}>
+                <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '22.28px' }}>A handful of fields. No PDFs to download, no notarised forms, no Sunday lost to paperwork.</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0' }}>
+              <div style={{ width: 2, height: 24, background: '#A68660' }} />
+            </div>
+
+            {/* Step 2 */}
+            <div style={{ background: '#FFFCF8', borderRadius: 20, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, boxShadow: '0px 4px 20px rgba(44,26,14,0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+              <div style={{ alignSelf: 'stretch', paddingTop: 24, paddingLeft: 28, paddingRight: 28, display: 'flex', alignItems: 'center', gap: 14 }}>
+                <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '40px' }}>2</span>
+                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '20.8px' }}>Upload your 4 documents</span>
+              </div>
+              <div style={{ width: isMobile ? 'calc(100% - 40px)' : 514, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {[
+                  { label: 'Anti-Rabies Vaccination Certificate', file: 'vax-record-bruno.pdf', done: true },
+                  { label: 'Applicant ID Proof', file: 'aadhaar-card.pdf', done: true },
+                  { label: 'Address Proof', file: 'electricity-bill.pdf', done: true },
+                  { label: 'Photo with Your Pet', file: 'Tap to upload →', done: false },
+                ].map((doc) => (
+                  <div key={doc.label} style={{ padding: '14px 16px', background: '#FAF6EF', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{ width: 38, height: 38, background: '#FFF0E4', borderRadius: 9, outline: '1px rgba(232,96,10,0.15) solid', outlineOffset: -1, flexShrink: 0 }} />
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 600 }}>{doc.label}</span>
+                      <span style={{ color: doc.done ? '#A68660' : '#C04E06', fontSize: getResponsiveFontSize(11, 10, 9), fontFamily: F.dmSans, fontWeight: doc.done ? 400 : 500 }}>{doc.file}</span>
+                    </div>
+                    {doc.done ? (
+                      <div style={{ width: 22, height: 22, background: '#E6F6ED', borderRadius: 11, outline: '1px #A8DDB8 solid', outlineOffset: -1, flexShrink: 0 }} />
+                    ) : (
+                      <div style={{ width: 22, height: 22, background: '#F3EDE0', borderRadius: 11, border: '1px rgba(44,26,14,0.18) solid', flexShrink: 0 }} />
+                    )}
+                  </div>
+                ))}
+                <div style={{ padding: '12px 20px', background: '#2C1A0E', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                  <span style={{ color: '#FFFCF8', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 600 }}>Submit Documents</span>
+                </div>
+              </div>
+              <div style={{ width: isMobile ? 'calc(100% - 40px)' : 514, padding: '11px 14px', background: '#E6F6ED', borderRadius: 9, outline: '1px #A8DDB8 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 9 }}>
+                <div style={{ width: 14, height: 14, background: '#A8DDB8', borderRadius: 7, flexShrink: 0 }} />
+                <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontFamily: F.dmSans, lineHeight: '16.68px' }}>
+                  <strong>Certificate in 24–72 hrs.</strong> We handle the municipal filing — you'll receive your official digital certificate by email once approved.
+                </span>
+              </div>
+              <div style={{ alignSelf: 'stretch', padding: '24px 28px 26px', display: 'flex', flexDirection: 'column', gap: 5.14 }}>
+                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(20, 18, 16), fontFamily: F.fraunces, fontWeight: 700, lineHeight: '24px' }}>Upload, we'll do the rest.</span>
+                <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '22.28px' }}>No office visits, no photocopies. We file directly with your municipality on your behalf.</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Pricing Section */}
-      <div className="bg-[#2C1A0E] max-w-[1438px] pt-[52px] mx-auto rounded-[20px] shadow-[0px_4px_4px_#FF8D28] mb-[243px] px-4">
-        <div className="flex flex-col md:flex-row justify-between items-start px-4 md:px-6">
-          <div className="text-center md:text-left mb-8 md:mb-0">
-            <button className="bg-[#FF8C4226] py-1.5 px-[15px] mb-[43px] rounded-[99px] border border-solid border-[#FF8C4240]">
-              <span className="text-[#FFDBB8] text-[10px] font-bold">Simple, transparent pricing</span>
-            </button>
-            <h2 className="text-[#FF8C42] text-[32px] md:text-[40px] font-black">One price. <br />Everything included.</h2>
-            <p className="text-[#FFF3E0] text-base font-normal mt-4">No hidden charges, no surprise fees. ₹1,999 covers your complete pet registration <br className="hidden md:block" /> filing, certificate, and everything in between.</p>
-          </div>
-          <div className="text-center w-full md:w-auto">
-            <button className="bg-[#FF8C4226] py-1.5 px-[30px] md:px-[51px] mb-[67px] rounded-[99px] border border-solid border-[#FF8C4240]">
-              <span className="text-[#FFDBB8] text-[10px] font-bold">All Inclusive</span>
-            </button>
-            <span className="text-[#FF8C42] text-6xl md:text-9xl font-black">₹1,999/-</span>
-          </div>
-        </div>
+      {/* ══════════════════════════════════════
+          PRICING — dark card
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#2C1A0E', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ width: 1080, maxWidth: '100%', background: '#3A1F0A', borderRadius: 24, outline: '1px rgba(255,255,255,0.07) solid', outlineOffset: -1, boxShadow: '0px 32px 80px rgba(0,0,0,0.50)', overflow: 'hidden', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', position: 'relative' }}>
 
-        <div className="flex flex-wrap justify-center items-start max-w-[1279px] mx-auto mb-[27px] gap-4 px-4">
-          <div className="flex-1 text-center bg-[#FFFFFF08] py-[30px] rounded-[14px] border border-solid border-[#FFF3E01A] min-w-[200px]">
-            <h3 className="text-[#FF8C42] text-xl font-bold">Municipal Filing</h3>
-            <div className="my-2">
-              <img src="/images/office-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
+            <div style={{ padding: isMobile ? '32px' : '44px 44px 40px', borderRight: isMobile ? 'none' : '1px rgba(255,255,255,0.07) solid', display: 'flex', flexDirection: 'column', gap: 0 }}>
+              <Badge text="Simple, transparent pricing" dark />
+              <div style={{ paddingTop: 22 }}>
+                <div style={{ color: '#FAF6EF', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '43.2px' }}>One price.</div>
+                <div style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '43.2px' }}>Everything included.</div>
+              </div>
+              <p style={{ margin: '5px 0 0', maxWidth: 360, color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '22.28px' }}>
+                No hidden charges, no surprise fees. ₹999 covers your complete pet registration filing, certificate, and everything in between.
+              </p>
+              <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 0 }}>
+                {[
+                  { title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.' },
+                  { title: 'Official Certificate', desc: 'Govt-issued, delivered within 24–72 hrs.' },
+                  { title: 'Vaccination Tracker', desc: 'Digital records + auto-reminders so you never miss a booster.' },
+                  { title: 'Renewal Reminders', desc: 'WhatsApp & email alerts before your annual expiry date.' },
+                ].map((item) => (
+                  <div key={item.title} style={{ padding: '16px 16px 14px', background: 'rgba(255,255,255,0.04)', borderRadius: 13, outline: '1px rgba(255,255,255,0.07) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 0 }}>
+                    <div style={{ width: 32, height: 32, background: 'rgba(255,140,58,0.10)', borderRadius: 9, outline: '1px rgba(255,140,58,0.15) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: 16, height: 16, background: 'rgba(255,140,58,0.3)', borderRadius: 3 }} />
+                    </div>
+                    <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(12.5, 11, 10), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '16.25px', paddingTop: 6 }}>{item.title}</span>
+                    <span style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(11, 10, 9), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '16.5px' }}>{item.desc}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <p className="text-[#FFF3E0] text-sm font-normal mt-2">We handle MCD / Noida Authority / GMC paperwork</p>
-          </div>
 
-          <div className="flex-1 text-center bg-[#FFFFFF08] py-8 rounded-[14px] border border-solid border-[#FFF3E01A] min-w-[200px]">
-            <h3 className="text-[#FF8C42] text-xl font-bold">Official certificate</h3>
-            <div className="my-2">
-              <img src="/images/certificate-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
-            </div>
-            <p className="text-[#FFF3E0] text-sm font-normal mt-2">Govt-issued, delivered within 24 hrs - 72hrs</p>
-          </div>
+            <div style={{ padding: isMobile ? '32px' : '44px 44px 40px', position: 'relative', display: 'flex', flexDirection: 'column' }}>
+              <Badge text="All Inclusive" dark />
 
-          <div className="flex-1 text-center bg-[#FFFFFF08] pt-8 rounded-[14px] border border-solid border-[#FFF3E01A] min-w-[200px]">
-            <h3 className="text-[#FF8C42] text-xl font-bold mb-[29px]">Vaccination tracker</h3>
-            <div className="my-2">
-              <img src="/images/vaccine-1.png" className="w-8 h-8 mx-auto" alt="symbol" />
-            </div>
-            <p className="text-[#FFF3E0] text-sm font-normal mb-[45px]">Digital records + auto-reminders</p>
-          </div>
+              <div style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 14px', background: '#FFE600', borderRadius: 100, alignSelf: 'flex-start' }}>
+                <div style={{ width: 6, height: 6, background: '#C04E06', borderRadius: 3 }} />
+                <span style={{ color: '#1A0A00', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.95px' }}>Launch Offer — Save ₹1,000</span>
+              </div>
 
-          <div className="flex-1 text-center bg-[#FFFFFF08] py-[37px] rounded-[14px] border border-solid border-[#FFF3E01A] min-w-[200px]">
-            <h3 className="text-[#FF8C42] text-xl font-bold">Renewal reminders</h3>
-            <div className="my-2">
-              <img src="/images/reminder.png" className="w-8 h-8 mx-auto" alt="symbol" />
+              <div style={{ marginTop: 14, display: 'flex', alignItems: 'flex-end', gap: 2, flexWrap: 'wrap' }}>
+                <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(22, 18, 16), fontFamily: F.dmSans, fontWeight: 700, lineHeight: '22px', paddingBottom: 14 }}>₹</span>
+                <span style={{ color: '#FAF6EF', fontSize: getResponsiveFontSize(90, 70, 50), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '81px' }}>999</span>
+                <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(56, 44, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '50.4px', paddingBottom: 4 }}>/-</span>
+              </div>
+
+              <div style={{ marginTop: 3 }}>
+                <span style={{ color: 'rgba(250,246,239,0.35)', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 400 }}>Regular price </span>
+                <span style={{ color: 'rgba(250,246,239,0.35)', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 400, textDecoration: 'line-through' }}>₹1,999</span>
+              </div>
+              <div><span style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(11.5, 10, 9), fontFamily: F.dmSans, fontWeight: 400 }}>Inclusive of all taxes & GST</span></div>
+              <div><span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 600 }}>Per pet · Valid for 1 year</span></div>
+
+              <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {[
+                  'Register in under 1 minute, from your phone',
+                  'Legally secured Govt issued certificate',
+                  'Vaccination tracker — schedule, record, share with any vet',
+                  'Processed in 24–72 hours',
+                ].map((item) => (
+                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 18, height: 18, background: 'rgba(232,96,10,0.18)', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <div style={{ width: 7, height: 5, outline: '2.2px #FF8C3A solid', outlineOffset: -1.1 }} />
+                    </div>
+                    <span style={{ color: 'rgba(250,246,239,0.70)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 500 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Link href="/register" style={{
+                marginTop: 24, padding: isMobile ? '12px 20px' : '15px 20px',
+                background: '#E8600A',
+                boxShadow: '0px 6px 24px rgba(232,96,10,0.35), 0px 2px 0px #C04E06',
+                borderRadius: 9, outline: '2px #C04E06 solid', outlineOffset: -2,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'white', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 600,
+                textDecoration: 'none', letterSpacing: '0.15px',
+              }}>
+                Register Your Pet — ₹999 →
+              </Link>
+
+              <div style={{ marginTop: 18, display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+                {['Secure payment', 'Legally valid', '24–72 hr approval'].map((badge) => (
+                  <div key={badge} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div style={{ width: 13, height: 13, background: 'rgba(250,246,239,0.10)', borderRadius: 2 }} />
+                    <span style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 500 }}>{badge}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <p className="text-[#FFF3E0] text-sm font-normal mt-2">WhatsApp & email before expiry</p>
           </div>
         </div>
       </div>
 
-      {/* FAQ Section */}
-      <div className="max-w-4xl mx-auto mb-20 px-4">
-        <div className="text-center mb-10">
-          <button className="bg-[#FFDBB8] py-[5px] px-[13px] rounded-[999px] mb-4">
-            <span className="text-[#D96F28] text-xs font-bold">Common questions</span>
-          </button>
-          <h2 className="text-[#2C1A0E] text-[28px] md:text-[40px] font-black">Everything you want to know</h2>
-          <p className="text-[#6B3A1F] text-base font-normal mt-2">If it's not here, our support team responds in under 2 hours.</p>
-        </div>
+      {/* ══════════════════════════════════════
+          TESTIMONIALS
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#F3EDE0', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 40 }}>
 
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div key={index} className="border-b border-gray-200 pb-4">
-              <button
-                onClick={() => toggleFaq(index)}
-                className="flex items-center justify-between w-full text-left py-2"
-              >
-                <span className="text-[#2C1A0E] text-sm md:text-base font-bold pr-4">{faq.question}</span>
-                <span className="text-[#FF8C42] text-3xl md:text-4xl font-bold flex-shrink-0">{faqOpen === index ? '−' : '+'}</span>
-              </button>
-              {faqOpen === index && (
-                <p className="text-[#6B3A1F] text-sm font-normal mt-2 pl-4 leading-relaxed">{faq.answer}</p>
-              )}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 11 }}>
+            <Badge text="Happy pet parents" />
+            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '41.8px', textAlign: 'center', paddingTop: 5 }}>They did it. So can you.</div>
+            <p style={{ margin: 0, maxWidth: 440, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
+              Pet parents from Delhi NCR who registered with Tailio.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'), gap: 16, justifyContent: 'center' }}>
+            {[
+              {
+                review: '"I had no idea registration was mandatory until my RWA sent a notice. Tailio made it completely painless — done in 5 minutes from my kitchen. Bruno is now officially a Delhi resident!"',
+                name: 'Priya Sharma', location: 'Dwarka, Delhi', pet: 'Bruno',
+              },
+              {
+                review: '"I tried the Noida Municipal portal first — gave up after 40 minutes of errors. Tailio got it done in one sitting. The digital certificate and QR tag are a bonus I didn\'t expect."',
+                name: 'Arjun Mehta', location: 'Sector 62, Noida', pet: 'Luna',
+              },
+              {
+                review: '"The vaccination reminder alone is worth it. I used to forget booster dates all the time. Now Tailio pings me on WhatsApp a week before. My vet loves it too."',
+                name: 'Sneha Kapoor', location: 'Indirapuram, Ghaziabad', pet: 'Coco',
+              },
+            ].map((t) => (
+              <div key={t.name} style={{ padding: 24, background: '#FFFCF8', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 0 }}>
+                <div style={{ paddingBottom: 16 }}>
+                  <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', letterSpacing: '2px' }}>★★★★★</span>
+                </div>
+                <p style={{ margin: '0 0 16px', color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '22.28px' }}>{t.review}</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                  <div>
+                    <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(13.5, 12, 11), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '20.25px' }}>{t.name}</div>
+                    <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(11.5, 10, 9), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '17.25px' }}>{t.location}</div>
+                  </div>
+                  <div style={{ padding: '4px 12px', background: '#FFF0E4', borderRadius: 100, outline: '1px #FFCCA0 solid', outlineOffset: -1 }}>
+                    <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '18px' }}>{t.pet}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════
+          FAQ
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 40 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 11 }}>
+            <Badge text="Common questions" />
+            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '41.8px', textAlign: 'center', paddingTop: 5 }}>Everything you want to know</div>
+            <p style={{ margin: 0, maxWidth: 440, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
+              If it's not here, our support team responds within 60 minutes.
+            </p>
+          </div>
+          <div style={{ width: isMobile ? '100%' : 800, maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {[
+              'Is pet registration really mandatory in Delhi NCR?',
+              'Is Tailio\'s registration legally valid?',
+              'What documents do I need to register?',
+              'How much does registration cost on Tailio?',
+              'Can I register cats and other pets — not just dogs?',
+              'What happens if I don\'t register?',
+            ].map((q) => <FaqItem key={q} question={q} />)}
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════
+          FINAL CTA BANNER
+      ══════════════════════════════════════ */}
+      <div style={{ background: 'linear-gradient(163deg, #C04E06 0%, #E8600A 60%, #FF8C3A 100%)', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px' : '34px 40px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 15 }}>
+          <div style={{ position: 'relative', width: isMobile ? 40 : 52, height: isMobile ? 60 : 78 }}>
+            <Image src="/images/cta-paw.png" alt="Paw" fill style={{ objectFit: 'contain' }} />
+          </div>
+          <div style={{ textAlign: 'center', paddingTop: 0.6 }}>
+            <div style={{ color: 'white', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '58.24px' }}>
+              One Form<br />One Minute<br />One Year of Security
             </div>
-          ))}
+          </div>
+          <p style={{ margin: 0, maxWidth: 520, color: 'rgba(255,255,255,0.82)', fontSize: getResponsiveFontSize(15, 13, 12), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '24.75px', textAlign: 'center' }}>
+            Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad &amp; Gurugram who are already compliant.
+          </p>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', paddingTop: 16.6 }}>
+            <Link href="/register" style={{
+              padding: isMobile ? '12px 24px' : '14px 32px',
+              background: 'white', boxShadow: '0px 4px 16px rgba(0,0,0,0.15)',
+              borderRadius: 9, outline: '2px rgba(255,255,255,0.30) solid', outlineOffset: -2,
+              color: '#C04E06', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 600,
+              lineHeight: '22.5px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center',
+            }}>Register Now</Link>
+            <Link href="#why-register" style={{
+              padding: isMobile ? '12px 24px' : '14px 32px',
+              borderRadius: 9, outline: '1px rgba(255,255,255,0.40) solid', outlineOffset: -1,
+              color: 'rgba(255,255,255,0.85)', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 500,
+              lineHeight: '22.5px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center',
+            }}>Learn More</Link>
+          </div>
         </div>
       </div>
 
-      {/* Footer CTA */}
-      <div className="bg-gradient-to-r from-[#D96F28] to-[#FF8C42] max-w-[1438px] py-[50px] mx-auto rounded-2xl mb-[21px] px-4">
-        <div className="text-center">
-          <h2 className="text-white text-[28px] md:text-[42px] font-black">One Form<br />One Minute<br />One Year of Security !!</h2>
-          <p className="text-white text-sm md:text-base font-normal mt-6">Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad & Gurugram who are already compliant.</p>
+      {/* ══════════════════════════════════════
+          FOOTER
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#1C0F07', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px 0' : '64px 40px 0', boxSizing: 'border-box' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
+            gap: isMobile ? 32 : 48, 
+            paddingBottom: 40, 
+            borderBottom: '1px rgba(255,255,255,0.06) solid' 
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
+              <div style={{ position: 'relative', height: 53, width: 160 }}>
+                <Image src="/images/tailio-logo-light.png" alt="Tailio" fill style={{ objectFit: 'contain', objectPosition: 'left' }} />
+              </div>
+              <p style={{ margin: 0, color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '21.45px', maxWidth: 220 }}>
+                Making pet registration simple, digital, and stress-free across Delhi NCR.
+              </p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.4px' }}>Platform</span>
+              {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
+                <Link key={item} href="#" style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', textDecoration: 'none', paddingTop: 4 }}>{item}</Link>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.4px' }}>Cities</span>
+              {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
+                <Link key={item} href="#" style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', textDecoration: 'none', paddingTop: 4 }}>{item}</Link>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.4px' }}>Company</span>
+              {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
+                <Link key={item} href="#" style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', textDecoration: 'none', paddingTop: 4 }}>{item}</Link>
+              ))}
+            </div>
+          </div>
+          <div style={{ padding: '24px 0 32px', display: 'flex', justifyContent: 'center' }}>
+            <span style={{ color: 'rgba(250,246,239,0.20)', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '18px' }}>© 2026 Tailio. All rights reserved.</span>
+          </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="max-w-[1281px] mx-auto mb-[37px] px-4">
-        <div className="flex flex-col md:flex-row items-start gap-8">
-          <div className="text-center md:text-left">
-            <img src="/images/tailio.png" className="w-[200px] md:w-[260px] h-auto mb-2 mx-auto md:mx-0" />
-            <p className="text-[#D96F28] text-sm font-normal">Making pet registration simple, digital,<br />and stress-free across Delhi NCR.</p>
-          </div>
-          <div className="flex-1" />
-          <div className="text-center md:text-left w-full md:w-auto">
-            <h4 className="text-[#FF8C42] text-xs font-bold mb-[17px]">Platform</h4>
-            <ul className="space-y-3">
-              <li className="text-[#FF8C42] text-sm font-normal">Pet Registration</li>
-              <li className="text-[#FF8C42] text-sm font-normal">Digital Pet ID</li>
-              <li className="text-[#FF8C42] text-sm font-normal">Vaccination Tracker</li>
-              <li className="text-[#FF8C42] text-sm font-normal">Lost Pet QR</li>
-            </ul>
-          </div>
-          <div className="text-center md:text-left w-full md:w-auto">
-            <h4 className="text-[#FF8C42] text-xs font-bold mb-[17px]">Cities</h4>
-            <ul className="space-y-3">
-              <li className="text-[#FF8C42] text-sm font-normal">Delhi</li>
-              <li className="text-[#FF8C42] text-sm font-normal">Noida</li>
-              <li className="text-[#FF8C42] text-sm font-normal">Ghaziabad</li>
-              <li className="text-[#FF8C42] text-sm font-normal">Gurugram</li>
-            </ul>
-          </div>
-          <div className="text-center md:text-left w-full md:w-auto">
-            <h4 className="text-[#FF8C42] text-xs font-bold mb-[17px]">Company</h4>
-            <ul className="space-y-3">
-              <li className="text-[#FF8C42] text-sm font-normal">About Tailio</li>
-              <li className="text-[#FF8C42] text-sm font-normal">Privacy Policy</li>
-              <li className="text-[#FF8C42] text-sm font-normal">Terms of Service</li>
-              <li className="text-[#FF8C42] text-sm font-normal">Contact Us</li>
-            </ul>
-          </div>
-        </div>
-      </footer>
-    </main>
+    </div>
   );
 }

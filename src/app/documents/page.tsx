@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../component/context/AuthContext";
 import { useRouter } from "next/navigation";
-import Sidebar from "../../component/Sidebar";
+import Sidebar from "../component/Sidebar";
 import { 
   FileText, 
   Search, 

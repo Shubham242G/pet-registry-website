@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { apiFetch } from "../../services/api";
-import { useAuth } from "../../context/AuthContext";
+import { apiFetch } from "../services/api";
+import { useAuth } from "../component/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { 
   PawPrint, 
@@ -20,9 +20,9 @@ import {
   FileCheck,
   Clock
 } from "lucide-react";
-import AddPetModal from "../../component/AddPetModal";
-import RegistrationForm from "../../component/RegistrationForm";
-import Sidebar from '../../component/Sidebar'
+import AddPetModal from "../component/AddPetModal";
+import RegistrationForm from "../component/RegistrationForm";
+import Sidebar from '../component/Sidebar'
 
 interface Pet {
   _id: string;

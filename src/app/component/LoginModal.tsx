@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 import { useRouter } from "next/navigation";
 
 export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: any) {
@@ -33,7 +33,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: any)
 
     try {
       await login(email, password);
-      router.push("/pages/dashboard");
+      router.push("/dashboard");
       onClose();
     } catch (err: any) {
       setErrorMessage(err.message || "Invalid email or password");
@@ -80,7 +80,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: any)
         setTempToken(result.tempToken!);
         setStep("register");
       } else {
-        router.push("/pages/dashboard");
+        router.push("/dashboard");
         onClose();
       }
     } else {
@@ -98,7 +98,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: any)
     const result = await completeWhatsAppRegistration(tempToken, name, username);
     
     if (result.success) {
-      router.push("/pages/dashboard");
+      router.push("/dashboard");
       onClose();
     } else {
       setErrorMessage(result.error || "Registration failed");

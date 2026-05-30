@@ -1,503 +1,427 @@
-"use client";
+'use client';
 
-export default function AboutPage() {
+import Link from 'next/link';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+
+const F = {
+  fraunces: 'Fraunces, Georgia, serif',
+  dmSans: "'DM Sans', sans-serif",
+  dmMono: "'DM Mono', monospace",
+};
+
+/* ─── Shared: Badge ─────────────────────────────────────────────────────── */
+function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
   return (
-    <div className="flex flex-col bg-white font-['Nunito'] overflow-x-hidden">
-      <div className="flex flex-col items-start self-stretch bg-[#FFF0E4] pb-[50px] md:pb-[72px] pt-[80px]">
+    <div style={{
+      display: 'inline-flex', alignItems: 'center',
+      padding: '5px 14px',
+      background: dark ? 'rgba(255,140,58,0.12)' : '#FFF0E4',
+      borderRadius: 100,
+      outline: dark ? '1px rgba(255,140,58,0.20) solid' : '1px #FFCCA0 solid',
+      outlineOffset: -1,
+      alignSelf: 'flex-start',
+    }}>
+      <span style={{
+        color: dark ? '#FF8C3A' : '#C04E06',
+        fontSize: 10, fontFamily: F.dmSans, fontWeight: 500,
+        textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.2px',
+      }}>{text}</span>
+    </div>
+  );
+}
 
-        {/* Hero Section */}
-        <div className="flex flex-col md:flex-row items-start self-stretch mb-3 px-4 md:px-0" style={{ background: "linear-gradient(180deg, #FFFAF4, #FFF3E0, #FFF0E4)" }}>
-          <div className="flex-1 self-stretch hidden md:block" />
-          <div className="flex flex-col shrink-0 items-start w-full md:w-auto">
-            <button className="flex flex-col items-start bg-[#FFDBB8] text-left py-1.5 px-[17px] mb-5 rounded-[99px] border border-solid border-[#F0D5B8] mx-auto md:mx-0">
-              <span className="text-[#D96F28] text-xs font-bold">Our story</span>
-            </button>
-            <div className="flex flex-col items-center mb-6 w-full">
-              <span className="text-[#2C1A0E] text-[36px] md:text-[52px] font-black text-center w-full md:w-[413px] tracking-[-1px] leading-[44px] md:leading-[57px] px-4 md:px-0">
-                Built by pet parents,<br />for every pet parent.
-              </span>
-            </div>
-            <span className="text-[#6B3A1F] text-[15px] md:text-[17px] font-normal w-full md:w-[557px] mb-10 leading-relaxed text-center md:text-left px-4 md:px-0">
-              Tailio was born out of a simple frustration — why is doing the right thing<br className="hidden md:block" /> for your pet so unnecessarily hard? We set out to fix that, one registration<br className="hidden md:block" /> at a time.
-            </span>
-            <div className="flex flex-wrap justify-center md:justify-start items-start ml-0 md:ml-[26px] gap-6 md:gap-0">
-              <div className="flex flex-col shrink-0 items-center mt-1.5 mr-0 md:mr-16 gap-[3px]">
-                <div className="flex flex-col items-center">
-                  <span className="text-[#D96F28] text-[24px] md:text-[28px] font-black">2024</span>
-                </div>
-                <div className="flex flex-col items-start pb-[1px] px-[7px]">
-                  <span className="text-[#A07050] text-xs font-normal">Founded</span>
-                </div>
-              </div>
-              <div className="flex flex-col shrink-0 items-center mt-1.5 mr-0 md:mr-16 gap-[3px]">
-                <div className="flex flex-col items-start px-[9px]">
-                  <span className="text-[#D96F28] text-[24px] md:text-[28px] font-black">50K+</span>
-                </div>
-                <div className="flex flex-col items-center pb-[1px]">
-                  <span className="text-[#A07050] text-xs font-normal">Pets registered</span>
-                </div>
-              </div>
-              <div className="flex flex-col shrink-0 items-center mr-0 md:mr-[52px] gap-[3px]">
-                <div className="flex flex-col items-start px-5">
-                  <span className="text-[#D96F28] text-[24px] md:text-[28px] font-black">4</span>
-                </div>
-                <div className="flex flex-col items-center pb-[1px]">
-                  <span className="text-[#A07050] text-xs font-normal">Cities live</span>
-                </div>
-              </div>
-              <div className="flex flex-col shrink-0 items-center">
-                <span className="text-[#D96F28] text-[24px] md:text-[28px] font-black mr-0 md:mr-3.5">1 min</span>
-                <span className="text-[#A07050] text-xs font-normal mt-0 md:mt-[41px]">To register</span>
-              </div>
-            </div>
-          </div>
-          <div className="flex-1 self-stretch hidden md:block" />
-          <img
-            src="/images/banner-2.png"
-            alt="About hero"
-            className="w-[280px] md:w-[472px] h-auto md:h-[472px] mx-auto md:mr-[21px] object-fill mt-8 md:mt-0"
-          />
-        </div>
+/* ─── Founder photo ──────────────────────────────────────────────────────── */
+const founderImages: Record<number, string> = {
+  1: '/images/founder1.jpeg',
+  2: '/images/founder2.jpeg',
+  3: '/images/founder3.jpeg',
+  4: '/images/founder4.jpeg',
+};
 
-        {/* Inspiration pill */}
-        <button className="flex flex-col items-start bg-[#FFF0E4] text-left py-1.5 px-[15px] mb-3.5 mx-auto md:ml-[775px] rounded-[99px] border border-solid border-[#F0D5B8]">
-          <span className="text-[#D96F28] text-xs font-bold">💡 The inspiration</span>
-        </button>
-
-        {/* Why we built Tailio heading */}
-        <div className="flex flex-col items-start self-stretch max-w-[1094px] mx-auto mb-3.5 px-4 md:px-0">
-          <span className="text-[#2C1A0E] text-3xl md:text-4xl font-black text-center md:text-left w-full">Why we built Tailio</span>
-        </div>
-
-        <div className="flex flex-col md:flex-row items-start self-stretch max-w-[1094px] mb-5 mx-auto gap-[66px] px-4 md:px-0">
-
-          {/* Left - Quote card with floating badge */}
-          <div className="flex-1 relative mt-[72px] w-full">
-            <div className="flex flex-col bg-white pt-[33px] pr-[20px] md:pr-[33px] rounded-3xl border border-solid border-[#F0D5B8] shadow-[0px_8px_40px_#B464281A]">
-              <span className="text-[#FFDBB8] text-[60px] md:text-[80px] mb-3.5 ml-[20px] md:ml-[33px] font-black">"</span>
-              <div className="flex flex-col mb-4 ml-[20px] md:ml-[33px]">
-                <span className="text-[#2C1A0E] text-base md:text-lg font-normal leading-relaxed">
-                  We waited for hours on the municipal website only for the portal to crash during the final step. And even after it worked, the entire process was confusing, slow, and frustrating. That was the day we decided to build Tailio.
-                </span>
-              </div>
-              <div className="flex flex-col pt-1 mb-[60px] ml-[20px] md:ml-[33px] gap-[1px]">
-                <span className="text-[#2C1A0E] text-sm font-bold">The Founding Moment</span>
-                <span className="text-[#A07050] text-xs font-normal">Delhi, 2023</span>
-              </div>
-            </div>
-            {/* Floating orange badge */}
-            <button className="flex flex-col items-center bg-[#FF8C42] absolute top-[-17px] right-[-10px] md:right-[-17px] py-3.5 px-[15px] md:px-[18px] gap-[3px] rounded-[14px] border-0 shadow-[0px_6px_20px_#FF8C4257]">
-              <span className="text-white text-[20px] md:text-[26px] font-black">913</span>
-              <span className="text-white text-[9px] md:text-[11px] font-normal text-center w-[70px] md:w-[84px]">
-                Registered pets<br />in all of Delhi
-              </span>
-            </button>
-          </div>
-
-          {/* Right - Story text with all points aligned vertically */}
-          <div className="flex-1 flex flex-col gap-6">
-            <span className="text-[#6B3A1F] text-[14px] md:text-[15px] font-normal leading-relaxed text-center md:text-left">
-              Like millions of pet owners in India, our founders loved their pets deeply but had no idea that not registering them was illegal. When the Supreme Court of India mandated pet registration across Delhi NCR, the process to comply was shockingly broken.
-            </span>
-            
-            <span className="text-[#6B3A1F] text-[14px] md:text-[15px] font-normal leading-relaxed text-center md:text-left">
-              Long queues at municipal offices, confusing paperwork, no digital records, and zero guidance on what to do — responsible pet owners were being failed by a system that hadn't evolved in decades.
-            </span>
-            
-            {/* Point 1 */}
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-              <button className="flex items-center justify-center bg-[#FF8C42] w-8 h-8 rounded-[15px] border-2 border-solid border-[#FF8C42] shrink-0 mx-auto sm:mx-0">
-                <span className="text-[#2C1A0E] text-sm">💡</span>
-              </button>
-              <div className="flex-1 text-center sm:text-left">
-                <span className="text-[#2C1A0E] text-sm font-bold block mb-1">The problem was discovered</span>
-                <span className="text-[#A07050] text-[13px] font-normal leading-relaxed">
-                  Our co-founders tried to register their pets and found the process broken — hours lost, forms rejected, no digital option.
-                </span>
-              </div>
-            </div>
-            
-            {/* Point 2 */}
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-              <button className="flex items-center justify-center bg-[#FF8C42] w-8 h-8 rounded-[15px] border-2 border-solid border-[#FF8C42] shrink-0 mx-auto sm:mx-0">
-                <span className="text-[#2C1A0E] text-sm">🛠️</span>
-              </button>
-              <div className="flex-1 text-center sm:text-left">
-                <span className="text-[#2C1A0E] text-sm font-bold block mb-1">Tailio was built in 90 days</span>
-                <span className="text-[#A07050] text-[13px] font-normal leading-relaxed">
-                  A small team of builders and pet lovers came together to digitise the entire registration process from scratch.
-                </span>
-              </div>
-            </div>
-            
-            {/* Point 3 - Launched */}
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-              <button className="flex items-center justify-center bg-[#FF8C42] w-8 h-8 rounded-[15px] border-2 border-solid border-[#FF8C42] shrink-0 mx-auto sm:mx-0">
-                <span className="text-[#2C1A0E] text-sm">🚀</span>
-              </button>
-              <div className="flex-1 text-center sm:text-left">
-                <span className="text-[#2C1A0E] text-sm font-bold block mb-1">Launched across Delhi NCR</span>
-                <span className="text-[#A07050] text-[13px] font-normal leading-relaxed">
-                  Live in Delhi, Noida, Ghaziabad & Gurugram — with thousands of pets registered in our first few months.
-                </span>
-              </div>
-            </div>
-            
-            {/* Point 4 - Expanding */}
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-              <button className="flex items-center justify-center bg-[#FFF0E4] w-8 h-8 rounded-[15px] border-2 border-solid border-[#FFDBB8] shrink-0 mx-auto sm:mx-0">
-                <span className="text-[#2C1A0E] text-sm">🌍</span>
-              </button>
-              <div className="flex-1 text-center sm:text-left">
-                <span className="text-[#2C1A0E] text-sm font-bold block mb-1">Expanding to more cities</span>
-                <span className="text-[#A07050] text-[13px] font-normal leading-relaxed">
-                  Chandigarh is next. We're building the infrastructure for every city in India that mandates pet registration.
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mission & Vision Section */}
-        <div className="flex flex-col items-center self-stretch bg-[#2C1A0E] pt-20 mb-[122px] px-4">
-          <button className="flex flex-col items-start bg-[#FF8C4226] text-left py-1.5 px-[15px] mb-3.5 rounded-[99px] border border-solid border-[#FF8C4240] mx-auto">
-            <span className="text-[#FFDBB8] text-xs font-bold">What drives us</span>
-          </button>
-          <div className="flex flex-col items-center pt-0.5 px-4 md:px-[107px] mb-3.5">
-            <span className="text-[#FFF3E0] text-3xl md:text-4xl font-black text-center">Our mission & vision</span>
-          </div>
-          <div className="flex flex-col items-center px-4 md:px-6 mb-[47px]">
-            <span className="text-[#FFF3E0] text-[14px] md:text-[15px] font-normal leading-relaxed text-center">
-              We believe every pet deserves a verified identity, and every pet owner<br className="hidden md:block" /> deserves a system that actually works for them.
-            </span>
-          </div>
-          {/* Icons row - using img tags */}
-          <div className="flex flex-wrap justify-center items-center mb-2.5 gap-6 md:gap-0">
-            <img src="/images/target.png" className="w-12 h-12 mr-0 md:mr-[145px] rounded-[18px] object-fill" alt="Target icon" />
-            <img src="/images/something.png" className="w-12 h-12 mr-0 md:mr-[146px] rounded-[18px] object-fill" alt="Planet icon" />
-            <img src="/images/widget.png" className="w-12 h-12 rounded-[18px] object-fill" alt="Widget icon" />
-          </div>
-          <div className="flex flex-col md:flex-row items-center mb-[34px] gap-8 md:gap-0">
-            <div className="flex flex-col shrink-0 items-center mr-0 md:mr-[66px] gap-2.5 text-center">
-              <div className="flex flex-col items-center pt-2">
-                <span className="text-[#FFF3E0] text-[17px] font-bold w-[91px]">Make compliance effortless</span>
-              </div>
-              <span className="text-[#FFF3E0] text-[13px] font-normal w-[200px] md:w-[121px] leading-relaxed">
-                No pet owner should face fines because the system was confusing. We remove barriers between ownership and compliance.
-              </span>
-            </div>
-            <div className="flex flex-col shrink-0 items-center mr-0 md:mr-[66px] gap-2.5 text-center">
-              <div className="flex flex-col items-center pt-2">
-                <span className="text-[#FFF3E0] text-[17px] font-bold w-[117px]">Give every pet an identity</span>
-              </div>
-              <span className="text-[#FFF3E0] text-[13px] font-normal w-[200px] md:w-[125px] leading-relaxed">
-                A registered pet is a protected pet. With a digital ID, health records and a QR tag, every pet becomes findable, traceable, and cared for.
-              </span>
-            </div>
-            <div className="flex flex-col shrink-0 items-center gap-2.5 text-center">
-              <div className="flex flex-col items-center pt-2">
-                <span className="text-[#FFF3E0] text-[17px] font-bold w-[115px]">Build India's pet ecosystem</span>
-              </div>
-              <span className="text-[#FFF3E0] text-[13px] font-normal w-[200px] md:w-[126px] leading-relaxed">
-                Registration is just the start. Vaccination,<br className="hidden md:block" /> healthcare, adoption, and commerce. We're<br className="hidden md:block" /> building the complete infrastructure for pet<br className="hidden md:block" /> ownership in India.
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Meet our Founders */}
-        <div className="flex flex-col self-stretch max-w-[992px] mb-20 mx-auto gap-[52px] px-4">
-          <div className="flex flex-col items-center self-stretch gap-3.5">
-            <button className="flex flex-col items-start bg-[#FFF0E4] text-left py-1.5 px-[15px] rounded-[99px] border border-solid border-[#F0D5B8] mx-auto">
-              <span className="text-[#D96F28] text-xs font-bold">The people behind Tailio</span>
-            </button>
-            <div className="flex flex-col items-center self-stretch pt-0.5">
-              <span className="text-[#2C1A0E] text-3xl md:text-4xl font-black text-center">Meet our Founders</span>
-            </div>
-            <div className="flex flex-col items-center px-1">
-              <span className="text-[#6B3A1F] text-[14px] md:text-[15px] font-normal text-center w-full md:w-[468px] leading-relaxed">
-                A small team with big conviction — that every pet in India deserves to<br className="hidden md:block" /> be registered, protected, and loved.
-              </span>
-            </div>
-          </div>
-
-          {/* Founder Cards */}
-          <div className="flex flex-wrap items-stretch self-stretch pb-[45px] gap-4">
-            {/* Founder 1 - Kaavya */}
-            <div className="flex flex-1 flex-col items-start bg-white pt-[1px] rounded-[20px] border border-solid border-[#FAF0E6] min-w-[200px]">
-              <div className="relative self-stretch h-[190px] mb-[21px] mx-[1px] overflow-hidden rounded-t-[20px]" 
-                   style={{ background: "linear-gradient(180deg, #FFF0E4, #FFE5C4)" }}>
-                <img 
-                  src="/images/founder1.jpeg"
-                  alt="Kaavya Chhabra"
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
-              <div className="flex flex-col items-start self-stretch mb-[3px] mx-[21px]">
-                <span className="text-[#2C1A0E] text-lg font-bold">Kaavya Chhabra</span>
-              </div>
-              <button className="flex flex-col items-start bg-[#FFF0E4] text-left py-[3px] px-3 mb-1 ml-[21px] rounded-[99px] border-0">
-                <span className="text-[#D96F28] text-xs font-bold">Co-founder</span>
-              </button>
-              <div className="flex flex-col items-start self-stretch pt-2 mb-[45px] mx-[21px]">
-                <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">
-                  Teacher by profession and devoted pet parent, inspired by Mylo and Felix to celebrate the joy, chaos, companionship, and unforgettable bond pets bring daily.
-                </span>
-              </div>
-            </div>
-
-            {/* Founder 2 - Nitin */}
-            <div className="flex flex-1 flex-col items-start bg-white pt-[1px] rounded-[20px] border border-solid border-[#FAF0E6] min-w-[200px]">
-              <div className="relative self-stretch h-[190px] mb-[21px] mx-[1px] overflow-hidden rounded-t-[20px]" 
-                   style={{ background: "linear-gradient(180deg, #FFF0E4, #FFE5C4)" }}>
-                <img 
-                  src="/images/founder2.jpeg"
-                  alt="Nitin Verma"
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
-              <div className="flex flex-col items-start self-stretch mb-[3px] mx-[21px]">
-                <span className="text-[#2C1A0E] text-lg font-bold">Nitin Verma</span>
-              </div>
-              <button className="flex flex-col items-start bg-[#FFF0E4] text-left py-[3px] px-3 mb-1 ml-[21px] rounded-[99px] border-0">
-                <span className="text-[#D96F28] text-xs font-bold">Co-founder</span>
-              </button>
-              <div className="flex flex-col self-stretch pt-2 mb-[45px] mx-[21px]">
-                <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">
-                  Drives partnerships, customer experience, and market expansion, leveraging entrepreneurial expertise across sourcing, automotive detailing, and paint solutions businesses.
-                </span>
-              </div>
-            </div>
-
-            {/* Founder 3 - Akshay */}
-            <div className="flex flex-1 flex-col items-start bg-white pt-[1px] rounded-[20px] border border-solid border-[#FAF0E6] min-w-[200px]">
-              <div className="relative self-stretch h-[190px] mb-[21px] mx-[1px] overflow-hidden rounded-t-[20px]" 
-                   style={{ background: "linear-gradient(180deg, #FFF0E4, #FFE5C4)" }}>
-                <img 
-                  src="/images/founder3.jpeg"
-                  alt="Akshay Verma"
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
-              <div className="flex flex-col items-start self-stretch mb-[3px] mx-[21px]">
-                <span className="text-[#2C1A0E] text-lg font-bold">Akshay Verma</span>
-              </div>
-              <button className="flex flex-col items-start bg-[#FFF0E4] text-left py-[3px] px-3 mb-1 ml-[21px] rounded-[99px] border-0">
-                <span className="text-[#D96F28] text-xs font-bold">Co-founder</span>
-              </button>
-              <div className="flex flex-col self-stretch pt-2 mb-[45px] mx-[21px]">
-                <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">
-                  Built a scalable automotive aesthetics business, leading operations, luxury refinishing projects, talent development, and systems focused on quality and sustainable growth.
-                </span>
-              </div>
-            </div>
-
-            {/* Founder 4 - Anukrit */}
-            <div className="flex flex-1 flex-col items-start bg-white pt-[1px] rounded-[20px] border border-solid border-[#FAF0E6] min-w-[200px]">
-              <div className="relative self-stretch h-[190px] mb-[21px] mx-[1px] overflow-hidden rounded-t-[20px]" 
-                   style={{ background: "linear-gradient(180deg, #FFF0E4, #FFE5C4)" }}>
-                <img 
-                  src="/images/founder4.jpeg"
-                  alt="Anukrit Mahajan"
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
-              <div className="flex flex-col items-start self-stretch mb-[3px] mx-[21px]">
-                <span className="text-[#2C1A0E] text-lg font-bold">Anukrit Mahajan</span>
-              </div>
-              <button className="flex flex-col items-start bg-[#FFF0E4] text-left py-[3px] px-3 mb-1 ml-[21px] rounded-[99px] border-0">
-                <span className="text-[#D96F28] text-xs font-bold">Co-founder</span>
-              </button>
-              <div className="flex flex-col self-stretch pt-2 mb-[23px] mx-[21px]">
-                <span className="text-[#6B3A1F] text-[13px] font-normal leading-relaxed">
-                  Engineering graduate from Manipal Institute of Technology and MBA from China Europe International Business School, building scalable ecommerce ventures through innovation, strategy, and deep emerging-market expertise.
-                </span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* Our Values */}
-        <div className="flex flex-col self-stretch max-w-[1032px] mb-[97px] mx-auto gap-[47px] px-4">
-          <div className="flex flex-col items-center self-stretch gap-3.5">
-            <button className="flex flex-col items-start bg-[#FFF0E4] text-left py-1.5 px-[15px] rounded-[99px] border border-solid border-[#F0D5B8] mx-auto">
-              <span className="text-[#D96F28] text-xs font-bold">How we work</span>
-            </button>
-            <div className="flex flex-col items-center self-stretch pt-0.5">
-              <span className="text-[#2C1A0E] text-3xl md:text-4xl font-black text-center">Our values</span>
-            </div>
-            <div className="flex flex-col items-center px-2.5">
-              <span className="text-[#6B3A1F] text-[14px] md:text-[15px] font-normal text-center w-full md:w-[437px] leading-relaxed">
-                The principles we bring to work every day — and to every pet we<br className="hidden md:block" /> register.
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col self-stretch gap-[17px]">
-            {/* Row 1 */}
-            <div className="flex flex-col md:flex-row items-stretch self-stretch gap-4">
-              <div className="flex flex-1 items-start bg-white py-[29px] px-[25px] gap-[18px] rounded-[18px] border border-solid border-[#FAF0E6] flex-col md:flex-row text-center md:text-left">
-                <button className="flex flex-col shrink-0 items-start bg-[#FFF0E4] text-left py-[11px] px-3 rounded-xl border-0 mx-auto md:mx-0">
-                  <span className="text-[#2C1A0E] text-2xl">🎯</span>
-                </button>
-                <div className="flex flex-1 flex-col gap-[7px]">
-                  <div className="flex flex-col items-start self-stretch">
-                    <span className="text-[#2C1A0E] text-[17px] font-bold">Simplicity over complexity</span>
-                  </div>
-                  <div className="flex flex-col items-start self-stretch">
-                    <span className="text-[#6B3A1F] text-[13px] font-normal w-full md:w-[389px] leading-relaxed">
-                      If it takes more than 5 minutes, we've failed. Every feature we build is ruthlessly simplified so that any pet owner — regardless of technical ability — can use it with ease.
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-1 items-start bg-white py-[29px] px-[25px] gap-[18px] rounded-[18px] border border-solid border-[#FAF0E6] flex-col md:flex-row text-center md:text-left">
-                <button className="flex flex-col shrink-0 items-start bg-[#FFF0E4] text-left py-[11px] px-3 rounded-xl border-0 mx-auto md:mx-0">
-                  <span className="text-[#2C1A0E] text-2xl">🔒</span>
-                </button>
-                <div className="flex flex-1 flex-col gap-[7px]">
-                  <div className="flex flex-col items-start self-stretch">
-                    <span className="text-[#2C1A0E] text-[17px] font-bold">Trust is everything</span>
-                  </div>
-                  <div className="flex flex-col items-start self-stretch">
-                    <span className="text-[#6B3A1F] text-[13px] font-normal w-full md:w-96 leading-relaxed">
-                      Pet owners share sensitive documents with us. We treat that trust with the highest standard of data security, transparency, and accountability — always.
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Row 2 */}
-            <div className="flex flex-col md:flex-row items-stretch self-stretch gap-4">
-              <div className="flex flex-1 items-start bg-white py-[29px] px-[25px] gap-[18px] rounded-[18px] border border-solid border-[#FAF0E6] flex-col md:flex-row text-center md:text-left">
-                <button className="flex flex-col shrink-0 items-start bg-[#FFF0E4] text-left py-[11px] px-3 rounded-xl border-0 mx-auto md:mx-0">
-                  <span className="text-[#2C1A0E] text-2xl">🐾</span>
-                </button>
-                <div className="flex flex-1 flex-col gap-[7px]">
-                  <div className="flex flex-col items-start self-stretch">
-                    <span className="text-[#2C1A0E] text-[17px] font-bold">Pets first, always</span>
-                  </div>
-                  <div className="flex flex-col items-start self-stretch">
-                    <span className="text-[#6B3A1F] text-[13px] font-normal w-full md:w-[382px] leading-relaxed">
-                      Every decision we make is filtered through one question: does this make life better for pets and the people who love them? If not, it doesn't ship.
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-1 items-start bg-white py-[29px] px-[25px] gap-[18px] rounded-[18px] border border-solid border-[#FAF0E6] flex-col md:flex-row text-center md:text-left">
-                <button className="flex flex-col shrink-0 items-start bg-[#FFF0E4] text-left py-[11px] px-3 rounded-xl border-0 mx-auto md:mx-0">
-                  <span className="text-[#2C1A0E] text-2xl">⚡</span>
-                </button>
-                <div className="flex flex-1 flex-col gap-[7px]">
-                  <div className="flex flex-col items-start self-stretch">
-                    <span className="text-[#2C1A0E] text-[17px] font-bold">Move with urgency</span>
-                  </div>
-                  <div className="flex flex-col items-start self-stretch">
-                    <span className="text-[#6B3A1F] text-[13px] font-normal w-full md:w-[376px] leading-relaxed">
-                      Every unregistered pet is one municipal drive away from a fine or worse. We build fast because the problem is real and the clock is ticking for pet owners across India.
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer CTA */}
-        <div className="flex flex-col items-center self-stretch bg-[#2C1A0E] pt-20 pb-[81px] px-4 md:px-[196px] mb-[158px]">
-          <div className="flex flex-col items-center self-stretch mb-[13px]">
-            <span className="text-white text-[28px] md:text-[40px] font-black text-center">Ready to register your pet?</span>
-          </div>
-          <div className="flex flex-col items-center mb-3">
-            <span className="text-white text-sm md:text-base font-normal text-center w-full md:w-[479px] leading-relaxed">
-              Join 50,000+ pet parents across Delhi NCR who've made their pets<br className="hidden md:block" /> official with Tailio in just 1 minute.
-            </span>
-          </div>
-          <div className="flex flex-col sm:flex-row justify-center items-start self-stretch pt-[23px] gap-3.5">
-            <button className="flex flex-col shrink-0 items-start bg-white text-left py-[15px] px-[30px] rounded-xl border-0 w-full sm:w-auto text-center">
-              <span className="text-[#D96F28] text-[15px] font-bold">Register Your Pet →</span>
-            </button>
-            <button className="flex flex-col shrink-0 items-start bg-transparent text-left py-[15px] px-8 rounded-xl border border-solid border-white w-full sm:w-auto text-center">
-              <span className="text-white text-[15px] font-bold">Talk to us</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex flex-col md:flex-row items-center self-stretch max-w-[1086px] mx-auto px-4">
-          <div className="flex flex-col shrink-0 items-center md:items-start gap-2 text-center md:text-left">
-            <img src="/images/tailio.png" className="w-[180px] md:w-[260px] h-auto mb-2 mx-auto md:mx-0" alt="Tailio logo" />
-            <span className="text-[#D96F28] text-sm font-normal">
-              Making pet registration simple, digital,<br />and stress-free across Delhi NCR.
-            </span>
-          </div>
-          <div className="flex-1 self-stretch hidden md:block" />
-          <div className="flex flex-col shrink-0 items-center md:items-start mr-0 md:mr-[130px] mt-6 md:mt-0 text-center md:text-left">
-            <span className="text-[#FF8C42] text-xs font-bold mb-[17px]">Platform</span>
-            <span className="text-[#FF8C42] text-sm font-normal mb-3">Pet Registration</span>
-            <span className="text-[#FF8C42] text-sm font-normal mb-3">Digital Pet ID</span>
-            <span className="text-[#FF8C42] text-sm font-normal mb-3">Vaccination Tracker</span>
-            <span className="text-[#FF8C42] text-sm font-normal">Lost Pet QR</span>
-          </div>
-          <div className="flex flex-col shrink-0 items-center md:items-start mr-0 md:mr-[42px] mt-6 md:mt-0 text-center md:text-left">
-            <div className="flex flex-col items-start">
-              <span className="text-[#FF8C42] text-xs font-bold">Cities</span>
-            </div>
-            <div className="flex flex-col items-center gap-2.5 mt-4">
-              <div className="flex flex-col items-center py-[1px]">
-                <div className="flex flex-col items-start">
-                  <span className="text-[#FF8C42] text-sm font-normal">Delhi</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-center py-[1px]">
-                <div className="flex flex-col items-start">
-                  <span className="text-[#FF8C42] text-sm font-normal">Noida</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-center py-[1px]">
-                <div className="flex flex-col items-start">
-                  <span className="text-[#FF8C42] text-sm font-normal">Ghaziabad</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-center py-[1px]">
-                <div className="flex flex-col items-start">
-                  <span className="text-[#FF8C42] text-sm font-normal">Gurugram</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col shrink-0 items-center md:items-start mt-6 md:mt-0 text-center md:text-left">
-            <div className="flex flex-col items-start">
-              <span className="text-[#FF8C42] text-xs font-bold">Company</span>
-            </div>
-            <div className="flex flex-col items-center gap-2.5 mt-4">
-              <div className="flex flex-col items-center py-[1px]">
-                <div className="flex flex-col items-start">
-                  <span className="text-[#FF8C42] text-sm font-normal">About Tailio</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-center py-[1px]">
-                <div className="flex flex-col items-start">
-                  <span className="text-[#FF8C42] text-sm font-normal">Privacy Policy</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-center py-[1px]">
-                <div className="flex flex-col items-start">
-                  <span className="text-[#FF8C42] text-sm font-normal">Terms of Service</span>
-                </div>
-              </div>
-              <div className="flex flex-col items-center py-[1px]">
-                <div className="flex flex-col items-start">
-                  <span className="text-[#FF8C42] text-sm font-normal">Contact Us</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+function FounderSilhouette({ variant }: { variant: number }) {
+  const gradients: Record<number, string> = {
+    1: 'linear-gradient(163deg, #EBE1CE 0%, #DDD0B8 100%)',
+    2: 'linear-gradient(163deg, #E5D8C5 0%, #D6C7AD 100%)',
+    3: 'linear-gradient(163deg, #EAD9C0 0%, #DBCAAA 100%)',
+    4: 'linear-gradient(163deg, #E0D0B5 0%, #CEBFA0 100%)',
+  };
+  return (
+    <div style={{ height: 220, position: 'relative', background: gradients[variant], overflow: 'hidden', flexShrink: 0 }}>
+      <div style={{ width: 28, height: 28, left: 14, top: 14, position: 'absolute', zIndex: 1, background: '#2C1A0E', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ color: '#FFDBB8', fontSize: 11, fontFamily: F.dmMono, fontWeight: 500 }}>0{variant}</span>
       </div>
+      <Image
+        src={founderImages[variant]}
+        alt={`Founder ${variant}`}
+        fill
+        style={{ objectFit: 'cover', objectPosition: 'top' }}
+      />
+    </div>
+  );
+}
+
+/* ─── Timeline icon ──────────────────────────────────────────────────────── */
+function TimelineIcon({ variant }: { variant: number }) {
+  return (
+    <div style={{ width: 36, height: 36, flexShrink: 0, background: '#FFF0E4', borderRadius: 18, outline: '2px #FFCCA0 solid', outlineOffset: -2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: 16, height: 16, position: 'relative', overflow: 'hidden' }}>
+        {variant === 1 && <div style={{ width: 9.25, height: 13.33, left: 3.38, top: 1.33, position: 'absolute', outline: '1.2px #C04E06 solid', outlineOffset: -0.6 }} />}
+        {variant === 2 && <><div style={{ width: 4, height: 8, left: 10.67, top: 4, position: 'absolute', outline: '1.2px #C04E06 solid', outlineOffset: -0.6 }} /><div style={{ width: 4, height: 8, left: 1.33, top: 4, position: 'absolute', outline: '1.2px #C04E06 solid', outlineOffset: -0.6 }} /></>}
+        {variant === 3 && <><div style={{ width: 12, height: 14.67, left: 2, top: 0.67, position: 'absolute', outline: '1.2px #C04E06 solid', outlineOffset: -0.6 }} /><div style={{ width: 4, height: 4, left: 6, top: 4.67, position: 'absolute', outline: '1.2px #C04E06 solid', outlineOffset: -0.6 }} /></>}
+      </div>
+    </div>
+  );
+}
+
+/* ─── PAGE ───────────────────────────────────────────────────────────────── */
+export default function AboutPage() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsTablet(window.innerWidth <= 1024 && window.innerWidth > 768);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@500&display=swap';
+    document.head.appendChild(link);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const getResponsivePadding = () => {
+    if (isMobile) return '40px 20px';
+    if (isTablet) return '60px 30px';
+    return '80px 40px';
+  };
+
+  const getResponsiveFontSize = (desktop: number, tablet: number, mobile: number) => {
+    if (isMobile) return mobile;
+    if (isTablet) return tablet;
+    return desktop;
+  };
+
+  return (
+    <div style={{ fontFamily: F.dmSans, overflowX: 'hidden', width: '100%', margin: 0, padding: 0 }}>
+
+      {/* ── HERO ──────────────────────────────────────────────────────────── */}
+      <div style={{ background: '#FAF6EF', width: '100%', borderBottom: '1px rgba(44,26,14,0.10) solid', boxSizing: 'border-box' }}>
+        <div style={{ 
+          maxWidth: 1200, 
+          margin: '0 auto', 
+          padding: getResponsivePadding(),
+          boxSizing: 'border-box', 
+          display: 'flex', 
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: 'center', 
+          gap: isMobile ? 40 : 64 
+        }}>
+          {/* Left */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <Badge text="Our Story" />
+            <div style={{ lineHeight: isMobile ? '1.2' : '63.6px' }}>
+              <span style={{ 
+                color: '#2C1A0E', 
+                fontSize: getResponsiveFontSize(60, 48, 36),
+                fontFamily: F.fraunces, 
+                fontWeight: 900, 
+                lineHeight: 1.2, 
+                display: 'block' 
+              }}>Responsible</span>
+              <span style={{ 
+                color: '#C04E06', 
+                fontSize: getResponsiveFontSize(60, 48, 36),
+                fontFamily: F.fraunces, 
+                fontStyle: 'italic', 
+                fontWeight: 700, 
+                lineHeight: 1.2, 
+                display: 'block' 
+              }}>pet ownership</span>
+              <span style={{ 
+                color: '#2C1A0E', 
+                fontSize: getResponsiveFontSize(60, 48, 36),
+                fontFamily: F.fraunces, 
+                fontWeight: 900, 
+                lineHeight: 1.2, 
+                display: 'block' 
+              }}>made simple</span>
+            </div>
+            <p style={{ margin: 0, maxWidth: isMobile ? '100%' : 500, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px' }}>
+              The four co-founders got tired of watching pet owners struggle with confusing government portals, lost paperwork, and missed deadlines. So they built Tailio — the simplest way to register your pet and stay legally compliant, from your phone, in under a minute.
+            </p>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', paddingTop: 8 }}>
+              <a href="#founders" style={{ display: 'inline-flex', alignItems: 'center', padding: '13px 26px', background: '#E8600A', boxShadow: '0px 2px 0px #C04E06', borderRadius: 9, outline: '2px #C04E06 solid', outlineOffset: -2, color: 'white', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '22.5px', textDecoration: 'none' }}>
+                Meet the Founders
+              </a>
+              <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', padding: '13px 20px', borderRadius: 9, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '21px', textDecoration: 'none' }}>
+                Back to Home
+              </Link>
+            </div>
+          </div>
+          {/* Right — image */}
+          {!isMobile && (
+            <div style={{ flexShrink: 0, width: isMobile ? '100%' : 460, height: isMobile ? 'auto' : 460, minHeight: isMobile ? 300 : 460, borderRadius: 20, overflow: 'hidden', position: 'relative' }}>
+              <Image
+                src="/images/about-us-banner.png"
+                alt="Tailio founders illustration"
+                fill={!isMobile}
+                width={isMobile ? 460 : undefined}
+                height={isMobile ? 460 : undefined}
+                style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── STORY + JOURNEY ───────────────────────────────────────────────── */}
+      <div style={{ background: '#FFFCF8', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ 
+          maxWidth: 1200, 
+          margin: '0 auto', 
+          padding: getResponsivePadding(),
+          boxSizing: 'border-box', 
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
+          gap: isMobile ? 48 : 80, 
+          alignItems: 'flex-start' 
+        }}>
+
+          {/* Left — story */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <Badge text="How it started" />
+            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2 }}>
+              A problem we lived through ourselves
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {[
+                "It started with two dogs named Mylo and Felix. Co-founder Kaavya got a notice from her RWA saying her pets weren't registered and she had 7 days to comply or face eviction complaints. She spent three days navigating the MCD portal - broken links, confusing forms, and two office visits later, she gave up.",
+                "That frustration became Tailio. We asked one question: why should pet registration feel harder than filing taxes? It shouldn't. And with the Supreme Court of India now mandating registration across Delhi NCR, the urgency had never been greater.",
+                "We built Tailio in 2025 with one goal — make legal compliance invisible for pet parents. No queues, no confusion, no follow-ups. Just upload, submit, and done.",
+              ].map((text, i) => (
+                <p key={i} style={{ margin: 0, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '25.38px' }}>{text}</p>
+              ))}
+            </div>
+          </div>
+
+          {/* Right — timeline */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <Badge text="Our journey" />
+            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(27, 24, 22), fontFamily: F.fraunces, fontWeight: 700, lineHeight: 1.3 }}>
+              From idea to India's first digital pet registration platform
+            </div>
+            <div style={{ paddingTop: 8 }}>
+              {[
+                { period: 'Early 2025', title: 'The problem identified', desc: "After the Supreme Court's ABC Rules 2023 directive, we saw thousands of pet parents scrambling with no clear path to compliance.", v: 1 },
+                { period: 'Mid 2025', title: 'Team formed & built', desc: 'Four co-founders — combining expertise in technology, legal compliance, design, and operations — came together to build Tailio.', v: 2 },
+                { period: 'Early 2026', title: 'Launched across Delhi NCR', desc: 'Went live in Delhi, Noida, Ghaziabad, and Gurugram — filing directly with each municipal corporation on behalf of pet parents.', v: 3 },
+              ].map((item, i, arr) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 20, paddingBottom: i < arr.length - 1 ? 28 : 0 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', alignSelf: 'stretch' }}>
+                    <TimelineIcon variant={item.v} />
+                    {i < arr.length - 1 && (
+                      <div style={{ width: 1.5, flex: 1, minHeight: 24, background: 'rgba(44,26,14,0.18)', marginTop: 6 }} />
+                    )}
+                  </div>
+                  <div style={{ paddingTop: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(10, 10, 9), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '15px', letterSpacing: '0.8px' }}>{item.period}</span>
+                    <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '21px' }}>{item.title}</span>
+                    <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '20.15px' }}>{item.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── VALUES ────────────────────────────────────────────────────────── */}
+      <div style={{ background: '#F3EDE0', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
+            <Badge text="What we stand for" />
+            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, textAlign: 'center' }}>Our values</div>
+            <div style={{ maxWidth: 480, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
+              Every decision we make at Tailio comes back to these fundamentals.
+            </div>
+          </div>
+
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'), 
+            gap: 16 
+          }}>
+            {[
+              { title: 'Pet parents first', desc: 'Every feature, every word, every decision is made from the perspective of someone trying to do right by their pet. Complexity stays on our side.' },
+              { title: 'Radical simplicity', desc: "If it takes more than a minute, we've failed. We obsess over reducing friction — in our product, our communication, and our process." },
+              { title: 'Trust through transparency', desc: "No hidden fees, no confusing terms. We tell you exactly what we do, how much it costs, and what you'll get — before you pay a single rupee." },
+              { title: 'We love animals too', desc: "This isn't just a compliance tool. We genuinely care about animal welfare — every registered pet is a safer, healthier, more protected companion." },
+              { title: 'Building for scale', desc: "India has over 33 million pet dogs. We're not building for Delhi NCR — we're building the infrastructure for pet registration across the entire country." },
+              { title: 'Community accountability', desc: 'Registered pets mean accountable owners. We believe a safer city for animals is a safer city for everyone — and registration is where it starts.' },
+            ].map((v) => (
+              <div key={v.title} style={{ padding: '24px 20px', background: '#FFFCF8', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 7 }}>
+                <div style={{ width: 44, height: 44, background: '#FFF0E4', borderRadius: 9, outline: '1px #FFCCA0 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 22, height: 22, background: 'rgba(192,78,6,0.15)', borderRadius: 3 }} />
+                </div>
+                <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '22.5px', paddingTop: 9 }}>{v.title}</div>
+                <div style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '20.8px' }}>{v.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── FOUNDERS ──────────────────────────────────────────────────────── */}
+      <div id="founders" style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
+            <Badge text="The founders" />
+            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, textAlign: 'center' }}>
+              Meet the people behind Tailio
+            </div>
+            <div style={{ maxWidth: 440, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
+              Four people. One shared belief — that every pet deserves a legal identity, and every owner deserves a simple way to provide one.
+            </div>
+          </div>
+
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), 
+            gap: 16 
+          }}>
+            {[
+              { num: 1, name: 'Kaavya Chhabra', quote: '"Compliance shouldn\'t feel like punishment."', bio: 'Teacher by profession and devoted pet parent, inspired by Mylo and Felix to celebrate the joy, chaos, companionship, and unforgettable bond pets bring daily.' },
+              { num: 2, name: 'Nitin Verma', quote: '"Responsible pet ownership made simple"', bio: 'Drives partnerships, customer experience, and market expansion, leveraging entrepreneurial expertise across sourcing, automotive detailing, and paint solutions businesses.' },
+              { num: 3, name: 'Akshay Verma', quote: '"Design is not how it looks. It\'s how fast it works."', bio: 'Built a scalable automotive aesthetics business, leading operations, luxury refinishing projects, talent development, and systems focused on quality and sustainable growth.' },
+              { num: 4, name: 'Anukrit Mahajan', quote: '"If it doesn\'t scale, it doesn\'t count."', bio: 'Engineering graduate from Manipal Institute of Technology and MBA from China Europe International Business School, building scalable ecommerce ventures through innovation, strategy, and deep emerging-market expertise.' },
+            ].map((f) => (
+              <div key={f.name} style={{ background: '#FFFCF8', overflow: 'hidden', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column' }}>
+                <FounderSilhouette variant={f.num} />
+                <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(9.5, 9, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.14px' }}>Co-founder</span>
+                  <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(18, 16, 15), fontFamily: F.fraunces, fontWeight: 700, lineHeight: '27px' }}>{f.name}</span>
+                  <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontStyle: 'italic', fontWeight: 400, lineHeight: '19.38px' }}>{f.quote}</span>
+                  <div style={{ paddingTop: 16, marginTop: 8, borderTop: '1px rgba(44,26,14,0.10) solid', display: 'flex', flexDirection: 'column', gap: 7 }}>
+                    <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '0.8px' }}>Background</span>
+                    <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.38px' }}>{f.bio}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── WHAT WE'RE BUILDING ───────────────────────────────────────────── */}
+      <div style={{ background: '#2C1A0E', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 48 }}>
+          <div style={{ maxWidth: 600, display: 'flex', flexDirection: 'column', gap: 15 }}>
+            <Badge text="What we're building" dark />
+            <div>
+              <span style={{ color: '#FAF6EF', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2 }}>Tailio is just </span>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 900, lineHeight: 1.2 }}>getting started.</span>
+            </div>
+            <p style={{ margin: 0, color: 'rgba(250,246,239,0.55)', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px' }}>
+              Pet registration is live today. Three more services are in active development — built around everything a pet parent needs.
+            </p>
+          </div>
+
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'), 
+            gap: 16 
+          }}>
+            {[
+              { badge: { text: 'Live now', bg: '#E6F6ED', outline: '#A8DDB8', color: '#1A6B3A' }, title: 'Pet Registration', desc: 'Delhi, Noida, Ghaziabad & Gurugram — official municipal filing in under 1 minute. Legally valid certificate delivered in 24–72 hours.' },
+              { badge: { text: 'Coming soon', bg: 'rgba(255,140,58,0.12)', outline: 'rgba(255,140,58,0.20)', color: '#FF8C3A' }, title: 'Vaccination at Doorstep', desc: 'Book a certified vet to vaccinate your pet at home. No clinic visits, no stress. All records logged automatically to your Tailio profile.' },
+              { badge: { text: 'Coming soon', bg: 'rgba(255,140,58,0.12)', outline: 'rgba(255,140,58,0.20)', color: '#FF8C3A' }, title: 'Pet Ecommerce', desc: "A curated shop for vet-approved food, accessories, and grooming products — personalised to your pet's breed, age, and health profile." },
+            ].map((s) => (
+              <div key={s.title} style={{ padding: '25px', background: 'rgba(255,255,255,0.05)', borderRadius: 18, outline: '1px rgba(255,255,255,0.08) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 16, minHeight: isMobile ? 'auto' : 234, boxSizing: 'border-box' }}>
+                <div style={{ width: 44, height: 44, background: 'rgba(255,140,58,0.10)', borderRadius: 9, outline: '1px rgba(255,140,58,0.20) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 22, height: 22, background: 'rgba(255,140,58,0.3)', borderRadius: 3 }} />
+                </div>
+                <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '3px 9px', background: s.badge.bg, borderRadius: 100, outline: `1px ${s.badge.outline} solid`, outlineOffset: -1 }}>
+                  <span style={{ color: s.badge.color, fontSize: getResponsiveFontSize(9, 9, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', lineHeight: '13.5px', letterSpacing: '0.9px' }}>{s.badge.text}</span>
+                </div>
+                <div style={{ color: '#FAF6EF', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '22.5px' }}>{s.title}</div>
+                <div style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '20px' }}>{s.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── CTA ───────────────────────────────────────────────────────────── */}
+      <div style={{ background: 'linear-gradient(166deg, #C04E06 0%, #E8600A 60%, #FF8C3A 100%)', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 640, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          <Image src="/images/about-paw-icon.png" alt="Paw print" width={isMobile ? 50 : 70} height={isMobile ? 50 : 70} />
+          <div style={{ textAlign: 'center' }}>
+            <span style={{ color: 'white', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2 }}>Your pet is loved, now </span>
+            <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: 1.2 }}>make it legal</span>
+            <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2 }}>.</span>
+          </div>
+          <p style={{ margin: 0, color: 'rgba(255,255,255,0.82)', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '24.75px', textAlign: 'center' }}>
+            Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad & Gurugram who are already legally compliant. Register in under 1 minute.
+          </p>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', paddingTop: 8 }}>
+            <Link href="/register" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '13px 26px', background: 'white', boxShadow: '0px 2px 0px rgba(0,0,0,0.08)', borderRadius: 9, outline: '2px rgba(255,255,255,0.40) solid', outlineOffset: -2, color: '#C04E06', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '21px', textDecoration: 'none' }}>
+              Register Your Pet — ₹999
+            </Link>
+            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '13px 24px', background: 'rgba(255,255,255,0.12)', borderRadius: 9, outline: '1px rgba(255,255,255,0.30) solid', outlineOffset: -1, color: 'white', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '21px', textDecoration: 'none' }}>
+              Learn More
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* ── FOOTER ────────────────────────────────────────────────────────── */}
+      <div style={{ background: '#1C0F07', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px 0' : '64px 40px 0', boxSizing: 'border-box' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
+            gap: isMobile ? 32 : 48, 
+            paddingBottom: 40, 
+            borderBottom: '1px rgba(255,255,255,0.06) solid' 
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <Image src="/images/tailio-logo-light.png" alt="Tailio" width={120} height={40} style={{ height: 40, width: 'auto', objectFit: 'contain', alignSelf: 'flex-start' }} />
+              <p style={{ margin: 0, color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '21.45px', maxWidth: 220 }}>
+                Making pet registration simple, digital, and stress-free across Delhi NCR.
+              </p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 10, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.4px' }}>Platform</span>
+              {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
+                <Link key={item} href="#" style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', textDecoration: 'none' }}>{item}</Link>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 10, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.4px' }}>Cities</span>
+              {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
+                <Link key={item} href="#" style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', textDecoration: 'none' }}>{item}</Link>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 10, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.4px' }}>Company</span>
+              {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
+                <Link key={item} href="#" style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', textDecoration: 'none' }}>{item}</Link>
+              ))}
+            </div>
+          </div>
+          <div style={{ padding: '24px 0 32px', display: 'flex', justifyContent: 'center' }}>
+            <span style={{ color: 'rgba(250,246,239,0.20)', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '18px' }}>© 2026 Tailio. All rights reserved.</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }

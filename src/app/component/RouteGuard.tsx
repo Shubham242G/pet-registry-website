@@ -24,7 +24,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function RouteGuard({ children }: { children: React.ReactNode }) {

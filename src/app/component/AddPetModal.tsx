@@ -54,48 +54,61 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
   const [profilePreview, setProfilePreview] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Update form when petToEdit changes
+  // Reset form when modal opens or petToEdit changes
   useEffect(() => {
-    if (petToEdit) {
-      console.log("Editing pet:", petToEdit);
-      setForm({
-        name: petToEdit.name || "",
-        breed: petToEdit.breed || "",
-        ageYears: petToEdit.ageYears?.toString() || "",
-        ageMonths: petToEdit.ageMonths?.toString() || "",
-        gender: petToEdit.gender || "",
-        color: petToEdit.color || "",
-        profilePicture: petToEdit.profilePicture || "",
-        vaccinationCertificateNumber: petToEdit.vaccinationCertificateNumber || "",
-        vaccinationDate: petToEdit.vaccinationDate ? petToEdit.vaccinationDate.split('T')[0] : "",
-        vaccinationValidTill: petToEdit.vaccinationValidTill ? petToEdit.vaccinationValidTill.split('T')[0] : "",
-        vetName: petToEdit.vetName || "",
-        vetMobile: petToEdit.vetMobile || "",
-        microchip: petToEdit.microchip || "",
-        notes: petToEdit.notes || ""
-      });
-      setProfilePreview(petToEdit.profilePicture || "");
-    } else {
-      // Reset form when adding new pet
-      setForm({
-        name: "",
-        breed: "",
-        ageYears: "",
-        ageMonths: "",
-        gender: "",
-        color: "",
-        profilePicture: "",
-        vaccinationCertificateNumber: "",
-        vaccinationDate: "",
-        vaccinationValidTill: "",
-        vetName: "",
-        vetMobile: "",
-        microchip: "",
-        notes: ""
-      });
-      setProfilePreview("");
+    if (isOpen) {
+      if (petToEdit) {
+        // Editing mode - populate with pet data
+        console.log("Editing pet:", petToEdit);
+        setForm({
+          name: petToEdit.name || "",
+          breed: petToEdit.breed || "",
+          ageYears: petToEdit.ageYears?.toString() || "",
+          ageMonths: petToEdit.ageMonths?.toString() || "",
+          gender: petToEdit.gender || "",
+          color: petToEdit.color || "",
+          profilePicture: petToEdit.profilePicture || "",
+          vaccinationCertificateNumber: petToEdit.vaccinationCertificateNumber || "",
+          vaccinationDate: petToEdit.vaccinationDate ? petToEdit.vaccinationDate.split('T')[0] : "",
+          vaccinationValidTill: petToEdit.vaccinationValidTill ? petToEdit.vaccinationValidTill.split('T')[0] : "",
+          vetName: petToEdit.vetName || "",
+          vetMobile: petToEdit.vetMobile || "",
+          microchip: petToEdit.microchip || "",
+          notes: petToEdit.notes || ""
+        });
+        setProfilePreview(petToEdit.profilePicture || "");
+      } else {
+        // New pet mode - reset everything
+        resetForm();
+      }
     }
-  }, [petToEdit]);
+  }, [isOpen, petToEdit]); // Added isOpen to dependency array
+
+  const resetForm = () => {
+    setForm({
+      name: "",
+      breed: "",
+      ageYears: "",
+      ageMonths: "",
+      gender: "",
+      color: "",
+      profilePicture: "",
+      vaccinationCertificateNumber: "",
+      vaccinationDate: "",
+      vaccinationValidTill: "",
+      vetName: "",
+      vetMobile: "",
+      microchip: "",
+      notes: ""
+    });
+    setProfilePreview("");
+    setError("");
+    setSuccess(false);
+    // Clear file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -167,6 +180,10 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       onPetAdded();
       setTimeout(() => {
         onClose();
+        // Reset form after closing
+        if (!petToEdit) {
+          resetForm();
+        }
       }, 1000);
     } catch (err) {
       console.error("Submit error:", err);
@@ -174,6 +191,11 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
   };
 
   const genders = ["Male", "Female", "Unknown"];
@@ -214,7 +236,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             </div>
           </div>
           <button 
-            onClick={onClose}
+            onClick={handleClose}
             className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <X className="w-6 h-6" />
@@ -489,7 +511,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
           <div className="sticky bottom-0 bg-white pt-4 flex space-x-3 border-t border-gray-200">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="flex-1 px-6 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-colors"
             >
               Cancel
