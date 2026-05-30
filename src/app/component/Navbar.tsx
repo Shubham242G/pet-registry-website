@@ -8,6 +8,7 @@ import { useAuth } from './context/AuthContext';
 import RegisterModal from './RegisterModal';
 
 const DM_SANS = "'DM Sans', sans-serif";
+const ARCHIVO_BLACK = "'Archivo Black', sans-serif";
 
 const NAV_LINKS = [
   { label: 'About Us',      href: '/about-us'    },
@@ -129,7 +130,7 @@ export default function Navbar() {
                 style={{
                   color: '#7A5C40',
                   fontSize: 14,
-                  fontFamily: DM_SANS,
+                  fontFamily: ARCHIVO_BLACK,
                   fontWeight: 500,
                   lineHeight: '21px',
                   textDecoration: 'none',
@@ -261,7 +262,7 @@ export default function Navbar() {
                     borderBottom: '1px solid rgba(44,26,14,0.07)',
                     color: '#7A5C40',
                     fontSize: 15,
-                    fontFamily: DM_SANS,
+                    fontFamily: ARCHIVO_BLACK,
                     fontWeight: 500,
                     textDecoration: 'none',
                   }}

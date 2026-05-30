@@ -39,7 +39,7 @@ const founderImages: Record<number, string> = {
   4: '/images/founder4.jpeg',
 };
 
-function FounderSilhouette({ variant }: { variant: number }) {
+function FounderSilhouette({ variant, hideNumber = false }: { variant: number; hideNumber?: boolean }) {
   const gradients: Record<number, string> = {
     1: 'linear-gradient(163deg, #EBE1CE 0%, #DDD0B8 100%)',
     2: 'linear-gradient(163deg, #E5D8C5 0%, #D6C7AD 100%)',
@@ -47,15 +47,37 @@ function FounderSilhouette({ variant }: { variant: number }) {
     4: 'linear-gradient(163deg, #E0D0B5 0%, #CEBFA0 100%)',
   };
   return (
-    <div style={{ height: 220, position: 'relative', background: gradients[variant], overflow: 'hidden', flexShrink: 0 }}>
-      <div style={{ width: 28, height: 28, left: 14, top: 14, position: 'absolute', zIndex: 1, background: '#2C1A0E', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ color: '#FFDBB8', fontSize: 11, fontFamily: F.dmMono, fontWeight: 500 }}>0{variant}</span>
-      </div>
+    <div style={{ 
+      height: 220, 
+      position: 'relative', 
+      background: gradients[variant], 
+      overflow: 'hidden', 
+      flexShrink: 0,
+      // Remove any border that might be coming from the image
+      border: 'none',
+      outline: 'none',
+    }}>
+      {/* Number badge - hidden when hideNumber is true */}
+      {!hideNumber && (
+        <div style={{ 
+          width: 28, height: 28, left: 14, top: 14, position: 'absolute', 
+          zIndex: 1, background: '#2C1A0E', borderRadius: 14, 
+          display: 'flex', alignItems: 'center', justifyContent: 'center' 
+        }}>
+          <span style={{ color: '#FFDBB8', fontSize: 11, fontFamily: F.dmMono, fontWeight: 500 }}>0{variant}</span>
+        </div>
+      )}
+      {/* Founder photo - with proper styling to remove borders */}
       <Image
         src={founderImages[variant]}
         alt={`Founder ${variant}`}
         fill
-        style={{ objectFit: 'cover', objectPosition: 'top' }}
+        style={{ 
+          objectFit: 'cover', 
+          objectPosition: 'top',
+          border: 'none',
+          outline: 'none',
+        }}
       />
     </div>
   );
@@ -243,81 +265,137 @@ export default function AboutPage() {
       </div>
 
       {/* ── VALUES ────────────────────────────────────────────────────────── */}
-      <div style={{ background: '#F3EDE0', width: '100%', boxSizing: 'border-box' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
-            <Badge text="What we stand for" />
-            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, textAlign: 'center' }}>Our values</div>
-            <div style={{ maxWidth: 480, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
-              Every decision we make at Tailio comes back to these fundamentals.
-            </div>
-          </div>
+<div style={{ background: '#F3EDE0', width: '100%', boxSizing: 'border-box' }}>
+  <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
+      <Badge text="What we stand for" />
+      <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, textAlign: 'center' }}>Our values</div>
+      <div style={{ maxWidth: 480, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
+        Every decision we make at Tailio comes back to these fundamentals.
+      </div>
+    </div>
 
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'), 
+      gap: 24,
+      alignItems: 'stretch'
+    }}>
+      {[
+        { title: 'Pet parents first', desc: 'Every feature, every word, every decision is made from the perspective of someone trying to do right by their pet. Complexity stays on our side.' },
+        { title: 'Radical simplicity', desc: "If it takes more than a minute, we've failed. We obsess over reducing friction — in our product, our communication, and our process." },
+        { title: 'Trust through transparency', desc: "No hidden fees, no confusing terms. We tell you exactly what we do, how much it costs, and what you'll get — before you pay a single rupee." },
+        { title: 'We love animals too', desc: "This isn't just a compliance tool. We genuinely care about animal welfare — every registered pet is a safer, healthier, more protected companion." },
+        { title: 'Building for scale', desc: "India has over 33 million pet dogs. We're not building for Delhi NCR — we're building the infrastructure for pet registration across the entire country." },
+        { title: 'Community accountability', desc: 'Registered pets mean accountable owners. We believe a safer city for animals is a safer city for everyone — and registration is where it starts.' },
+      ].map((v) => (
+        <div 
+          key={v.title} 
+          style={{ 
+            padding: '28px 24px', 
+            background: '#FFFCF8', 
+            borderRadius: 18, 
+            outline: '1px rgba(44,26,14,0.10) solid', 
+            outlineOffset: -1, 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: 12,
+            height: '100%',
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          }}
+        >
+          {/* Icon Box - Perfectly centered and consistent size */}
           <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'), 
-            gap: 16 
+            width: 48, 
+            height: 48, 
+            background: '#FFF0E4', 
+            borderRadius: 12, 
+            outline: '1px #FFCCA0 solid', 
+            outlineOffset: -1, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            flexShrink: 0,
+            marginBottom: 4
           }}>
-            {[
-              { title: 'Pet parents first', desc: 'Every feature, every word, every decision is made from the perspective of someone trying to do right by their pet. Complexity stays on our side.' },
-              { title: 'Radical simplicity', desc: "If it takes more than a minute, we've failed. We obsess over reducing friction — in our product, our communication, and our process." },
-              { title: 'Trust through transparency', desc: "No hidden fees, no confusing terms. We tell you exactly what we do, how much it costs, and what you'll get — before you pay a single rupee." },
-              { title: 'We love animals too', desc: "This isn't just a compliance tool. We genuinely care about animal welfare — every registered pet is a safer, healthier, more protected companion." },
-              { title: 'Building for scale', desc: "India has over 33 million pet dogs. We're not building for Delhi NCR — we're building the infrastructure for pet registration across the entire country." },
-              { title: 'Community accountability', desc: 'Registered pets mean accountable owners. We believe a safer city for animals is a safer city for everyone — and registration is where it starts.' },
-            ].map((v) => (
-              <div key={v.title} style={{ padding: '24px 20px', background: '#FFFCF8', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 7 }}>
-                <div style={{ width: 44, height: 44, background: '#FFF0E4', borderRadius: 9, outline: '1px #FFCCA0 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: 22, height: 22, background: 'rgba(192,78,6,0.15)', borderRadius: 3 }} />
-                </div>
-                <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '22.5px', paddingTop: 9 }}>{v.title}</div>
-                <div style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '20.8px' }}>{v.desc}</div>
-              </div>
-            ))}
+            <div style={{ 
+              width: 24, 
+              height: 24, 
+              background: 'rgba(192,78,6,0.12)', 
+              borderRadius: 6,
+              transition: 'all 0.2s ease'
+            }} />
+          </div>
+          
+          {/* Title */}
+          <div style={{ 
+            color: '#2C1A0E', 
+            fontSize: getResponsiveFontSize(16, 15, 14), 
+            fontFamily: F.dmSans, 
+            fontWeight: 700, 
+            lineHeight: 1.4,
+            marginTop: 4
+          }}>
+            {v.title}
+          </div>
+          
+          {/* Description */}
+          <div style={{ 
+            color: '#7A5C40', 
+            fontSize: getResponsiveFontSize(13.5, 13, 12), 
+            fontFamily: F.dmSans, 
+            fontWeight: 400, 
+            lineHeight: 1.5,
+            opacity: 0.85
+          }}>
+            {v.desc}
           </div>
         </div>
-      </div>
+      ))}
+    </div>
+  </div>
+</div>
 
       {/* ── FOUNDERS ──────────────────────────────────────────────────────── */}
       <div id="founders" style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
-            <Badge text="The founders" />
-            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, textAlign: 'center' }}>
-              Meet the people behind Tailio
-            </div>
-            <div style={{ maxWidth: 440, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
-              Four people. One shared belief — that every pet deserves a legal identity, and every owner deserves a simple way to provide one.
-            </div>
-          </div>
+  <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
+      <Badge text="The founders" />
+      <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, textAlign: 'center' }}>
+        Meet the people behind Tailio
+      </div>
+      <div style={{ maxWidth: 440, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
+        Four people. One shared belief — that every pet deserves a legal identity, and every owner deserves a simple way to provide one.
+      </div>
+    </div>
 
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), 
-            gap: 16 
-          }}>
-            {[
-              { num: 1, name: 'Kaavya Chhabra', quote: '"Compliance shouldn\'t feel like punishment."', bio: 'Teacher by profession and devoted pet parent, inspired by Mylo and Felix to celebrate the joy, chaos, companionship, and unforgettable bond pets bring daily.' },
-              { num: 2, name: 'Nitin Verma', quote: '"Responsible pet ownership made simple"', bio: 'Drives partnerships, customer experience, and market expansion, leveraging entrepreneurial expertise across sourcing, automotive detailing, and paint solutions businesses.' },
-              { num: 3, name: 'Akshay Verma', quote: '"Design is not how it looks. It\'s how fast it works."', bio: 'Built a scalable automotive aesthetics business, leading operations, luxury refinishing projects, talent development, and systems focused on quality and sustainable growth.' },
-              { num: 4, name: 'Anukrit Mahajan', quote: '"If it doesn\'t scale, it doesn\'t count."', bio: 'Engineering graduate from Manipal Institute of Technology and MBA from China Europe International Business School, building scalable ecommerce ventures through innovation, strategy, and deep emerging-market expertise.' },
-            ].map((f) => (
-              <div key={f.name} style={{ background: '#FFFCF8', overflow: 'hidden', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column' }}>
-                <FounderSilhouette variant={f.num} />
-                <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 7 }}>
-                  <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(9.5, 9, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.14px' }}>Co-founder</span>
-                  <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(18, 16, 15), fontFamily: F.fraunces, fontWeight: 700, lineHeight: '27px' }}>{f.name}</span>
-                  <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontStyle: 'italic', fontWeight: 400, lineHeight: '19.38px' }}>{f.quote}</span>
-                  <div style={{ paddingTop: 16, marginTop: 8, borderTop: '1px rgba(44,26,14,0.10) solid', display: 'flex', flexDirection: 'column', gap: 7 }}>
-                    <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '0.8px' }}>Background</span>
-                    <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.38px' }}>{f.bio}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), 
+      gap: 16 
+    }}>
+      {[
+        { num: 1, name: 'Kaavya Chhabra', quote: '"Compliance shouldn\'t feel like punishment."', bio: 'Teacher by profession and devoted pet parent, inspired by Mylo and Felix to celebrate the joy, chaos, companionship, and unforgettable bond pets bring daily.' },
+        { num: 2, name: 'Nitin Verma', quote: '"Responsible pet ownership made simple"', bio: 'Drives partnerships, customer experience, and market expansion, leveraging entrepreneurial expertise across sourcing, automotive detailing, and paint solutions businesses.' },
+        { num: 3, name: 'Akshay Verma', quote: '"Design is not how it looks. It\'s how fast it works."', bio: 'Built a scalable automotive aesthetics business, leading operations, luxury refinishing projects, talent development, and systems focused on quality and sustainable growth.' },
+        { num: 4, name: 'Anukrit Mahajan', quote: '"If it doesn\'t scale, it doesn\'t count."', bio: 'Engineering graduate from Manipal Institute of Technology and MBA from China Europe International Business School, building scalable ecommerce ventures through innovation, strategy, and deep emerging-market expertise.' },
+      ].map((f) => (
+        <div key={f.name} style={{ background: '#FFFCF8', overflow: 'hidden', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column' }}>
+          <FounderSilhouette variant={f.num} hideNumber={true} />
+          <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 7 }}>
+            <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(9.5, 9, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.14px' }}>Co-founder</span>
+            <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(18, 16, 15), fontFamily: F.fraunces, fontWeight: 700, lineHeight: '27px' }}>{f.name}</span>
+            <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontStyle: 'italic', fontWeight: 400, lineHeight: '19.38px' }}>{f.quote}</span>
+            <div style={{ paddingTop: 16, marginTop: 8, borderTop: '1px rgba(44,26,14,0.10) solid', display: 'flex', flexDirection: 'column', gap: 7 }}>
+              <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '0.8px' }}>Background</span>
+              <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.38px' }}>{f.bio}</span>
+            </div>
           </div>
         </div>
-      </div>
+      ))}
+    </div>
+  </div>
+</div>
 
       {/* ── WHAT WE'RE BUILDING ───────────────────────────────────────────── */}
       <div style={{ background: '#2C1A0E', width: '100%', boxSizing: 'border-box' }}>
