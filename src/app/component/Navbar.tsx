@@ -12,7 +12,7 @@ const DM_SANS = "'DM Sans', sans-serif";
 
 const NAV_LINKS = [
   { label: 'About Us',      href: '/about-us'    },
-  { label: 'Why Register?', href: '/why-register' },
+//   { label: 'Why Register?', href: '/why-register' },
   { label: 'Why Tailio?',   href: '/why-tailio' },
   { label: 'How it Works',  href: '/how-it-works' },
 ];
@@ -111,17 +111,17 @@ export default function Navbar() {
           alignItems: 'center',
           justifyContent: 'space-between',
           boxSizing: 'border-box',
-          gap: 16,
+          gap: 150,
         }}>
 
-          {/* LOGO */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
+          {/* LOGO - Original size, moved left */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0, marginRight: 'auto' }}>
             <Image
               src="/images/tailio.png"
               alt="Tailio logo"
               width={800}
-              height={880}
-              style={{ width: 'auto', height: 230, objectFit: 'contain' }}
+              height={780}
+              style={{ width: 'auto', height: 230, objectFit: 'contain', marginRight:'40px'}}
               priority
             />
           </Link>
@@ -137,13 +137,14 @@ export default function Navbar() {
                   style={{
                     color: '#7A5C40',
                     fontSize: 14,
-                    fontFamily: DM_SANS,  /* ← changed from Archivo Black */
+                    fontFamily: DM_SANS,
                     fontWeight: 500,
                     lineHeight: '21px',
                     textDecoration: 'none',
                     whiteSpace: 'nowrap',
                     display: 'inline-flex',
                     alignItems: 'center',
+                    marginRight:'30px'
                   }}
                 >
                   {link.label}
@@ -185,7 +186,7 @@ export default function Navbar() {
                       onClick={handleLogout}
                       style={{
                         padding: '9px 18px',
-                        background: '#ef4444',
+                        background: '#2C1A0E',
                         borderRadius: 9,
                         color: 'white',
                         fontSize: 13.5,
@@ -297,7 +298,7 @@ export default function Navbar() {
                       borderBottom: '1px solid rgba(44,26,14,0.07)',
                       color: '#7A5C40',
                       fontSize: 15,
-                      fontFamily: DM_SANS,  /* ← changed from Archivo Black */
+                      fontFamily: DM_SANS,
                       fontWeight: 500,
                       textDecoration: 'none',
                     }}
