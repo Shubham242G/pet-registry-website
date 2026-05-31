@@ -1,0 +1,651 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+
+const F = {
+  playfair: "'Playfair Display', Georgia, serif",
+  dmSans: "'DM Sans', sans-serif",
+  fraunces: "'Fraunces', Georgia, serif",
+  dmSerif: "'DM Serif Display', serif",
+};
+
+export default function HowItWorksPage() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsTablet(window.innerWidth <= 1024 && window.innerWidth > 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&display=swap';
+    document.head.appendChild(link);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const fs = (d: number, t: number, m: number) => isMobile ? m : isTablet ? t : d;
+    const getResponsiveFontSize = (desktop: number, tablet: number, mobile: number) => {
+    if (isMobile) return mobile;
+    if (isTablet) return tablet;
+    return desktop;
+  };
+
+  return (
+    <div style={{ fontFamily: F.dmSans, background: '#F5F0E8', width: '100%', overflowX: 'hidden' }}>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          SECTION 1 — HERO
+      ══════════════════════════════════════════════════════════════════ */}
+      <div style={{ background: '#F5F0E8', width: '100%', paddingTop: 60 }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '0 20px 30px' : '0 40px 40px', display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'center' : 'flex-start' }}>
+
+          <div style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 6, paddingBottom: 6, background: 'rgba(212,82,26,0.10)', borderRadius: 100, display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 24 }}>
+            <span style={{ color: '#D4521A', fontSize: 12, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.2px' }}>How It Works</span>
+          </div>
+
+          <div style={{ marginBottom: 0 }}>
+            <span style={{ display: 'block', color: '#2B1F14', fontSize: fs(96, 72, 40), fontFamily: F.playfair, fontWeight: 900, lineHeight: '96px' }}>Three screens.</span>
+            <span style={{ display: 'block', color: '#D4521A', fontSize: fs(96, 72, 40), fontFamily: F.playfair, fontStyle: 'italic', fontWeight: 900, lineHeight: '96px' }}>Sixty seconds.</span>
+          </div>
+
+          <div style={{ maxWidth: 500, marginTop: 10 }}>
+            <p style={{ color: '#7A6858', fontSize: 18, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '29.7px', margin: 0 }}>
+              We're going to register your pet. It takes sixty seconds,<br />
+              costs ₹999, and ends with a legally valid ID. Follow the paws.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 10, flexWrap: 'wrap', marginTop: 24, marginBottom: 24 }}>
+            {['₹999 one-time, all-inclusive', 'MCD, Noida & GMC accepted', 'Certificate in 24–72 hrs', 'No office visit needed'].map(pill => (
+              <div key={pill} style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, background: '#FDFAF5', borderRadius: 100, outline: '1px rgba(43,31,20,0.10) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7 }}>
+                <div style={{ width: 7, height: 7, background: '#D4521A', borderRadius: 3.5 }} />
+                <span style={{ color: '#2B1F14', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>{pill}</span>
+              </div>
+            ))}
+          </div>
+
+          <button style={{ paddingLeft: 40, paddingRight: 40, paddingTop: 16, paddingBottom: 16, background: '#D4521A', boxShadow: '0px 6px 0px #A83E10', borderRadius: 100, border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ color: 'white', fontSize: 17, fontFamily: F.dmSans, fontWeight: 600 }}>Start walking</span>
+            <div style={{ width: 17, height: 17, position: 'relative', overflow: 'hidden' }}>
+              <div style={{ width: 4.96, height: 9.92, left: 8.5, top: 3.54, position: 'absolute', outline: '1.77px white solid', outlineOffset: -0.89 }} />
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          STATS BAR
+      ══════════════════════════════════════════════════════════════════ */}
+      <div style={{ background: '#2B1F14', width: '100%', display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        {[
+          { value: '<913', label: 'Pets registered in\nDelhi municipality today' },
+          { value: '₹10K', label: 'Minimum fine for\nnon-compliance in Noida' },
+          { value: '60s',  label: 'Time to register\non Tailio' },
+          { value: '33M+', label: 'Pet dogs across\nIndia' },
+        ].map((s, i) => (
+          <div key={i} style={{
+            width: isMobile ? '50%' : 240,
+            alignSelf: 'stretch',
+            maxWidth: 240,
+            paddingLeft: 32, paddingRight: 32, paddingTop: 36, paddingBottom: 36,
+            borderRight: (!isMobile && i < 3) ? '1px solid rgba(255,255,255,0.07)' : 'none',
+            display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start', gap: 6,
+            boxSizing: 'border-box',
+          }}>
+            <div style={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ textAlign: 'center', color: '#D4521A', fontSize: 38, fontFamily: F.playfair, fontWeight: 900, lineHeight: '38px' }}>{s.value}</span>
+            </div>
+            <div style={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ textAlign: 'center', color: 'rgba(245,240,232,0.50)', fontSize: 13, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', whiteSpace: 'pre-line' }}>{s.label}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          SECTION 2 — THE PROCESS (3 steps) - COMPACTED
+      ══════════════════════════════════════════════════════════════════ */}
+      <div style={{ background: '#F5F0E8', width: '100%' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? '50px 20px' : '80px 40px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 50 }}>
+
+          {/* Section header - reduced gap */}
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+            <div style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 6, paddingBottom: 6, background: 'rgba(212,82,26,0.10)', borderRadius: 100, display: 'inline-flex', alignItems: 'center' }}>
+              <span style={{ color: '#D4521A', fontSize: 12, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.2px' }}>The Process</span>
+            </div>
+            <div style={{ paddingTop: 4, textAlign: 'center' }}>
+              <span style={{ color: '#2B1F14', fontSize: fs(60, 48, 32), fontFamily: F.playfair, fontWeight: 900, lineHeight: '63px' }}>Follow the </span>
+              <span style={{ color: '#D4521A', fontSize: fs(60, 48, 32), fontFamily: F.playfair, fontStyle: 'italic', fontWeight: 900, lineHeight: '63px' }}>paws.</span>
+            </div>
+            <div style={{ maxWidth: 460 }}>
+              <p style={{ textAlign: 'center', color: '#7A6858', fontSize: 16, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '27.2px', margin: 0 }}>
+                Just 4 documents. No PDFs, no notarised forms, no Sunday lost to paperwork.
+              </p>
+            </div>
+          </div>
+
+          {/* ── STEP 1 ── COMPACTED */}
+          <div style={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ alignSelf: 'stretch', paddingLeft: 24 }}>
+              <div style={{ alignSelf: 'stretch', paddingLeft: 44, paddingRight: 44, paddingTop: 32, paddingBottom: 32, background: '#FDFAF5', borderRadius: 20, outline: '1px rgba(43,31,20,0.08) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ width: 46, height: 46, background: 'rgba(212,82,26,0.08)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 22, height: 22, position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ width: 14.67, height: 5.5, left: 3.67, top: 13.75, position: 'absolute', outline: '1.83px #D4521A solid', outlineOffset: -0.92 }} />
+                    <div style={{ width: 7.33, height: 7.33, left: 7.33, top: 2.75, position: 'absolute', outline: '1.83px #D4521A solid', outlineOffset: -0.92 }} />
+                  </div>
+                </div>
+                <div style={{ paddingTop: 4 }}>
+                  <span style={{ color: '#2B1F14', fontSize: 26, fontFamily: F.playfair, fontWeight: 700, lineHeight: '31.2px' }}>Register & add your pet's details</span>
+                </div>
+                <div style={{ paddingBottom: 0.5 }}>
+                  <p style={{ color: '#7A6858', fontSize: 15, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '25.5px', margin: 0 }}>
+                    Fill in a handful of fields — your pet's name, breed, and age. Works on any phone. No PDFs to download, no notarised forms, no Sunday lost to paperwork.
+                  </p>
+                </div>
+                <div style={{ paddingTop: 10, display: 'flex', alignItems: 'flex-start', gap: 10, flexWrap: 'wrap' }}>
+                  {["Pet's name & breed", 'Age & gender', 'Under 60 seconds'].map(tag => (
+                    <div key={tag} style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 6, paddingBottom: 6, background: '#F5F0E8', borderRadius: 100, outline: '1px rgba(43,31,20,0.08) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7 }}>
+                      <div style={{ width: 13, height: 13, position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ width: 8.67, height: 5.96, left: 2.17, top: 3.25, position: 'absolute', outline: '1.35px #D4521A solid', outlineOffset: -0.68 }} />
+                      </div>
+                      <span style={{ color: '#6B4C35', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>{tag}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div style={{ alignSelf: 'stretch', paddingTop: 6, paddingBottom: 40, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ width: 58, height: 58, position: 'relative', background: '#D4521A', borderRadius: 29, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 58, height: 58, left: 0, top: 0, position: 'absolute', boxShadow: '0px 0px 0px 10px rgba(212,82,26,0.20), 0px 0px 0px 8px #F5F0E8', borderRadius: 29 }} />
+                <span style={{ textAlign: 'center', color: 'white', fontSize: 22, fontFamily: F.playfair, fontWeight: 900 }}>1</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ── STEP 2 ── COMPACTED */}
+          <div style={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ alignSelf: 'stretch', paddingLeft: 24 }}>
+              <div style={{ alignSelf: 'stretch', paddingLeft: 44, paddingRight: 44, paddingTop: 32, paddingBottom: 32, background: '#FDFAF5', borderRadius: 20, outline: '1px rgba(43,31,20,0.08) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ width: 46, height: 46, background: 'rgba(212,82,26,0.08)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 22, height: 22, position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ width: 16.5, height: 5.5, left: 2.75, top: 13.75, position: 'absolute', outline: '1.83px #D4521A solid', outlineOffset: -0.92 }} />
+                    <div style={{ width: 9.17, height: 4.58, left: 6.42, top: 2.75, position: 'absolute', outline: '1.83px #D4521A solid', outlineOffset: -0.92 }} />
+                  </div>
+                </div>
+                <div style={{ paddingTop: 4 }}>
+                  <span style={{ color: '#2B1F14', fontSize: 26, fontFamily: F.playfair, fontWeight: 700, lineHeight: '31.2px' }}>Upload your 4 documents</span>
+                </div>
+                <div style={{ paddingBottom: 0.5 }}>
+                  <p style={{ color: '#7A6858', fontSize: 15, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '25.5px', margin: 0 }}>
+                    Upload them digitally — no photocopies, no office visits. JPG, PNG or PDF accepted. We handle the municipal filing on your behalf.
+                  </p>
+                </div>
+                <div style={{ paddingTop: 10, display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  {[
+                    { label: 'Anti-Rabies Vaccination Certificate', desc: 'From registered vet, with signature & stamp', n: 1 },
+                    { label: 'Applicant ID Proof',                  desc: 'Aadhaar, PAN, Passport or Voter ID',         n: 2 },
+                    { label: 'Address Proof',                       desc: 'Delhi, Noida, Ghaziabad or Gurugram',        n: 3 },
+                    { label: 'Photo with Your Pet',                 desc: 'Both faces visible, within 3 months',        n: 4 },
+                  ].map(doc => (
+                    <div key={doc.n} style={{ position: 'relative', paddingLeft: 18, paddingRight: 18, paddingTop: 14, paddingBottom: 14, background: '#F5F0E8', borderRadius: 14, outline: '1px rgba(43,31,20,0.08) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 2, marginTop: doc.n > 1 ? 6 : 0 }}>
+                      <div style={{ paddingRight: 28 }}>
+                        <span style={{ color: '#2B1F14', fontSize: 13, fontFamily: F.dmSans, fontWeight: 600 }}>{doc.label}</span>
+                      </div>
+                      <span style={{ color: '#7A6858', fontSize: 11, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '15.4px' }}>{doc.desc}</span>
+                      <div style={{ display: 'flex', gap: 5, paddingTop: 5 }}>
+                        {['JPG', 'PNG', 'PDF'].map(f => (
+                          <div key={f} style={{ paddingLeft: 7, paddingRight: 7, paddingTop: 2, paddingBottom: 2, background: 'rgba(43,31,20,0.06)', borderRadius: 4 }}>
+                            <span style={{ color: '#6B4C35', fontSize: 10, fontFamily: F.dmSans, fontWeight: 700, letterSpacing: '0.4px' }}>{f}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div style={{ width: 22, height: 22, left: 345, top: 13, position: 'absolute', background: '#2B1F14', borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span style={{ color: '#F5F0E8', fontSize: 10, fontFamily: F.dmSans, fontWeight: 700 }}>{doc.n}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div style={{ alignSelf: 'stretch', paddingTop: 6, paddingBottom: 40, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ width: 58, height: 58, position: 'relative', background: '#D4521A', borderRadius: 29, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 58, height: 58, left: 0, top: 0, position: 'absolute', boxShadow: '0px 0px 0px 10px rgba(212,82,26,0.20), 0px 0px 0px 8px #F5F0E8', borderRadius: 29 }} />
+                <span style={{ textAlign: 'center', color: 'white', fontSize: 22, fontFamily: F.playfair, fontWeight: 900 }}>2</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ── STEP 3 ── COMPACTED */}
+          <div style={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ alignSelf: 'stretch', paddingLeft: 24 }}>
+              <div style={{ alignSelf: 'stretch', paddingLeft: 44, paddingRight: 44, paddingTop: 32, paddingBottom: 32, background: '#FDFAF5', borderRadius: 20, outline: '1px rgba(43,31,20,0.08) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ width: 46, height: 46, background: 'rgba(212,82,26,0.08)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: 22, height: 22, position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ width: 14.67, height: 18.33, left: 3.67, top: 1.83, position: 'absolute', outline: '1.83px #D4521A solid', outlineOffset: -0.92 }} />
+                    <div style={{ width: 5.5, height: 5.5, left: 12.83, top: 1.83, position: 'absolute', outline: '1.83px #D4521A solid', outlineOffset: -0.92 }} />
+                  </div>
+                </div>
+                <div style={{ paddingTop: 4 }}>
+                  <span style={{ color: '#2B1F14', fontSize: 26, fontFamily: F.playfair, fontWeight: 700, lineHeight: '31.2px' }}>We file. You get your certificate.</span>
+                </div>
+                <div style={{ paddingBottom: 0.5 }}>
+                  <p style={{ color: '#7A6858', fontSize: 15, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '25.5px', margin: 0 }}>
+                    We submit directly to your municipality — MCD, Noida Authority, or GMC. Your official digital certificate arrives by email within 24–72 hours. No office visit. Ever.
+                  </p>
+                </div>
+                <div style={{ paddingTop: 30, paddingBottom: 20, paddingLeft: 32, paddingRight: 32, background: 'linear-gradient(167deg, #2B1F14 0%, #3D2B1A 100%)', borderRadius: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+                  <div style={{ minWidth: 334.67, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <div style={{ display: 'inline-flex', alignSelf: 'flex-start', paddingLeft: 12, paddingRight: 12, paddingTop: 4, paddingBottom: 4, background: 'rgba(212,82,26,0.22)', borderRadius: 100, alignItems: 'center', gap: 6 }}>
+                      <div style={{ width: 6, height: 6, background: '#F4A56A', borderRadius: 3 }} />
+                      <span style={{ color: '#F4A56A', fontSize: 11, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.88px' }}>Certificate issued</span>
+                    </div>
+                    <div style={{ paddingTop: 6 }}>
+                      <span style={{ color: '#F5F0E8', fontSize: 26, fontFamily: F.playfair, fontWeight: 700 }}>Bruno</span>
+                    </div>
+                    <span style={{ color: 'rgba(245,240,232,0.40)', fontSize: 11, fontFamily: F.dmSans, fontWeight: 600, letterSpacing: '1.1px' }}>TL-DL-2025-88471</span>
+                    <div style={{ paddingTop: 10, display: 'flex', alignItems: 'flex-start', gap: 8, flexWrap: 'wrap' }}>
+                      {['Legally registered in Delhi NCR', 'No office visit'].map(b => (
+                        <div key={b} style={{ paddingLeft: 12, paddingRight: 12, paddingTop: 5, paddingBottom: 5, background: 'rgba(255,255,255,0.06)', borderRadius: 100, display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
+                            <div style={{ width: 7.33, height: 5.04, left: 1.83, top: 2.75, position: 'absolute', outline: '1.15px rgba(245,240,232,0.65) solid', outlineOffset: -0.57 }} />
+                          </div>
+                          <span style={{ color: 'rgba(245,240,232,0.65)', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400 }}>{b}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ width: 68, height: 68, background: '#F5F0E8', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <div style={{ width: 38, height: 38, position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ width: 11.4, height: 11.4, left: 3.8,  top: 3.8,  position: 'absolute', outline: '1.9px #2B1F14 solid', outlineOffset: -0.95 }} />
+                      <div style={{ width: 7.6,  height: 7.6,  left: 5.7,  top: 5.7,  position: 'absolute', background: '#2B1F14' }} />
+                      <div style={{ width: 11.4, height: 11.4, left: 22.8, top: 3.8,  position: 'absolute', outline: '1.9px #2B1F14 solid', outlineOffset: -0.95 }} />
+                      <div style={{ width: 7.6,  height: 7.6,  left: 24.7, top: 5.7,  position: 'absolute', background: '#2B1F14' }} />
+                      <div style={{ width: 11.4, height: 11.4, left: 3.8,  top: 22.8, position: 'absolute', outline: '1.9px #2B1F14 solid', outlineOffset: -0.95 }} />
+                      <div style={{ width: 7.6,  height: 7.6,  left: 5.7,  top: 24.7, position: 'absolute', background: '#2B1F14' }} />
+                      <div style={{ width: 3.8,  height: 3.8,  left: 22.8, top: 22.8, position: 'absolute', background: '#2B1F14' }} />
+                      <div style={{ width: 3.8,  height: 3.8,  left: 30.4, top: 22.8, position: 'absolute', background: '#2B1F14' }} />
+                      <div style={{ width: 3.8,  height: 3.8,  left: 22.8, top: 30.4, position: 'absolute', background: '#2B1F14' }} />
+                      <div style={{ width: 3.8,  height: 3.8,  left: 30.4, top: 30.4, position: 'absolute', background: '#2B1F14' }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style={{ alignSelf: 'stretch', paddingTop: 6, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{ width: 58, height: 58, position: 'relative', background: '#D4521A', borderRadius: 29, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 58, height: 58, left: 0, top: 0, position: 'absolute', boxShadow: '0px 0px 0px 10px rgba(212,82,26,0.20), 0px 0px 0px 8px #F5F0E8', borderRadius: 29 }} />
+                <span style={{ textAlign: 'center', color: 'white', fontSize: 22, fontFamily: F.playfair, fontWeight: 900 }}>3</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          SECTION 3 — FOUR DOCUMENTS (dark bg)
+      ══════════════════════════════════════════════════════════════════ */}
+      <div style={{ background: '#2B1F14', width: '100%' }}>
+        <div style={{ maxWidth: 1060, margin: '0 auto', padding: isMobile ? '60px 20px' : '100px 40px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 60 }}>
+
+          <div style={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+            <div style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 6, paddingBottom: 6, background: 'rgba(212,82,26,0.22)', borderRadius: 100, display: 'inline-flex', alignItems: 'center' }}>
+              <span style={{ color: '#F4A56A', fontSize: 12, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.2px' }}>What You'll Need</span>
+            </div>
+            <div style={{ paddingTop: 4, textAlign: 'center' }}>
+              <span style={{ color: '#F5F0E8', fontSize: fs(60, 48, 32), fontFamily: F.playfair, fontWeight: 900, lineHeight: '63px' }}>Four documents.<br /></span>
+              <span style={{ color: '#D4521A', fontSize: fs(60, 48, 32), fontFamily: F.playfair, fontStyle: 'italic', fontWeight: 900, lineHeight: '63px' }}>That's all.</span>
+            </div>
+            <div style={{ maxWidth: 460 }}>
+              <p style={{ textAlign: 'center', color: 'rgba(245,240,232,0.45)', fontSize: 16, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '27.2px', margin: 0 }}>
+                Upload digitally — no delays, no broken websites. We handle the municipal filing.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ alignSelf: 'stretch', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: 20 }}>
+            {[
+              {
+                title: 'Anti-Rabies Vaccination Certificate',
+                desc: 'Issued by a registered vet confirming your pet received their anti-rabies vaccine.',
+                points: ["Pet's name, gender & age", 'Vaccination date & due date', "Vet's signature & hospital stamp"],
+                n: 1,
+              },
+              {
+                title: 'Applicant ID Proof',
+                desc: 'Any government-issued photo ID of the pet owner. Must be valid and clearly legible.',
+                points: ['Aadhaar Card', 'PAN Card', 'Passport or Voter ID'],
+                n: 2,
+              },
+              {
+                title: 'Applicant Address Proof',
+                desc: 'Proof you reside in Delhi, Noida, Ghaziabad or Gurugram. Must show your current address.',
+                points: ['Aadhaar Card (serves as both)', 'Electricity or water bill', 'Rental agreement or bank statement'],
+                n: 3,
+              },
+              {
+                title: 'Photograph with Your Pet Dog',
+                desc: 'A clear, recent photo of you with your pet. Both faces must be visible. Natural lighting.',
+                points: ['Good natural lighting', 'Both owner & pet clearly visible', 'Taken within last 3 months'],
+                n: 4,
+              },
+            ].map(doc => (
+              <div key={doc.n} style={{ padding: 28, background: 'rgba(255,255,255,0.04)', borderRadius: 20, outline: '1px rgba(255,255,255,0.07) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div style={{ width: 46, height: 46, background: 'rgba(212,82,26,0.14)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: 20, height: 20, position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ width: 13.33, height: 16.67, left: 3.33, top: 1.67, position: 'absolute', outline: '1.67px #D4521A solid', outlineOffset: -0.83 }} />
+                      <div style={{ width: 5, height: 5, left: 11.67, top: 1.67, position: 'absolute', outline: '1.67px #D4521A solid', outlineOffset: -0.83 }} />
+                    </div>
+                  </div>
+                  <div style={{ width: 26, height: 26, background: '#D4521A', borderRadius: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ color: 'white', fontSize: 12, fontFamily: F.dmSans, fontWeight: 700 }}>{doc.n}</span>
+                  </div>
+                </div>
+                <div style={{ paddingTop: 10 }}>
+                  <span style={{ color: '#F5F0E8', fontSize: 18, fontFamily: F.dmSerif, fontWeight: 400, lineHeight: '22.5px' }}>{doc.title}</span>
+                </div>
+                <div style={{ paddingBottom: 0.5 }}>
+                  <p style={{ color: 'rgba(245,240,232,0.42)', fontSize: 13, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '20.8px', margin: 0 }}>{doc.desc}</p>
+                </div>
+                <div style={{ paddingTop: 10, display: 'flex', flexDirection: 'column' }}>
+                  {doc.points.map((pt, i, arr) => (
+                    <div key={pt} style={{ display: 'flex', alignItems: 'center', gap: 9, paddingTop: 4, paddingBottom: 4, borderBottom: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
+                      <div style={{ width: 5, height: 5, background: '#D4521A', borderRadius: 2.5, flexShrink: 0 }} />
+                      <span style={{ color: 'rgba(245,240,232,0.58)', fontSize: 13, fontFamily: F.dmSans, fontWeight: 400 }}>{pt}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ paddingTop: 10, display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                  {['JPG', 'PNG', 'PDF'].map(f => (
+                    <div key={f} style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 2, paddingBottom: 2, background: 'rgba(255,255,255,0.05)', borderRadius: 4 }}>
+                      <span style={{ color: 'rgba(245,240,232,0.35)', fontSize: 10, fontFamily: F.dmSans, fontWeight: 700, letterSpacing: '0.4px' }}>{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          SECTION 4 — TAILIO vs MUNICIPAL PORTAL
+      ══════════════════════════════════════════════════════════════════ */}
+      <div style={{ background: '#F5F0E8', width: '100%' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? '60px 20px' : '80px 40px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 9 }}>
+
+          <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, background: '#FFF0E4', borderRadius: 100, outline: '1px #FFCCA0 solid', outlineOffset: -1, display: 'inline-flex' }}>
+            <span style={{ color: '#C04E06', fontSize: 10, fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.2px' }}>Tailio vs Municipal Portal</span>
+          </div>
+
+          <div style={{ paddingTop: 5 }}>
+            <span style={{ color: '#2C1A0E', fontSize: fs(40, 32, 24), fontFamily: F.playfair, fontWeight: 900, lineHeight: '44px' }}>Or spend your </span>
+            <span style={{ color: '#E8600A', fontSize: fs(40, 32, 24), fontFamily: F.playfair, fontStyle: 'italic', fontWeight: 700, lineHeight: '44px' }}>weekend</span>
+            <span style={{ color: '#2C1A0E', fontSize: fs(40, 32, 24), fontFamily: F.playfair, fontWeight: 900, lineHeight: '44px' }}> on the MCD portal.</span>
+          </div>
+
+          <div style={{ maxWidth: 540, paddingBottom: 0.88 }}>
+            <p style={{ color: '#7A5C40', fontSize: 14.5, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', margin: 0 }}>
+              The municipal portal works. Eventually. Probably. Here's the difference in numbers.
+            </p>
+          </div>
+
+          <div style={{ alignSelf: 'stretch', overflowX: 'auto' }}>
+            <div style={{ minWidth: isMobile ? 700 : '100%', background: '#FFFCF8', boxShadow: '0px 4px 20px rgba(44,26,14,0.08)', overflow: 'hidden', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1 }}>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+                <div style={{ height: 63, padding: '16px 24px', borderBottom: '1px rgba(44,26,14,0.10) solid', borderRight: '1px rgba(44,26,14,0.10) solid', display: 'flex', alignItems: 'center' }}>
+                  <span style={{ color: '#A68660', fontSize: 9.5, fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.33px' }}>What you get</span>
+                </div>
+                <div style={{ height: 63, padding: '16px 24px', background: '#E8600A', borderBottom: '1px rgba(255,255,255,0.08) solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ color: '#4A2C14', fontSize: 20, fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 900, lineHeight: '30px' }}>Tailio.</span>
+                </div>
+                <div style={{ height: 63, padding: '16px 24px', borderBottom: '1px rgba(44,26,14,0.10) solid', borderLeft: '1px rgba(44,26,14,0.10) solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ color: '#A68660', fontSize: 9.5, fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.33px' }}>Municipal Portal</span>
+                </div>
+              </div>
+
+              {[
+                { label: 'Time to register',          sub: 'From start to submission',          tailio: 'Under 1 minute',     portal: '2–4 weeks',          tc: 'text',   pc: 'muted'       },
+                { label: 'Works on your phone',        sub: 'No opening laptops for filing the form', tailio: 'check',       portal: 'cross',               tc: 'check',  pc: 'cross'       },
+                { label: 'Digital certificate',        sub: 'Always accessible on profile',      tailio: 'check',             portal: 'cross',               tc: 'check',  pc: 'cross'       },
+                { label: 'Renewal reminders',          sub: 'WhatsApp, SMS & email',             tailio: 'check',             portal: 'cross',               tc: 'check',  pc: 'cross'       },
+                { label: 'Vaccination tracker',        sub: 'Schedule, record, share with vets', tailio: 'check',             portal: 'cross',               tc: 'check',  pc: 'cross'       },
+                { label: 'Legal pet profile',          sub: 'Proof of ownership on record',      tailio: 'check',             portal: 'cross',               tc: 'check',  pc: 'cross'       },
+                { label: 'Registration cost',          sub: 'All-inclusive, no surprises',       tailio: '₹999',              portal: '₹100–500 + effort',   tc: 'bold',   pc: 'muted'       },
+                { label: 'If you wait, the fine is…',  sub: 'Municipal enforcement active now',  tailio: 'None',              portal: '₹10,000+',            tc: 'fraunces', pc: 'red'       },
+              ].map((row, i, arr) => (
+                <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: i < arr.length - 1 ? '1px rgba(44,26,14,0.10) solid' : 'none' }}>
+                  <div style={{ height: 74.75, padding: '18px 24px', borderRight: '1px rgba(44,26,14,0.10) solid', display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ width: 34, height: 34, background: '#F3EDE0', borderRadius: 9, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, flexShrink: 0 }} />
+                    <div>
+                      <div style={{ color: '#2C1A0E', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '20.25px' }}>{row.label}</div>
+                      <div style={{ color: '#A68660', fontSize: 11, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '16.5px' }}>{row.sub}</div>
+                    </div>
+                  </div>
+                  <div style={{ height: 74.75, padding: '18px 24px', background: 'rgba(232,96,10,0.04)', borderRight: '1px rgba(232,96,10,0.12) solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {row.tc === 'check' && (
+                      <div style={{ width: 28, height: 28, background: '#2C1A0E', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 13, height: 13, position: 'relative', overflow: 'hidden' }}>
+                          <div style={{ width: 9.29, height: 7.43, left: 1.86, top: 2.79, position: 'absolute', outline: '2.04px white solid', outlineOffset: -1.02 }} />
+                        </div>
+                      </div>
+                    )}
+                    {row.tc === 'text'     && <span style={{ color: '#2C1A0E', fontSize: 14, fontFamily: F.dmSans, fontWeight: 700, lineHeight: '21px' }}>{row.tailio}</span>}
+                    {row.tc === 'bold'     && <span style={{ color: '#2C1A0E', fontSize: 14, fontFamily: F.dmSans, fontWeight: 700, lineHeight: '21px' }}>{row.tailio}</span>}
+                    {row.tc === 'fraunces' && <span style={{ color: '#2C1A0E', fontSize: 16, fontFamily: F.fraunces, fontWeight: 900, lineHeight: '24px' }}>{row.tailio}</span>}
+                  </div>
+                  <div style={{ height: 74.75, padding: '18px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {row.pc === 'cross' && (
+                      <div style={{ width: 28, height: 28, borderRadius: 14, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
+                          <div style={{ width: 5.5, height: 5.5, left: 2.75, top: 2.75, position: 'absolute', outline: '1.83px #A68660 solid', outlineOffset: -0.92 }} />
+                        </div>
+                      </div>
+                    )}
+                    {row.pc === 'muted' && <span style={{ color: '#A68660', fontSize: 14, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '21px' }}>{row.portal}</span>}
+                    {row.pc === 'red'   && <span style={{ color: '#C04E06', fontSize: 16, fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '24px' }}>{row.portal}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          SECTION 5 — PRICING
+      ══════════════════════════════════════════════════════════════════ */}
+      <div style={{ background: '#2B1F14', width: '100%' }}>
+        <div style={{ maxWidth: 660, margin: '0 auto', padding: isMobile ? '60px 20px' : '80px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+
+          <div style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 6, paddingBottom: 6, background: 'rgba(212,82,26,0.22)', borderRadius: 100, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ color: '#F4A56A', fontSize: 12, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.2px' }}>One Price. Everything Included.</span>
+          </div>
+
+          <div style={{ paddingTop: 24, textAlign: 'center' }}>
+            <span style={{ color: '#F5F0E8', fontSize: fs(60, 48, 32), fontFamily: F.playfair, fontWeight: 900, lineHeight: '63px' }}>Done.<br /></span>
+            <span style={{ color: '#D4521A', fontSize: fs(60, 48, 32), fontFamily: F.playfair, fontStyle: 'italic', fontWeight: 900, lineHeight: '63px' }}>You're at the end<br />of the path.</span>
+          </div>
+
+          <div style={{ maxWidth: 460 }}>
+            <p style={{ textAlign: 'center', color: 'rgba(245,240,232,0.42)', fontSize: 16, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '27.2px', margin: 0 }}>
+              Sixty seconds from here to legally issued. Your certificate lands in your inbox — valid PAN India.
+            </p>
+          </div>
+
+          <div style={{ alignSelf: 'stretch', paddingTop: 60, paddingBottom: 40, paddingLeft: isMobile ? 24 : 46, paddingRight: isMobile ? 24 : 46, position: 'relative', background: 'rgba(255,255,255,0.04)', overflow: 'hidden', borderRadius: 24, outline: '1px rgba(212,82,26,0.28) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+
+            <div style={{ width: 200, height: 200, right: -20, top: -19.01, position: 'absolute', background: 'radial-gradient(ellipse 70.71% 70.71% at 50% 50%, rgba(212,82,26,0.14) 0%, rgba(212,82,26,0) 70%)', pointerEvents: 'none' }} />
+
+            <div style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 6, paddingBottom: 6, background: 'rgba(212,82,26,0.18)', borderRadius: 100, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ width: 9.17, height: 8.72, left: 0.92, top: 0.92, position: 'absolute', outline: '1.15px #F4A56A solid', outlineOffset: -0.57 }} />
+              </div>
+              <span style={{ color: '#F4A56A', fontSize: 12, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.96px' }}>Launch Offer — Save ₹1,000</span>
+            </div>
+
+            <div style={{ alignSelf: 'stretch', height: 98, position: 'relative' }}>
+              <span style={{ left: 204.75, top: 29.5, position: 'absolute', color: '#D4521A', fontSize: 38, fontFamily: F.playfair, fontWeight: 900, lineHeight: '38px' }}>₹</span>
+              <span style={{ left: 225.05, top: 20, position: 'absolute', color: '#F5F0E8', fontSize: 78, fontFamily: F.playfair, fontWeight: 900, lineHeight: '78px' }}>999</span>
+            </div>
+
+            <div style={{ alignSelf: 'stretch', paddingTop: 2, textAlign: 'center' }}>
+              <span style={{ color: 'rgba(245,240,232,0.28)', fontSize: 15, fontFamily: F.dmSans, fontWeight: 400, textDecoration: 'line-through' }}>Regular price ₹1,999</span>
+            </div>
+
+            <div style={{ alignSelf: 'stretch', textAlign: 'center' }}>
+              <span style={{ color: 'rgba(245,240,232,0.38)', fontSize: 13, fontFamily: F.dmSans, fontWeight: 400 }}>Per pet · Valid for 1 year · Inclusive of all taxes &amp; GST</span>
+            </div>
+
+            <div style={{ alignSelf: 'stretch', paddingTop: 28, paddingBottom: 32, display: 'flex', flexDirection: 'column' }}>
+              {[
+                'Municipal Filing — We handle MCD / Noida Authority / GMC paperwork end to end',
+                'Official Certificate — Govt issued, delivered within 24–72 hrs',
+                'Vaccination Tracker — Digital records + auto-reminders for every booster',
+                'Renewal Reminders — WhatsApp & email alerts before your annual expiry',
+                'Legal Pet Profile — Proof of ownership, stored and accessible anytime',
+              ].map((item, idx, arr) => (
+                <div key={idx} style={{ alignSelf: 'stretch', paddingTop: 10, paddingBottom: 10, borderBottom: idx < arr.length - 1 ? '1px rgba(255,255,255,0.04) solid' : 'none', display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 28, height: 28, background: 'rgba(212,82,26,0.14)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <div style={{ width: 13, height: 13, position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ width: 8.67, height: 5.96, left: 2.17, top: 3.25, position: 'absolute', outline: '1.35px #F4A56A solid', outlineOffset: -0.68 }} />
+                    </div>
+                  </div>
+                  <span style={{ color: 'rgba(245,240,232,0.62)', fontSize: 14, fontFamily: F.dmSans, fontWeight: 400 }}>{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <button style={{ alignSelf: 'stretch', padding: 20, background: '#D4521A', boxShadow: '0px 6px 0px #A83E10', borderRadius: 100, border: 'none', cursor: 'pointer' }}>
+              <span style={{ textAlign: 'center', color: 'white', fontSize: 18, fontFamily: F.dmSans, fontWeight: 700 }}>Register Your Pet — ₹999 →</span>
+            </button>
+
+            <div style={{ alignSelf: 'stretch', paddingTop: 12, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: 24, flexWrap: 'wrap' }}>
+              {['Secure payment', 'Legally valid', '24–72 hr approval'].map(badge => (
+                <div key={badge} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ width: 13, height: 13, position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ width: 10.83, height: 10.83, left: 1.08, top: 1.08, position: 'absolute', outline: '1.08px rgba(245,240,232,0.30) solid', outlineOffset: -0.54 }} />
+                  </div>
+                  <span style={{ color: 'rgba(245,240,232,0.30)', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400 }}>{badge}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          SECTION 6 — FINAL CTA
+      ══════════════════════════════════════════════════════════════════ */}
+      <div style={{ background: 'linear-gradient(164deg, #C04E06 0%, #E8600A 60%, #FF8C3A 100%)', width: '100%' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '60px 20px' : '80px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+
+          <div style={{ alignSelf: 'stretch', paddingTop: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <span style={{ textAlign: 'center', color: 'white', fontSize: fs(58, 44, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '62.64px' }}>
+              Upload-Free, <br />Delay-Free, <br />Always.
+            </span>
+          </div>
+
+          <div style={{ maxWidth: 520, paddingBottom: 0.5 }}>
+            <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.82)', fontSize: 16, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '26.4px', margin: 0 }}>
+              Join thousands of responsible pet parents across Delhi, Noida,<br />Ghaziabad &amp; Gurugram who are already compliant.
+            </p>
+          </div>
+
+          <div style={{ alignSelf: 'stretch', paddingTop: 20, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
+            <button style={{ height: 55, minHeight: 50, paddingLeft: 32, paddingRight: 32, paddingTop: 14, paddingBottom: 14, background: 'white', boxShadow: '0px 4px 16px rgba(0,0,0,0.15)', borderRadius: 9, outline: '2px rgba(255,255,255,0.30) solid', outlineOffset: -2, border: 'none', cursor: 'pointer' }}>
+              <span style={{ color: '#C04E06', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700, lineHeight: '22.5px' }}>Register Your Pet — ₹999 →</span>
+            </button>
+            <button style={{ height: 55, minHeight: 50, paddingLeft: 28, paddingRight: 28, paddingTop: 14, paddingBottom: 14, background: 'transparent', borderRadius: 9, outline: '1px rgba(255,255,255,0.40) solid', outlineOffset: -1, border: 'none', cursor: 'pointer' }}>
+              <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 500, lineHeight: '22.5px' }}>See how it works</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+{/* ══════════════════════════════════════
+          FOOTER
+      ══════════════════════════════════════ */}
+      <div style={{ background: '#1C0F07', width: '100%' }}>
+  <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px 0' : '60px 40px 0' }}>
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
+      gap: isMobile ? 32 : 40, 
+      paddingBottom: 32, 
+      borderBottom: '1px solid rgba(255,255,255,0.06)',
+      alignItems: 'flex-start'
+    }}>
+      {/* Brand Column */}
+      <div>
+        <div style={{ marginBottom: 16 }}>
+          <Image 
+            src="/images/tailio.png" 
+            alt="Tailio" 
+            width={200}
+            height={60}
+            style={{ objectFit: 'contain' }}
+          />
+        </div>
+        <p style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(12, 11, 10), lineHeight: '1.5', maxWidth: 220, margin: 0 }}>
+          Making pet registration simple, digital, and stress-free across Delhi NCR.
+        </p>
+      </div>
+      
+      {/* Platform Column */}
+      <div>
+        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Platform</span>
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
+            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Cities Column */}
+      <div>
+        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Cities</span>
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
+            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Company Column */}
+      <div>
+        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Company</span>
+        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
+            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    
+    {/* Copyright */}
+    <div style={{ textAlign: 'center', padding: '24px 0 32px' }}>
+      <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(11, 10, 9) }}>
+        © 2026 Tailio. All rights reserved.
+      </span>
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+  );
+}

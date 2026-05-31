@@ -282,12 +282,36 @@ export default function AboutPage() {
       alignItems: 'stretch'
     }}>
       {[
-        { title: 'Pet parents first', desc: 'Every feature, every word, every decision is made from the perspective of someone trying to do right by their pet. Complexity stays on our side.' },
-        { title: 'Radical simplicity', desc: "If it takes more than a minute, we've failed. We obsess over reducing friction — in our product, our communication, and our process." },
-        { title: 'Trust through transparency', desc: "No hidden fees, no confusing terms. We tell you exactly what we do, how much it costs, and what you'll get — before you pay a single rupee." },
-        { title: 'We love animals too', desc: "This isn't just a compliance tool. We genuinely care about animal welfare — every registered pet is a safer, healthier, more protected companion." },
-        { title: 'Building for scale', desc: "India has over 33 million pet dogs. We're not building for Delhi NCR — we're building the infrastructure for pet registration across the entire country." },
-        { title: 'Community accountability', desc: 'Registered pets mean accountable owners. We believe a safer city for animals is a safer city for everyone — and registration is where it starts.' },
+        { 
+          title: 'Pet parents first', 
+          desc: 'Every feature, every word, every decision is made from the perspective of someone trying to do right by their pet. Complexity stays on our side.',
+          icon: '/images/certificate-1.png'
+        },
+        { 
+          title: 'Radical simplicity', 
+          desc: "If it takes more than a minute, we've failed. We obsess over reducing friction — in our product, our communication, and our process.",
+          icon: '/images/id.png'
+        },
+        { 
+          title: 'Trust through transparency', 
+          desc: "No hidden fees, no confusing terms. We tell you exactly what we do, how much it costs, and what you'll get — before you pay a single rupee.",
+          icon: '/images/target.png'
+        },
+        { 
+          title: 'We love animals too', 
+          desc: "This isn't just a compliance tool. We genuinely care about animal welfare — every registered pet is a safer, healthier, more protected companion.",
+          icon: '/images/correct.png'
+        },
+        { 
+          title: 'Building for scale', 
+          desc: "India has over 33 million pet dogs. We're not building for Delhi NCR — we're building the infrastructure for pet registration across the entire country.",
+          icon: '/images/location.png'
+        },
+        { 
+          title: 'Community accountability', 
+          desc: 'Registered pets mean accountable owners. We believe a safer city for animals is a safer city for everyone — and registration is where it starts.',
+          icon: '/images/something.png'
+        },
       ].map((v) => (
         <div 
           key={v.title} 
@@ -304,7 +328,7 @@ export default function AboutPage() {
             transition: 'transform 0.2s ease, box-shadow 0.2s ease',
           }}
         >
-          {/* Icon Box - Perfectly centered and consistent size */}
+          {/* Icon Box with Image */}
           <div style={{ 
             width: 48, 
             height: 48, 
@@ -318,13 +342,13 @@ export default function AboutPage() {
             flexShrink: 0,
             marginBottom: 4
           }}>
-            <div style={{ 
-              width: 24, 
-              height: 24, 
-              background: 'rgba(192,78,6,0.12)', 
-              borderRadius: 6,
-              transition: 'all 0.2s ease'
-            }} />
+            <Image 
+              src={v.icon}
+              alt={v.title}
+              width={24}
+              height={24}
+              style={{ objectFit: 'contain' }}
+            />
           </div>
           
           {/* Title */}
@@ -412,35 +436,149 @@ export default function AboutPage() {
           </div>
 
           <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'), 
-            gap: 16 
-          }}>
-            {[
-              { badge: { text: 'Live now', bg: '#E6F6ED', outline: '#A8DDB8', color: '#1A6B3A' }, title: 'Pet Registration', desc: 'Delhi, Noida, Ghaziabad & Gurugram — official municipal filing in under 1 minute. Legally valid certificate delivered in 24–72 hours.' },
-              { badge: { text: 'Coming soon', bg: 'rgba(255,140,58,0.12)', outline: 'rgba(255,140,58,0.20)', color: '#FF8C3A' }, title: 'Vaccination at Doorstep', desc: 'Book a certified vet to vaccinate your pet at home. No clinic visits, no stress. All records logged automatically to your Tailio profile.' },
-              { badge: { text: 'Coming soon', bg: 'rgba(255,140,58,0.12)', outline: 'rgba(255,140,58,0.20)', color: '#FF8C3A' }, title: 'Pet Ecommerce', desc: "A curated shop for vet-approved food, accessories, and grooming products — personalised to your pet's breed, age, and health profile." },
-            ].map((s) => (
-              <div key={s.title} style={{ padding: '25px', background: 'rgba(255,255,255,0.05)', borderRadius: 18, outline: '1px rgba(255,255,255,0.08) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 16, minHeight: isMobile ? 'auto' : 234, boxSizing: 'border-box' }}>
-                <div style={{ width: 44, height: 44, background: 'rgba(255,140,58,0.10)', borderRadius: 9, outline: '1px rgba(255,140,58,0.20) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ width: 22, height: 22, background: 'rgba(255,140,58,0.3)', borderRadius: 3 }} />
-                </div>
-                <div style={{ display: 'inline-flex', alignSelf: 'flex-start', padding: '3px 9px', background: s.badge.bg, borderRadius: 100, outline: `1px ${s.badge.outline} solid`, outlineOffset: -1 }}>
-                  <span style={{ color: s.badge.color, fontSize: getResponsiveFontSize(9, 9, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', lineHeight: '13.5px', letterSpacing: '0.9px' }}>{s.badge.text}</span>
-                </div>
-                <div style={{ color: '#FAF6EF', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '22.5px' }}>{s.title}</div>
-                <div style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '20px' }}>{s.desc}</div>
-              </div>
-            ))}
-          </div>
+  display: 'grid', 
+  gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)'), 
+  gap: 16 
+}}>
+  {[
+    { 
+      badge: { text: 'Live now', bg: '#E6F6ED', outline: '#A8DDB8', color: '#1A6B3A' }, 
+      title: 'Pet Registration', 
+      desc: 'Delhi, Noida, Ghaziabad & Gurugram — official municipal filing in under 1 minute. Legally valid certificate delivered in 24–72 hours.',
+      icon: '/images/certificate-1.png'
+    },
+    { 
+      badge: { text: 'Coming soon', bg: 'rgba(255,140,58,0.12)', outline: 'rgba(255,140,58,0.20)', color: '#FF8C3A' }, 
+      title: 'Vaccination at Doorstep', 
+      desc: 'Book a certified vet to vaccinate your pet at home. No clinic visits, no stress. All records logged automatically to your Tailio profile.',
+      icon: '/images/vaccine.png'
+    },
+    { 
+      badge: { text: 'Coming soon', bg: 'rgba(255,140,58,0.12)', outline: 'rgba(255,140,58,0.20)', color: '#FF8C3A' }, 
+      title: 'Pet Ecommerce', 
+      desc: "A curated shop for vet-approved food, accessories, and grooming products — personalised to your pet's breed, age, and health profile.",
+      icon: '/images/widget.png'
+    },
+  ].map((s) => (
+    <div 
+      key={s.title} 
+      style={{ 
+        padding: '25px', 
+        background: 'rgba(255,255,255,0.05)', 
+        borderRadius: 18, 
+        outline: '1px rgba(255,255,255,0.08) solid', 
+        outlineOffset: -1, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: 16, 
+        minHeight: isMobile ? 'auto' : 234, 
+        boxSizing: 'border-box',
+        transition: 'transform 0.2s ease'
+      }}
+    >
+      {/* Icon with Image */}
+      <div style={{ 
+        width: 44, 
+        height: 44, 
+        background: 'rgba(255,140,58,0.10)', 
+        borderRadius: 9, 
+        outline: '1px rgba(255,140,58,0.20) solid', 
+        outlineOffset: -1, 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center' 
+      }}>
+        <Image 
+          src={s.icon}
+          alt={s.title}
+          width={24}
+          height={24}
+          style={{ objectFit: 'contain' }}
+        />
+      </div>
+      
+      {/* Badge - Consistent styling for both Live now and Coming soon */}
+      <div style={{ 
+        display: 'inline-flex', 
+        alignSelf: 'flex-start', 
+        padding: '4px 12px', 
+        background: s.badge.bg, 
+        borderRadius: 100, 
+        outline: `1px ${s.badge.outline} solid`, 
+        outlineOffset: -1 
+      }}>
+        <span style={{ 
+          color: s.badge.color, 
+          fontSize: getResponsiveFontSize(10, 9, 8), 
+          fontFamily: F.dmMono, 
+          fontWeight: 500, 
+          textTransform: 'uppercase', 
+          lineHeight: '14px', 
+          letterSpacing: '0.9px' 
+        }}>
+          {s.badge.text}
+        </span>
+      </div>
+      
+      {/* Title */}
+      <div style={{ 
+        color: '#FAF6EF', 
+        fontSize: getResponsiveFontSize(16, 15, 14), 
+        fontFamily: F.dmSans, 
+        fontWeight: 600, 
+        lineHeight: '22.5px' 
+      }}>
+        {s.title}
+      </div>
+      
+      {/* Description */}
+      <div style={{ 
+        color: 'rgba(250,246,239,0.45)', 
+        fontSize: getResponsiveFontSize(12.5, 12, 11), 
+        fontFamily: F.dmSans, 
+        fontWeight: 400, 
+        lineHeight: '20px' 
+      }}>
+        {s.desc}
+      </div>
+    </div>
+  ))}
+</div>
         </div>
       </div>
 
       {/* ── CTA ───────────────────────────────────────────────────────────── */}
       <div style={{ background: 'linear-gradient(166deg, #C04E06 0%, #E8600A 60%, #FF8C3A 100%)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ maxWidth: 640, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-          <Image src="/images/about-paw-icon.png" alt="Paw print" width={isMobile ? 50 : 70} height={isMobile ? 50 : 70} />
-          <div style={{ textAlign: 'center' }}>
+{/* White Paw SVG - 3 fingers/toes */}
+    <div style={{ 
+      width: isMobile ? 40 : 52, 
+      height: isMobile ? 60 : 78, 
+      margin: '0 auto 15px', 
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <svg 
+        width={isMobile ? 40 : 52} 
+        height={isMobile ? 60 : 78} 
+        viewBox="0 0 100 100" 
+        fill="none" 
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Main paw pad (center) */}
+        <ellipse cx="50" cy="65" rx="22" ry="18" fill="white" />
+        
+        {/* Left toe pad */}
+        <ellipse cx="28" cy="38" rx="11" ry="13" fill="white" transform="rotate(-15, 28, 38)" />
+        
+        {/* Center toe pad */}
+        <ellipse cx="50" cy="32" rx="11" ry="13" fill="white" />
+        
+        {/* Right toe pad */}
+        <ellipse cx="72" cy="38" rx="11" ry="13" fill="white" transform="rotate(15, 72, 38)" />
+      </svg>
+    </div>          <div style={{ textAlign: 'center' }}>
             <span style={{ color: 'white', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2 }}>Your pet is loved, now </span>
             <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: 1.2 }}>make it legal</span>
             <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2 }}>.</span>
@@ -460,42 +598,74 @@ export default function AboutPage() {
       </div>
 
       {/* ── FOOTER ────────────────────────────────────────────────────────── */}
-      <div style={{ background: '#1C0F07', width: '100%', boxSizing: 'border-box' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px 0' : '64px 40px 0', boxSizing: 'border-box' }}>
+      <div style={{ background: '#1C0F07', width: '100%' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px 0' : '60px 40px 0' }}>
           <div style={{ 
             display: 'grid', 
             gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
-            gap: isMobile ? 32 : 48, 
-            paddingBottom: 40, 
-            borderBottom: '1px rgba(255,255,255,0.06) solid' 
+            gap: isMobile ? 32 : 40, 
+            paddingBottom: 32, 
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            alignItems: 'flex-start'
           }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <Image src="/images/tailio-logo-light.png" alt="Tailio" width={120} height={40} style={{ height: 40, width: 'auto', objectFit: 'contain', alignSelf: 'flex-start' }} />
-              <p style={{ margin: 0, color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '21.45px', maxWidth: 220 }}>
+            {/* Brand Column */}
+            <div>
+              <div style={{ marginBottom: 16 }}>
+                <Image 
+                  src="/images/tailio.png" 
+                  alt="Tailio" 
+                  width={200}
+                  height={60}
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+              <p style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(12, 11, 10), lineHeight: '1.5', maxWidth: 220, margin: 0 }}>
                 Making pet registration simple, digital, and stress-free across Delhi NCR.
               </p>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 10, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.4px' }}>Platform</span>
-              {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
-                <Link key={item} href="#" style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', textDecoration: 'none' }}>{item}</Link>
-              ))}
+            
+            {/* Platform Column */}
+            <div>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Platform</span>
+              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
+                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 10, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.4px' }}>Cities</span>
-              {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
-                <Link key={item} href="#" style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', textDecoration: 'none' }}>{item}</Link>
-              ))}
+            
+            {/* Cities Column */}
+            <div>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Cities</span>
+              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
+                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 10, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.4px' }}>Company</span>
-              {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
-                <Link key={item} href="#" style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px', textDecoration: 'none' }}>{item}</Link>
-              ))}
+            
+            {/* Company Column */}
+            <div>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Company</span>
+              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
+                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          <div style={{ padding: '24px 0 32px', display: 'flex', justifyContent: 'center' }}>
-            <span style={{ color: 'rgba(250,246,239,0.20)', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '18px' }}>© 2026 Tailio. All rights reserved.</span>
+          
+          {/* Copyright */}
+          <div style={{ textAlign: 'center', padding: '24px 0 32px' }}>
+            <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(11, 10, 9) }}>
+              © 2026 Tailio. All rights reserved.
+            </span>
           </div>
         </div>
       </div>

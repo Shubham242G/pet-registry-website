@@ -9,12 +9,11 @@ import RegisterModal from './RegisterModal';
 import LoginModal from './LoginModal';
 
 const DM_SANS = "'DM Sans', sans-serif";
-const ARCHIVO_BLACK = "'Archivo Black', sans-serif";
 
 const NAV_LINKS = [
   { label: 'About Us',      href: '/about-us'    },
   { label: 'Why Register?', href: '/why-register' },
-  { label: 'Why Tailio?',   href: '/#whyTailio', scrollId: 'whyTailio' },
+  { label: 'Why Tailio?',   href: '/why-tailio' },
   { label: 'How it Works',  href: '/how-it-works' },
 ];
 
@@ -28,17 +27,13 @@ export default function Navbar() {
   const [showRegister, setShowRegister] = useState(false);
   const [isMounted,    setIsMounted]    = useState(false);
   const [displayName,  setDisplayName]  = useState('');
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile,     setIsMobile]     = useState(false);
 
   const { user, logout, isAuthenticated, loading } = useAuth();
 
-  useEffect(() => { 
+  useEffect(() => {
     setIsMounted(true);
-    
-    // Check if mobile on mount and on resize
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -73,7 +68,7 @@ export default function Navbar() {
   };
 
   const handleDashboardClick = () => {
-    router.push('/pages/dashboard');
+    router.push('/dashboard');
     setMenuOpen(false);
   };
 
@@ -87,7 +82,7 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
-  const isDashboardPage = pathname?.startsWith('/pages/dashboard');
+  const isDashboardPage = pathname?.startsWith('/dashboard');
   if (!isMounted || loading) return null;
   if (isDashboardPage)       return null;
 
@@ -131,18 +126,18 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* DESKTOP NAV LINKS - Hide on mobile */}
+          {/* DESKTOP NAV LINKS */}
           {!isMobile && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={link.scrollId ? (e) => handleScrollToSection(e as any, link.scrollId!) : undefined}
+                  onClick={undefined}
                   style={{
                     color: '#7A5C40',
                     fontSize: 14,
-                    fontFamily: ARCHIVO_BLACK,
+                    fontFamily: DM_SANS,  /* ← changed from Archivo Black */
                     fontWeight: 500,
                     lineHeight: '21px',
                     textDecoration: 'none',
@@ -157,17 +152,15 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* RIGHT SIDE - Auth Buttons */}
+          {/* RIGHT SIDE */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuthenticated ? (
               <>
-                {/* Desktop auth buttons - hide on mobile */}
                 {!isMobile && (
                   <>
                     <span style={{ color: '#7A5C40', fontSize: 14, fontFamily: DM_SANS }}>
                       Welcome, {displayName}
                     </span>
-                    
                     <button
                       onClick={handleDashboardClick}
                       style={{
@@ -188,7 +181,6 @@ export default function Navbar() {
                     >
                       Dashboard
                     </button>
-                    
                     <button
                       onClick={handleLogout}
                       style={{
@@ -210,7 +202,6 @@ export default function Navbar() {
                 )}
               </>
             ) : (
-              /* Desktop register button - hide on mobile */
               !isMobile && (
                 <button
                   onClick={() => setShowRegister(true)}
@@ -235,7 +226,7 @@ export default function Navbar() {
               )
             )}
 
-            {/* HAMBURGER MENU BUTTON - Only visible on mobile */}
+            {/* HAMBURGER — mobile only */}
             {isMobile && (
               <button
                 type="button"
@@ -257,29 +248,21 @@ export default function Navbar() {
                 }}
               >
                 <span style={{
-                  display: 'block',
-                  width: 18,
-                  height: 2,
-                  background: '#2C1A0E',
-                  borderRadius: 2,
+                  display: 'block', width: 18, height: 2,
+                  background: '#2C1A0E', borderRadius: 2,
                   transition: 'transform 0.22s ease, opacity 0.22s ease',
                   transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
                 }} />
                 <span style={{
-                  display: 'block',
-                  height: 2,
-                  background: '#2C1A0E',
-                  borderRadius: 2,
+                  display: 'block', height: 2,
+                  background: '#2C1A0E', borderRadius: 2,
                   transition: 'opacity 0.22s ease, width 0.22s ease',
                   opacity: menuOpen ? 0 : 1,
                   width: menuOpen ? 0 : 18,
                 }} />
                 <span style={{
-                  display: 'block',
-                  width: 18,
-                  height: 2,
-                  background: '#2C1A0E',
-                  borderRadius: 2,
+                  display: 'block', width: 18, height: 2,
+                  background: '#2C1A0E', borderRadius: 2,
                   transition: 'transform 0.22s ease, opacity 0.22s ease',
                   transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
                 }} />
@@ -288,29 +271,23 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* MOBILE MENU - Only shown on mobile when open */}
+        {/* MOBILE MENU */}
         {isMobile && menuOpen && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 68,
-              left: 0,
-              right: 0,
-              background: '#FFFCF8',
-              borderTop: '1px solid rgba(44,26,14,0.10)',
-              maxHeight: 'calc(100vh - 68px)',
-              overflowY: 'auto',
-              zIndex: 101,
-            }}
-          >
+          <div style={{
+            position: 'absolute',
+            top: 68, left: 0, right: 0,
+            background: '#FFFCF8',
+            borderTop: '1px solid rgba(44,26,14,0.10)',
+            maxHeight: 'calc(100vh - 68px)',
+            overflowY: 'auto',
+            zIndex: 101,
+          }}>
             <ul style={{ listStyle: 'none', margin: 0, padding: '12px 20px 4px', display: 'flex', flexDirection: 'column', gap: 2 }}>
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    onClick={link.scrollId
-                      ? (e) => handleScrollToSection(e as any, link.scrollId!)
-                      : () => setMenuOpen(false)}
+                    onClick={() => setMenuOpen(false)}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -320,7 +297,7 @@ export default function Navbar() {
                       borderBottom: '1px solid rgba(44,26,14,0.07)',
                       color: '#7A5C40',
                       fontSize: 15,
-                      fontFamily: ARCHIVO_BLACK,
+                      fontFamily: DM_SANS,  /* ← changed from Archivo Black */
                       fontWeight: 500,
                       textDecoration: 'none',
                     }}
@@ -340,17 +317,12 @@ export default function Navbar() {
                   <button
                     onClick={handleDashboardClick}
                     style={{
-                      width: '100%',
-                      padding: '14px 20px',
+                      width: '100%', padding: '14px 20px',
                       background: '#E8600A',
                       boxShadow: '0px 2px 0px #C04E06',
                       border: '1px solid #C04E06',
-                      borderRadius: 9,
-                      color: 'white',
-                      fontSize: 15,
-                      fontFamily: DM_SANS,
-                      fontWeight: 600,
-                      cursor: 'pointer',
+                      borderRadius: 9, color: 'white',
+                      fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
                     }}
                   >
                     Dashboard
@@ -358,16 +330,11 @@ export default function Navbar() {
                   <button
                     onClick={handleLogout}
                     style={{
-                      width: '100%',
-                      padding: '14px 20px',
+                      width: '100%', padding: '14px 20px',
                       background: '#ef4444',
                       border: '1px solid #dc2626',
-                      borderRadius: 9,
-                      color: 'white',
-                      fontSize: 15,
-                      fontFamily: DM_SANS,
-                      fontWeight: 600,
-                      cursor: 'pointer',
+                      borderRadius: 9, color: 'white',
+                      fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
                     }}
                   >
                     Logout
@@ -378,17 +345,12 @@ export default function Navbar() {
                   <button
                     onClick={() => { setShowRegister(true); setMenuOpen(false); }}
                     style={{
-                      width: '100%',
-                      padding: '14px 20px',
+                      width: '100%', padding: '14px 20px',
                       background: '#E8600A',
                       boxShadow: '0px 2px 0px #C04E06',
                       border: '1px solid #C04E06',
-                      borderRadius: 9,
-                      color: 'white',
-                      fontSize: 15,
-                      fontFamily: DM_SANS,
-                      fontWeight: 600,
-                      cursor: 'pointer',
+                      borderRadius: 9, color: 'white',
+                      fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
                     }}
                   >
                     Register Your Pet
@@ -396,16 +358,11 @@ export default function Navbar() {
                   <button
                     onClick={() => { setShowLogin(true); setMenuOpen(false); }}
                     style={{
-                      width: '100%',
-                      padding: '14px 20px',
+                      width: '100%', padding: '14px 20px',
                       background: 'transparent',
                       border: '1px solid #E8600A',
-                      borderRadius: 9,
-                      color: '#E8600A',
-                      fontSize: 15,
-                      fontFamily: DM_SANS,
-                      fontWeight: 600,
-                      cursor: 'pointer',
+                      borderRadius: 9, color: '#E8600A',
+                      fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
                     }}
                   >
                     Login
@@ -417,13 +374,12 @@ export default function Navbar() {
         )}
       </div>
 
-      {/* Backdrop for mobile menu */}
+      {/* Backdrop */}
       {isMobile && menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
           style={{
-            position: 'fixed',
-            inset: 0,
+            position: 'fixed', inset: 0,
             background: 'rgba(44,26,14,0.35)',
             zIndex: 99,
             backdropFilter: 'blur(2px)',
@@ -435,19 +391,12 @@ export default function Navbar() {
       <RegisterModal
         isOpen={showRegister}
         onClose={() => setShowRegister(false)}
-        onSwitchToLogin={() => { 
-          setShowRegister(false); 
-          setShowLogin(true); 
-        }}
+        onSwitchToLogin={() => { setShowRegister(false); setShowLogin(true); }}
       />
-      
       <LoginModal
         isOpen={showLogin}
         onClose={() => setShowLogin(false)}
-        onSwitchToRegister={() => { 
-          setShowLogin(false); 
-          setShowRegister(true); 
-        }}
+        onSwitchToRegister={() => { setShowLogin(false); setShowRegister(true); }}
       />
     </>
   );

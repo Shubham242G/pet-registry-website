@@ -18,7 +18,8 @@ import {
   FileText,
   Eye,
   FileCheck,
-  Clock
+  Clock,
+  Award
 } from "lucide-react";
 import AddPetModal from "../component/AddPetModal";
 import RegistrationForm from "../component/RegistrationForm";
@@ -66,7 +67,6 @@ export default function Dashboard() {
     petName: ''
   });
 
-  // Validate session
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push("/");
@@ -80,83 +80,75 @@ export default function Dashboard() {
   }, [token]);
 
   const loadPets = useCallback(async () => {
-  try {
-    setLoading(true);
-    setError("");
-    
-    // Add a timestamp to prevent caching
-    const data = await apiFetch("/pets?t=" + Date.now(), "GET", null, token!);
-    
-    const petsWithStatus = await Promise.all((Array.isArray(data) ? data : []).map(async (pet: any) => {
-      try {
-        const status = await apiFetch(`/registration/${pet._id}/status?t=${Date.now()}`, "GET", null, token!);
-        return {
-          ...pet,
-          uploadedDocumentsCount: status?.uploadedDocumentsCount || 0,
-          hasAllDocuments: status?.hasAllDocuments || false,
-          registrationTriggered: status?.registrationTriggered || false,
-          registrationStage: pet.registrationStage || 0,
-          registrationStatus: pet.registrationStatus || 'not_started'
-        };
-      } catch {
-        return {
-          ...pet,
-          uploadedDocumentsCount: 0,
-          hasAllDocuments: false,
-          registrationTriggered: false,
-          registrationStage: pet.registrationStage || 0,
-          registrationStatus: pet.registrationStatus || 'not_started'
-        };
+    try {
+      setLoading(true);
+      setError("");
+      
+      const data = await apiFetch("/pets?t=" + Date.now(), "GET", null, token!);
+      
+      const petsWithStatus = await Promise.all((Array.isArray(data) ? data : []).map(async (pet: any) => {
+        try {
+          const status = await apiFetch(`/registration/${pet._id}/status?t=${Date.now()}`, "GET", null, token!);
+          return {
+            ...pet,
+            uploadedDocumentsCount: status?.uploadedDocumentsCount || 0,
+            hasAllDocuments: status?.hasAllDocuments || false,
+            registrationTriggered: status?.registrationTriggered || false,
+            registrationStage: pet.registrationStage || 0,
+            registrationStatus: pet.registrationStatus || 'not_started'
+          };
+        } catch {
+          return {
+            ...pet,
+            uploadedDocumentsCount: 0,
+            hasAllDocuments: false,
+            registrationTriggered: false,
+            registrationStage: pet.registrationStage || 0,
+            registrationStatus: pet.registrationStatus || 'not_started'
+          };
+        }
+      }));
+      
+      setPets(petsWithStatus);
+      if (petsWithStatus.length > 0 && !selectedPet) {
+        setSelectedPet(petsWithStatus[0]);
+      } else if (selectedPet && petsWithStatus.length > 0) {
+        const updatedSelected = petsWithStatus.find(p => p._id === selectedPet._id);
+        if (updatedSelected) {
+          setSelectedPet(updatedSelected);
+        }
       }
-    }));
-    
-    setPets(petsWithStatus);
-    if (petsWithStatus.length > 0 && !selectedPet) {
-      setSelectedPet(petsWithStatus[0]);
-    } else if (selectedPet && petsWithStatus.length > 0) {
-      const updatedSelected = petsWithStatus.find(p => p._id === selectedPet._id);
-      if (updatedSelected) {
-        setSelectedPet(updatedSelected);
+    } catch (error) {
+      console.error("Error loading pets:", error);
+      setError("Failed to load pets. Please try again.");
+      if (error instanceof Error && error.message === "Session expired") {
+        logout();
+        router.push('/');
       }
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Error loading pets:", error);
-    setError("Failed to load pets. Please try again.");
-    if (error instanceof Error && error.message === "Session expired") {
-      logout();
-      router.push('/');
-    }
-  } finally {
-    setLoading(false);
-  }
-}, [token, selectedPet, logout, router]);
+  }, [token, selectedPet, logout, router]);
 
   const handleDeletePet = async (petId: string) => {
-  try {
-    setLoading(true);
-    await apiFetch(`/pets/${petId}`, "DELETE", null, token!);
-    
-    // Remove the deleted pet from pets array
-    const updatedPets = pets.filter(pet => pet._id !== petId);
-    setPets(updatedPets);
-    
-    // If no pets left, clear selected pet
-    if (updatedPets.length === 0) {
-      setSelectedPet(null);
-    } 
-    // If the deleted pet was selected, select the first available pet
-    else if (selectedPet?._id === petId) {
-      setSelectedPet(updatedPets[0]);
+    try {
+      setLoading(true);
+      await apiFetch(`/pets/${petId}`, "DELETE", null, token!);
+      const updatedPets = pets.filter(pet => pet._id !== petId);
+      setPets(updatedPets);
+      if (updatedPets.length === 0) {
+        setSelectedPet(null);
+      } else if (selectedPet?._id === petId) {
+        setSelectedPet(updatedPets[0]);
+      }
+      setShowDeleteConfirm({ show: false, petId: '', petName: '' });
+    } catch (error) {
+      console.error("Error deleting pet:", error);
+      setError("Failed to delete pet");
+    } finally {
+      setLoading(false);
     }
-    
-    setShowDeleteConfirm({ show: false, petId: '', petName: '' });
-  } catch (error) {
-    console.error("Error deleting pet:", error);
-    setError("Failed to delete pet");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleViewRegistration = async (pet: Pet) => {
     try {
@@ -218,10 +210,10 @@ export default function Dashboard() {
   };
 
   const handlePetAdded = async () => {
-  await loadPets();
-  setIsModalOpen(false);
-  setEditingPet(null);
-};
+    await loadPets();
+    setIsModalOpen(false);
+    setEditingPet(null);
+  };
 
   const getFormattedAge = (pet: Pet) => {
     try {
@@ -248,25 +240,27 @@ export default function Dashboard() {
 
   const getSpeciesIcon = (species: string) => {
     switch(species?.toLowerCase()) {
-      case 'dog': return <Dog className="w-6 h-6 md:w-8 md:h-8" />;
-      case 'cat': return <Cat className="w-6 h-6 md:w-8 md:h-8" />;
-      case 'bird': return <Bird className="w-6 h-6 md:w-8 md:h-8" />;
+      case 'dog':    return <Dog    className="w-6 h-6 md:w-8 md:h-8" />;
+      case 'cat':    return <Cat    className="w-6 h-6 md:w-8 md:h-8" />;
+      case 'bird':   return <Bird   className="w-6 h-6 md:w-8 md:h-8" />;
       case 'rabbit': return <Rabbit className="w-6 h-6 md:w-8 md:h-8" />;
-      default: return <PawPrint className="w-6 h-6 md:w-8 md:h-8" />;
+      default:       return <PawPrint className="w-6 h-6 md:w-8 md:h-8" />;
     }
   };
 
+  // ─── Stage label ──────────────────────────────────────────────────────────
   const getStageLabel = (stage: number) => {
     switch(stage) {
       case 0: return 'Not Started';
       case 1: return 'Documents Ready';
-      case 2: return 'Form Submitted';
-      case 3: return 'Processing';
-      case 4: return 'Complete';
+      case 2: return 'Submitted';
+      case 3: return 'Awaiting License';
+      case 4: return 'Registered ✓';
       default: return 'Unknown';
     }
   };
 
+  // ─── Stage badge color ────────────────────────────────────────────────────
   const getStageColor = (stage: number) => {
     switch(stage) {
       case 0: return 'bg-gray-100 text-gray-600';
@@ -286,9 +280,7 @@ export default function Dashboard() {
     );
   }
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
   const currentPet = selectedPet;
 
@@ -298,10 +290,10 @@ export default function Dashboard() {
       <div className="hidden md:block">
         <Sidebar />
       </div>
-      
+
       {/* Main Content */}
       <div className="md:pl-64">
-        
+
         {/* Header */}
         <div className="bg-white border-b border-gray-200 px-4 md:px-8 py-4 md:py-6">
           <h1 className="text-xl md:text-2xl font-bold text-gray-900">My Dashboard</h1>
@@ -322,10 +314,7 @@ export default function Dashboard() {
               <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">No pets yet</h3>
               <p className="text-sm md:text-base text-gray-500 mb-6">Add your first pet to get started</p>
               <button
-                onClick={() => {
-                  setEditingPet(null);
-                  setIsModalOpen(true);
-                }}
+                onClick={() => { setEditingPet(null); setIsModalOpen(true); }}
                 className="bg-orange-500 hover:bg-orange-600 text-white px-5 md:px-6 py-2 md:py-3 rounded-xl font-semibold text-sm md:text-base"
               >
                 Add Your First Pet
@@ -333,13 +322,12 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="max-w-6xl mx-auto">
-              
               <div className="flex flex-col lg:flex-row gap-6">
-                
-                {/* Left Column - Main Pet Info */}
+
+                {/* ── LEFT COLUMN ── */}
                 <div className="lg:col-span-2 space-y-6 w-full">
-                  
-                  {/* Pet Selector */}
+
+                  {/* Pet selector tabs */}
                   <div className="flex space-x-3 overflow-x-auto pb-2">
                     {pets.map((pet) => (
                       <button
@@ -352,25 +340,16 @@ export default function Dashboard() {
                         }`}
                       >
                         {pet.profilePicture ? (
-                          <img 
-                            src={pet.profilePicture} 
-                            alt={pet.name} 
-                            className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover"
-                          />
+                          <img src={pet.profilePicture} alt={pet.name} className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover" />
                         ) : (
                           <PawPrint className="w-3 h-3 md:w-4 md:h-4" />
                         )}
                         <span>{pet.name}</span>
-                        {pet.registrationStage === 4 && (
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                        )}
+                        {pet.registrationStage === 4 && <CheckCircle className="w-3 h-3 text-green-300" />}
                       </button>
                     ))}
                     <button
-                      onClick={() => {
-                        setEditingPet(null);
-                        setIsModalOpen(true);
-                      }}
+                      onClick={() => { setEditingPet(null); setIsModalOpen(true); }}
                       className="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center space-x-1 flex-shrink-0"
                     >
                       <Plus className="w-3 h-3 md:w-4 md:h-4" />
@@ -378,18 +357,14 @@ export default function Dashboard() {
                     </button>
                   </div>
 
-                  {/* Pet Card */}
+                  {/* ── PET CARD ── */}
                   {currentPet && (
                     <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-6">
                       <div className="flex flex-col sm:flex-row items-start justify-between mb-6 gap-4">
                         <div className="flex items-center space-x-4">
                           <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
                             {currentPet.profilePicture ? (
-                              <img 
-                                src={currentPet.profilePicture} 
-                                alt={currentPet.name} 
-                                className="w-full h-full object-cover"
-                              />
+                              <img src={currentPet.profilePicture} alt={currentPet.name} className="w-full h-full object-cover" />
                             ) : (
                               getSpeciesIcon(currentPet.species)
                             )}
@@ -417,7 +392,7 @@ export default function Dashboard() {
                         </div>
                       </div>
 
-                      {/* Pet Details Grid */}
+                      {/* Pet details grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 pt-4 border-t border-gray-100">
                         <div className="space-y-3 md:space-y-4">
                           <div>
@@ -447,8 +422,12 @@ export default function Dashboard() {
                         </div>
                       </div>
 
-                      {/* Action Buttons */}
-                      <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t border-gray-100">
+                      {/* ══════════════════════════════════════
+                          ACTION BUTTONS — fixed stage logic
+                      ══════════════════════════════════════ */}
+                      <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t border-gray-100 flex-wrap">
+
+                        {/* Edit pet info — always visible */}
                         <button
                           onClick={() => handleEditPet(currentPet)}
                           className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2"
@@ -456,7 +435,9 @@ export default function Dashboard() {
                           <Edit className="w-4 h-4" />
                           <span>Edit Pet Info</span>
                         </button>
-                        {currentPet.registrationStage === 4 ? (
+
+                        {/* Stage 4: fully registered */}
+                        {currentPet.registrationStage === 4 && (
                           <>
                             <button
                               onClick={() => handleViewRegistration(currentPet)}
@@ -473,15 +454,42 @@ export default function Dashboard() {
                               <span>Edit Registration</span>
                             </button>
                           </>
-                        ) : (
+                        )}
+
+                        {/* Stage 2 or 3: already submitted — no action button, just status */}
+                        {(currentPet.registrationStage === 2 || currentPet.registrationStage === 3) && (
+                          <div className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
+                            currentPet.registrationStage === 3
+                              ? 'bg-purple-50 text-purple-700'
+                              : 'bg-orange-50 text-orange-700'
+                          }`}>
+                            {currentPet.registrationStage === 3
+                              ? <Award className="w-4 h-4" />
+                              : <Clock className="w-4 h-4" />}
+                            <span>
+                              {currentPet.registrationStage === 2
+                                ? "Under Review — we'll update you soon"
+                                : "License being prepared"}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Stage 0 or 1: not yet submitted */}
+                        {(currentPet.registrationStage === 0 || currentPet.registrationStage === 1) && (
                           <button
                             onClick={() => handleRegisterPet(currentPet)}
                             className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2"
                           >
                             <FileText className="w-4 h-4" />
-                            <span>Complete Registration</span>
+                            <span>
+                              {currentPet.registrationStage === 1
+                                ? 'Upload Docs & Pay'
+                                : 'Complete Registration'}
+                            </span>
                           </button>
                         )}
+
+                        {/* Delete — always visible */}
                         <button
                           onClick={() => setShowDeleteConfirm({ show: true, petId: currentPet._id, petName: currentPet.name })}
                           className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2"
@@ -493,44 +501,78 @@ export default function Dashboard() {
                     </div>
                   )}
 
-                  {/* Registration Progress - Fixed */}
+                  {/* ══════════════════════════════════════
+                      REGISTRATION PROGRESS CARD
+                  ══════════════════════════════════════ */}
                   {currentPet && (
                     <div className="bg-white rounded-xl border border-gray-200 p-5">
-                      <h3 className="font-semibold text-gray-900 mb-3">Registration Progress</h3>
+                      <h3 className="font-semibold text-gray-900 mb-4">Registration Progress</h3>
                       <div className="space-y-4">
+
+                        {/* Documents progress bar */}
                         <div>
                           <div className="flex justify-between text-sm mb-1">
                             <span className="text-gray-600">Documents Uploaded</span>
                             <span className="font-medium text-gray-900">{currentPet.uploadedDocumentsCount || 0}/4</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
+                            <div
                               className="bg-orange-500 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${((currentPet.uploadedDocumentsCount || 0) / 4) * 100}%` }}
                             />
                           </div>
                         </div>
-                        
+
+                        {/* Stage progress bar */}
                         <div>
                           <div className="flex justify-between text-sm mb-1">
-                            <span className="text-gray-600">Registration Status</span>
-                            <span className={`font-medium ${getStageColor(currentPet.registrationStage || 0)}`}>
+                            <span className="text-gray-600">Registration Stage</span>
+                            <span className={`font-medium text-xs px-2 py-0.5 rounded-full ${getStageColor(currentPet.registrationStage || 0)}`}>
                               {getStageLabel(currentPet.registrationStage || 0)}
                             </span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-orange-500 h-2 rounded-full transition-all duration-500"
+                            <div
+                              className={`h-2 rounded-full transition-all duration-500 ${
+                                currentPet.registrationStage === 4 ? 'bg-green-500' :
+                                currentPet.registrationStage === 3 ? 'bg-purple-500' :
+                                currentPet.registrationStage === 2 ? 'bg-orange-500' :
+                                currentPet.registrationStage === 1 ? 'bg-blue-500' : 'bg-gray-400'
+                              }`}
                               style={{ width: `${((currentPet.registrationStage || 0) / 4) * 100}%` }}
                             />
                           </div>
                         </div>
-                        
+
+                        {/* ── Stage-specific hint message ── */}
+                        {currentPet.registrationStage === 0 && (
+                          <div className="mt-2 p-3 bg-orange-50 border border-orange-100 rounded-lg">
+                            <p className="text-sm text-orange-700">⚠️ Upload your documents to start registration.</p>
+                          </div>
+                        )}
                         {currentPet.registrationStage === 1 && currentPet.hasAllDocuments && !currentPet.registrationTriggered && (
-                          <div className="mt-3 p-3 bg-green-50 rounded-lg">
-                            <p className="text-sm text-green-700">
-                              ✅ All documents uploaded! Click "Complete Registration" to proceed with payment and submission.
-                            </p>
+                          <div className="mt-2 p-3 bg-green-50 border border-green-100 rounded-lg">
+                            <p className="text-sm text-green-700">✅ All documents uploaded! Click "Upload Docs & Pay" to submit your registration.</p>
+                          </div>
+                        )}
+                        {currentPet.registrationStage === 1 && !currentPet.hasAllDocuments && (
+                          <div className="mt-2 p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                            <p className="text-sm text-blue-700">📄 {currentPet.uploadedDocumentsCount || 0}/4 documents uploaded. Upload remaining documents to proceed.</p>
+                          </div>
+                        )}
+                        {currentPet.registrationStage === 2 && (
+                          <div className="mt-2 p-3 bg-orange-50 border border-orange-100 rounded-lg">
+                            <p className="text-sm text-orange-700">📋 Registration submitted and under review. We'll notify you once your license is ready.</p>
+                          </div>
+                        )}
+                        {currentPet.registrationStage === 3 && (
+                          <div className="mt-2 p-3 bg-purple-50 border border-purple-100 rounded-lg">
+                            <p className="text-sm text-purple-700">🏅 Documents verified! Your license is being prepared and will be delivered within 7–10 business days.</p>
+                          </div>
+                        )}
+                        {currentPet.registrationStage === 4 && (
+                          <div className="mt-2 p-3 bg-green-50 border border-green-100 rounded-lg">
+                            <p className="text-sm text-green-700">🎉 Your pet is fully registered! License has been delivered.</p>
                           </div>
                         )}
                       </div>
@@ -538,13 +580,13 @@ export default function Dashboard() {
                   )}
                 </div>
 
-                {/* Right Column - Stats Cards */}
+                {/* ── RIGHT COLUMN — Stats ── */}
                 <div className="space-y-4 w-full">
-                  
+
                   <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-5 text-white">
                     <h3 className="font-semibold text-sm md:text-base mb-2">Pet Overview</h3>
                     <div className="text-2xl md:text-3xl font-bold">{stats.total}</div>
-                    <p className="text-xs md:text-sm opacity-90">Total Pets Registered</p>
+                    <p className="text-xs md:text-sm opacity-90">Total Pets</p>
                     <div className="mt-3 pt-3 border-t border-orange-400">
                       <div className="flex justify-between text-xs md:text-sm">
                         <span>Registered:</span>
@@ -571,7 +613,7 @@ export default function Dashboard() {
                     </div>
                     <p className="text-xs md:text-sm text-orange-600 mb-3">{(stats.total * 4) - stats.documentsUploaded} pending uploads</p>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
-                      <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${(stats.documentsUploaded / (stats.total * 4)) * 100}%` }}></div>
+                      <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${stats.total > 0 ? (stats.documentsUploaded / (stats.total * 4)) * 100 : 0}%` }} />
                     </div>
                   </div>
 
@@ -581,14 +623,17 @@ export default function Dashboard() {
                         <FileCheck className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
                         <h3 className="font-semibold text-sm md:text-base text-gray-900">REGISTRATION</h3>
                       </div>
-                      <span className="text-lg md:text-xl font-bold text-gray-900">{stats.total === 0 ? 0 : Math.round((stats.registered / stats.total) * 100)}%</span>
+                      <span className="text-lg md:text-xl font-bold text-gray-900">
+                        {stats.total === 0 ? 0 : Math.round((stats.registered / stats.total) * 100)}%
+                      </span>
                     </div>
                     <p className="text-xs md:text-sm text-gray-600 mb-3">{stats.registered} of {stats.total} pets registered</p>
                     <div className="w-full bg-gray-200 rounded-full h-1.5">
-                      <div className="bg-green-500 h-1.5 rounded-full" style={{ width: `${stats.total === 0 ? 0 : (stats.registered / stats.total) * 100}%` }}></div>
+                      <div className="bg-green-500 h-1.5 rounded-full" style={{ width: `${stats.total === 0 ? 0 : (stats.registered / stats.total) * 100}%` }} />
                     </div>
                   </div>
 
+                  {/* Registration Timeline */}
                   <div className="bg-white rounded-xl border border-gray-200 p-5">
                     <h3 className="font-semibold text-sm md:text-base text-gray-900 mb-3 flex items-center">
                       <Clock className="w-4 h-4 mr-2 text-orange-500" />
@@ -604,22 +649,18 @@ export default function Dashboard() {
                         </div>
                         <div className="flex justify-between text-xs md:text-sm">
                           <span className="text-gray-500">Documents Uploaded:</span>
-                          <span className="font-medium text-gray-900">
-                            {currentPet.uploadedDocumentsCount || 0}/4
-                          </span>
+                          <span className="font-medium text-gray-900">{currentPet.uploadedDocumentsCount || 0}/4</span>
                         </div>
                         <div className="flex justify-between text-xs md:text-sm">
                           <span className="text-gray-500">Current Stage:</span>
-                          <span className={`font-medium ${getStageColor(currentPet.registrationStage || 0)}`}>
+                          <span className={`font-medium text-xs px-2 py-0.5 rounded-full ${getStageColor(currentPet.registrationStage || 0)}`}>
                             {getStageLabel(currentPet.registrationStage || 0)}
                           </span>
                         </div>
                         {currentPet.registrationStage === 4 && (
-                          <div className="mt-2 pt-2 border-t border-gray-100">
-                            <div className="flex items-center space-x-2 text-green-600">
-                              <CheckCircle className="w-4 h-4" />
-                              <span className="text-[10px] md:text-xs font-medium">Registration Complete!</span>
-                            </div>
+                          <div className="mt-2 pt-2 border-t border-gray-100 flex items-center space-x-2 text-green-600">
+                            <CheckCircle className="w-4 h-4" />
+                            <span className="text-[10px] md:text-xs font-medium">Registration Complete!</span>
                           </div>
                         )}
                       </div>
@@ -628,6 +669,7 @@ export default function Dashboard() {
                     )}
                   </div>
 
+                  {/* Quick tips */}
                   <div className="bg-blue-50 rounded-xl p-5 border border-blue-100">
                     <h3 className="font-semibold text-sm md:text-base text-blue-900 mb-3">💡 Quick Tips</h3>
                     <ul className="space-y-2 text-xs md:text-sm text-blue-800">
@@ -641,7 +683,7 @@ export default function Dashboard() {
                       </li>
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0 mt-0.5" />
-                        <span>License will be delivered within 7-10 business days</span>
+                        <span>License will be delivered within 7–10 business days</span>
                       </li>
                     </ul>
                   </div>
@@ -652,8 +694,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Modals */}
-      <AddPetModal 
+      {/* ── MODALS ── */}
+      <AddPetModal
         isOpen={isModalOpen}
         onClose={handlePetModalClose}
         onPetAdded={handlePetAdded}
@@ -704,7 +746,7 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete confirm */}
       {showDeleteConfirm.show && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-4 md:p-6 mx-4">

@@ -12,7 +12,7 @@ interface RegisterModalProps {
 export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
   const { register, login, sendWhatsAppOTP, verifyWhatsAppOTP, completeWhatsAppRegistration } = useAuth();
   const router = useRouter();
-  const [authMethod, setAuthMethod] = useState<"email" | "whatsapp">("whatsapp");
+  const [authMethod, setAuthMethod] = useState<"email" | "whatsapp">("email");
   const [step, setStep] = useState<"phone" | "otp" | "register">("phone");
   
   // Email registration state
@@ -100,7 +100,6 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
         setTempToken(result.tempToken!);
         setStep("register");
       } else {
-        // User already exists, just login
         router.push("/dashboard");
         onClose();
       }
@@ -151,35 +150,66 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     setIsLoading(false);
   };
 
+  // Password strength indicator
+  const getPasswordStrength = () => {
+    if (!password) return 0;
+    let strength = 0;
+    if (password.length >= 6) strength++;
+    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+    if (password.match(/[0-9]/)) strength++;
+    if (password.match(/[^a-zA-Z0-9]/)) strength++;
+    return Math.min(strength, 4);
+  };
+
+  const passwordStrength = getPasswordStrength();
+
   // Render WhatsApp Registration Flow
   const renderWhatsAppAuth = () => {
     if (step === "phone") {
       return (
-        <form onSubmit={handleSendOTP}>
-          <div className="space-y-1">
-            <label className="block text-sm font-semibold text-gray-700">
+        <form onSubmit={handleSendOTP} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
               WhatsApp Number
             </label>
-            <input 
-              className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white"
-              type="tel"
-              placeholder="Enter 10-digit mobile number" 
-              value={whatsappNumber}
-              onChange={e => setWhatsappNumber(e.target.value)} 
-              disabled={isLoading}
-              required
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              We'll send a verification code via WhatsApp
-            </p>
+            <div style={{ display: 'flex', background: '#FAF6EF', overflow: 'hidden', borderRadius: 9, outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '12px 14px', background: '#F3EDE0', borderRight: '1px solid rgba(44,26,14,0.18)' }}>
+                <span style={{ fontSize: 14, fontFamily: 'monospace', color: '#4A2C14' }}>🇮🇳</span>
+                <span style={{ fontSize: 13.5, fontFamily: 'monospace', fontWeight: 500, color: '#4A2C14' }}>+91</span>
+              </div>
+              <input 
+                style={{ flex: 1, padding: '12px 14px', background: '#FAF6EF', border: 'none', outline: 'none', fontSize: 13.5, color: '#2C1A0E' }}
+                type="tel"
+                placeholder="Enter 10-digit mobile number" 
+                value={whatsappNumber}
+                onChange={e => setWhatsappNumber(e.target.value)} 
+                disabled={isLoading}
+                required
+              />
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 12, background: '#FFF0E4', borderRadius: 9, outline: '1px solid rgba(232,96,10,0.18)', outlineOffset: -1 }}>
+            <div style={{ width: 28, height: 28, background: '#E8600A', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M10.5 4.5L5.25 9.75L3.5 8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <span style={{ fontSize: 12.5, color: '#4A2C14' }}>
+              We'll send a verification code via WhatsApp — no spam, ever.
+            </span>
           </div>
           
           <button 
             type="submit"
-            className="bg-orange-500 hover:bg-orange-600 text-white w-full py-2 rounded-lg disabled:opacity-50 transition-colors duration-200 font-semibold mt-4"
+            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             disabled={isLoading}
           >
-            {isLoading ? "Sending..." : "Send OTP →"}
+            {isLoading ? "Sending..." : "Send OTP"} 
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4.67 12L11.33 5.33" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 5.33H11.33V12" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+            </svg>
           </button>
         </form>
       );
@@ -187,13 +217,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     
     if (step === "otp") {
       return (
-        <form onSubmit={handleVerifyOTP}>
-          <div className="space-y-1">
-            <label className="block text-sm font-semibold text-gray-700">
+        <form onSubmit={handleVerifyOTP} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
               Verification Code
             </label>
             <input 
-              className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white text-center text-2xl tracking-widest"
+              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, textAlign: 'center', fontSize: 24, letterSpacing: '0.2em', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
               type="text"
               placeholder="000000" 
               value={otp}
@@ -202,24 +232,28 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               disabled={isLoading}
               required
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p style={{ fontSize: 12, color: '#A68660', marginTop: 4 }}>
               Enter the code sent to {whatsappNumber}
             </p>
           </div>
           
           <button 
             type="submit"
-            className="bg-orange-500 hover:bg-orange-600 text-white w-full py-2 rounded-lg disabled:opacity-50 transition-colors duration-200 font-semibold mt-4"
+            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             disabled={isLoading}
           >
-            {isLoading ? "Verifying..." : "Verify & Continue →"}
+            {isLoading ? "Verifying..." : "Verify & Continue"}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4.67 12L11.33 5.33" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 5.33H11.33V12" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+            </svg>
           </button>
           
-          <div className="flex justify-between items-center mt-3">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
             <button
               type="button"
               onClick={() => setStep("phone")}
-              className="text-sm text-gray-500 hover:text-gray-700"
+              style={{ fontSize: 13, color: '#A68660', background: 'none', border: 'none', cursor: 'pointer' }}
             >
               ← Change number
             </button>
@@ -227,7 +261,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               type="button"
               onClick={resendOTP}
               disabled={resendCooldown > 0}
-              className="text-sm text-orange-500 hover:text-orange-600 disabled:opacity-50"
+              style={{ fontSize: 13, color: '#E8600A', background: 'none', border: 'none', cursor: 'pointer' }}
             >
               {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend OTP"}
             </button>
@@ -238,13 +272,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     
     if (step === "register") {
       return (
-        <form onSubmit={handleCompleteRegistration}>
-          <div className="space-y-1">
-            <label className="block text-sm font-semibold text-gray-700">
+        <form onSubmit={handleCompleteRegistration} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
               Your Name *
             </label>
             <input 
-              className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white"
+              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
               type="text"
               placeholder="Enter your full name" 
               value={name}
@@ -254,12 +288,12 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             />
           </div>
           
-          <div className="space-y-1 mt-4">
-            <label className="block text-sm font-semibold text-gray-700">
+          <div>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
               Username (Optional)
             </label>
             <input 
-              className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white"
+              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
               type="text"
               placeholder="Choose a username" 
               value={waUsername}
@@ -268,18 +302,18 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             />
           </div>
           
-          <div className="bg-blue-50 p-3 rounded-lg mt-4">
-            <p className="text-xs text-blue-700">
+          <div style={{ background: '#EBF5FF', padding: 12, borderRadius: 9 }}>
+            <p style={{ fontSize: 12, color: '#1A6B3A' }}>
               📱 You'll use your WhatsApp number to login next time. Email/Password are optional.
             </p>
           </div>
           
           <button 
             type="submit"
-            className="bg-orange-500 hover:bg-orange-600 text-white w-full py-2 rounded-lg disabled:opacity-50 transition-colors duration-200 font-semibold mt-4"
+            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none' }}
             disabled={isLoading}
           >
-            {isLoading ? "Creating Account..." : "Complete Registration →"}
+            {isLoading ? "Creating Account..." : "Complete Registration"}
           </button>
         </form>
       );
@@ -287,134 +321,207 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-xl w-96 space-y-4 relative shadow-xl max-h-[90vh] overflow-y-auto">
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999, padding: 16 }}>
+      <div style={{ width: 420, maxWidth: '100%', background: '#FFFCF8', borderRadius: 18, boxShadow: '0px 24px 80px rgba(44,26,14,0.18)', outline: '1px solid rgba(44,26,14,0.10)', outlineOffset: -1, position: 'relative' }}>
+        
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+          style={{ position: 'absolute', top: 12, right: 12, width: 30, height: 30, background: '#F3EDE0', borderRadius: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', zIndex: 10 }}
           disabled={isLoading}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M1 1L11 11M1 11L11 1" stroke="#7A5C40" strokeWidth="1.8" strokeLinecap="round"/>
           </svg>
         </button>
 
-        {/* Auth Method Toggle */}
-        <div className="flex gap-2 border-b pb-2">
+        {/* Tabs */}
+        <div style={{ display: 'flex', paddingTop: 10, paddingLeft: 16, paddingRight: 16 }}>
+          <button
+            onClick={() => {
+              setAuthMethod("email");
+              setErrorMessage("");
+            }}
+            style={{
+              flex: 1,
+              padding: '8px 0',
+              borderTopLeftRadius: 9,
+              borderTopRightRadius: 9,
+              borderLeft: '1px solid rgba(44,26,14,0.18)',
+              borderTop: '1px solid rgba(44,26,14,0.18)',
+              borderRight: '1px solid rgba(44,26,14,0.18)',
+              background: authMethod === "email" ? '#FFFCF8' : '#F3EDE0',
+              position: 'relative',
+              cursor: 'pointer'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <div style={{ width: 18, height: 18, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', background: authMethod === "email" ? '#E8600A' : '#A68660' }}>
+                <span style={{ fontSize: 11 }}>✉️</span>
+              </div>
+              <span style={{ fontSize: 13, fontWeight: 600, color: authMethod === "email" ? '#E8600A' : '#7A5C40' }}>Email</span>
+            </div>
+            {authMethod === "email" && (
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2.5, background: '#E8600A', borderTopLeftRadius: 2, borderTopRightRadius: 2 }} />
+            )}
+          </button>
+          
           <button
             onClick={() => {
               setAuthMethod("whatsapp");
               setStep("phone");
               setErrorMessage("");
             }}
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition ${
-              authMethod === "whatsapp"
-                ? "bg-orange-500 text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            📱 WhatsApp
-          </button>
-          <button
-            onClick={() => {
-              setAuthMethod("email");
-              setErrorMessage("");
+            style={{
+              flex: 1,
+              padding: '8px 0',
+              borderTopLeftRadius: 9,
+              borderTopRightRadius: 9,
+              borderLeft: '1px solid rgba(44,26,14,0.18)',
+              borderTop: '1px solid rgba(44,26,14,0.18)',
+              borderRight: '1px solid rgba(44,26,14,0.18)',
+              background: authMethod === "whatsapp" ? '#FFFCF8' : '#F3EDE0',
+              position: 'relative',
+              cursor: 'pointer'
             }}
-            className={`flex-1 py-2 text-sm font-medium rounded-lg transition ${
-              authMethod === "email"
-                ? "bg-orange-500 text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
           >
-            ✉️ Email
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <div style={{ width: 18, height: 18, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', background: authMethod === "whatsapp" ? '#E8600A' : '#A68660' }}>
+                <span style={{ fontSize: 11 }}>💬</span>
+              </div>
+              <span style={{ fontSize: 13, fontWeight: 600, color: authMethod === "whatsapp" ? '#E8600A' : '#7A5C40' }}>WhatsApp</span>
+            </div>
+            {authMethod === "whatsapp" && (
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2.5, background: '#E8600A', borderTopLeftRadius: 2, borderTopRightRadius: 2 }} />
+            )}
           </button>
         </div>
 
-        <h2 className="text-xl font-bold text-gray-800 text-center">
-          {authMethod === "whatsapp" ? "Register with WhatsApp" : "Create Account"}
-        </h2>
-        
-        {errorMessage && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-lg text-sm">
-            {errorMessage}
+        <div style={{ height: 1, background: 'rgba(44,26,14,0.18)' }} />
+
+        {/* Content - Reduced top padding */}
+        <div style={{ padding: '20px 28px 28px 28px' }}>
+          {/* Header - Reduced spacing */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+            <div style={{ width: 16, height: 1.5, background: '#E8600A', borderRadius: 100 }} />
+            <span style={{ fontSize: 8.5, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#E8600A' }}>
+              {authMethod === "email" ? "Create your account" : "Quick registration"}
+            </span>
           </div>
-        )}
-        
-        {authMethod === "email" ? (
-          // Email Registration Form
-          <>
-            <div className="space-y-1">
-              <label className="block text-sm font-semibold text-gray-700">Username</label>
-              <input 
-                className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white"
-                type="text"
-                placeholder="Choose a username" 
-                value={username}
-                onChange={e => setUsername(e.target.value)} 
-                disabled={isLoading}
-              />
-            </div>
+          
+          <h2 style={{ fontSize: 24, fontWeight: 900, lineHeight: '26px', marginBottom: 2 }}>
+            <span style={{ color: '#2C1A0E' }}>{authMethod === "email" ? "Join " : "Register with "}</span>
+            <span style={{ color: '#E8600A', fontStyle: 'italic' }}>Tailio</span>
+          </h2>
+          
+          <p style={{ fontSize: 12, color: '#7A5C40', lineHeight: '18px', marginBottom: 2 }}>
+            {authMethod === "email" 
+              ? "Register your pet in under 60 seconds. Legally valid across Delhi NCR."
+              : "We'll send a one-time code to verify your number. Takes 30 seconds."}
+          </p>
 
-            <div className="space-y-1">
-              <label className="block text-sm font-semibold text-gray-700">Email Address</label>
-              <input 
-                className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white"
-                type="email"
-                placeholder="Enter your email" 
-                value={email}
-                onChange={e => setEmail(e.target.value)} 
-                disabled={isLoading}
-              />
-            </div>
+          <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {errorMessage && (
+              <div style={{ background: '#FEF2F2', border: '1px solid #FEE2E2', color: '#DC2626', padding: '8px 12px', borderRadius: 9, fontSize: 12 }}>
+                {errorMessage}
+              </div>
+            )}
+            
+            {authMethod === "email" ? (
+              <>
+                <div>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
+                    Username
+                  </label>
+                  <input 
+                    style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
+                    type="text"
+                    placeholder="Choose a username" 
+                    value={username}
+                    onChange={e => setUsername(e.target.value)} 
+                    disabled={isLoading}
+                  />
+                </div>
 
-            <div className="space-y-1">
-              <label className="block text-sm font-semibold text-gray-700">Password</label>
-              <input 
-                className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white" 
-                type="password" 
-                placeholder="Create a password" 
-                value={password}
-                onChange={e => setPassword(e.target.value)} 
-                disabled={isLoading}
-              />
-            </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
+                    Email Address
+                  </label>
+                  <input 
+                    style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
+                    type="email"
+                    placeholder="Enter your email" 
+                    value={email}
+                    onChange={e => setEmail(e.target.value)} 
+                    disabled={isLoading}
+                  />
+                </div>
 
-            <div className="space-y-1">
-              <label className="block text-sm font-semibold text-gray-700">Confirm Password</label>
-              <input 
-                className="border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 bg-white" 
-                type="password" 
-                placeholder="Confirm your password" 
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)} 
-                disabled={isLoading}
-              />
-            </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
+                    Password
+                  </label>
+                  <input 
+                    style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
+                    type="password" 
+                    placeholder="Create a password" 
+                    value={password}
+                    onChange={e => setPassword(e.target.value)} 
+                    disabled={isLoading}
+                  />
+                  {password && (
+                    <div style={{ display: 'flex', gap: 4, marginTop: 6 }}>
+                      {[1, 2, 3, 4].map((level) => (
+                        <div 
+                          key={level}
+                          style={{ flex: 1, height: 3, borderRadius: 2, background: level <= passwordStrength ? '#E8600A' : '#EBE1CE' }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-            <button 
-              onClick={handleEmailRegister} 
-              className="bg-orange-500 hover:bg-orange-600 text-white w-full py-2 rounded-lg disabled:opacity-50 transition-colors duration-200 font-semibold"
-              disabled={isLoading}
-            >
-              {isLoading ? "Creating Account..." : "Register"}
-            </button>
-          </>
-        ) : (
-          renderWhatsAppAuth()
-        )}
-        
-        {/* THIS IS THE BUTTON THAT OPENS LOGIN MODAL - MAKE SURE onSwitchToLogin IS PASSED CORRECTLY */}
-        <button 
-          onClick={() => {
-            console.log("Switch to login clicked"); // Add this to debug
-            onSwitchToLogin();
-          }} 
-          className="text-sm text-orange-500 hover:text-orange-600 transition-colors duration-200 w-full text-center"
-          disabled={isLoading}
-        >
-          Already have an account? Login
-        </button>
+                <div>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
+                    Confirm Password
+                  </label>
+                  <input 
+                    style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
+                    type="password" 
+                    placeholder="Confirm your password" 
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)} 
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <button 
+                  onClick={handleEmailRegister} 
+                  style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 }}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Creating Account..." : "Create Account"}
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M4.67 12L11.33 5.33" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+                    <path d="M4.67 5.33H11.33V12" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              </>
+            ) : (
+              renderWhatsAppAuth()
+            )}
+            
+            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 8 }}>
+              <button 
+                onClick={onSwitchToLogin} 
+                style={{ fontSize: 13, color: '#E8600A', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+                disabled={isLoading}
+              >
+                Already have an account? Sign in
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
