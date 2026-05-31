@@ -82,7 +82,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
         resetForm();
       }
     }
-  }, [isOpen, petToEdit]); // Added isOpen to dependency array
+  }, [isOpen, petToEdit]);
 
   const resetForm = () => {
     setForm({
@@ -281,8 +281,8 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   ) : (
                     <div className="text-center p-4">
                       <Camera className="w-10 h-10 text-orange-500 mx-auto mb-2" />
-                      <p className="text-xs text-gray-500">Click to upload</p>
-                      <p className="text-xs text-gray-400">JPEG, PNG, Max 2MB</p>
+                      <p className="text-xs text-gray-600">Click to upload</p>
+                      <p className="text-xs text-gray-500">JPEG, PNG, Max 2MB</p>
                     </div>
                   )}
                 </div>
@@ -302,7 +302,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                 />
               </div>
             </div>
-            <p className="text-center text-xs text-gray-400 mt-2">Format: JPEG, PNG, Max size: 2MB</p>
+            <p className="text-center text-xs text-gray-500 mt-2">Format: JPEG, PNG, Max size: 2MB</p>
             {petToEdit && profilePreview && (
               <p className="text-center text-xs text-blue-600 mt-2">Current photo shown. Upload new to replace.</p>
             )}
@@ -312,7 +312,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Name of Pet Dog <span className="text-red-500">*</span>
-              <span className="text-xs text-gray-400 ml-2">(Max Length 50 Chars)</span>
+              <span className="text-xs text-gray-500 ml-2">(Max Length 50 Chars)</span>
             </label>
             <input
               type="text"
@@ -320,8 +320,9 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
               maxLength={50}
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
               placeholder="Enter name of pet dog"
+              style={{ color: '#111827' }}
             />
           </div>
 
@@ -334,11 +335,12 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
               required
               value={form.breed}
               onChange={(e) => setForm({ ...form, breed: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white text-gray-900"
+              style={{ color: '#111827' }}
             >
               <option value="">Select Breed</option>
               {breeds.map(breed => (
-                <option key={breed} value={breed}>{breed}</option>
+                <option key={breed} value={breed} className="text-gray-900">{breed}</option>
               ))}
             </select>
           </div>
@@ -357,10 +359,11 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   required
                   value={form.ageYears}
                   onChange={(e) => setForm({ ...form, ageYears: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                   placeholder="Enter Year"
+                  style={{ color: '#111827' }}
                 />
-                <p className="text-xs text-gray-400 mt-1">Year</p>
+                <p className="text-xs text-gray-500 mt-1">Year</p>
               </div>
               <div>
                 <input
@@ -370,10 +373,11 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   required
                   value={form.ageMonths}
                   onChange={(e) => setForm({ ...form, ageMonths: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                   placeholder="Enter Month"
+                  style={{ color: '#111827' }}
                 />
-                <p className="text-xs text-gray-400 mt-1">Month</p>
+                <p className="text-xs text-gray-500 mt-1">Month</p>
               </div>
             </div>
             {getDisplayAge() && (
@@ -388,11 +392,12 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
               <select
                 value={form.gender}
                 onChange={(e) => setForm({ ...form, gender: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white text-gray-900"
+                style={{ color: '#111827' }}
               >
                 <option value="">Select gender</option>
                 {genders.map(g => (
-                  <option key={g} value={g.toLowerCase()}>{g}</option>
+                  <option key={g} value={g.toLowerCase()} className="text-gray-900">{g}</option>
                 ))}
               </select>
             </div>
@@ -402,8 +407,9 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                 type="text"
                 value={form.color}
                 onChange={(e) => setForm({ ...form, color: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                 placeholder="e.g., Golden / Cream"
+                style={{ color: '#111827' }}
               />
             </div>
           </div>
@@ -419,7 +425,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Vaccination Certificate Number <span className="text-red-500">*</span>
-                  <span className="text-xs text-gray-400 ml-2">(Max Length 50 Chars)</span>
+                  <span className="text-xs text-gray-500 ml-2">(Max Length 50 Chars)</span>
                 </label>
                 <input
                   type="text"
@@ -427,8 +433,9 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   maxLength={50}
                   value={form.vaccinationCertificateNumber}
                   onChange={(e) => setForm({ ...form, vaccinationCertificateNumber: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                   placeholder="Enter certificate number"
+                  style={{ color: '#111827' }}
                 />
               </div>
 
@@ -441,7 +448,8 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   required
                   value={form.vaccinationDate}
                   onChange={(e) => setForm({ ...form, vaccinationDate: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900"
+                  style={{ color: '#111827' }}
                 />
               </div>
 
@@ -453,7 +461,8 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   type="date"
                   value={form.vaccinationValidTill}
                   onChange={(e) => setForm({ ...form, vaccinationValidTill: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900"
+                  style={{ color: '#111827' }}
                 />
               </div>
             </div>
@@ -470,7 +479,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Name of Veterinary Doctor/Hospital <span className="text-red-500">*</span>
-                  <span className="text-xs text-gray-400 ml-2">(Max Length 50 Chars)</span>
+                  <span className="text-xs text-gray-500 ml-2">(Max Length 50 Chars)</span>
                 </label>
                 <input
                   type="text"
@@ -478,18 +487,19 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   maxLength={50}
                   value={form.vetName}
                   onChange={(e) => setForm({ ...form, vetName: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                   placeholder="Enter doctor/hospital name"
+                  style={{ color: '#111827' }}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Mobile Number of Doctor <span className="text-red-500">*</span>
-                  <span className="text-xs text-gray-400 ml-2">(Max Length 10 Chars)</span>
+                  <span className="text-xs text-gray-500 ml-2">(Max Length 10 Chars)</span>
                 </label>
                 <div className="flex">
-                  <div className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-xl px-3 py-3 text-gray-600">
+                  <div className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-xl px-3 py-3 text-gray-700">
                     +91
                   </div>
                   <input
@@ -499,8 +509,9 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                     pattern="[0-9]{10}"
                     value={form.vetMobile}
                     onChange={(e) => setForm({ ...form, vetMobile: e.target.value })}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-r-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-r-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                     placeholder="9876543210"
+                    style={{ color: '#111827' }}
                   />
                 </div>
               </div>
@@ -524,12 +535,12 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin text-white" />
                   <span>{petToEdit ? 'Updating...' : 'Adding...'}</span>
                 </>
               ) : (
                 <>
-                  <PawPrint className="w-5 h-5" />
+                  <PawPrint className="w-5 h-5 text-white" />
                   <span>{petToEdit ? 'Update Pet' : 'Add Pet'}</span>
                 </>
               )}
