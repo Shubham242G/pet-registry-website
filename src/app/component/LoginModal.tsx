@@ -166,13 +166,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
           
           <button 
             type="submit"
-            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             disabled={isLoading}
           >
             {isLoading ? "Sending..." : "Send OTP"}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M4.67 12L11.33 5.33" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
-              <path d="M4.67 5.33H11.33V12" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
             </svg>
           </button>
         </form>
@@ -187,7 +187,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
               Verification Code
             </label>
             <input 
-              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, textAlign: 'center', fontSize: 24, letterSpacing: '0.2em', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
+              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, textAlign: 'center', fontSize: 24, letterSpacing: '0.2em', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none', color: '#2C1A0E' }}
               type="text"
               placeholder="000000" 
               value={otp}
@@ -202,13 +202,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
           
           <button 
             type="submit"
-            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             disabled={isLoading}
           >
             {isLoading ? "Verifying..." : "Verify & Login"}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M4.67 12L11.33 5.33" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
-              <path d="M4.67 5.33H11.33V12" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
             </svg>
           </button>
           
@@ -267,7 +267,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
           
           <button 
             type="submit"
-            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none' }}
+            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none' }}
             disabled={isLoading}
           >
             {isLoading ? "Creating Account..." : "Complete Registration"}
@@ -416,13 +416,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
 
                 <button 
                   onClick={handleEmailLogin} 
-                  style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 }}
+                  style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 }}
                   disabled={isLoading}
                 >
                   {isLoading ? "Logging in..." : "Sign in"}
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M4.67 12L11.33 5.33" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
-                    <path d="M4.67 5.33H11.33V12" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+                    <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+                    <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
                   </svg>
                 </button>
               </>

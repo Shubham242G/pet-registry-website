@@ -192,7 +192,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 12, background: '#FFF0E4', borderRadius: 9, outline: '1px solid rgba(232,96,10,0.18)', outlineOffset: -1 }}>
             <div style={{ width: 28, height: 28, background: '#E8600A', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M10.5 4.5L5.25 9.75L3.5 8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M10.5 4.5L5.25 9.75L3.5 8" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
             </div>
             <span style={{ fontSize: 12.5, color: '#4A2C14' }}>
@@ -202,13 +202,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
           
           <button 
             type="submit"
-            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             disabled={isLoading}
           >
             {isLoading ? "Sending..." : "Send OTP"} 
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M4.67 12L11.33 5.33" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
-              <path d="M4.67 5.33H11.33V12" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
             </svg>
           </button>
         </form>
@@ -223,7 +223,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               Verification Code
             </label>
             <input 
-              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, textAlign: 'center', fontSize: 24, letterSpacing: '0.2em', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
+              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, textAlign: 'center', fontSize: 24, letterSpacing: '0.2em', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none', color: '#2C1A0E' }}
               type="text"
               placeholder="000000" 
               value={otp}
@@ -239,13 +239,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
           
           <button 
             type="submit"
-            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             disabled={isLoading}
           >
             {isLoading ? "Verifying..." : "Verify & Continue"}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M4.67 12L11.33 5.33" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
-              <path d="M4.67 5.33H11.33V12" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
             </svg>
           </button>
           
@@ -310,7 +310,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
           
           <button 
             type="submit"
-            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none' }}
+            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none' }}
             disabled={isLoading}
           >
             {isLoading ? "Creating Account..." : "Complete Registration"}
@@ -399,9 +399,9 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
         <div style={{ height: 1, background: 'rgba(44,26,14,0.18)' }} />
 
-        {/* Content - Reduced top padding */}
+        {/* Content */}
         <div style={{ padding: '20px 28px 28px 28px' }}>
-          {/* Header - Reduced spacing */}
+          {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
             <div style={{ width: 16, height: 1.5, background: '#E8600A', borderRadius: 100 }} />
             <span style={{ fontSize: 8.5, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#E8600A' }}>
@@ -497,13 +497,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
                 <button 
                   onClick={handleEmailRegister} 
-                  style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: 'white', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 }}
+                  style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 }}
                   disabled={isLoading}
                 >
                   {isLoading ? "Creating Account..." : "Create Account"}
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M4.67 12L11.33 5.33" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
-                    <path d="M4.67 5.33H11.33V12" stroke="white" strokeWidth="1.67" strokeLinecap="round"/>
+                    <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+                    <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
                   </svg>
                 </button>
               </>
