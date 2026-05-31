@@ -7,12 +7,11 @@ const nextConfig: NextConfig = {
       { pathname: '/images/**' }
     ]
   },
-  // Add this async rewrites function to proxy API requests to your backend
   async rewrites() {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:5000/api/:path*', // Proxy to your backend on port 5000
+        destination: `${process.env.BACKEND_URL}/:path*`,
       },
     ];
   },
