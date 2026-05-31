@@ -12,7 +12,6 @@ const DM_SANS = "'DM Sans', sans-serif";
 
 const NAV_LINKS = [
   { label: 'About Us',      href: '/about-us'    },
-//   { label: 'Why Register?', href: '/why-register' },
   { label: 'Why Tailio?',   href: '/why-tailio' },
   { label: 'How it Works',  href: '/how-it-works' },
 ];
@@ -111,17 +110,16 @@ export default function Navbar() {
           alignItems: 'center',
           justifyContent: 'space-between',
           boxSizing: 'border-box',
-          gap: 150,
         }}>
 
-          {/* LOGO - Original size, moved left */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0, marginRight: 'auto' }}>
+          {/* LOGO - Larger size like desktop */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
             <Image
               src="/images/tailio.png"
               alt="Tailio logo"
               width={800}
-              height={780}
-              style={{ width: 'auto', height: 230, objectFit: 'contain', marginRight:'40px'}}
+              height={880}
+              style={{ width: 'auto', height: 230, objectFit: 'contain' }}
               priority
             />
           </Link>
@@ -133,7 +131,6 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={undefined}
                   style={{
                     color: '#7A5C40',
                     fontSize: 14,
@@ -144,7 +141,6 @@ export default function Navbar() {
                     whiteSpace: 'nowrap',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    marginRight:'30px'
                   }}
                 >
                   {link.label}
@@ -153,7 +149,7 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* RIGHT SIDE */}
+          {/* RIGHT SIDE - Auth Buttons + Hamburger */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {isAuthenticated ? (
               <>
@@ -171,7 +167,7 @@ export default function Navbar() {
                         borderRadius: 9,
                         outline: '1px #C04E06 solid',
                         outlineOffset: -1,
-                        color: 'white',
+                        color: '#FFFFFF',
                         fontSize: 13.5,
                         fontFamily: DM_SANS,
                         fontWeight: 600,
@@ -188,7 +184,7 @@ export default function Navbar() {
                         padding: '9px 18px',
                         background: '#2C1A0E',
                         borderRadius: 9,
-                        color: 'white',
+                        color: '#FFFFFF',
                         fontSize: 13.5,
                         fontFamily: DM_SANS,
                         fontWeight: 600,
@@ -213,7 +209,7 @@ export default function Navbar() {
                     borderRadius: 9,
                     outline: '1px #C04E06 solid',
                     outlineOffset: -1,
-                    color: 'white',
+                    color: '#FFFFFF',
                     fontSize: 13.5,
                     fontFamily: DM_SANS,
                     fontWeight: 600,
@@ -227,61 +223,62 @@ export default function Navbar() {
               )
             )}
 
-            {/* HAMBURGER — mobile only */}
-            {isMobile && (
-              <button
-                type="button"
-                onClick={() => setMenuOpen((p) => !p)}
-                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '5px',
-                  cursor: 'pointer',
-                  background: 'transparent',
-                  border: '1.5px solid rgba(44,26,14,0.18)',
-                  padding: '9px 8px',
-                  minWidth: 44,
-                  minHeight: 44,
-                  borderRadius: 8,
-                }}
-              >
-                <span style={{
-                  display: 'block', width: 18, height: 2,
-                  background: '#2C1A0E', borderRadius: 2,
-                  transition: 'transform 0.22s ease, opacity 0.22s ease',
-                  transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
-                }} />
-                <span style={{
-                  display: 'block', height: 2,
-                  background: '#2C1A0E', borderRadius: 2,
-                  transition: 'opacity 0.22s ease, width 0.22s ease',
-                  opacity: menuOpen ? 0 : 1,
-                  width: menuOpen ? 0 : 18,
-                }} />
-                <span style={{
-                  display: 'block', width: 18, height: 2,
-                  background: '#2C1A0E', borderRadius: 2,
-                  transition: 'transform 0.22s ease, opacity 0.22s ease',
-                  transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
-                }} />
-              </button>
-            )}
+            {/* HAMBURGER — mobile only - with brown color */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen((p) => !p)}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              style={{
+                display: isMobile ? 'flex' : 'none',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '5px',
+                cursor: 'pointer',
+                background: 'transparent',
+                border: '1.5px solid rgba(44,26,14,0.18)',
+                padding: '9px 8px',
+                minWidth: 44,
+                minHeight: 44,
+                borderRadius: 8,
+              }}
+            >
+              <span style={{
+                display: 'block', width: 18, height: 2,
+                background: '#7A5C40',  /* Changed to brown color */
+                borderRadius: 2,
+                transition: 'transform 0.22s ease, opacity 0.22s ease',
+                transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
+              }} />
+              <span style={{
+                display: 'block', height: 2,
+                background: '#7A5C40',  /* Changed to brown color */
+                borderRadius: 2,
+                transition: 'opacity 0.22s ease, width 0.22s ease',
+                opacity: menuOpen ? 0 : 1,
+                width: menuOpen ? 0 : 18,
+              }} />
+              <span style={{
+                display: 'block', width: 18, height: 2,
+                background: '#7A5C40',  /* Changed to brown color */
+                borderRadius: 2,
+                transition: 'transform 0.22s ease, opacity 0.22s ease',
+                transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
+              }} />
+            </button>
           </div>
         </div>
 
         {/* MOBILE MENU */}
         {isMobile && menuOpen && (
           <div style={{
-            position: 'absolute',
-            top: 68, left: 0, right: 0,
+            position: 'fixed',
+            top: 68, left: 0, right: 0, bottom: 0,
             background: '#FFFCF8',
             borderTop: '1px solid rgba(44,26,14,0.10)',
-            maxHeight: 'calc(100vh - 68px)',
             overflowY: 'auto',
             zIndex: 101,
+            paddingBottom: 20,
           }}>
             <ul style={{ listStyle: 'none', margin: 0, padding: '12px 20px 4px', display: 'flex', flexDirection: 'column', gap: 2 }}>
               {NAV_LINKS.map((link) => (
@@ -322,7 +319,7 @@ export default function Navbar() {
                       background: '#E8600A',
                       boxShadow: '0px 2px 0px #C04E06',
                       border: '1px solid #C04E06',
-                      borderRadius: 9, color: 'white',
+                      borderRadius: 9, color: '#FFFFFF',
                       fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
                     }}
                   >
@@ -332,9 +329,8 @@ export default function Navbar() {
                     onClick={handleLogout}
                     style={{
                       width: '100%', padding: '14px 20px',
-                      background: '#ef4444',
-                      border: '1px solid #dc2626',
-                      borderRadius: 9, color: 'white',
+                      background: '#2C1A0E',
+                      borderRadius: 9, color: '#FFFFFF',
                       fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
                     }}
                   >
@@ -350,7 +346,7 @@ export default function Navbar() {
                       background: '#E8600A',
                       boxShadow: '0px 2px 0px #C04E06',
                       border: '1px solid #C04E06',
-                      borderRadius: 9, color: 'white',
+                      borderRadius: 9, color: '#FFFFFF',
                       fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
                     }}
                   >

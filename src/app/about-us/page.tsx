@@ -10,6 +10,51 @@ const F = {
   dmMono: "'DM Mono', monospace",
 };
 
+function FounderSilhouette({ variant, hideNumber = false }: { variant: number; hideNumber?: boolean }) {
+  const gradients: Record<number, string> = {
+    1: 'linear-gradient(163deg, #EBE1CE 0%, #DDD0B8 100%)',
+    2: 'linear-gradient(163deg, #E5D8C5 0%, #D6C7AD 100%)',
+    3: 'linear-gradient(163deg, #EAD9C0 0%, #DBCAAA 100%)',
+    4: 'linear-gradient(163deg, #E0D0B5 0%, #CEBFA0 100%)',
+  };
+  return (
+    <div style={{ 
+      height: 220, 
+      position: 'relative', 
+      background: gradients[variant], 
+      overflow: 'hidden', 
+      flexShrink: 0,
+      border: 'none',
+      outline: 'none',
+      borderRadius: '18px 18px 0 0',
+    }}>
+      {/* Number badge - hidden when hideNumber is true */}
+      {!hideNumber && (
+        <div style={{ 
+          width: 28, height: 28, left: 14, top: 14, position: 'absolute', 
+          zIndex: 1, background: '#2C1A0E', borderRadius: 14, 
+          display: 'flex', alignItems: 'center', justifyContent: 'center' 
+        }}>
+          <span style={{ color: '#FFDBB8', fontSize: 11, fontFamily: F.dmMono, fontWeight: 500 }}>0{variant}</span>
+        </div>
+      )}
+      {/* Founder photo */}
+      <Image
+        src={founderImages[variant]}
+        alt={`Founder ${variant}`}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+        style={{ 
+          objectFit: 'cover', 
+          objectPosition: 'top center',
+          border: 'none',
+          outline: 'none',
+        }}
+      />
+    </div>
+  );
+}
+
 /* ─── Shared: Badge ─────────────────────────────────────────────────────── */
 function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
   return (
@@ -39,49 +84,7 @@ const founderImages: Record<number, string> = {
   4: '/images/founder4.jpeg',
 };
 
-function FounderSilhouette({ variant, hideNumber = false }: { variant: number; hideNumber?: boolean }) {
-  const gradients: Record<number, string> = {
-    1: 'linear-gradient(163deg, #EBE1CE 0%, #DDD0B8 100%)',
-    2: 'linear-gradient(163deg, #E5D8C5 0%, #D6C7AD 100%)',
-    3: 'linear-gradient(163deg, #EAD9C0 0%, #DBCAAA 100%)',
-    4: 'linear-gradient(163deg, #E0D0B5 0%, #CEBFA0 100%)',
-  };
-  return (
-    <div style={{ 
-      height: 220, 
-      position: 'relative', 
-      background: gradients[variant], 
-      overflow: 'hidden', 
-      flexShrink: 0,
-      // Remove any border that might be coming from the image
-      border: 'none',
-      outline: 'none',
-    }}>
-      {/* Number badge - hidden when hideNumber is true */}
-      {!hideNumber && (
-        <div style={{ 
-          width: 28, height: 28, left: 14, top: 14, position: 'absolute', 
-          zIndex: 1, background: '#2C1A0E', borderRadius: 14, 
-          display: 'flex', alignItems: 'center', justifyContent: 'center' 
-        }}>
-          <span style={{ color: '#FFDBB8', fontSize: 11, fontFamily: F.dmMono, fontWeight: 500 }}>0{variant}</span>
-        </div>
-      )}
-      {/* Founder photo - with proper styling to remove borders */}
-      <Image
-        src={founderImages[variant]}
-        alt={`Founder ${variant}`}
-        fill
-        style={{ 
-          objectFit: 'cover', 
-          objectPosition: 'top',
-          border: 'none',
-          outline: 'none',
-        }}
-      />
-    </div>
-  );
-}
+
 
 /* ─── Timeline icon ──────────────────────────────────────────────────────── */
 function TimelineIcon({ variant }: { variant: number }) {
@@ -268,12 +271,15 @@ export default function AboutPage() {
 <div style={{ background: '#F3EDE0', width: '100%', boxSizing: 'border-box' }}>
   <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
-      <Badge text="What we stand for" />
+      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <Badge text="What we stand for" />
+      </div>
       <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, textAlign: 'center' }}>Our values</div>
       <div style={{ maxWidth: 480, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
         Every decision we make at Tailio comes back to these fundamentals.
       </div>
     </div>
+  
 
     <div style={{ 
       display: 'grid', 
@@ -384,7 +390,9 @@ export default function AboutPage() {
       <div id="founders" style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
   <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
-      <Badge text="The founders" />
+      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <Badge text="The founders" />
+      </div>
       <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, textAlign: 'center' }}>
         Meet the people behind Tailio
       </div>
@@ -392,6 +400,7 @@ export default function AboutPage() {
         Four people. One shared belief — that every pet deserves a legal identity, and every owner deserves a simple way to provide one.
       </div>
     </div>
+  
 
     <div style={{ 
       display: 'grid', 
@@ -599,37 +608,34 @@ export default function AboutPage() {
 
       {/* ── FOOTER ────────────────────────────────────────────────────────── */}
       <div style={{ background: '#1C0F07', width: '100%' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px 0' : '60px 40px 0' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '32px 20px 0' : '40px 40px 0' }}>
           <div style={{ 
             display: 'grid', 
             gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
-            gap: isMobile ? 32 : 40, 
-            paddingBottom: 32, 
+            gap: isMobile ? 28 : 32, 
+            paddingBottom: 20, 
             borderBottom: '1px solid rgba(255,255,255,0.06)',
             alignItems: 'flex-start'
           }}>
             {/* Brand Column */}
             <div>
-              <div style={{ marginBottom: 16 }}>
+              <div style={{ marginBottom: 12 }}>
                 <Image 
                   src="/images/tailio.png" 
                   alt="Tailio" 
-                  width={200}
-                  height={60}
-                  style={{ objectFit: 'contain' }}
+                  width={180} 
+                  height={54} 
+                  style={{ objectFit: 'contain' }} 
                 />
               </div>
-              <p style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(12, 11, 10), lineHeight: '1.5', maxWidth: 220, margin: 0 }}>
-                Making pet registration simple, digital, and stress-free across Delhi NCR.
-              </p>
             </div>
             
             {/* Platform Column */}
             <div>
               <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Platform</span>
-              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
-                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
+                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
                     {item}
                   </div>
                 ))}
@@ -639,9 +645,9 @@ export default function AboutPage() {
             {/* Cities Column */}
             <div>
               <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Cities</span>
-              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
-                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
+                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
                     {item}
                   </div>
                 ))}
@@ -651,9 +657,9 @@ export default function AboutPage() {
             {/* Company Column */}
             <div>
               <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Company</span>
-              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
-                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
+                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
                     {item}
                   </div>
                 ))}
@@ -662,8 +668,8 @@ export default function AboutPage() {
           </div>
           
           {/* Copyright */}
-          <div style={{ textAlign: 'center', padding: '24px 0 32px' }}>
-            <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(11, 10, 9) }}>
+          <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
+            <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(12, 11, 10) }}>
               © 2026 Tailio. All rights reserved.
             </span>
           </div>

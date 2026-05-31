@@ -64,7 +64,7 @@ function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
 }
 
 /* ─── FAQ Item Component ─────────────────────────────────────────────────── */
-function FaqItem({ question }: { question: string }) {
+function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ 
@@ -111,6 +111,21 @@ function FaqItem({ question }: { question: string }) {
           <span style={{ color: '#C04E06', fontSize: 16, fontFamily: F.dmSans, fontWeight: 700 }}>{open ? '−' : '+'}</span>
         </div>
       </button>
+      
+      {/* Answer section - only visible when open */}
+      {open && (
+        <div style={{ 
+          padding: '0 20px 20px 20px', 
+          color: '#7A5C40', 
+          fontSize: 14, 
+          fontFamily: F.dmSans, 
+          lineHeight: '1.6',
+          borderTop: '1px solid rgba(44,26,14,0.08)',
+          paddingTop: 16
+        }}>
+          {answer}
+        </div>
+      )}
     </div>
   );
 }
@@ -653,71 +668,80 @@ export default function HomePage() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 24, alignItems: 'start' }}>
-            {/* Step 1 */}
-            <div style={{ background: '#FFFCF8', borderRadius: 20, padding: isMobile ? '20px' : '24px 28px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-                <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>1</span>
-                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Register & add your pet's details</span>
-              </div>
-              <div style={{ background: '#FAF6EF', borderRadius: 13, padding: 20, marginBottom: 16 }}>
-                {[
-                  { label: "Pet's Name", value: 'Bruno', active: true },
-                  { label: 'Breed', value: 'Shih Tzu', active: false },
-                  { label: 'Age', value: '3 years', active: false },
-                ].map((field) => (
-                  <div key={field.label} style={{ marginBottom: 12 }}>
-                    <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(9, 8, 8), fontFamily: F.dmMono, marginBottom: 5 }}>{field.label}</div>
-                    <div style={{ padding: '10px 14px', background: '#FFFCF8', borderRadius: 9, outline: field.active ? '1px #E8600A solid' : '1px rgba(44,26,14,0.18) solid', display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12) }}>{field.value}</span>
-                      {field.active && <div style={{ width: 1.5, height: 16, background: '#E8600A' }} />}
-                    </div>
-                  </div>
-                ))}
-                <div style={{ padding: '14px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600 }}>Continue</div>
-              </div>
-              <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>
-                A handful of fields. No PDFs to download, no notarised forms, no Sunday lost to paperwork.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div style={{ background: '#FFFCF8', borderRadius: 20, padding: isMobile ? '20px' : '24px 28px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-                <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>2</span>
-                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Upload your 4 documents</span>
-              </div>
-              {[
-                { label: 'Anti-Rabies Vaccination Certificate', file: 'vax-record-bruno.pdf', done: true, icon: '/images/vaccine.png' },
-                { label: 'Applicant ID Proof', file: 'aadhaar-card.pdf', done: true, icon: '/images/certificate-1.png' },
-                { label: 'Address Proof', file: 'electricity-bill.pdf', done: true, icon: '/images/target.png' },
-                { label: 'Photo with Your Pet', file: 'Tap to upload →', done: false, icon: '/images/photograph.png' },
-              ].map((doc) => (
-                <div key={doc.label} style={{ padding: 14, background: '#FAF6EF', borderRadius: 13, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ width: 38, height: 38, background: '#FFF0E4', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Image src={doc.icon} alt={doc.label} width={24} height={24} style={{ objectFit: 'contain' }} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ color: '#2C1A0E', fontWeight: 600, fontSize: getResponsiveFontSize(13, 12, 11) }}>{doc.label}</div>
-                    <div style={{ color: doc.done ? '#A68660' : '#C04E06', fontSize: getResponsiveFontSize(11, 10, 9) }}>{doc.file}</div>
-                  </div>
-                  <div style={{ width: 22, height: 22, background: doc.done ? '#E6F6ED' : '#F3EDE0', borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    {doc.done && (
-                      <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 4.5L4.5 8L11 1" stroke="#1A6B3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    )}
-                  </div>
-                </div>
-              ))}
-              <div style={{ padding: '12px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600, marginBottom: 16 }}>Submit Documents</div>
-              <div style={{ padding: '11px 14px', background: '#E6F6ED', borderRadius: 9, marginBottom: 16 }}>
-                <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 700 }}>Certificate in 24–72 hrs.</span>
-                <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 500 }}> We handle the municipal filing — you'll receive your official digital certificate by email once approved.</span>
-              </div>
-              <p style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(20, 18, 16), fontWeight: 700, margin: '0 0 8px' }}>Upload, we'll do the rest.</p>
-              <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>No office visits, no photocopies. We file directly with your municipality on your behalf.</p>
-            </div>
+  {/* Step 1 */}
+  <div style={{ background: '#FFFCF8', borderRadius: 20, padding: isMobile ? '20px' : '24px 28px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
+      <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>1</span>
+      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Register & add your pet's details</span>
+    </div>
+    <div style={{ background: '#FAF6EF', borderRadius: 13, padding: 20, marginBottom: 16 }}>
+      {[
+        { label: "Pet's Name", value: 'Bruno', active: true },
+        { label: 'Breed', value: 'Shih Tzu', active: false },
+        { label: 'Age', value: '3 years', active: false },
+      ].map((field) => (
+        <div key={field.label} style={{ marginBottom: 12 }}>
+          <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(9, 8, 8), fontFamily: F.dmMono, marginBottom: 5 }}>{field.label}</div>
+          <div style={{ padding: '10px 14px', background: '#FFFCF8', borderRadius: 9, outline: field.active ? '1px #E8600A solid' : '1px rgba(44,26,14,0.18) solid', display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12) }}>{field.value}</span>
+            {field.active && <div style={{ width: 1.5, height: 16, background: '#E8600A' }} />}
           </div>
+        </div>
+      ))}
+      <div style={{ padding: '14px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600 }}>Continue</div>
+    </div>
+    <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>
+      A handful of fields. No PDFs to download, no notarised forms, no Sunday lost to paperwork.
+    </p>
+  </div>
+
+  {/* Step 2 */}
+  <div style={{ background: '#FFFCF8', borderRadius: 20, padding: isMobile ? '20px' : '24px 28px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
+      <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>2</span>
+      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Upload your 4 documents</span>
+    </div>
+    {[
+      { label: 'Anti-Rabies Vaccination Certificate', file: 'vax-record-bruno.pdf', done: true, icon: '/images/vaccine.png' },
+      { label: 'Applicant ID Proof', file: 'aadhaar-card.pdf', done: true, icon: '/images/certificate-1.png' },
+      { label: 'Address Proof', file: 'electricity-bill.pdf', done: true, icon: '/images/target.png' },
+      { label: 'Photo with Your Pet', file: 'Tap to upload →', done: true, icon: '/images/photograph.png' },  // Changed done to true
+    ].map((doc) => (
+      <div key={doc.label} style={{ padding: 14, background: '#FAF6EF', borderRadius: 13, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ width: 38, height: 38, background: '#FFF0E4', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Image src={doc.icon} alt={doc.label} width={24} height={24} style={{ objectFit: 'contain' }} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ color: '#2C1A0E', fontWeight: 600, fontSize: getResponsiveFontSize(13, 12, 11) }}>{doc.label}</div>
+          <div style={{ color: doc.done ? '#A68660' : '#C04E06', fontSize: getResponsiveFontSize(11, 10, 9) }}>{doc.file}</div>
+        </div>
+        <div style={{ 
+          width: 22, 
+          height: 22, 
+          background: doc.done ? '#E6F6ED' : '#F3EDE0', 
+          borderRadius: 11, 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          flexShrink: 0 
+        }}>
+          {doc.done && (
+            <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 4.5L4.5 8L11 1" stroke="#1A6B3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </div>
+      </div>
+    ))}
+    <div style={{ padding: '12px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600, marginBottom: 16 }}>Submit Documents</div>
+    <div style={{ padding: '11px 14px', background: '#E6F6ED', borderRadius: 9, marginBottom: 16 }}>
+      <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 700 }}>Certificate in 24–72 hrs.</span>
+      <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 500 }}> We handle the municipal filing — you'll receive your official digital certificate by email once approved.</span>
+    </div>
+    <p style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(20, 18, 16), fontWeight: 700, margin: '0 0 8px' }}>Upload, we'll do the rest.</p>
+    <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>No broken websites, no photocopies. We file directly with your municipality on your behalf.</p>
+  </div>
+</div>
         </div>
       </div>
 
@@ -795,7 +819,7 @@ export default function HomePage() {
               <div style={{ display: 'flex', gap: 20, marginTop: 18, flexWrap: 'wrap' }}>
                 {['Secure payment', 'Legally valid', '24–72 hr approval'].map((badge) => (
                   <div key={badge} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <div style={{ width: 13, height: 13, background: 'rgba(250,246,239,0.10)', borderRadius: 2 }} />
+                    {/* <div style={{ width: 13, height: 13, background: 'rgba(250,246,239,0.10)', borderRadius: 2 }} /> */}
                     <span style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(12, 11, 10) }}>{badge}</span>
                   </div>
                 ))}
@@ -841,24 +865,47 @@ export default function HomePage() {
       {/* ══════════════════════════════════════
           FAQ SECTION
       ══════════════════════════════════════ */}
-      <div style={{ background: '#FAF6EF', width: '100%' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: getResponsivePadding(), textAlign: 'center' }}>
-          <Badge text="Common questions" />
-          <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, marginTop: 16, marginBottom: 16 }}>Everything you want to know</div>
-          <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), marginBottom: 40 }}>If it's not here, our support team responds within 60 minutes.</p>
+      {/* ══════════════════════════════════════
+    FAQ SECTION
+══════════════════════════════════════ */}
+<div style={{ background: '#FAF6EF', width: '100%' }}>
+  <div style={{ maxWidth: 800, margin: '0 auto', padding: getResponsivePadding(), textAlign: 'center' }}>
+    <Badge text="Common questions" />
+    <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, marginTop: 16, marginBottom: 16 }}>Everything you want to know</div>
+    <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), marginBottom: 40 }}>If it's not here, our support team responds within 60 minutes.</p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {[
-              'Is pet registration really mandatory in Delhi NCR?',
-              'Is Tailio\'s registration legally valid?',
-              'What documents do I need to register?',
-              'How much does registration cost on Tailio?',
-              'Can I register cats and other pets — not just dogs?',
-              'What happens if I don\'t register?',
-            ].map((q) => <FaqItem key={q} question={q} />)}
-          </div>
-        </div>
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {[
+        { 
+          q: 'Is pet registration really mandatory in Delhi NCR?', 
+          a: 'Yes, the Supreme Court of India has mandated pet registration across Delhi NCR through the Animal Birth Control (ABC) Rules 2023. All pet owners in Delhi, Noida, Ghaziabad, and Gurugram are required to register their pets with the respective municipal corporations.'
+        },
+        { 
+          q: 'Is Tailio\'s registration legally valid?', 
+          a: 'Absolutely. We file directly with MCD, Noida Authority, and GMC. The certificate you receive is the official government-issued document — not a Tailio proxy. Your registration is legally valid across India.'
+        },
+        { 
+          q: 'What documents do I need to register?', 
+          a: 'You need 4 documents: (1) Anti-Rabies Vaccination Certificate, (2) Applicant ID Proof (Aadhaar, PAN, Passport, or Voter ID), (3) Address Proof (Aadhaar, electricity/water bill, rental agreement, or bank statement), and (4) A clear photo with your pet.'
+        },
+        { 
+          q: 'How much does registration cost on Tailio?', 
+          a: 'Registration costs ₹999 all-inclusive (launch offer, regular price ₹1,999). This covers municipal filing, digital certificate, vaccination tracker, and renewal reminders. No hidden charges.'
+        },
+        { 
+          q: 'Can I register cats and other pets — not just dogs?', 
+          a: 'Currently, we support dog registration across Delhi NCR. Support for cats and other pets is coming soon. Stay tuned!'
+        },
+        { 
+          q: 'What happens if I don\'t register?', 
+          a: 'Municipal authorities can seize unregistered pets during disputes or complaints. You may also face fines up to ₹10,000. Unregistered pets have no legal standing, leaving both you and your pet unprotected.'
+        },
+      ].map((item) => (
+        <FaqItem key={item.q} question={item.q} answer={item.a} />
+      ))}
+    </div>
+  </div>
+</div>
 
       {/* ══════════════════════════════════════
           FINAL CTA BANNER
@@ -898,71 +945,73 @@ export default function HomePage() {
           FOOTER
       ══════════════════════════════════════ */}
       <div style={{ background: '#1C0F07', width: '100%' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px 0' : '60px 40px 0' }}>
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
-            gap: isMobile ? 32 : 40, 
-            paddingBottom: 32, 
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
-            alignItems: 'flex-start'
-          }}>
-            {/* Brand Column */}
-            <div>
-              <div style={{ marginBottom: 16 }}>
-                <Image src="/images/tailio.png" alt="Tailio" width={200} height={60} style={{ objectFit: 'contain' }} />
-              </div>
-              <p style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(12, 11, 10), lineHeight: '1.5', maxWidth: 220, margin: 0 }}>
-                Making pet registration simple, digital, and stress-free across Delhi NCR.
-              </p>
-            </div>
-            
-            {/* Platform Column */}
-            <div>
-              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Platform</span>
-              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
-                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer' }}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Cities Column */}
-            <div>
-              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Cities</span>
-              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
-                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer' }}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Company Column */}
-            <div>
-              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Company</span>
-              <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
-                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer' }}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          {/* Copyright */}
-          <div style={{ textAlign: 'center', padding: '24px 0 32px' }}>
-            <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(11, 10, 9) }}>
-              © 2026 Tailio. All rights reserved.
-            </span>
-          </div>
+  <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '32px 20px 0' : '40px 40px 0' }}>
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
+      gap: isMobile ? 28 : 32, 
+      paddingBottom: 20, 
+      borderBottom: '1px solid rgba(255,255,255,0.06)',
+      alignItems: 'flex-start'
+    }}>
+      {/* Brand Column */}
+      <div>
+        <div style={{ marginBottom: 12 }}>
+          <Image 
+            src="/images/tailio.png" 
+            alt="Tailio" 
+            width={180} 
+            height={54} 
+            style={{ objectFit: 'contain' }} 
+          />
         </div>
       </div>
-
+      
+      {/* Platform Column */}
+      <div>
+        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Platform</span>
+        <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
+            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Cities Column */}
+      <div>
+        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Cities</span>
+        <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
+            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Company Column */}
+      <div>
+        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Company</span>
+        <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
+            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
+              {item}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    
+    {/* Copyright */}
+    <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
+      <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(12, 11, 10) }}>
+        © 2026 Tailio. All rights reserved.
+      </span>
+    </div>
+  </div>
+</div>
       {/* Modals */}
       <RegisterModal
         isOpen={showRegisterModal}

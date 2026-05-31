@@ -4,12 +4,12 @@
 import { useState } from 'react';
 
 const faqs = [
-  { question: "Is pet registration really mandatory in Delhi NCR?", answer: "Yes, the Supreme Court of India has mandated pet registration across all municipal limits in Delhi NCR. Non-compliance can result in fines up to ₹10,000." },
-  { question: "Is Tailio's registration legally valid?", answer: "Absolutely! Tailio handles the official municipal filing for you. Your registration is processed through the appropriate government authorities and you receive a legally valid certificate." },
-  { question: "What documents do I need to register?", answer: "You'll need: 1) Anti-Rabies Vaccination Certificate, 2) Applicant ID Proof (Aadhaar/PAN/Passport), 3) Applicant Address Proof, 4) Photograph with your pet dog." },
-  { question: "How much does registration cost on Tailio?", answer: "₹999/- all inclusive. This covers your complete pet registration filing, certificate, and everything in between. No hidden charges." },
-  { question: "Can I register cats and other pets — not just dogs?", answer: "Currently, we support dog registration as mandated by the Supreme Court. Support for cats and other pets is coming soon!" },
-  { question: "What happens if I don't register?", answer: "You risk paying fines up to ₹10,000, your pet may be seized in disputes, and you won't have legal proof of ownership." }
+  { question: "Is pet registration really mandatory in Delhi NCR?", answer: "Yes. The Supreme Court of India, through the Animal Birth Control (ABC) Rules 2023 and a landmark order in August 2025, directed all municipal corporations across Delhi NCR to enforce mandatory pet registration for all pet animals — not just dogs." },
+  { question: "Is Tailio's registration legally valid?", answer: "Yes. Tailio files directly with your municipality — MCD (Delhi), Noida Authority, GMC (Ghaziabad), or Gurugram — on your behalf. The certificate you receive is an official government-issued document, valid across all Delhi NCR municipalities." },
+  { question: "What documents do I need to register?", answer: "Four documents: (1) Anti-Rabies Vaccination Certificate issued by a registered vet, (2) Applicant ID proof — Aadhaar, PAN, Passport or Voter ID, (3) Address proof showing you reside in Delhi, Noida, Ghaziabad or Gurugram, and (4) A recent photograph of you with your pet dog where both faces are clearly visible." },
+  { question: "How much does registration cost on Tailio?", answer: "₹999 one-time, all-inclusive. This covers municipal filing, the official certificate, vaccination tracker, and renewal reminders. No hidden charges. GST included. Currently available at a launch offer — regular price is ₹1,999." },
+  { question: "Can I register cats and other pets — not just dogs?", answer: "Currently Tailio is built for dog registration in compliance with Delhi NCR municipal requirements. Registration for cats and other pets is coming soon as municipal rules expand." },
+  { question: "What happens if I don't register?", answer: "Fines start at ₹500 in Delhi, ₹5,000 in Ghaziabad, and go up to ₹10,000 in Noida — with enforcement actively underway. Municipal authorities also have the power to seize an unregistered pet with no legal recourse for the owner since an unregistered pet has no legal standing" }
 ];
 
 export default function FAQ() {

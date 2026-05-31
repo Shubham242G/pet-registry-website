@@ -3,16 +3,85 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+
 const F = {
   playfair: "'Playfair Display', Georgia, serif",
   dmSans: "'DM Sans', sans-serif",
   fraunces: "'Fraunces', Georgia, serif",
   dmSerif: "'DM Serif Display', serif",
+  dmMono: "'DM Mono', monospace",
+  
 };
 
+
+
+function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 768);
+  }, []);
+  
+  if (dark) {
+    return (
+      <div style={{ 
+        display: 'inline-flex', alignItems: 'center', 
+        padding: '5px 14px', 
+        background: 'rgba(255,255,255,0.06)', 
+        borderRadius: 100, 
+        outline: '1px rgba(255,255,255,0.10) solid', 
+        outlineOffset: -1 
+      }}>
+        <span style={{ 
+          color: 'rgba(250,246,239,0.55)', 
+          fontSize: isMobile ? 8 : 9.5, 
+          fontFamily: F.dmMono, 
+          fontWeight: 500, 
+          textTransform: 'uppercase', 
+          letterSpacing: '1.24px' 
+        }}>{text}</span>
+      </div>
+    );
+  }
+
+  
+  return (
+    <div style={{ 
+      display: 'inline-flex', alignItems: 'center', 
+      padding: '5px 14px', 
+      background: '#FFF0E4', 
+      borderRadius: 100, 
+      outline: '1px #FFCCA0 solid', 
+      outlineOffset: -1 
+    }}>
+      <span style={{ 
+        color: '#C04E06', 
+        fontSize: isMobile ? 9 : 10, 
+        fontFamily: F.dmSans, 
+        fontWeight: 500, 
+        textTransform: 'uppercase', 
+        lineHeight: '15px', 
+        letterSpacing: '1.20px' 
+      }}>{text}</span>
+    </div>
+  );
+}
 export default function HowItWorksPage() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+
+  const getResponsivePadding = () => {
+    if (isMobile) return '40px 20px';
+    if (isTablet) return '60px 30px';
+    return '80px 40px';
+  };
+
+  
+  const getResponsiveFontSize = (desktop: number, tablet: number, mobile: number) => {
+    if (isMobile) return mobile;
+    if (isTablet) return tablet;
+    return desktop;
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,11 +98,7 @@ export default function HowItWorksPage() {
   }, []);
 
   const fs = (d: number, t: number, m: number) => isMobile ? m : isTablet ? t : d;
-    const getResponsiveFontSize = (desktop: number, tablet: number, mobile: number) => {
-    if (isMobile) return mobile;
-    if (isTablet) return tablet;
-    return desktop;
-  };
+
 
   return (
     <div style={{ fontFamily: F.dmSans, background: '#F5F0E8', width: '100%', overflowX: 'hidden' }}>
@@ -373,90 +438,89 @@ export default function HowItWorksPage() {
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          SECTION 4 — TAILIO vs MUNICIPAL PORTAL
-      ══════════════════════════════════════════════════════════════════ */}
-      <div style={{ background: '#F5F0E8', width: '100%' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: isMobile ? '60px 20px' : '80px 40px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 9 }}>
-
-          <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, background: '#FFF0E4', borderRadius: 100, outline: '1px #FFCCA0 solid', outlineOffset: -1, display: 'inline-flex' }}>
-            <span style={{ color: '#C04E06', fontSize: 10, fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '1.2px' }}>Tailio vs Municipal Portal</span>
+      {/* ══ SECTION 3: TAILIO vs PORTAL ══ */}
+<div id="comparison" style={{ background: '#F3EDE0', width: '100%' }}>
+  <div style={{ maxWidth: 1100, margin: '0 auto', padding: getResponsivePadding() }}>
+    <div style={{ marginBottom: 52 }}>
+      <Badge text="Tailio vs Municipal Portal" />
+      <div style={{ marginTop: 20 }}>
+        <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontWeight: 900 }}>Or, you could spend a </span>
+        <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 900 }}>weekend</span>
+        <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontWeight: 900 }}> at the MCD office.</span>
+      </div>
+      <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(15, 13, 12), maxWidth: 360, marginTop: 20 }}>The municipal portal works. Eventually. Probably. Here's the difference in numbers.</p>
+    </div>
+    
+    <div style={{ overflowX: 'auto' }}>
+      <div style={{ minWidth: isMobile ? 800 : '100%', background: '#FFFFFF', borderRadius: 18, overflow: 'hidden' }}>
+        
+        {/* Table Header */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: '1px solid rgba(44,26,14,0.10)' }}>
+          <div style={{ padding: '16px 24px', borderRight: '1px solid rgba(44,26,14,0.10)' }}>
+            <span style={{ color: '#A68660', fontSize: 9.5, fontFamily: F.dmMono, textTransform: 'uppercase', letterSpacing: '1.33px' }}>What you get</span>
           </div>
-
-          <div style={{ paddingTop: 5 }}>
-            <span style={{ color: '#2C1A0E', fontSize: fs(40, 32, 24), fontFamily: F.playfair, fontWeight: 900, lineHeight: '44px' }}>Or spend your </span>
-            <span style={{ color: '#E8600A', fontSize: fs(40, 32, 24), fontFamily: F.playfair, fontStyle: 'italic', fontWeight: 700, lineHeight: '44px' }}>weekend</span>
-            <span style={{ color: '#2C1A0E', fontSize: fs(40, 32, 24), fontFamily: F.playfair, fontWeight: 900, lineHeight: '44px' }}> on the MCD portal.</span>
+          <div style={{ padding: '16px 24px', background: '#E8600A', textAlign: 'center' }}>
+            <span style={{ color: '#4A2C14', fontSize: 20, fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 900 }}>Tailio.</span>
           </div>
-
-          <div style={{ maxWidth: 540, paddingBottom: 0.88 }}>
-            <p style={{ color: '#7A5C40', fontSize: 14.5, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', margin: 0 }}>
-              The municipal portal works. Eventually. Probably. Here's the difference in numbers.
-            </p>
-          </div>
-
-          <div style={{ alignSelf: 'stretch', overflowX: 'auto' }}>
-            <div style={{ minWidth: isMobile ? 700 : '100%', background: '#FFFCF8', boxShadow: '0px 4px 20px rgba(44,26,14,0.08)', overflow: 'hidden', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1 }}>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-                <div style={{ height: 63, padding: '16px 24px', borderBottom: '1px rgba(44,26,14,0.10) solid', borderRight: '1px rgba(44,26,14,0.10) solid', display: 'flex', alignItems: 'center' }}>
-                  <span style={{ color: '#A68660', fontSize: 9.5, fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.33px' }}>What you get</span>
-                </div>
-                <div style={{ height: 63, padding: '16px 24px', background: '#E8600A', borderBottom: '1px rgba(255,255,255,0.08) solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ color: '#4A2C14', fontSize: 20, fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 900, lineHeight: '30px' }}>Tailio.</span>
-                </div>
-                <div style={{ height: 63, padding: '16px 24px', borderBottom: '1px rgba(44,26,14,0.10) solid', borderLeft: '1px rgba(44,26,14,0.10) solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ color: '#A68660', fontSize: 9.5, fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.33px' }}>Municipal Portal</span>
-                </div>
-              </div>
-
-              {[
-                { label: 'Time to register',          sub: 'From start to submission',          tailio: 'Under 1 minute',     portal: '2–4 weeks',          tc: 'text',   pc: 'muted'       },
-                { label: 'Works on your phone',        sub: 'No opening laptops for filing the form', tailio: 'check',       portal: 'cross',               tc: 'check',  pc: 'cross'       },
-                { label: 'Digital certificate',        sub: 'Always accessible on profile',      tailio: 'check',             portal: 'cross',               tc: 'check',  pc: 'cross'       },
-                { label: 'Renewal reminders',          sub: 'WhatsApp, SMS & email',             tailio: 'check',             portal: 'cross',               tc: 'check',  pc: 'cross'       },
-                { label: 'Vaccination tracker',        sub: 'Schedule, record, share with vets', tailio: 'check',             portal: 'cross',               tc: 'check',  pc: 'cross'       },
-                { label: 'Legal pet profile',          sub: 'Proof of ownership on record',      tailio: 'check',             portal: 'cross',               tc: 'check',  pc: 'cross'       },
-                { label: 'Registration cost',          sub: 'All-inclusive, no surprises',       tailio: '₹999',              portal: '₹100–500 + effort',   tc: 'bold',   pc: 'muted'       },
-                { label: 'If you wait, the fine is…',  sub: 'Municipal enforcement active now',  tailio: 'None',              portal: '₹10,000+',            tc: 'fraunces', pc: 'red'       },
-              ].map((row, i, arr) => (
-                <div key={row.label} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: i < arr.length - 1 ? '1px rgba(44,26,14,0.10) solid' : 'none' }}>
-                  <div style={{ height: 74.75, padding: '18px 24px', borderRight: '1px rgba(44,26,14,0.10) solid', display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ width: 34, height: 34, background: '#F3EDE0', borderRadius: 9, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, flexShrink: 0 }} />
-                    <div>
-                      <div style={{ color: '#2C1A0E', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '20.25px' }}>{row.label}</div>
-                      <div style={{ color: '#A68660', fontSize: 11, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '16.5px' }}>{row.sub}</div>
-                    </div>
-                  </div>
-                  <div style={{ height: 74.75, padding: '18px 24px', background: 'rgba(232,96,10,0.04)', borderRight: '1px rgba(232,96,10,0.12) solid', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {row.tc === 'check' && (
-                      <div style={{ width: 28, height: 28, background: '#2C1A0E', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ width: 13, height: 13, position: 'relative', overflow: 'hidden' }}>
-                          <div style={{ width: 9.29, height: 7.43, left: 1.86, top: 2.79, position: 'absolute', outline: '2.04px white solid', outlineOffset: -1.02 }} />
-                        </div>
-                      </div>
-                    )}
-                    {row.tc === 'text'     && <span style={{ color: '#2C1A0E', fontSize: 14, fontFamily: F.dmSans, fontWeight: 700, lineHeight: '21px' }}>{row.tailio}</span>}
-                    {row.tc === 'bold'     && <span style={{ color: '#2C1A0E', fontSize: 14, fontFamily: F.dmSans, fontWeight: 700, lineHeight: '21px' }}>{row.tailio}</span>}
-                    {row.tc === 'fraunces' && <span style={{ color: '#2C1A0E', fontSize: 16, fontFamily: F.fraunces, fontWeight: 900, lineHeight: '24px' }}>{row.tailio}</span>}
-                  </div>
-                  <div style={{ height: 74.75, padding: '18px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {row.pc === 'cross' && (
-                      <div style={{ width: 28, height: 28, borderRadius: 14, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
-                          <div style={{ width: 5.5, height: 5.5, left: 2.75, top: 2.75, position: 'absolute', outline: '1.83px #A68660 solid', outlineOffset: -0.92 }} />
-                        </div>
-                      </div>
-                    )}
-                    {row.pc === 'muted' && <span style={{ color: '#A68660', fontSize: 14, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '21px' }}>{row.portal}</span>}
-                    {row.pc === 'red'   && <span style={{ color: '#C04E06', fontSize: 16, fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '24px' }}>{row.portal}</span>}
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div style={{ padding: '16px 24px', textAlign: 'center' }}>
+            <span style={{ color: '#A68660', fontSize: 9.5, fontFamily: F.dmMono, textTransform: 'uppercase', letterSpacing: '1.33px' }}>Municipal Portal</span>
           </div>
         </div>
+        
+        {/* Table Rows */}
+        {[
+          { label: 'Time to register', sub: 'From start to submission', tailio: 'Under 1 minute', portal: '2–4 weeks' },
+          { label: 'Works on your phone', sub: 'No opening laptops for filing the form', tailio: '✓', portal: '✗' },
+          { label: 'Digital certificate', sub: 'Always accessible on profile', tailio: '✓', portal: '✗' },
+          { label: 'Renewal reminders', sub: 'WhatsApp, SMS & email', tailio: '✓', portal: '✗' },
+          { label: 'Vaccination tracker', sub: 'Schedule, record, share with vets', tailio: '✓', portal: '✗' },
+          { label: 'Legal pet profile', sub: 'Proof of ownership on record', tailio: '✓', portal: '✗' },
+          { label: 'Registration cost', sub: 'All-inclusive, no surprises', tailio: '₹999', portal: '₹100–500 + effort' },
+          { label: 'If you wait, the fine is…', sub: 'Municipal enforcement active now', tailio: 'None', portal: '₹10,000+' },
+        ].map((row, i) => (
+          <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: i < 7 ? '1px solid rgba(44,26,14,0.10)' : 'none' }}>
+            
+            {/* Left Column */}
+            <div style={{ padding: '18px 24px', borderRight: '1px solid rgba(44,26,14,0.10)' }}>
+              <div style={{ fontWeight: 600, fontSize: 13.5, color: '#2C1A0E' }}>{row.label}</div>
+              <div style={{ color: '#A68660', fontSize: 11, marginTop: 4 }}>{row.sub}</div>
+            </div>
+            
+            {/* Middle Column - Tailio */}
+            <div style={{ padding: '18px 24px', background: 'rgba(232,96,10,0.04)', textAlign: 'center', borderRight: '1px solid rgba(232,96,10,0.12)' }}>
+              {row.tailio === '✓' ? (
+                <div style={{ width: 28, height: 28, background: '#2C1A0E', borderRadius: 14, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="13" height="10" viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.5 5L4.5 8L11 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              ) : row.tailio === 'None' ? (
+                <span style={{ color: '#2C1A0E', fontSize: 16, fontFamily: F.fraunces, fontWeight: 900 }}>{row.tailio}</span>
+              ) : (
+                <span style={{ color: '#2C1A0E', fontSize: 14, fontFamily: F.dmSans, fontWeight: 700 }}>{row.tailio}</span>
+              )}
+            </div>
+            
+            {/* Right Column - Portal */}
+            <div style={{ padding: '18px 24px', textAlign: 'center' }}>
+              {row.portal === '✗' ? (
+                <div style={{ width: 28, height: 28, borderRadius: 14, border: '1px solid rgba(44,26,14,0.18)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1L10 10M1 10L10 1" stroke="#A68660" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              ) : row.portal === '₹10,000+' ? (
+                <span style={{ color: '#C04E06', fontSize: 16, fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>{row.portal}</span>
+              ) : (
+                <span style={{ color: '#A68660', fontSize: 14, fontFamily: F.dmSans, fontWeight: 400 }}>{row.portal}</span>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
+    </div>
+  </div>
+</div>
 
       {/* ══════════════════════════════════════════════════════════════════
           SECTION 5 — PRICING
@@ -530,7 +594,7 @@ export default function HowItWorksPage() {
               {['Secure payment', 'Legally valid', '24–72 hr approval'].map(badge => (
                 <div key={badge} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <div style={{ width: 13, height: 13, position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ width: 10.83, height: 10.83, left: 1.08, top: 1.08, position: 'absolute', outline: '1.08px rgba(245,240,232,0.30) solid', outlineOffset: -0.54 }} />
+                    {/* <div style={{ width: 10.83, height: 10.83, left: 1.08, top: 1.08, position: 'absolute', outline: '1.08px rgba(245,240,232,0.30) solid', outlineOffset: -0.54 }} /> */}
                   </div>
                   <span style={{ color: 'rgba(245,240,232,0.30)', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400 }}>{badge}</span>
                 </div>
@@ -574,76 +638,73 @@ export default function HowItWorksPage() {
           FOOTER
       ══════════════════════════════════════ */}
       <div style={{ background: '#1C0F07', width: '100%' }}>
-  <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px 0' : '60px 40px 0' }}>
-    <div style={{ 
-      display: 'grid', 
-      gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
-      gap: isMobile ? 32 : 40, 
-      paddingBottom: 32, 
-      borderBottom: '1px solid rgba(255,255,255,0.06)',
-      alignItems: 'flex-start'
-    }}>
-      {/* Brand Column */}
-      <div>
-        <div style={{ marginBottom: 16 }}>
-          <Image 
-            src="/images/tailio.png" 
-            alt="Tailio" 
-            width={200}
-            height={60}
-            style={{ objectFit: 'contain' }}
-          />
-        </div>
-        <p style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(12, 11, 10), lineHeight: '1.5', maxWidth: 220, margin: 0 }}>
-          Making pet registration simple, digital, and stress-free across Delhi NCR.
-        </p>
-      </div>
-      
-      {/* Platform Column */}
-      <div>
-        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Platform</span>
-        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
-            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
-              {item}
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '32px 20px 0' : '40px 40px 0' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
+            gap: isMobile ? 28 : 32, 
+            paddingBottom: 20, 
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            alignItems: 'flex-start'
+          }}>
+            {/* Brand Column */}
+            <div>
+              <div style={{ marginBottom: 12 }}>
+                <Image 
+                  src="/images/tailio.png" 
+                  alt="Tailio" 
+                  width={180} 
+                  height={54} 
+                  style={{ objectFit: 'contain' }} 
+                />
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
-      
-      {/* Cities Column */}
-      <div>
-        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Cities</span>
-        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
-            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
-              {item}
+            
+            {/* Platform Column */}
+            <div>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Platform</span>
+              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
+                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
-      
-      {/* Company Column */}
-      <div>
-        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Company</span>
-        <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
-            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(12, 11, 10), cursor: 'pointer', transition: 'color 0.2s' }}>
-              {item}
+            
+            {/* Cities Column */}
+            <div>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Cities</span>
+              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
+                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+            
+            {/* Company Column */}
+            <div>
+              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Company</span>
+              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
+                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          {/* Copyright */}
+          <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
+            <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(12, 11, 10) }}>
+              © 2026 Tailio. All rights reserved.
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-    
-    {/* Copyright */}
-    <div style={{ textAlign: 'center', padding: '24px 0 32px' }}>
-      <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(11, 10, 9) }}>
-        © 2026 Tailio. All rights reserved.
-      </span>
-    </div>
-  </div>
-</div>
 
       
     </div>
