@@ -100,41 +100,72 @@ export default function HowItWorksPage() {
       {/* ══════════════════════════════════════════════════════════════════
           SECTION 1 — HERO
       ══════════════════════════════════════════════════════════════════ */}
-      <div style={{ background: '#F5F0E8', width: '100%', paddingTop: isMobile ? 40 : 60 }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '0 20px 30px' : '0 40px 40px', display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'center' : 'flex-start' }}>
+      <div style={{ background: '#F5F0E8', width: '100%', paddingTop: isMobile ? 30 : 60 }}>
+  <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '0 20px 30px' : '0 40px 40px', display: 'flex', flexDirection: 'column', alignItems: isMobile ? 'center' : 'flex-start' }}>
 
-          <div style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 6, paddingBottom: 6, background: 'rgba(212,82,26,0.10)', borderRadius: 100, display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 24 }}>
-            <span style={{ color: '#D4521A', fontSize: 12, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.2px' }}>How It Works</span>
-          </div>
+    <div style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 6, paddingBottom: 6, background: 'rgba(212,82,26,0.10)', borderRadius: 100, display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: isMobile ? 16 : 24 }}>
+      <span style={{ color: '#D4521A', fontSize: 12, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.2px' }}>How It Works</span>
+    </div>
 
-          <div style={{ marginBottom: 0, textAlign: isMobile ? 'center' : 'left' }}>
-            <span style={{ display: 'block', color: '#2B1F14', fontSize: fs(96, 72, 40), fontFamily: F.playfair, fontWeight: 900, lineHeight: '96px' }}>Two screens.</span>
-            <span style={{ display: 'block', color: '#D4521A', fontSize: fs(96, 72, 40), fontFamily: F.playfair, fontStyle: 'italic', fontWeight: 900, lineHeight: '96px' }}>Sixty seconds.</span>
-          </div>
+    <div style={{ marginBottom: 0, textAlign: isMobile ? 'center' : 'left' }}>
+      <span style={{ 
+        display: 'block', 
+        color: '#2B1F14', 
+        fontSize: fs(96, 72, 36), 
+        fontFamily: F.playfair, 
+        fontWeight: 900, 
+        lineHeight: isMobile ? 1.1 : 1.2,
+        marginBottom: isMobile ? 4 : 0
+      }}>Two screens.</span>
+      <span style={{ 
+        display: 'block', 
+        color: '#D4521A', 
+        fontSize: fs(96, 72, 36), 
+        fontFamily: F.playfair, 
+        fontStyle: 'italic', 
+        fontWeight: 900, 
+        lineHeight: isMobile ? 1.1 : 1.2,
+        marginTop: isMobile ? -8 : 0
+      }}>Sixty seconds.</span>
+    </div>
 
-          <div style={{ maxWidth: isMobile ? '100%' : 500, marginTop: 10, textAlign: isMobile ? 'center' : 'left' }}>
-            <p style={{ color: '#7A6858', fontSize: fs(18, 16, 14), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '29.7px', margin: 0 }}>
-              We're going to register your pet. It takes sixty seconds, costs ₹999, and ends with a legally valid ID. Follow the paws.
-            </p>
-          </div>
+    <div style={{ maxWidth: isMobile ? '100%' : 500, marginTop: isMobile ? 16 : 20, textAlign: isMobile ? 'center' : 'left' }}>
+      <p style={{ color: '#7A6858', fontSize: fs(18, 16, 14), fontFamily: F.dmSans, fontWeight: 400, lineHeight: isMobile ? 1.4 : 1.5, margin: 0 }}>
+        We're going to register your pet. It takes sixty seconds, costs ₹999, and ends with a legally valid ID. Follow the paws.
+      </p>
+    </div>
 
-          <div style={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start', alignItems: 'flex-start', gap: 10, flexWrap: 'wrap', marginTop: 24, marginBottom: 24 }}>
-            {['₹999 one-time, all-inclusive', 'MCD, Noida & GMC accepted', 'Certificate in 24–72 hrs', 'No office visit needed'].map(pill => (
-              <div key={pill} style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, background: '#FDFAF5', borderRadius: 100, outline: '1px rgba(43,31,20,0.10) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7 }}>
-                <div style={{ width: 7, height: 7, background: '#D4521A', borderRadius: 3.5 }} />
-                <span style={{ color: '#2B1F14', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>{pill}</span>
-              </div>
-            ))}
-          </div>
-
-          <button style={{ alignSelf: isMobile ? 'center' : 'flex-start', paddingLeft: isMobile ? 30 : 40, paddingRight: isMobile ? 30 : 40, paddingTop: 14, paddingBottom: 14, background: '#D4521A', boxShadow: '0px 6px 0px #A83E10', borderRadius: 100, border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ color: 'white', fontSize: fs(17, 16, 14), fontFamily: F.dmSans, fontWeight: 600 }}>Start walking</span>
-            <div style={{ width: 17, height: 17, position: 'relative', overflow: 'hidden' }}>
-              <div style={{ width: 4.96, height: 9.92, left: 8.5, top: 3.54, position: 'absolute', outline: '1.77px white solid', outlineOffset: -0.89 }} />
-            </div>
-          </button>
+    <div style={{ display: 'flex', justifyContent: isMobile ? 'center' : 'flex-start', alignItems: 'flex-start', gap: 10, flexWrap: 'wrap', marginTop: isMobile ? 16 : 24, marginBottom: isMobile ? 20 : 24 }}>
+      {['₹999 one-time, all-inclusive', 'MCD, Noida & GMC accepted', 'Certificate in 24–72 hrs', 'No office visit needed'].map(pill => (
+        <div key={pill} style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 6, paddingBottom: 6, background: '#FDFAF5', borderRadius: 100, outline: '1px rgba(43,31,20,0.10) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ width: 6, height: 6, background: '#D4521A', borderRadius: 3 }} />
+          <span style={{ color: '#2B1F14', fontSize: 12, fontFamily: F.dmSans, fontWeight: 500 }}>{pill}</span>
         </div>
+      ))}
+    </div>
+
+    <button style={{ 
+      alignSelf: isMobile ? 'center' : 'flex-start', 
+      paddingLeft: isMobile ? 28 : 40, 
+      paddingRight: isMobile ? 28 : 40, 
+      paddingTop: isMobile ? 12 : 14, 
+      paddingBottom: isMobile ? 12 : 14, 
+      background: '#D4521A', 
+      boxShadow: '0px 6px 0px #A83E10', 
+      borderRadius: 100, 
+      border: 'none', 
+      cursor: 'pointer', 
+      display: 'inline-flex', 
+      alignItems: 'center', 
+      gap: 8 
+    }}>
+      <span style={{ color: 'white', fontSize: fs(17, 16, 14), fontFamily: F.dmSans, fontWeight: 600 }}>Start walking</span>
+      <div style={{ width: 16, height: 16, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ width: 4.5, height: 9, left: 8, top: 3.5, position: 'absolute', outline: '1.7px white solid', outlineOffset: -0.85 }} />
       </div>
+    </button>
+  </div>
+</div>
 
       {/* ══════════════════════════════════════════════════════════════════
           STATS BAR - Mobile friendly wrap
