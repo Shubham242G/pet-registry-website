@@ -10,74 +10,42 @@ interface RegisterModalProps {
 }
 
 export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
-  const { register, login, sendWhatsAppOTP, verifyWhatsAppOTP, completeWhatsAppRegistration } = useAuth();
+  // Removed: register, login (email) — not needed anymore
+  const { sendWhatsAppOTP, verifyWhatsAppOTP, completeWhatsAppRegistration } = useAuth();
   const router = useRouter();
-  const [authMethod, setAuthMethod] = useState<"email" | "whatsapp">("email");
+
+  // Removed: authMethod state — always WhatsApp now
   const [step, setStep] = useState<"phone" | "otp" | "register">("phone");
-  
-  // Email registration state
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  
-  // WhatsApp registration state
+
+  // Removed: username, email, password, confirmPassword state
+
+  // WhatsApp registration state — all kept exactly as before
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [tempToken, setTempToken] = useState("");
   const [name, setName] = useState("");
   const [waUsername, setWaUsername] = useState("");
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
 
   if (!isOpen) return null;
 
-  // Handle Email Registration
-  const handleEmailRegister = async () => {
-    setErrorMessage("");
-    
-    if (!username || !email || !password) {
-      setErrorMessage("All fields are required");
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match");
-      return;
-    }
-    
-    setIsLoading(true);
+  // Removed: handleEmailRegister, getPasswordStrength, passwordStrength
 
-    try {
-      await register(username, email, password);
-      await login(email, password);
-      router.push("/dashboard");
-      onClose();
-    } catch (err: any) {
-      setErrorMessage(err.message || "Registration failed");
-      setIsLoading(false);
-    }
-  };
-
-  // Send WhatsApp OTP
+  // Send OTP — unchanged
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
     setIsLoading(true);
-    
     const result = await sendWhatsAppOTP(whatsappNumber);
-    
     if (result.success) {
       setStep("otp");
       setResendCooldown(30);
       const timer = setInterval(() => {
         setResendCooldown(prev => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
+          if (prev <= 1) { clearInterval(timer); return 0; }
           return prev - 1;
         });
       }, 1000);
@@ -87,14 +55,12 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     setIsLoading(false);
   };
 
-  // Verify OTP and complete registration
+  // Verify OTP — unchanged
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
     setIsLoading(true);
-    
     const result = await verifyWhatsAppOTP(whatsappNumber, otp);
-    
     if (result.success) {
       if (result.requiresRegistration) {
         setTempToken(result.tempToken!);
@@ -109,14 +75,12 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     setIsLoading(false);
   };
 
-  // Complete registration for new users
+  // Complete registration — unchanged
   const handleCompleteRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
     setIsLoading(true);
-    
     const result = await completeWhatsAppRegistration(tempToken, name, waUsername);
-    
     if (result.success) {
       router.push("/dashboard");
       onClose();
@@ -126,21 +90,17 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     setIsLoading(false);
   };
 
+  // Resend OTP — unchanged
   const resendOTP = async () => {
     if (resendCooldown > 0) return;
     setErrorMessage("");
     setIsLoading(true);
-    
     const result = await sendWhatsAppOTP(whatsappNumber);
-    
     if (result.success) {
       setResendCooldown(30);
       const timer = setInterval(() => {
         setResendCooldown(prev => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
+          if (prev <= 1) { clearInterval(timer); return 0; }
           return prev - 1;
         });
       }, 1000);
@@ -150,21 +110,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     setIsLoading(false);
   };
 
-  // Password strength indicator
-  const getPasswordStrength = () => {
-    if (!password) return 0;
-    let strength = 0;
-    if (password.length >= 6) strength++;
-    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
-    if (password.match(/[0-9]/)) strength++;
-    if (password.match(/[^a-zA-Z0-9]/)) strength++;
-    return Math.min(strength, 4);
-  };
-
-  const passwordStrength = getPasswordStrength();
-
-  // Render WhatsApp Registration Flow
-  const renderWhatsAppAuth = () => {
+  const renderContent = () => {
     if (step === "phone") {
       return (
         <form onSubmit={handleSendOTP} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -177,20 +123,20 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                 <span style={{ fontSize: 14, fontFamily: 'monospace', color: '#4A2C14' }}>🇮🇳</span>
                 <span style={{ fontSize: 13.5, fontFamily: 'monospace', fontWeight: 500, color: '#4A2C14' }}>+91</span>
               </div>
-              <input 
+              <input
                 style={{ flex: 1, padding: '12px 14px', background: '#FAF6EF', border: 'none', outline: 'none', fontSize: 13.5, color: '#2C1A0E' }}
                 type="tel"
-                placeholder="Enter 10-digit mobile number" 
+                placeholder="Enter 10-digit mobile number"
                 value={whatsappNumber}
-                onChange={e => setWhatsappNumber(e.target.value)} 
+                onChange={e => setWhatsappNumber(e.target.value)}
                 disabled={isLoading}
                 required
               />
             </div>
           </div>
-          
+
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 12, background: '#FFF0E4', borderRadius: 9, outline: '1px solid rgba(232,96,10,0.18)', outlineOffset: -1 }}>
-            <div style={{ width: 28, height: 28, background: '#E8600A', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 28, height: 28, background: '#E8600A', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M10.5 4.5L5.25 9.75L3.5 8" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
@@ -199,13 +145,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               We'll send a verification code via WhatsApp — no spam, ever.
             </span>
           </div>
-          
-          <button 
+
+          <button
             type="submit"
             style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             disabled={isLoading}
           >
-            {isLoading ? "Sending..." : "Send OTP"} 
+            {isLoading ? "Sending..." : "Send OTP"}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
               <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
@@ -214,7 +160,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
         </form>
       );
     }
-    
+
     if (step === "otp") {
       return (
         <form onSubmit={handleVerifyOTP} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -222,22 +168,22 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
               Verification Code
             </label>
-            <input 
+            <input
               style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, textAlign: 'center', fontSize: 24, letterSpacing: '0.2em', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none', color: '#2C1A0E' }}
               type="text"
-              placeholder="000000" 
+              placeholder="000000"
               value={otp}
-              onChange={e => setOtp(e.target.value)} 
+              onChange={e => setOtp(e.target.value)}
               maxLength={6}
               disabled={isLoading}
               required
             />
             <p style={{ fontSize: 12, color: '#A68660', marginTop: 4 }}>
-              Enter the code sent to {whatsappNumber}
+              Enter the code sent to +91 {whatsappNumber}
             </p>
           </div>
-          
-          <button 
+
+          <button
             type="submit"
             style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             disabled={isLoading}
@@ -248,28 +194,19 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
             </svg>
           </button>
-          
+
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
-            <button
-              type="button"
-              onClick={() => setStep("phone")}
-              style={{ fontSize: 13, color: '#A68660', background: 'none', border: 'none', cursor: 'pointer' }}
-            >
+            <button type="button" onClick={() => setStep("phone")} style={{ fontSize: 13, color: '#A68660', background: 'none', border: 'none', cursor: 'pointer' }}>
               ← Change number
             </button>
-            <button
-              type="button"
-              onClick={resendOTP}
-              disabled={resendCooldown > 0}
-              style={{ fontSize: 13, color: '#E8600A', background: 'none', border: 'none', cursor: 'pointer' }}
-            >
+            <button type="button" onClick={resendOTP} disabled={resendCooldown > 0} style={{ fontSize: 13, color: '#E8600A', background: 'none', border: 'none', cursor: 'pointer' }}>
               {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend OTP"}
             </button>
           </div>
         </form>
       );
     }
-    
+
     if (step === "register") {
       return (
         <form onSubmit={handleCompleteRegistration} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -277,38 +214,30 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
               Your Name *
             </label>
-            <input 
+            <input
               style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
               type="text"
-              placeholder="Enter your full name" 
+              placeholder="Enter your full name"
               value={name}
-              onChange={e => setName(e.target.value)} 
+              onChange={e => setName(e.target.value)}
               required
               disabled={isLoading}
             />
           </div>
-          
           <div>
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
               Username (Optional)
             </label>
-            <input 
+            <input
               style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
               type="text"
-              placeholder="Choose a username" 
+              placeholder="Choose a username"
               value={waUsername}
-              onChange={e => setWaUsername(e.target.value)} 
+              onChange={e => setWaUsername(e.target.value)}
               disabled={isLoading}
             />
           </div>
-          
-          <div style={{ background: '#EBF5FF', padding: 12, borderRadius: 9 }}>
-            <p style={{ fontSize: 12, color: '#1A6B3A' }}>
-              📱 You'll use your WhatsApp number to login next time. Email/Password are optional.
-            </p>
-          </div>
-          
-          <button 
+          <button
             type="submit"
             style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none' }}
             disabled={isLoading}
@@ -323,8 +252,8 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999, padding: 16 }}>
       <div style={{ width: 420, maxWidth: '100%', background: '#FFFCF8', borderRadius: 18, boxShadow: '0px 24px 80px rgba(44,26,14,0.18)', outline: '1px solid rgba(44,26,14,0.10)', outlineOffset: -1, position: 'relative' }}>
-        
-        {/* Close Button */}
+
+        {/* Close Button — unchanged */}
         <button
           onClick={onClose}
           style={{ position: 'absolute', top: 12, right: 12, width: 30, height: 30, background: '#F3EDE0', borderRadius: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', zIndex: 10 }}
@@ -335,89 +264,44 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
           </svg>
         </button>
 
-        {/* Tabs */}
-        <div style={{ display: 'flex', paddingTop: 10, paddingLeft: 16, paddingRight: 16 }}>
-          <button
-            onClick={() => {
-              setAuthMethod("email");
-              setErrorMessage("");
-            }}
-            style={{
-              flex: 1,
-              padding: '8px 0',
-              borderTopLeftRadius: 9,
-              borderTopRightRadius: 9,
-              borderLeft: '1px solid rgba(44,26,14,0.18)',
-              borderTop: '1px solid rgba(44,26,14,0.18)',
-              borderRight: '1px solid rgba(44,26,14,0.18)',
-              background: authMethod === "email" ? '#FFFCF8' : '#F3EDE0',
-              position: 'relative',
-              cursor: 'pointer'
-            }}
-          >
+        {/* Header bar — no tabs, just WhatsApp branding */}
+        <div style={{ paddingTop: 14, paddingLeft: 16, paddingRight: 16 }}>
+          <div style={{
+            padding: '10px 0',
+            borderTopLeftRadius: 9,
+            borderTopRightRadius: 9,
+            borderLeft: '1px solid rgba(44,26,14,0.18)',
+            borderTop: '1px solid rgba(44,26,14,0.18)',
+            borderRight: '1px solid rgba(44,26,14,0.18)',
+            background: '#FFFCF8',
+            position: 'relative',
+          }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <div style={{ width: 18, height: 18, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', background: authMethod === "email" ? '#E8600A' : '#A68660' }}>
-                <span style={{ fontSize: 11 }}>✉️</span>
-              </div>
-              <span style={{ fontSize: 13, fontWeight: 600, color: authMethod === "email" ? '#E8600A' : '#7A5C40' }}>Email</span>
-            </div>
-            {authMethod === "email" && (
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2.5, background: '#E8600A', borderTopLeftRadius: 2, borderTopRightRadius: 2 }} />
-            )}
-          </button>
-          
-          <button
-            onClick={() => {
-              setAuthMethod("whatsapp");
-              setStep("phone");
-              setErrorMessage("");
-            }}
-            style={{
-              flex: 1,
-              padding: '8px 0',
-              borderTopLeftRadius: 9,
-              borderTopRightRadius: 9,
-              borderLeft: '1px solid rgba(44,26,14,0.18)',
-              borderTop: '1px solid rgba(44,26,14,0.18)',
-              borderRight: '1px solid rgba(44,26,14,0.18)',
-              background: authMethod === "whatsapp" ? '#FFFCF8' : '#F3EDE0',
-              position: 'relative',
-              cursor: 'pointer'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <div style={{ width: 18, height: 18, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', background: authMethod === "whatsapp" ? '#E8600A' : '#A68660' }}>
+              <div style={{ width: 18, height: 18, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E8600A' }}>
                 <span style={{ fontSize: 11 }}>💬</span>
               </div>
-              <span style={{ fontSize: 13, fontWeight: 600, color: authMethod === "whatsapp" ? '#E8600A' : '#7A5C40' }}>WhatsApp</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#E8600A' }}>WhatsApp</span>
             </div>
-            {authMethod === "whatsapp" && (
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2.5, background: '#E8600A', borderTopLeftRadius: 2, borderTopRightRadius: 2 }} />
-            )}
-          </button>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2.5, background: '#E8600A', borderTopLeftRadius: 2, borderTopRightRadius: 2 }} />
+          </div>
         </div>
 
         <div style={{ height: 1, background: 'rgba(44,26,14,0.18)' }} />
 
         {/* Content */}
         <div style={{ padding: '20px 28px 28px 28px' }}>
-          {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
             <div style={{ width: 16, height: 1.5, background: '#E8600A', borderRadius: 100 }} />
-            <span style={{ fontSize: 8.5, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#E8600A' }}>
-              {authMethod === "email" ? "Create your account" : "Quick registration"}
-            </span>
+            <span style={{ fontSize: 8.5, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#E8600A' }}>Quick registration</span>
           </div>
-          
+
           <h2 style={{ fontSize: 24, fontWeight: 900, lineHeight: '26px', marginBottom: 2 }}>
-            <span style={{ color: '#2C1A0E' }}>{authMethod === "email" ? "Join " : "Register with "}</span>
+            <span style={{ color: '#2C1A0E' }}>Register with </span>
             <span style={{ color: '#E8600A', fontStyle: 'italic' }}>Tailio</span>
           </h2>
-          
+
           <p style={{ fontSize: 12, color: '#7A5C40', lineHeight: '18px', marginBottom: 2 }}>
-            {authMethod === "email" 
-              ? "Register your pet in under 60 seconds. Legally valid across Delhi NCR."
-              : "We'll send a one-time code to verify your number. Takes 30 seconds."}
+            We'll send a one-time code to verify your number. Takes 30 seconds.
           </p>
 
           <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -426,94 +310,12 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
                 {errorMessage}
               </div>
             )}
-            
-            {authMethod === "email" ? (
-              <>
-                <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
-                    Username
-                  </label>
-                  <input 
-                    style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
-                    type="text"
-                    placeholder="Choose a username" 
-                    value={username}
-                    onChange={e => setUsername(e.target.value)} 
-                    disabled={isLoading}
-                  />
-                </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
-                    Email Address
-                  </label>
-                  <input 
-                    style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
-                    type="email"
-                    placeholder="Enter your email" 
-                    value={email}
-                    onChange={e => setEmail(e.target.value)} 
-                    disabled={isLoading}
-                  />
-                </div>
+            {renderContent()}
 
-                <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
-                    Password
-                  </label>
-                  <input 
-                    style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
-                    type="password" 
-                    placeholder="Create a password" 
-                    value={password}
-                    onChange={e => setPassword(e.target.value)} 
-                    disabled={isLoading}
-                  />
-                  {password && (
-                    <div style={{ display: 'flex', gap: 4, marginTop: 6 }}>
-                      {[1, 2, 3, 4].map((level) => (
-                        <div 
-                          key={level}
-                          style={{ flex: 1, height: 3, borderRadius: 2, background: level <= passwordStrength ? '#E8600A' : '#EBE1CE' }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
-                    Confirm Password
-                  </label>
-                  <input 
-                    style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
-                    type="password" 
-                    placeholder="Confirm your password" 
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)} 
-                    disabled={isLoading}
-                  />
-                </div>
-
-                <button 
-                  onClick={handleEmailRegister} 
-                  style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 }}
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Creating Account..." : "Create Account"}
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
-                    <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
-                  </svg>
-                </button>
-              </>
-            ) : (
-              renderWhatsAppAuth()
-            )}
-            
             <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 8 }}>
-              <button 
-                onClick={onSwitchToLogin} 
+              <button
+                onClick={onSwitchToLogin}
                 style={{ fontSize: 13, color: '#E8600A', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
                 disabled={isLoading}
               >

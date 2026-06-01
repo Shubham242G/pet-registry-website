@@ -3,27 +3,16 @@ import { useEffect, useState, useCallback } from "react";
 import { apiFetch } from "../services/api";
 import { useAuth } from "../component/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { 
-  PawPrint, 
-  Plus, 
-  Dog, 
-  Cat, 
-  CheckCircle, 
-  AlertCircle,
-  Bird,
-  Rabbit,
-  Loader2,
-  Edit,
-  Trash2,
-  FileText,
-  Eye,
-  FileCheck,
-  Clock,
-  Award
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import AddPetModal from "../component/AddPetModal";
 import RegistrationForm from "../component/RegistrationForm";
-import Sidebar from '../component/Sidebar'
+import Sidebar from '../component/Sidebar';
+
+const F = {
+  fraunces: "'Fraunces', Georgia, serif",
+  dmSans: "'DM Sans', sans-serif",
+  dmMono: "'DM Mono', monospace",
+};
 
 interface Pet {
   _id: string;
@@ -47,6 +36,117 @@ interface Pet {
   updatedAt: string;
 }
 
+/* ─── small icon components matching Figma ──────────────────────────────── */
+function PawIcon({ size = 28, color = '#A68660' }: { size?: number; color?: string }) {
+  const s = size / 28;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 12.32 * s, height: 10.08 * s, left: 7.84 * s, top: 15.12 * s, position: 'absolute', background: color }} />
+      <div style={{ width: 6.16 * s, height: 7.28 * s, left: 4.76 * s, top: 10.92 * s, position: 'absolute', background: color }} />
+      <div style={{ width: 6.16 * s, height: 7.28 * s, left: 17.08 * s, top: 10.92 * s, position: 'absolute', background: color }} />
+      <div style={{ width: 5.04 * s, height: 6.16 * s, left: 8.12 * s, top: 7 * s, position: 'absolute', background: color }} />
+      <div style={{ width: 5.04 * s, height: 6.16 * s, left: 15.12 * s, top: 7 * s, position: 'absolute', background: color }} />
+    </div>
+  );
+}
+
+function DocIcon({ size = 13, color = 'white' }: { size?: number; color?: string }) {
+  const s = size / 13;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 8.67 * s, height: 10.83 * s, left: 2.17 * s, top: 1.08 * s, position: 'absolute', outline: `1.08px ${color} solid`, outlineOffset: -0.54 * s }} />
+      <div style={{ width: 3.25 * s, height: 3.25 * s, left: 7.58 * s, top: 1.08 * s, position: 'absolute', outline: `1.08px ${color} solid`, outlineOffset: -0.54 * s }} />
+    </div>
+  );
+}
+
+function EditIcon({ size = 13, color = '#2C1A0E' }: { size?: number; color?: string }) {
+  const s = size / 13;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 9.75 * s, height: 9.75 * s, left: 1.08 * s, top: 2.17 * s, position: 'absolute', outline: `1.08px ${color} solid`, outlineOffset: -0.54 * s }} />
+      <div style={{ width: 7.65 * s, height: 7.65 * s, left: 4.33 * s, top: 1.02 * s, position: 'absolute', outline: `1.08px ${color} solid`, outlineOffset: -0.54 * s }} />
+    </div>
+  );
+}
+
+function TrashIcon({ size = 13, color = '#A0251E' }: { size?: number; color?: string }) {
+  const s = size / 13;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 7.58 * s, height: 8.67 * s, left: 2.71 * s, top: 3.25 * s, position: 'absolute', outline: `1.08px ${color} solid`, outlineOffset: -0.54 * s }} />
+      <div style={{ width: 3.25 * s, height: 1.63 * s, left: 4.88 * s, top: 1.63 * s, position: 'absolute', outline: `1.08px ${color} solid`, outlineOffset: -0.54 * s }} />
+    </div>
+  );
+}
+
+function AddPetPlusIcon({ size = 13, color = '#2C1A0E' }: { size?: number; color?: string }) {
+  const s = size / 12;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 9 * s, height: 1.5 * s, left: 1.5 * s, top: 5.25 * s, position: 'absolute', background: color, borderRadius: 1 }} />
+      <div style={{ width: 1.5 * s, height: 9 * s, left: 5.25 * s, top: 1.5 * s, position: 'absolute', background: color, borderRadius: 1 }} />
+    </div>
+  );
+}
+
+function CheckmarkIcon({ size = 11, color = 'white' }: { size?: number; color?: string }) {
+  const s = size / 11;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 7.33 * s, height: 5.04 * s, left: 1.83 * s, top: 2.75 * s, position: 'absolute', outline: `1.38px ${color} solid`, outlineOffset: -0.69 * s }} />
+    </div>
+  );
+}
+
+function WaIcon({ size = 21, color = 'white' }: { size?: number; color?: string }) {
+  const s = size / 21;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 15.75 * s, height: 15.75 * s, left: 2.63 * s, top: 2.62 * s, position: 'absolute', background: color }} />
+    </div>
+  );
+}
+
+function ArrowIcon({ size = 14, color = 'white' }: { size?: number; color?: string }) {
+  const s = size / 14;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 4.08 * s, height: 8.17 * s, left: 7 * s, top: 2.92 * s, position: 'absolute', outline: `1.46px ${color} solid`, outlineOffset: -0.73 * s }} />
+    </div>
+  );
+}
+
+function PaymentIcon({ size = 14, color = 'white' }: { size?: number; color?: string }) {
+  const s = size / 14;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 6.42 * s, height: 6.42 * s, left: 6.42 * s, top: 1.17 * s, position: 'absolute', outline: `1.17px ${color} solid`, outlineOffset: -0.58 * s }} />
+      <div style={{ width: 11.67 * s, height: 11.67 * s, left: 1.17 * s, top: 1.17 * s, position: 'absolute', outline: `1.17px ${color} solid`, outlineOffset: -0.58 * s }} />
+    </div>
+  );
+}
+
+function PreviewIcon({ size = 11, color = '#7A5C40' }: { size?: number; color?: string }) {
+  const s = size / 11;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 10.08 * s, height: 7.33 * s, left: 0.46 * s, top: 1.83 * s, position: 'absolute', outline: `0.92px ${color} solid`, outlineOffset: -0.46 * s }} />
+      <div style={{ width: 2.75 * s, height: 2.75 * s, left: 4.13 * s, top: 4.13 * s, position: 'absolute', outline: `0.92px ${color} solid`, outlineOffset: -0.46 * s }} />
+    </div>
+  );
+}
+
+function DeleteDocIcon({ size = 11, color = '#7A5C40' }: { size?: number; color?: string }) {
+  const s = size / 11;
+  return (
+    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ width: 6.42 * s, height: 7.33 * s, left: 2.29 * s, top: 2.75 * s, position: 'absolute', outline: `0.92px ${color} solid`, outlineOffset: -0.46 * s }} />
+    </div>
+  );
+}
+
+/* ─── Main Dashboard ─────────────────────────────────────────────────────── */
 export default function Dashboard() {
   const { token, isAuthenticated, loading: authLoading, logout, user } = useAuth();
   const router = useRouter();
@@ -56,74 +156,56 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editingPet, setEditingPet] = useState<any>(null);
-  
-  // Registration states
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
   const [showRegistrationView, setShowRegistrationView] = useState(false);
   const [existingRegistration, setExistingRegistration] = useState<any>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<{show: boolean, petId: string, petName: string}>({
-    show: false,
-    petId: '',
-    petName: ''
-  });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ show: boolean; petId: string; petName: string }>({ show: false, petId: '', petName: '' });
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push("/");
-    }
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap';
+    document.head.appendChild(link);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) router.push("/");
   }, [authLoading, isAuthenticated, router]);
 
   useEffect(() => {
-    if (token) {
-      loadPets();
-    }
+    if (token) loadPets();
   }, [token]);
 
   const loadPets = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
-      
       const data = await apiFetch("/pets?t=" + Date.now(), "GET", null, token!);
-      
-      const petsWithStatus = await Promise.all((Array.isArray(data) ? data : []).map(async (pet: any) => {
-        try {
-          const status = await apiFetch(`/registration/${pet._id}/status?t=${Date.now()}`, "GET", null, token!);
-          return {
-            ...pet,
-            uploadedDocumentsCount: status?.uploadedDocumentsCount || 0,
-            hasAllDocuments: status?.hasAllDocuments || false,
-            registrationTriggered: status?.registrationTriggered || false,
-            registrationStage: pet.registrationStage || 0,
-            registrationStatus: pet.registrationStatus || 'not_started'
-          };
-        } catch {
-          return {
-            ...pet,
-            uploadedDocumentsCount: 0,
-            hasAllDocuments: false,
-            registrationTriggered: false,
-            registrationStage: pet.registrationStage || 0,
-            registrationStatus: pet.registrationStatus || 'not_started'
-          };
-        }
+      const petsData: Pet[] = (Array.isArray(data) ? data : []).map((pet: any) => ({
+        ...pet,
+        uploadedDocumentsCount: pet.uploadedDocumentsCount ?? 0,
+        hasAllDocuments: pet.hasAllDocuments ?? false,
+        registrationTriggered: pet.registrationTriggered ?? false,
+        registrationStage: pet.registrationStage ?? 0,
+        registrationStatus: pet.registrationStatus ?? 'not_started',
       }));
-      
-      setPets(petsWithStatus);
-      if (petsWithStatus.length > 0 && !selectedPet) {
-        setSelectedPet(petsWithStatus[0]);
-      } else if (selectedPet && petsWithStatus.length > 0) {
-        const updatedSelected = petsWithStatus.find(p => p._id === selectedPet._id);
-        if (updatedSelected) {
-          setSelectedPet(updatedSelected);
-        }
+      setPets(petsData);
+      if (petsData.length > 0 && !selectedPet) {
+        setSelectedPet(petsData[0]);
+      } else if (selectedPet && petsData.length > 0) {
+        const updated = petsData.find(p => p._id === selectedPet._id);
+        if (updated) setSelectedPet(updated);
       }
     } catch (error) {
       console.error("Error loading pets:", error);
       setError("Failed to load pets. Please try again.");
       if (error instanceof Error && error.message === "Session expired") {
-        logout();
-        router.push('/');
+        logout(); router.push('/');
       }
     } finally {
       setLoading(false);
@@ -136,14 +218,10 @@ export default function Dashboard() {
       await apiFetch(`/pets/${petId}`, "DELETE", null, token!);
       const updatedPets = pets.filter(pet => pet._id !== petId);
       setPets(updatedPets);
-      if (updatedPets.length === 0) {
-        setSelectedPet(null);
-      } else if (selectedPet?._id === petId) {
-        setSelectedPet(updatedPets[0]);
-      }
+      if (updatedPets.length === 0) setSelectedPet(null);
+      else if (selectedPet?._id === petId) setSelectedPet(updatedPets[0]);
       setShowDeleteConfirm({ show: false, petId: '', petName: '' });
     } catch (error) {
-      console.error("Error deleting pet:", error);
       setError("Failed to delete pet");
     } finally {
       setLoading(false);
@@ -153,81 +231,32 @@ export default function Dashboard() {
   const handleViewRegistration = async (pet: Pet) => {
     try {
       const registration = await apiFetch(`/registration/${pet._id}`, "GET", null, token!);
-      if (!registration) {
-        setError(`No registration found for ${pet.name}`);
-        return;
-      }
-      setSelectedPet(pet);
-      setExistingRegistration(registration);
-      setShowRegistrationView(true);
-    } catch (error) {
-      console.error("Error loading registration:", error);
-      setError("Failed to load registration");
-    }
+      if (!registration) { setError(`No registration found for ${pet.name}`); return; }
+      setSelectedPet(pet); setExistingRegistration(registration); setShowRegistrationView(true);
+    } catch { setError("Failed to load registration"); }
   };
 
   const handleEditRegistration = async (pet: Pet) => {
     try {
       setLoading(true);
       const registration = await apiFetch<any>(`/registration/${pet._id}`, "GET", null, token!);
-      if (registration && registration.applicantDetails) {
-        setSelectedPet(pet);
-        setExistingRegistration(registration);
-        setShowRegistrationForm(true);
-      } else {
-        setSelectedPet(pet);
-        setExistingRegistration(null);
-        setShowRegistrationForm(true);
-        if (pet.isRegistered) {
-          await apiFetch(`/pets/${pet._id}`, "PUT", { isRegistered: false }, token!);
-          await loadPets();
-        }
-      }
-    } catch (error) {
-      console.error("Error loading registration:", error);
       setSelectedPet(pet);
-      setExistingRegistration(null);
+      setExistingRegistration(registration?.applicantDetails ? registration : null);
       setShowRegistrationForm(true);
-    } finally {
-      setLoading(false);
-    }
+    } catch {
+      setSelectedPet(pet); setExistingRegistration(null); setShowRegistrationForm(true);
+    } finally { setLoading(false); }
   };
 
   const handleRegisterPet = (pet: Pet) => {
-    setSelectedPet(pet);
-    setExistingRegistration(null);
-    setShowRegistrationForm(true);
-  };
-
-  const handleEditPet = (pet: Pet) => {
-    setEditingPet(pet);
-    setIsModalOpen(true);
-  };
-
-  const handlePetModalClose = () => {
-    setIsModalOpen(false);
-    setEditingPet(null);
-  };
-
-  const handlePetAdded = async () => {
-    await loadPets();
-    setIsModalOpen(false);
-    setEditingPet(null);
+    setSelectedPet(pet); setExistingRegistration(null); setShowRegistrationForm(true);
   };
 
   const getFormattedAge = (pet: Pet) => {
-    try {
-      if (pet.ageYears && pet.ageMonths && pet.ageYears > 0 && pet.ageMonths > 0) {
-        return `${pet.ageYears} years ${pet.ageMonths} months`;
-      } else if (pet.ageYears && pet.ageYears > 0) {
-        return `${pet.ageYears} years`;
-      } else if (pet.ageMonths && pet.ageMonths > 0) {
-        return `${pet.ageMonths} months`;
-      }
-      return "Not specified";
-    } catch (err) {
-      return "Not specified";
-    }
+    if (pet.ageYears && pet.ageMonths && pet.ageYears > 0 && pet.ageMonths > 0) return `${pet.ageYears} ${pet.ageYears === 1 ? 'year' : 'years'} ${pet.ageMonths} ${pet.ageMonths === 1 ? 'month' : 'months'}`;
+    if (pet.ageYears && pet.ageYears > 0) return `${pet.ageYears} ${pet.ageYears === 1 ? 'year' : 'years'}`;
+    if (pet.ageMonths && pet.ageMonths > 0) return `${pet.ageMonths} ${pet.ageMonths === 1 ? 'month' : 'months'}`;
+    return "Not specified";
   };
 
   const stats = {
@@ -235,459 +264,594 @@ export default function Dashboard() {
     registered: pets.filter(p => p.registrationStage === 4).length,
     inProgress: pets.filter(p => p.registrationStage > 0 && p.registrationStage < 4).length,
     notStarted: pets.filter(p => p.registrationStage === 0).length,
-    documentsUploaded: pets.reduce((sum, pet) => sum + (pet.uploadedDocumentsCount || 0), 0)
+    documentsUploaded: pets.reduce((sum, pet) => sum + (pet.uploadedDocumentsCount || 0), 0),
   };
 
-  const getSpeciesIcon = (species: string) => {
-    switch(species?.toLowerCase()) {
-      case 'dog':    return <Dog    className="w-6 h-6 md:w-8 md:h-8" />;
-      case 'cat':    return <Cat    className="w-6 h-6 md:w-8 md:h-8" />;
-      case 'bird':   return <Bird   className="w-6 h-6 md:w-8 md:h-8" />;
-      case 'rabbit': return <Rabbit className="w-6 h-6 md:w-8 md:h-8" />;
-      default:       return <PawPrint className="w-6 h-6 md:w-8 md:h-8" />;
-    }
-  };
-
-  // ─── Stage label ──────────────────────────────────────────────────────────
-  const getStageLabel = (stage: number) => {
-    switch(stage) {
-      case 0: return 'Not Started';
-      case 1: return 'Documents Ready';
-      case 2: return 'Submitted';
-      case 3: return 'Awaiting License';
-      case 4: return 'Registered ✓';
-      default: return 'Unknown';
-    }
-  };
-
-  // ─── Stage badge color ────────────────────────────────────────────────────
-  const getStageColor = (stage: number) => {
-    switch(stage) {
-      case 0: return 'bg-gray-100 text-gray-600';
-      case 1: return 'bg-blue-100 text-blue-600';
-      case 2: return 'bg-orange-100 text-orange-600';
-      case 3: return 'bg-purple-100 text-purple-600';
-      case 4: return 'bg-green-100 text-green-600';
-      default: return 'bg-gray-100 text-gray-600';
-    }
-  };
+  const currentPet = selectedPet;
+  const allDocsUploaded = currentPet && (currentPet.uploadedDocumentsCount || 0) >= 4;
+  const needsPayment = allDocsUploaded && currentPet && currentPet.registrationStage < 2;
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-16 h-16 text-orange-500 animate-spin" />
+      <div style={{ minHeight: '100vh', background: '#FAF6EF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Loader2 style={{ width: 48, height: 48, color: '#E8600A', animation: 'spin 1s linear infinite' }} />
       </div>
     );
   }
 
   if (!isAuthenticated) return null;
 
-  const currentPet = selectedPet;
-
   return (
-    <div className="min-h-screen bg-gray-50 font-['Nunito']">
+    <div style={{ minHeight: '100vh', background: '#FAF6EF', fontFamily: F.dmSans }}>
       {/* Sidebar */}
-      <div className="hidden md:block">
-        <Sidebar />
-      </div>
+      <div className="hidden md:block"><Sidebar /></div>
 
-      {/* Main Content */}
+      {/* Main content */}
       <div className="md:pl-64">
+        <div style={{ paddingTop: 54, paddingLeft: isMobile ? 16 : 40, paddingRight: isMobile ? 16 : 40 }}>
 
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-4 md:px-8 py-4 md:py-6">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">My Dashboard</h1>
-          <p className="text-xs md:text-sm text-gray-500 mt-1">Tailio → Overview</p>
-        </div>
+          {/* ── HEADER ── */}
+          <div style={{ marginLeft: 28, marginRight: 28, display: 'flex', flexDirection: 'column', gap: 5 }}>
+            {/* Breadcrumb */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{ color: '#A68660', fontSize: 11.5, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '17.25px' }}>Tailio</span>
+              <div style={{ width: 10, height: 10, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ width: 2.5, height: 5, left: 3.75, top: 2.5, position: 'absolute', outline: '0.83px #A68660 solid', outlineOffset: -0.42 }} />
+              </div>
+              <span style={{ color: '#A68660', fontSize: 11.5, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '17.25px' }}>Overview</span>
+            </div>
 
-        {/* Content */}
-        <div className="p-4 md:p-8">
+            {/* Title row */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+              <span style={{ color: '#2C1A0E', fontSize: 26, fontFamily: F.fraunces, fontWeight: 900, lineHeight: '39px' }}>My Dashboard</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                {/* Add Pet button */}
+                <button
+                  onClick={() => { setEditingPet(null); setIsModalOpen(true); }}
+                  style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 8, paddingBottom: 8, borderRadius: 9, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7, background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                  <AddPetPlusIcon size={13} color="#2C1A0E" />
+                  <span style={{ color: '#2C1A0E', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>Add Pet</span>
+                </button>
+                {/* Complete Registration button */}
+                {currentPet && (currentPet.registrationStage === 0 || currentPet.registrationStage === 1) && (
+                  <button
+                    onClick={() => currentPet && handleRegisterPet(currentPet)}
+                    style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 8, paddingBottom: 8, background: '#E8600A', boxShadow: '0px 1.5px 0px #C04E06', borderRadius: 9, outline: '1px #C04E06 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7, border: 'none', cursor: 'pointer' }}
+                  >
+                    <DocIcon size={13} color="white" />
+                    <span style={{ color: 'white', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 600 }}>Complete Registration</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
           {loading ? (
-            <div className="flex justify-center py-20">
-              <Loader2 className="w-12 h-12 text-orange-500 animate-spin" />
+            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 80 }}>
+              <Loader2 style={{ width: 48, height: 48, color: '#E8600A', animation: 'spin 1s linear infinite' }} />
             </div>
           ) : pets.length === 0 ? (
-            <div className="bg-white rounded-2xl p-6 md:p-12 text-center">
-              <div className="bg-orange-100 p-4 rounded-full w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 flex items-center justify-center">
-                <PawPrint className="w-8 h-8 md:w-10 md:h-10 text-orange-500" />
+            <div style={{ margin: '40px 28px', background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', padding: '60px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
+              <div style={{ width: 60, height: 60, background: '#F3EDE0', borderRadius: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <PawIcon size={28} color="#A68660" />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">No pets yet</h3>
-              <p className="text-sm md:text-base text-gray-500 mb-6">Add your first pet to get started</p>
-              <button
-                onClick={() => { setEditingPet(null); setIsModalOpen(true); }}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-5 md:px-6 py-2 md:py-3 rounded-xl font-semibold text-sm md:text-base"
-              >
+              <span style={{ color: '#2C1A0E', fontSize: 20, fontFamily: F.fraunces, fontWeight: 900 }}>No pets yet</span>
+              <span style={{ color: '#7A5C40', fontSize: 14, fontFamily: F.dmSans }}>Add your first pet to get started</span>
+              <button onClick={() => { setEditingPet(null); setIsModalOpen(true); }} style={{ paddingLeft: 22, paddingRight: 22, paddingTop: 12, paddingBottom: 12, background: '#E8600A', boxShadow: '0px 2px 0px #C04E06', borderRadius: 9, outline: '2px #C04E06 solid', outlineOffset: -2, border: 'none', cursor: 'pointer', color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 600 }}>
                 Add Your First Pet
               </button>
             </div>
           ) : (
-            <div className="max-w-6xl mx-auto">
-              <div className="flex flex-col lg:flex-row gap-6">
+            <div style={{ margin: '24px 28px 0', display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 20, alignItems: 'flex-start' }}>
 
-                {/* ── LEFT COLUMN ── */}
-                <div className="lg:col-span-2 space-y-6 w-full">
+              {/* ── LEFT COLUMN ── */}
+              <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-                  {/* Pet selector tabs */}
-                  <div className="flex space-x-3 overflow-x-auto pb-2">
-                    {pets.map((pet) => (
-                      <button
-                        key={pet._id}
-                        onClick={() => setSelectedPet(pet)}
-                        className={`flex items-center space-x-2 px-3 md:px-4 py-2 rounded-lg font-medium text-xs md:text-sm transition-all flex-shrink-0 ${
-                          selectedPet?._id === pet._id
-                            ? "bg-orange-500 text-white shadow-md"
-                            : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
-                        }`}
-                      >
-                        {pet.profilePicture ? (
-                          <img src={pet.profilePicture} alt={pet.name} className="w-5 h-5 md:w-6 md:h-6 rounded-full object-cover" />
-                        ) : (
-                          <PawPrint className="w-3 h-3 md:w-4 md:h-4" />
-                        )}
-                        <span>{pet.name}</span>
-                        {pet.registrationStage === 4 && <CheckCircle className="w-3 h-3 text-green-300" />}
-                      </button>
-                    ))}
-                    <button
-                      onClick={() => { setEditingPet(null); setIsModalOpen(true); }}
-                      className="px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center space-x-1 flex-shrink-0"
-                    >
-                      <Plus className="w-3 h-3 md:w-4 md:h-4" />
-                      <span>Add Pet</span>
-                    </button>
+                {/* All docs uploaded banner */}
+                {needsPayment && (
+                  <div style={{ padding: '16px 16px', background: '#E6F6ED', borderRadius: 13, outline: '1px #A8DDB8 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 22, height: 22, background: '#1A6B3A', borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <CheckmarkIcon size={11} color="white" />
+                    </div>
+                    <span style={{ color: '#1A6B3A', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 500 }}>
+                      🎉 All documents uploaded! Please complete payment to finish registration.
+                    </span>
                   </div>
+                )}
 
-                  {/* ── PET CARD ── */}
-                  {currentPet && (
-                    <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-6">
-                      <div className="flex flex-col sm:flex-row items-start justify-between mb-6 gap-4">
-                        <div className="flex items-center space-x-4">
-                          <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
-                            {currentPet.profilePicture ? (
-                              <img src={currentPet.profilePicture} alt={currentPet.name} className="w-full h-full object-cover" />
-                            ) : (
-                              getSpeciesIcon(currentPet.species)
+                {/* WhatsApp agent banner */}
+                <div style={{ padding: '16px 20px', background: 'linear-gradient(174deg, #162C18 0%, #0D1F0F 100%)', borderRadius: 13, outline: '1px rgba(37,211,102,0.12) solid', outlineOffset: -1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{ width: 42, height: 42, background: '#25D366', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <WaIcon size={21} color="white" />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <div style={{ display: 'inline-flex', alignSelf: 'flex-start', paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: 'rgba(37,211,102,0.18)', borderRadius: 100, alignItems: 'center', gap: 6 }}>
+                        <div style={{ width: 6, height: 6, background: '#6EE09A', borderRadius: 3 }} />
+                        <span style={{ color: '#6EE09A', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '15.75px' }}>Agent available now</span>
+                      </div>
+                      <span style={{ color: '#C8F0CC', fontSize: 15, fontFamily: F.fraunces, fontWeight: 700, lineHeight: '22.5px' }}>Register via WhatsApp — with live agent support</span>
+                      <span style={{ color: 'rgba(200,240,204,0.50)', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '16.8px' }}>Prefer help? A Tailio representative guides you through every step on WhatsApp.</span>
+                    </div>
+                  </div>
+                  <button style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 13, paddingBottom: 13, background: '#25D366', boxShadow: '0px 2px 0px #1A9E4A', borderRadius: 9, outline: '2px #1A9E4A solid', outlineOffset: -2, display: 'flex', alignItems: 'center', gap: 9, border: 'none', cursor: 'pointer', flexShrink: 0 }}>
+                    <WaIcon size={16} color="white" />
+                    <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700 }}>Chat with us now</span>
+                    <ArrowIcon size={14} color="white" />
+                  </button>
+                </div>
+
+                {/* Pet selector tabs */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', paddingTop: 4 }}>
+                  {pets.map(pet => (
+                    <button
+                      key={pet._id}
+                      onClick={() => setSelectedPet(pet)}
+                      style={{
+                        paddingLeft: 14, paddingRight: 14, paddingTop: 7, paddingBottom: 7,
+                        background: selectedPet?._id === pet._id ? '#E8600A' : 'none',
+                        boxShadow: selectedPet?._id === pet._id ? '0px 2px 0px #C04E06' : 'none',
+                        borderRadius: 100,
+                        outline: selectedPet?._id === pet._id ? '1px #C04E06 solid' : '1px rgba(44,26,14,0.18) solid',
+                        outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7, border: 'none', cursor: 'pointer',
+                      }}
+                    >
+                      <div style={{ width: 7, height: 7, background: selectedPet?._id === pet._id ? 'rgba(255,255,255,0.50)' : 'rgba(44,26,14,0.25)', borderRadius: 3.5 }} />
+                      <span style={{ color: selectedPet?._id === pet._id ? 'white' : '#7A5C40', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>{pet.name}</span>
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => { setEditingPet(null); setIsModalOpen(true); }}
+                    style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 7, paddingBottom: 7, borderRadius: 100, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    <span style={{ color: '#7A5C40', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>Add Pet</span>
+                  </button>
+                </div>
+
+                {/* ── PET CARD ── */}
+                {currentPet && (
+                  <div style={{ background: '#FFFCF8', borderRadius: 13, borderLeft: '1px #E8600A solid', borderTop: '3px #E8600A solid', borderRight: '1px #E8600A solid', borderBottom: '1px #E8600A solid', padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 18 }}>
+                    {/* Pet header */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                      <div style={{ width: 60, height: 60, background: '#F3EDE0', borderRadius: 13, outline: '2px rgba(44,26,14,0.18) solid', outlineOffset: -2, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+                        {currentPet.profilePicture
+                          ? <img src={currentPet.profilePicture} alt={currentPet.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          : <PawIcon size={28} color="#A68660" />
+                        }
+                      </div>
+                      <div>
+                        <span style={{ color: '#2C1A0E', fontSize: 21, fontFamily: F.fraunces, fontWeight: 900, lineHeight: '31.5px', display: 'block' }}>{currentPet.name}</span>
+                        <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginTop: 2 }}>
+                          {currentPet.registrationStage < 4 && (
+                            <div style={{ paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: '#FFF4E4', borderRadius: 100, outline: '1px #FFCCA0 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 5 }}>
+                              <div style={{ width: 9, height: 9, position: 'relative', overflow: 'hidden' }}>
+                                <div style={{ width: 7.5, height: 7.5, left: 0.75, top: 0.75, position: 'absolute', outline: '0.94px #B85C00 solid', outlineOffset: -0.47 }} />
+                              </div>
+                              <span style={{ color: '#B85C00', fontSize: 11, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '16.5px' }}>Registration Pending</span>
+                            </div>
+                          )}
+                          {currentPet.registrationStage === 4 && (
+                            <div style={{ paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: '#E6F6ED', borderRadius: 100, outline: '1px #A8DDB8 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 5 }}>
+                              <span style={{ color: '#1A6B3A', fontSize: 11, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '16.5px' }}>✓ Registered</span>
+                            </div>
+                          )}
+                          <div style={{ paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: '#F3EDE0', borderRadius: 100, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center' }}>
+                            <span style={{ color: '#7A5C40', fontSize: 11, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '16.5px' }}>
+                              {currentPet.registrationStage === 0 ? 'Not Started' : currentPet.registrationStage === 1 ? 'Documents Ready' : currentPet.registrationStage === 2 ? 'Submitted' : currentPet.registrationStage === 3 ? 'Awaiting License' : 'Registered'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Pet details */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                      {[
+                        { label: 'Breed', value: currentPet.breed || 'Not specified' },
+                        { label: 'Member Since', value: currentPet.createdAt ? new Date(currentPet.createdAt).toLocaleDateString() : 'N/A' },
+                        { label: 'Colour', value: currentPet.color || 'Not specified', muted: true },
+                        { label: 'Documents', value: `${currentPet.uploadedDocumentsCount || 0}/4 uploaded` },
+                        { label: 'Age', value: getFormattedAge(currentPet) },
+                      ].map(row => (
+                        <div key={row.label} style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          <span style={{ color: '#A68660', fontSize: 9.5, fontFamily: F.dmMono, fontWeight: 400, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.14px' }}>{row.label}</span>
+                          <span style={{ color: row.muted ? '#7A5C40' : '#2C1A0E', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 500, lineHeight: '20.25px' }}>{row.value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Action buttons */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, flexWrap: 'wrap' }}>
+                      {/* Edit Pet Info */}
+                      <button
+                        onClick={() => { setEditingPet(currentPet); setIsModalOpen(true); }}
+                        style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 14.5, paddingBottom: 14.5, borderRadius: 9, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7, background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
+                        <EditIcon size={13} color="#2C1A0E" />
+                        <span style={{ color: '#2C1A0E', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>Edit Pet Info</span>
+                      </button>
+
+                      {/* Complete Registration (stage 0 or 1) */}
+                      {(currentPet.registrationStage === 0 || currentPet.registrationStage === 1) && (
+                        <button
+                          onClick={() => handleRegisterPet(currentPet)}
+                          style={{ paddingLeft: 22, paddingRight: 22, paddingTop: 12, paddingBottom: 12, background: '#E8600A', boxShadow: '0px 2px 0px #C04E06', borderRadius: 9, outline: '2px #C04E06 solid', outlineOffset: -2, display: 'flex', alignItems: 'center', gap: 7, border: 'none', cursor: 'pointer' }}
+                        >
+                          <DocIcon size={13} color="white" />
+                          <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 600 }}>Complete Registration</span>
+                        </button>
+                      )}
+
+                      {/* Stage 2/3 — status pill */}
+                      {(currentPet.registrationStage === 2 || currentPet.registrationStage === 3) && (
+                        <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 12, paddingBottom: 12, background: currentPet.registrationStage === 3 ? '#F3EAF8' : '#FFF4E4', borderRadius: 9, outline: `1px ${currentPet.registrationStage === 3 ? '#D4A0E8' : '#FFCCA0'} solid`, outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7 }}>
+                          <span style={{ color: currentPet.registrationStage === 3 ? '#6B21A8' : '#B85C00', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>
+                            {currentPet.registrationStage === 2 ? '📋 Under Review' : '🏅 License Being Prepared'}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Stage 4 — view registration */}
+                      {currentPet.registrationStage === 4 && (
+                        <button
+                          onClick={() => handleViewRegistration(currentPet)}
+                          style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 14.5, paddingBottom: 14.5, borderRadius: 9, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7, background: 'none', border: 'none', cursor: 'pointer' }}
+                        >
+                          <span style={{ color: '#2C1A0E', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>View Registration</span>
+                        </button>
+                      )}
+
+                      {/* Delete */}
+                      <button
+                        onClick={() => setShowDeleteConfirm({ show: true, petId: currentPet._id, petName: currentPet.name })}
+                        style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 14.5, paddingBottom: 14.5, background: '#FDECEA', borderRadius: 9, outline: '1px #F5B8B5 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 7, border: 'none', cursor: 'pointer' }}
+                      >
+                        <TrashIcon size={13} color="#A0251E" />
+                        <span style={{ color: '#A0251E', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>Delete</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── REGISTRATION PROGRESS CARD ── */}
+                {currentPet && (
+                  <div style={{ background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                      <div style={{ width: 12, height: 12, position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ width: 10, height: 9, left: 1, top: 1.5, position: 'absolute', outline: '1px #A68660 solid', outlineOffset: -0.5 }} />
+                      </div>
+                      <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15.75px', letterSpacing: '1.05px' }}>Registration Progress</span>
+                    </div>
+
+                    {/* Documents progress */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5, paddingTop: 2 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ color: '#2C1A0E', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500, lineHeight: '19.5px' }}>Documents Uploaded</span>
+                        <span style={{ color: '#7A5C40', fontSize: 12, fontFamily: F.dmMono, fontWeight: 400, lineHeight: '18px' }}>{currentPet.uploadedDocumentsCount || 0}/4</span>
+                      </div>
+                      <div style={{ height: 6, background: '#EBE1CE', borderRadius: 100, overflow: 'hidden' }}>
+                        <div style={{ height: 6, background: (currentPet.uploadedDocumentsCount || 0) >= 4 ? '#1A6B3A' : '#E8600A', borderRadius: 100, width: `${((currentPet.uploadedDocumentsCount || 0) / 4) * 100}%`, transition: 'width 0.4s' }} />
+                      </div>
+                    </div>
+
+                    {/* Registration status */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ color: '#2C1A0E', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500, lineHeight: '19.5px' }}>Registration Status</span>
+                        <span style={{ color: '#B85C00', fontSize: 12, fontFamily: F.dmMono, fontWeight: 400, lineHeight: '18px' }}>
+                          {currentPet.registrationStage === 0 ? 'Not Started' : currentPet.registrationStage === 1 ? needsPayment ? 'Pending Payment' : 'Docs Uploading' : currentPet.registrationStage === 2 ? 'Under Review' : currentPet.registrationStage === 3 ? 'Awaiting License' : 'Complete'}
+                        </span>
+                      </div>
+                      <div style={{ height: 6, background: '#EBE1CE', borderRadius: 100, overflow: 'hidden', position: 'relative' }}>
+                        <div style={{ height: 6, background: '#E8600A', borderRadius: 100, width: `${(currentPet.registrationStage / 4) * 100}%`, transition: 'width 0.4s' }} />
+                      </div>
+                    </div>
+
+                    {/* Preview docs pills */}
+                    <div style={{ paddingTop: 2, display: 'flex', alignItems: 'center', gap: 5.5, flexWrap: 'wrap' }}>
+                      <span style={{ color: '#A68660', fontSize: 11, fontFamily: F.dmMono, fontWeight: 400, lineHeight: '16.5px' }}>Preview docs:</span>
+                      {[0, 1, 2, 3].map(n => {
+                        const uploaded = (currentPet.uploadedDocumentsCount || 0) > n;
+                        return (
+                          <div
+                            key={n}
+                            style={{ paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: uploaded ? '#E8600A' : 'none', borderRadius: 100, outline: `1px ${uploaded ? '#C04E06' : 'rgba(44,26,14,0.18)'} solid`, outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          >
+                            <span style={{ color: uploaded ? 'white' : '#7A5C40', fontSize: 11, fontFamily: F.dmSans, fontWeight: 400 }}>{uploaded ? `${n + 1} ✓` : `${n}`}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── REQUIRED DOCUMENTS CARD ── */}
+                {currentPet && (
+                  <div style={{ background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                      <div style={{ width: 12, height: 12, position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ width: 8, height: 10, left: 2, top: 1, position: 'absolute', outline: '1px #A68660 solid', outlineOffset: -0.5 }} />
+                        <div style={{ width: 3, height: 3, left: 7, top: 1, position: 'absolute', outline: '1px #A68660 solid', outlineOffset: -0.5 }} />
+                      </div>
+                      <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15.75px', letterSpacing: '1.05px' }}>Required Documents</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {[
+                        { key: 'antiRabiesCertificate', label: 'Anti-Rabies Certificate', sub: 'Issued by registered vet' },
+                        { key: 'idProof', label: 'Applicant ID Proof', sub: 'Aadhaar / PAN / Passport' },
+                        { key: 'residenceProof', label: 'Residence Proof', sub: 'Electricity bill / Rental agreement' },
+                        { key: 'ownerWithPetPhoto', label: 'Photo with Pet Dog', sub: 'Both faces clearly visible' },
+                      ].map((doc, idx) => {
+                        const uploaded = (currentPet.uploadedDocumentsCount || 0) > idx;
+                        return (
+                          <div
+                            key={doc.key}
+                            style={{ padding: '13px 14px', background: uploaded ? '#E6F6ED' : '#FAF6EF', borderRadius: 13, outline: `1px ${uploaded ? '#A8DDB8' : 'rgba(44,26,14,0.08)'} solid`, outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 8, marginTop: idx > 0 ? 4 : 0 }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
+                              <div style={{ width: 30, height: 30, background: uploaded ? '#E6F6ED' : '#F3EDE0', borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <div style={{ width: 14, height: 14, position: 'relative', overflow: 'hidden' }}>
+                                  <div style={{ width: 9.33, height: 6.42, left: 2.33, top: 3.5, position: 'absolute', outline: `1.46px ${uploaded ? '#1A6B3A' : '#A68660'} solid`, outlineOffset: -0.73 }} />
+                                </div>
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                                <span style={{ color: '#2C1A0E', fontSize: 12.5, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '16.25px' }}>{doc.label}</span>
+                                <span style={{ color: '#7A5C40', fontSize: 11, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '14.85px' }}>{doc.sub}</span>
+                              </div>
+                            </div>
+                            {uploaded && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '15.75px' }}>Document uploaded</span>
+                                <div style={{ display: 'flex', gap: 4 }}>
+                                  <div style={{ width: 26, height: 26, background: '#FFFCF8', borderRadius: 5, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                                    <PreviewIcon size={11} color="#7A5C40" />
+                                  </div>
+                                  <div style={{ width: 26, height: 26, background: '#FFFCF8', borderRadius: 5, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                                    <DeleteDocIcon size={11} color="#7A5C40" />
+                                  </div>
+                                </div>
+                              </div>
                             )}
                           </div>
-                          <div>
-                            <div className="flex flex-wrap items-center gap-2">
-                              <h2 className="text-xl md:text-2xl font-bold text-gray-900">{currentPet.name}</h2>
-                              <span className={`px-2 py-1 rounded-full text-[10px] md:text-xs font-medium ${getStageColor(currentPet.registrationStage || 0)}`}>
-                                {getStageLabel(currentPet.registrationStage || 0)}
-                              </span>
-                            </div>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                              {currentPet.registrationStage === 0 && (
-                                <span className="px-2 py-1 bg-orange-100 text-orange-600 text-[10px] md:text-xs rounded-full">
-                                  ⚠️ Registration Pending
-                                </span>
-                              )}
-                              {currentPet.registrationStage === 4 && (
-                                <span className="px-2 py-1 bg-green-100 text-green-600 text-[10px] md:text-xs rounded-full">
-                                  ✅ Fully Registered
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── IMPORTANT INFORMATION CARD ── */}
+                {currentPet && (
+                  <div style={{ padding: '14px 16px', background: '#EEF4FF', borderRadius: 13, outline: '1px #B3CEFF solid', outlineOffset: -1, display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                    <div style={{ width: 18, height: 18, background: '#2653A0', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                      <div style={{ width: 10, height: 10, position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ width: 8.33, height: 8.33, left: 0.83, top: 0.83, position: 'absolute', outline: '1.04px white solid', outlineOffset: -0.52 }} />
                       </div>
-
-                      {/* Pet details grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 pt-4 border-t border-gray-100">
-                        <div className="space-y-3 md:space-y-4">
-                          <div>
-                            <p className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide">BREED</p>
-                            <p className="text-sm md:text-base font-medium text-gray-900 mt-1">{currentPet.breed || "Not specified"}</p>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                      <span style={{ color: '#2653A0', fontSize: 12.5, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '18.75px' }}>Important Information</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                        {[
+                          'All 4 documents are required to complete the registration process',
+                          'Documents can be uploaded in any order and replaced before submission',
+                          'Once registration is submitted, documents cannot be modified',
+                          'Payment of ₹999 is required to complete registration',
+                          'You can pay anytime after uploading all documents',
+                        ].map((text, i) => (
+                          <div key={i} style={{ position: 'relative', paddingLeft: 10 }}>
+                            <div style={{ width: 4, height: 4, left: 0, top: 5, position: 'absolute', background: '#2653A0', borderRadius: 2 }} />
+                            <span style={{ color: '#3A5FAA', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '17.4px' }}>{text}</span>
                           </div>
-                          <div>
-                            <p className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide">COLOUR</p>
-                            <p className="text-sm md:text-base font-medium text-gray-900 mt-1">{currentPet.color || "Not specified"}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide">AGE</p>
-                            <p className="text-sm md:text-base font-medium text-gray-900 mt-1">{getFormattedAge(currentPet)}</p>
-                          </div>
-                        </div>
-                        <div className="space-y-3 md:space-y-4">
-                          <div>
-                            <p className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide">MEMBER SINCE</p>
-                            <p className="text-sm md:text-base font-medium text-gray-900 mt-1">
-                              {currentPet.createdAt ? new Date(currentPet.createdAt).toLocaleDateString() : "N/A"}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wide">DOCUMENTS</p>
-                            <p className="text-sm md:text-base font-medium text-gray-900 mt-1">{currentPet.uploadedDocumentsCount || 0}/4 uploaded</p>
-                          </div>
-                        </div>
+                        ))}
                       </div>
+                    </div>
+                  </div>
+                )}
 
-                      {/* ══════════════════════════════════════
-                          ACTION BUTTONS — fixed stage logic
-                      ══════════════════════════════════════ */}
-                      <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-4 border-t border-gray-100 flex-wrap">
+                {/* ── MUNICIPAL OTP WARNING CARD ── */}
+                {currentPet && (
+                  <div style={{ padding: '15px 16px', background: 'linear-gradient(175deg, #FFF0E4 0%, #FFE3C8 100%)', borderRadius: 13, outline: '1px #FFCCA0 solid', outlineOffset: -1, display: 'flex', alignItems: 'flex-start', gap: 11 }}>
+                    <div style={{ width: 30, height: 30, background: '#E8600A', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <div style={{ width: 15, height: 15, position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ width: 8.75, height: 12.5, left: 3.13, top: 1.25, position: 'absolute', outline: '1.25px white solid', outlineOffset: -0.63 }} />
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3.3 }}>
+                      <span style={{ color: '#2C1A0E', fontSize: 14, fontFamily: F.fraunces, fontWeight: 700, lineHeight: '21px' }}>You'll receive an OTP from your Municipal Corporation</span>
+                      <div>
+                        <span style={{ color: '#4A2C14', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '18.6px' }}>After submission, the Municipal Corporation will send a verification OTP to your registered number. </span>
+                        <span style={{ color: '#C04E06', fontSize: 12, fontFamily: F.dmSans, fontWeight: 700, lineHeight: '18.6px' }}>You must share this OTP with Tailio on WhatsApp only</span>
+                        <span style={{ color: '#4A2C14', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '18.6px' }}> — never share it via email, SMS or any other channel. This is the final step to confirm your pet's registration.</span>
+                      </div>
+                      <div style={{ display: 'inline-flex', paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: '#25D366', borderRadius: 100, alignItems: 'center', gap: 5, alignSelf: 'flex-start' }}>
+                        <div style={{ width: 10, height: 10, position: 'relative', overflow: 'hidden' }}>
+                          <div style={{ width: 7.5, height: 7.5, left: 1.25, top: 1.25, position: 'absolute', background: 'white' }} />
+                        </div>
+                        <span style={{ color: 'white', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 700, lineHeight: '15.75px' }}>Share only on Tailio's WhatsApp</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-                        {/* Edit pet info — always visible */}
-                        <button
-                          onClick={() => handleEditPet(currentPet)}
-                          className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2"
-                        >
-                          <Edit className="w-4 h-4" />
-                          <span>Edit Pet Info</span>
-                        </button>
-
-                        {/* Stage 4: fully registered */}
-                        {currentPet.registrationStage === 4 && (
-                          <>
-                            <button
-                              onClick={() => handleViewRegistration(currentPet)}
-                              className="bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2"
-                            >
-                              <Eye className="w-4 h-4" />
-                              <span>View Registration</span>
-                            </button>
-                            <button
-                              onClick={() => handleEditRegistration(currentPet)}
-                              className="bg-orange-50 hover:bg-orange-100 text-orange-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2"
-                            >
-                              <Edit className="w-4 h-4" />
-                              <span>Edit Registration</span>
-                            </button>
-                          </>
-                        )}
-
-                        {/* Stage 2 or 3: already submitted — no action button, just status */}
-                        {(currentPet.registrationStage === 2 || currentPet.registrationStage === 3) && (
-                          <div className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
-                            currentPet.registrationStage === 3
-                              ? 'bg-purple-50 text-purple-700'
-                              : 'bg-orange-50 text-orange-700'
-                          }`}>
-                            {currentPet.registrationStage === 3
-                              ? <Award className="w-4 h-4" />
-                              : <Clock className="w-4 h-4" />}
-                            <span>
-                              {currentPet.registrationStage === 2
-                                ? "Under Review — we'll update you soon"
-                                : "License being prepared"}
-                            </span>
+                {/* ── SUBMIT / PAYMENT FOOTER CARD ── */}
+                {currentPet && (currentPet.registrationStage === 0 || currentPet.registrationStage === 1) && (
+                  <div style={{ background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    {/* Terms checkbox row */}
+                    <div style={{ paddingBottom: 16, borderBottom: '1px rgba(44,26,14,0.10) solid', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                      <div style={{ width: 17, height: 17, paddingTop: 1.38, paddingBottom: 2.92, paddingLeft: 3.04, paddingRight: 1.76, background: '#E8600A', borderRadius: 5, outline: '2px #C04E06 solid', outlineOffset: -2, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <div style={{ width: 4, height: 8, transform: 'rotate(40deg)', transformOrigin: 'top left', borderRight: '2px white solid', borderBottom: '2px white solid' }} />
+                      </div>
+                      <div style={{ fontSize: 12.5, color: '#7A5C40', fontFamily: F.dmSans, fontWeight: 400, lineHeight: '20px' }}>
+                        I have read and agree to Tailio's{' '}
+                        <span style={{ color: '#E8600A', fontWeight: 500, cursor: 'pointer' }}>Terms of Service</span>
+                        {' '}and{' '}
+                        <span style={{ color: '#E8600A', fontWeight: 500, cursor: 'pointer' }}>Privacy Policy</span>
+                        . I confirm that all uploaded documents are genuine and belong to me. I understand that submitting false documents is a legal offence under Indian law.
+                      </div>
+                    </div>
+                    {/* Action row */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                      <button
+                        onClick={() => { setShowRegistrationForm(false); setSelectedPet(null); }}
+                        style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 8, paddingBottom: 8, borderRadius: 9, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
+                        <span style={{ color: '#2C1A0E', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>Cancel</span>
+                      </button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                          <div style={{ width: 12, height: 12, position: 'relative', overflow: 'hidden' }}>
+                            <div style={{ width: 9, height: 5.5, left: 1.5, top: 5.5, position: 'absolute', outline: '1px #A68660 solid', outlineOffset: -0.5 }} />
+                            <div style={{ width: 5, height: 4.5, left: 3.5, top: 1, position: 'absolute', outline: '1px #A68660 solid', outlineOffset: -0.5 }} />
                           </div>
-                        )}
-
-                        {/* Stage 0 or 1: not yet submitted */}
-                        {(currentPet.registrationStage === 0 || currentPet.registrationStage === 1) && (
-                          <button
-                            onClick={() => handleRegisterPet(currentPet)}
-                            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2"
-                          >
-                            <FileText className="w-4 h-4" />
-                            <span>
-                              {currentPet.registrationStage === 1
-                                ? 'Upload Docs & Pay'
-                                : 'Complete Registration'}
-                            </span>
-                          </button>
-                        )}
-
-                        {/* Delete — always visible */}
+                          <span style={{ color: '#A68660', fontSize: 11.5, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '17.25px' }}>Secure · GST inclusive</span>
+                        </div>
                         <button
-                          onClick={() => setShowDeleteConfirm({ show: true, petId: currentPet._id, petName: currentPet.name })}
-                          className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2"
+                          onClick={() => handleRegisterPet(currentPet)}
+                          style={{ paddingLeft: 22, paddingRight: 22, paddingTop: 12, paddingBottom: 12, background: '#E8600A', boxShadow: '0px 2px 0px #C04E06', borderRadius: 9, outline: '2px #C04E06 solid', outlineOffset: -2, display: 'flex', alignItems: 'center', gap: 7, border: 'none', cursor: 'pointer' }}
                         >
-                          <Trash2 className="w-4 h-4" />
-                          <span>Delete</span>
+                          <PaymentIcon size={14} color="white" />
+                          <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 600 }}>Pay ₹999 & Submit Registration</span>
                         </button>
                       </div>
                     </div>
-                  )}
+                  </div>
+                )}
+              </div>
 
-                  {/* ══════════════════════════════════════
-                      REGISTRATION PROGRESS CARD
-                  ══════════════════════════════════════ */}
-                  {currentPet && (
-                    <div className="bg-white rounded-xl border border-gray-200 p-5">
-                      <h3 className="font-semibold text-gray-900 mb-4">Registration Progress</h3>
-                      <div className="space-y-4">
+              {/* ── RIGHT COLUMN ── */}
+              <div style={{ width: isMobile ? '100%' : 280, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-                        {/* Documents progress bar */}
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="text-gray-600">Documents Uploaded</span>
-                            <span className="font-medium text-gray-900">{currentPet.uploadedDocumentsCount || 0}/4</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-orange-500 h-2 rounded-full transition-all duration-500"
-                              style={{ width: `${((currentPet.uploadedDocumentsCount || 0) / 4) * 100}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Stage progress bar */}
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span className="text-gray-600">Registration Stage</span>
-                            <span className={`font-medium text-xs px-2 py-0.5 rounded-full ${getStageColor(currentPet.registrationStage || 0)}`}>
-                              {getStageLabel(currentPet.registrationStage || 0)}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className={`h-2 rounded-full transition-all duration-500 ${
-                                currentPet.registrationStage === 4 ? 'bg-green-500' :
-                                currentPet.registrationStage === 3 ? 'bg-purple-500' :
-                                currentPet.registrationStage === 2 ? 'bg-orange-500' :
-                                currentPet.registrationStage === 1 ? 'bg-blue-500' : 'bg-gray-400'
-                              }`}
-                              style={{ width: `${((currentPet.registrationStage || 0) / 4) * 100}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        {/* ── Stage-specific hint message ── */}
-                        {currentPet.registrationStage === 0 && (
-                          <div className="mt-2 p-3 bg-orange-50 border border-orange-100 rounded-lg">
-                            <p className="text-sm text-orange-700">⚠️ Upload your documents to start registration.</p>
-                          </div>
-                        )}
-                        {currentPet.registrationStage === 1 && currentPet.hasAllDocuments && !currentPet.registrationTriggered && (
-                          <div className="mt-2 p-3 bg-green-50 border border-green-100 rounded-lg">
-                            <p className="text-sm text-green-700">✅ All documents uploaded! Click "Upload Docs & Pay" to submit your registration.</p>
-                          </div>
-                        )}
-                        {currentPet.registrationStage === 1 && !currentPet.hasAllDocuments && (
-                          <div className="mt-2 p-3 bg-blue-50 border border-blue-100 rounded-lg">
-                            <p className="text-sm text-blue-700">📄 {currentPet.uploadedDocumentsCount || 0}/4 documents uploaded. Upload remaining documents to proceed.</p>
-                          </div>
-                        )}
-                        {currentPet.registrationStage === 2 && (
-                          <div className="mt-2 p-3 bg-orange-50 border border-orange-100 rounded-lg">
-                            <p className="text-sm text-orange-700">📋 Registration submitted and under review. We'll notify you once your license is ready.</p>
-                          </div>
-                        )}
-                        {currentPet.registrationStage === 3 && (
-                          <div className="mt-2 p-3 bg-purple-50 border border-purple-100 rounded-lg">
-                            <p className="text-sm text-purple-700">🏅 Documents verified! Your license is being prepared and will be delivered within 7–10 business days.</p>
-                          </div>
-                        )}
-                        {currentPet.registrationStage === 4 && (
-                          <div className="mt-2 p-3 bg-green-50 border border-green-100 rounded-lg">
-                            <p className="text-sm text-green-700">🎉 Your pet is fully registered! License has been delivered.</p>
-                          </div>
-                        )}
+                {/* Pet Overview card */}
+                <div style={{ padding: '18px 20px', background: '#2C1A0E', borderRadius: 13, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: 'rgba(244,228,207,0.38)', fontSize: 9.5, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '0.95px' }}>Pet Overview</span>
+                    <PawIcon size={13} color="rgba(255,255,255,0.22)" />
+                  </div>
+                  <div style={{ paddingTop: 11 }}>
+                    <span style={{ color: '#FF8C3A', fontSize: 46, fontFamily: F.fraunces, fontWeight: 900, lineHeight: '46px' }}>{stats.total}</span>
+                  </div>
+                  <span style={{ color: 'rgba(244,228,207,0.42)', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '18px' }}>Total Pets Added</span>
+                  <div style={{ paddingTop: 11, display: 'flex', flexDirection: 'column' }}>
+                    {[
+                      { label: 'Registered', value: stats.registered, color: '#6EE09A' },
+                      { label: 'In Progress', value: stats.inProgress, color: '#FFB266' },
+                      { label: 'Not Started', value: stats.notStarted, color: '#F4E4CF' },
+                    ].map((row, i, arr) => (
+                      <div key={row.label} style={{ paddingTop: 7, paddingBottom: 7, borderBottom: i < arr.length - 1 ? '1px rgba(255,255,255,0.05) solid' : 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ color: 'rgba(244,228,207,0.52)', fontSize: 13, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.5px' }}>{row.label}</span>
+                        <span style={{ color: row.color, fontSize: 13, fontFamily: F.dmMono, fontWeight: 500, lineHeight: '19.5px' }}>{row.value}</span>
                       </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Total Documents */}
+                <div style={{ padding: '16px 18px', background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  <div style={{ paddingBottom: 5, display: 'flex', alignItems: 'center', gap: 7 }}>
+                    <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ width: 7.33, height: 9.17, left: 1.83, top: 0.92, position: 'absolute', outline: '0.92px #A68660 solid', outlineOffset: -0.46 }} />
+                      <div style={{ width: 2.75, height: 2.75, left: 6.42, top: 0.92, position: 'absolute', outline: '0.92px #A68660 solid', outlineOffset: -0.46 }} />
+                    </div>
+                    <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15.75px', letterSpacing: '1.05px', flex: 1 }}>Total Documents</span>
+                    <span style={{ color: stats.documentsUploaded >= stats.total * 4 && stats.total > 0 ? '#1A6B3A' : '#E8600A', fontSize: 12, fontFamily: F.dmMono, fontWeight: 500, lineHeight: '18px' }}>{stats.documentsUploaded}/{stats.total * 4}</span>
+                  </div>
+                  <div style={{ height: 6, background: '#EBE1CE', borderRadius: 100, overflow: 'hidden' }}>
+                    <div style={{ height: 6, background: stats.documentsUploaded >= stats.total * 4 && stats.total > 0 ? '#1A6B3A' : '#E8600A', borderRadius: 100, width: `${stats.total > 0 ? (stats.documentsUploaded / (stats.total * 4)) * 100 : 0}%` }} />
+                  </div>
+                  {stats.documentsUploaded >= stats.total * 4 && stats.total > 0 && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                      <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ width: 7.33, height: 5.04, left: 1.83, top: 2.75, position: 'absolute', outline: '1.15px #1A6B3A solid', outlineOffset: -0.57 }} />
+                      </div>
+                      <span style={{ color: '#1A6B3A', fontSize: 12, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '18px' }}>All documents uploaded</span>
                     </div>
                   )}
                 </div>
 
-                {/* ── RIGHT COLUMN — Stats ── */}
-                <div className="space-y-4 w-full">
-
-                  <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-5 text-white">
-                    <h3 className="font-semibold text-sm md:text-base mb-2">Pet Overview</h3>
-                    <div className="text-2xl md:text-3xl font-bold">{stats.total}</div>
-                    <p className="text-xs md:text-sm opacity-90">Total Pets</p>
-                    <div className="mt-3 pt-3 border-t border-orange-400">
-                      <div className="flex justify-between text-xs md:text-sm">
-                        <span>Registered:</span>
-                        <span className="font-semibold">{stats.registered}</span>
-                      </div>
-                      <div className="flex justify-between text-xs md:text-sm mt-1">
-                        <span>In Progress:</span>
-                        <span className="font-semibold">{stats.inProgress}</span>
-                      </div>
-                      <div className="flex justify-between text-xs md:text-sm mt-1">
-                        <span>Not Started:</span>
-                        <span className="font-semibold">{stats.notStarted}</span>
-                      </div>
+                {/* Registration % */}
+                <div style={{ padding: '16px 18px', background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  <div style={{ paddingBottom: 5, display: 'flex', alignItems: 'center', gap: 7 }}>
+                    <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ width: 9.17, height: 9.17, left: 0.92, top: 0.91, position: 'absolute', outline: '0.92px #A68660 solid', outlineOffset: -0.46 }} />
+                      <div style={{ width: 5.96, height: 4.59, left: 4.13, top: 1.83, position: 'absolute', outline: '0.92px #A68660 solid', outlineOffset: -0.46 }} />
                     </div>
+                    <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15.75px', letterSpacing: '1.05px', flex: 1 }}>Registration</span>
+                    <span style={{ color: '#E8600A', fontSize: 12, fontFamily: F.dmMono, fontWeight: 500, lineHeight: '18px' }}>{stats.total === 0 ? 0 : Math.round((stats.registered / stats.total) * 100)}%</span>
                   </div>
-
-                  <div className="bg-white rounded-xl border border-gray-200 p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-2">
-                        <FileText className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
-                        <h3 className="font-semibold text-sm md:text-base text-gray-900">TOTAL DOCUMENTS</h3>
-                      </div>
-                      <span className="text-lg md:text-xl font-bold text-gray-900">{stats.documentsUploaded}/{stats.total * 4}</span>
-                    </div>
-                    <p className="text-xs md:text-sm text-orange-600 mb-3">{(stats.total * 4) - stats.documentsUploaded} pending uploads</p>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5">
-                      <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: `${stats.total > 0 ? (stats.documentsUploaded / (stats.total * 4)) * 100 : 0}%` }} />
-                    </div>
+                  <div style={{ height: 6, background: '#EBE1CE', borderRadius: 100 }}>
+                    <div style={{ height: 6, background: '#1A6B3A', borderRadius: 100, width: `${stats.total === 0 ? 0 : (stats.registered / stats.total) * 100}%` }} />
                   </div>
-
-                  <div className="bg-white rounded-xl border border-gray-200 p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-2">
-                        <FileCheck className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
-                        <h3 className="font-semibold text-sm md:text-base text-gray-900">REGISTRATION</h3>
-                      </div>
-                      <span className="text-lg md:text-xl font-bold text-gray-900">
-                        {stats.total === 0 ? 0 : Math.round((stats.registered / stats.total) * 100)}%
-                      </span>
-                    </div>
-                    <p className="text-xs md:text-sm text-gray-600 mb-3">{stats.registered} of {stats.total} pets registered</p>
-                    <div className="w-full bg-gray-200 rounded-full h-1.5">
-                      <div className="bg-green-500 h-1.5 rounded-full" style={{ width: `${stats.total === 0 ? 0 : (stats.registered / stats.total) * 100}%` }} />
-                    </div>
-                  </div>
-
-                  {/* Registration Timeline */}
-                  <div className="bg-white rounded-xl border border-gray-200 p-5">
-                    <h3 className="font-semibold text-sm md:text-base text-gray-900 mb-3 flex items-center">
-                      <Clock className="w-4 h-4 mr-2 text-orange-500" />
-                      Registration Timeline
-                    </h3>
-                    {currentPet ? (
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-xs md:text-sm">
-                          <span className="text-gray-500">Account Created:</span>
-                          <span className="font-medium text-gray-900">
-                            {new Date(currentPet.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <div className="flex justify-between text-xs md:text-sm">
-                          <span className="text-gray-500">Documents Uploaded:</span>
-                          <span className="font-medium text-gray-900">{currentPet.uploadedDocumentsCount || 0}/4</span>
-                        </div>
-                        <div className="flex justify-between text-xs md:text-sm">
-                          <span className="text-gray-500">Current Stage:</span>
-                          <span className={`font-medium text-xs px-2 py-0.5 rounded-full ${getStageColor(currentPet.registrationStage || 0)}`}>
-                            {getStageLabel(currentPet.registrationStage || 0)}
-                          </span>
-                        </div>
-                        {currentPet.registrationStage === 4 && (
-                          <div className="mt-2 pt-2 border-t border-gray-100 flex items-center space-x-2 text-green-600">
-                            <CheckCircle className="w-4 h-4" />
-                            <span className="text-[10px] md:text-xs font-medium">Registration Complete!</span>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <p className="text-xs md:text-sm text-gray-500">Select a pet to view timeline</p>
-                    )}
-                  </div>
-
-                  {/* Quick tips */}
-                  <div className="bg-blue-50 rounded-xl p-5 border border-blue-100">
-                    <h3 className="font-semibold text-sm md:text-base text-blue-900 mb-3">💡 Quick Tips</h3>
-                    <ul className="space-y-2 text-xs md:text-sm text-blue-800">
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0 mt-0.5" />
-                        <span>Upload all 4 documents to start registration</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0 mt-0.5" />
-                        <span>Pay ₹999 to complete registration after document upload</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <CheckCircle className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0 mt-0.5" />
-                        <span>License will be delivered within 7–10 business days</span>
-                      </li>
-                    </ul>
-                  </div>
+                  <span style={{ color: '#7A5C40', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '18px' }}>{stats.registered} of {stats.total} pets registered</span>
                 </div>
+
+                {/* Registration Timeline */}
+                {currentPet && (
+                  <div style={{ padding: '16px 18px', background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                      <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ width: 9.17, height: 9.17, left: 0.92, top: 0.92, position: 'absolute', outline: '0.92px #E8600A solid', outlineOffset: -0.46 }} />
+                        <div style={{ width: 1.83, height: 3.67, left: 5.5, top: 2.75, position: 'absolute', outline: '0.92px #E8600A solid', outlineOffset: -0.46 }} />
+                      </div>
+                      <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15.75px', letterSpacing: '1.05px' }}>Registration Timeline</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {[
+                        { label: 'Account Created', sub: new Date(currentPet.createdAt).toLocaleDateString(), done: true },
+                        { label: 'Documents Uploaded', sub: `${currentPet.uploadedDocumentsCount || 0}/4 complete`, done: (currentPet.uploadedDocumentsCount || 0) >= 4 },
+                        { label: 'Current Stage', sub: needsPayment ? 'Pending Payment' : currentPet.registrationStage === 2 ? 'Under Review' : currentPet.registrationStage >= 3 ? 'Processing' : 'Not started', current: true, done: false },
+                        { label: 'Municipal Verification', sub: 'Not started', done: currentPet.registrationStage >= 3 },
+                        { label: 'Certificate Issued', sub: '24–72 hrs after payment', done: currentPet.registrationStage === 4 },
+                      ].map((item, i, arr) => (
+                        <div key={item.label} style={{ paddingTop: 9, paddingBottom: 9, borderBottom: i < arr.length - 1 ? '1px rgba(44,26,14,0.10) solid' : 'none', display: 'flex', alignItems: 'flex-start', gap: 11 }}>
+                          <div style={{ width: 8, height: 12, paddingTop: 4, flexShrink: 0 }}>
+                            {item.done ? (
+                              <div style={{ width: 8, height: 8, background: '#1A6B3A', borderRadius: 4 }} />
+                            ) : item.current ? (
+                              <div style={{ width: 8, height: 8, background: '#E8600A', borderRadius: 4, boxShadow: '0px 0px 0px 3px rgba(232,96,10,0.18)' }} />
+                            ) : (
+                              <div style={{ width: 8, height: 8, background: '#EBE1CE', borderRadius: 4, border: '1px rgba(44,26,14,0.18) solid' }} />
+                            )}
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                            <span style={{ color: item.done || item.current ? '#2C1A0E' : '#7A5C40', fontSize: 13, fontFamily: F.dmSans, fontWeight: 500, lineHeight: '19.5px' }}>{item.label}</span>
+                            <span style={{ color: item.current ? '#E8600A' : '#A68660', fontSize: 11, fontFamily: F.dmMono, fontWeight: 400, lineHeight: '16.5px' }}>{item.sub}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Quick Tips */}
+                {currentPet && (
+                  <div style={{ padding: '16px 18px', background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ paddingBottom: 12, display: 'flex', alignItems: 'center', gap: 7 }}>
+                      <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ width: 9.17, height: 9.17, left: 0.92, top: 0.92, position: 'absolute', outline: '0.92px #E8600A solid', outlineOffset: -0.46 }} />
+                      </div>
+                      <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15.75px', letterSpacing: '1.05px' }}>Quick Tips</span>
+                    </div>
+                    {[
+                      { bold: 'All 4 documents uploaded.', normal: " You're ready to pay and submit." },
+                      { normal: 'Pay ', bold: '₹999', normal2: ' to complete registration and receive your certificate.' },
+                      { normal: 'Expect an ', bold: 'OTP from the Municipal Corporation', normal2: ' — share it only on Tailio\'s WhatsApp.' },
+                      { normal: 'Certificate delivered within ', bold: '24–72 hours', normal2: ' of approval.' },
+                    ].map((tip, i, arr) => (
+                      <div key={i} style={{ paddingTop: 8, paddingBottom: 8, borderBottom: i < arr.length - 1 ? '1px rgba(44,26,14,0.10) solid' : 'none', display: 'flex', alignItems: 'flex-start', gap: 9 }}>
+                        <div style={{ width: 19, height: 19, background: '#FFF0E4', borderRadius: 9.5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                          <div style={{ width: 10, height: 10, position: 'relative', overflow: 'hidden' }}>
+                            <div style={{ width: 6.67, height: 4.58, left: 1.67, top: 2.5, position: 'absolute', outline: '1.04px #E8600A solid', outlineOffset: -0.52 }} />
+                          </div>
+                        </div>
+                        <span style={{ fontSize: 12, fontFamily: F.dmSans, lineHeight: '18px' }}>
+                          {tip.bold && <span style={{ color: '#2C1A0E', fontWeight: 600 }}>{tip.bold}</span>}
+                          {tip.normal && <span style={{ color: '#7A5C40', fontWeight: 400 }}>{tip.normal}</span>}
+                          {(tip as any).normal2 && <span style={{ color: '#7A5C40', fontWeight: 400 }}>{(tip as any).normal2}</span>}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -695,31 +859,14 @@ export default function Dashboard() {
       </div>
 
       {/* ── MODALS ── */}
-      <AddPetModal
-        isOpen={isModalOpen}
-        onClose={handlePetModalClose}
-        onPetAdded={handlePetAdded}
-        token={token}
-        petToEdit={editingPet}
-      />
+      <AddPetModal isOpen={isModalOpen} onClose={() => { setIsModalOpen(false); setEditingPet(null); }} onPetAdded={async () => { await loadPets(); setIsModalOpen(false); setEditingPet(null); }} token={token} petToEdit={editingPet} />
 
       {showRegistrationForm && selectedPet && (
         <RegistrationForm
           key={selectedPet._id + (existingRegistration ? 'edit' : 'new')}
-          petId={selectedPet._id}
-          token={token!}
-          petName={selectedPet.name}
-          onSuccess={async () => {
-            setShowRegistrationForm(false);
-            setSelectedPet(null);
-            setExistingRegistration(null);
-            await loadPets();
-          }}
-          onCancel={() => {
-            setShowRegistrationForm(false);
-            setSelectedPet(null);
-            setExistingRegistration(null);
-          }}
+          petId={selectedPet._id} token={token!} petName={selectedPet.name}
+          onSuccess={async () => { setShowRegistrationForm(false); setSelectedPet(null); setExistingRegistration(null); await loadPets(); }}
+          onCancel={() => { setShowRegistrationForm(false); setSelectedPet(null); setExistingRegistration(null); }}
           existingRegistration={existingRegistration}
         />
       )}
@@ -727,51 +874,24 @@ export default function Dashboard() {
       {showRegistrationView && selectedPet && existingRegistration && (
         <RegistrationForm
           key={`view-${selectedPet._id}`}
-          petId={selectedPet._id}
-          token={token!}
-          petName={selectedPet.name}
-          onSuccess={() => {
-            setShowRegistrationView(false);
-            setSelectedPet(null);
-            setExistingRegistration(null);
-            loadPets();
-          }}
-          onCancel={() => {
-            setShowRegistrationView(false);
-            setSelectedPet(null);
-            setExistingRegistration(null);
-          }}
-          existingRegistration={existingRegistration}
-          viewOnly={true}
+          petId={selectedPet._id} token={token!} petName={selectedPet.name}
+          onSuccess={() => { setShowRegistrationView(false); setSelectedPet(null); setExistingRegistration(null); loadPets(); }}
+          onCancel={() => { setShowRegistrationView(false); setSelectedPet(null); setExistingRegistration(null); }}
+          existingRegistration={existingRegistration} viewOnly={true}
         />
       )}
 
-      {/* Delete confirm */}
       {showDeleteConfirm.show && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-4 md:p-6 mx-4">
-            <div className="text-center">
-              <div className="bg-red-100 p-3 rounded-full w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 flex items-center justify-center">
-                <AlertCircle className="w-6 h-6 md:w-8 md:h-8 text-red-600" />
-              </div>
-              <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Delete Pet?</h2>
-              <p className="text-sm md:text-base text-gray-500 mb-6">
-                Are you sure you want to delete {showDeleteConfirm.petName}? This action cannot be undone.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={() => setShowDeleteConfirm({ show: false, petId: '', petName: '' })}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => handleDeletePet(showDeleteConfirm.petId)}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium"
-                >
-                  Delete
-                </button>
-              </div>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.60)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: 16 }}>
+          <div style={{ background: '#FFFCF8', borderRadius: 18, maxWidth: 400, width: '100%', padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center' }}>
+            <div style={{ width: 48, height: 48, background: '#FDECEA', borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <TrashIcon size={20} color="#A0251E" />
+            </div>
+            <span style={{ color: '#2C1A0E', fontSize: 18, fontFamily: F.fraunces, fontWeight: 900 }}>Delete Pet?</span>
+            <span style={{ color: '#7A5C40', fontSize: 14, fontFamily: F.dmSans }}>Are you sure you want to delete {showDeleteConfirm.petName}? This cannot be undone.</span>
+            <div style={{ display: 'flex', gap: 12, width: '100%' }}>
+              <button onClick={() => setShowDeleteConfirm({ show: false, petId: '', petName: '' })} style={{ flex: 1, padding: '10px 0', borderRadius: 9, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, background: 'none', border: 'none', cursor: 'pointer', color: '#2C1A0E', fontSize: 14, fontFamily: F.dmSans, fontWeight: 500 }}>Cancel</button>
+              <button onClick={() => handleDeletePet(showDeleteConfirm.petId)} style={{ flex: 1, padding: '10px 0', background: '#A0251E', borderRadius: 9, border: 'none', cursor: 'pointer', color: 'white', fontSize: 14, fontFamily: F.dmSans, fontWeight: 600 }}>Delete</button>
             </div>
           </div>
         </div>
