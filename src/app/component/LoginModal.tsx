@@ -102,54 +102,74 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
     if (step === "phone") {
       return (
         <form onSubmit={handleSendOTP} style={{ width: '100%' }}>
-          <div style={{ marginBottom: '18.91px' }}>
-            <div style={{ marginBottom: '5px' }}>
-              <div style={{ color: '#2C1A0E', fontSize: '12px', fontFamily: 'DM Sans', fontWeight: 600, letterSpacing: '0.12px' }}>
-                WhatsApp Number
-              </div>
-            </div>
+          {/* WhatsApp Number Label */}
+          <div style={{ marginBottom: '5px' }}>
             <div style={{ 
-              display: 'flex', 
-              background: '#FAF6EF', 
-              overflow: 'hidden', 
-              borderRadius: '9px', 
-              outline: '1px solid rgba(44, 26, 14, 0.18)', 
-              outlineOffset: '-1px'
+              color: '#2C1A0E', 
+              fontSize: '12px', 
+              fontFamily: 'DM Sans', 
+              fontWeight: 600, 
+              letterSpacing: '0.12px' 
             }}>
-              <div style={{ 
-                padding: '11px 12px 11px 14px', 
-                background: '#F3EDE0', 
-                borderRight: '1px solid rgba(44, 26, 14, 0.18)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px'
-              }}>
-                <span style={{ minWidth: '24.78px', fontSize: '14px', fontFamily: 'DM Mono', fontWeight: 500, color: '#4A2C14' }}>🇮🇳</span>
-                <span style={{ fontSize: '13.5px', fontFamily: 'DM Mono', fontWeight: 500, color: '#4A2C14' }}>+91</span>
-              </div>
-              <input
-                style={{ 
-                  flex: 1, 
-                  padding: '12px 14px 11px 14px', 
-                  background: '#FAF6EF', 
-                  border: 'none', 
-                  outline: 'none', 
-                  fontSize: '13.5px', 
-                  fontFamily: 'DM Sans',
-                  fontWeight: 400,
-                  color: '#2C1A0E'
-                }}
-                type="tel"
-                placeholder="Enter 10-digit mobile number"
-                value={whatsappNumber}
-                onChange={e => setWhatsappNumber(e.target.value)}
-                disabled={isLoading}
-              />
+              WhatsApp Number
             </div>
           </div>
 
+          {/* Phone Input */}
           <div style={{ 
-            marginBottom: '18px',
+            display: 'flex', 
+            background: '#FAF6EF', 
+            overflow: 'hidden', 
+            borderRadius: '9px', 
+            outline: '1px solid rgba(44, 26, 14, 0.18)', 
+            outlineOffset: '-1px',
+            marginBottom: '18.91px'
+          }}>
+            <div style={{ 
+              padding: '11px 12px 11px 14px', 
+              background: '#F3EDE0', 
+              borderRight: '1px solid rgba(44, 26, 14, 0.18)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}>
+              <span style={{ 
+                minWidth: '24.78px', 
+                fontSize: '14px', 
+                fontFamily: 'DM Mono', 
+                fontWeight: 500, 
+                color: '#4A2C14' 
+              }}>🇮🇳</span>
+              <span style={{ 
+                fontSize: '13.5px', 
+                fontFamily: 'DM Mono', 
+                fontWeight: 500, 
+                color: '#4A2C14' 
+              }}>+91</span>
+            </div>
+            <input
+              style={{ 
+                flex: 1, 
+                padding: '12px 14px 11px 14px', 
+                background: '#FAF6EF', 
+                border: 'none', 
+                outline: 'none', 
+                fontSize: '13.5px', 
+                fontFamily: 'DM Sans',
+                fontWeight: 400,
+                color: '#2C1A0E'
+              }}
+              type="tel"
+              placeholder="Enter 10-digit mobile number"
+              value={whatsappNumber}
+              onChange={e => setWhatsappNumber(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+
+          {/* Info Box */}
+          <div style={{ 
+            marginBottom: '22px',
             padding: '10px 14px', 
             background: '#FFF0E4', 
             borderRadius: '9px', 
@@ -185,38 +205,37 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
             </div>
           </div>
 
-          <div style={{ paddingTop: '4px' }}>
-            <button
-              type="submit"
-              style={{ 
-                width: '100%', 
-                padding: '13px 24px', 
-                background: '#E8600A', 
-                boxShadow: '0px 3px 0px #C04E06', 
-                borderRadius: '9px', 
-                outline: '2px solid #C04E06', 
-                outlineOffset: '-2px',
-                fontWeight: 600, 
-                color: '#FFFFFF', 
-                fontSize: '15px', 
-                fontFamily: 'DM Sans',
-                letterSpacing: '0.15px', 
-                cursor: 'pointer', 
-                border: 'none', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                gap: '8px'
-              }}
-              disabled={isLoading}
-            >
-              {isLoading ? "Sending..." : "Send OTP"}
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
-                <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
-              </svg>
-            </button>
-          </div>
+          {/* Send OTP Button */}
+          <button
+            type="submit"
+            style={{ 
+              width: '100%', 
+              padding: '13px 24px', 
+              background: '#E8600A', 
+              boxShadow: '0px 3px 0px #C04E06', 
+              borderRadius: '9px', 
+              outline: '2px solid #C04E06', 
+              outlineOffset: '-2px',
+              fontWeight: 600, 
+              color: '#FFFFFF', 
+              fontSize: '15px', 
+              fontFamily: 'DM Sans',
+              letterSpacing: '0.15px', 
+              cursor: 'pointer', 
+              border: 'none', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '8px'
+            }}
+            disabled={isLoading}
+          >
+            {isLoading ? "Sending..." : "Send OTP"}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+            </svg>
+          </button>
         </form>
       );
     }
@@ -224,68 +243,72 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
     if (step === "otp") {
       return (
         <form onSubmit={handleVerifyOTP} style={{ width: '100%' }}>
-          <div style={{ marginBottom: '18.91px' }}>
-            <div style={{ marginBottom: '5px' }}>
-              <div style={{ color: '#2C1A0E', fontSize: '12px', fontFamily: 'DM Sans', fontWeight: 600, letterSpacing: '0.12px' }}>
-                Verification Code
-              </div>
+          <div style={{ marginBottom: '5px' }}>
+            <div style={{ 
+              color: '#2C1A0E', 
+              fontSize: '12px', 
+              fontFamily: 'DM Sans', 
+              fontWeight: 600, 
+              letterSpacing: '0.12px' 
+            }}>
+              Verification Code
             </div>
-            <input
-              style={{ 
-                width: '100%', 
-                padding: '12px 14px', 
-                background: '#FAF6EF', 
-                borderRadius: '9px', 
-                textAlign: 'center', 
-                fontSize: '24px', 
-                letterSpacing: '0.2em', 
-                outline: '1px solid rgba(44, 26, 14, 0.18)', 
-                outlineOffset: '-1px', 
-                border: 'none', 
-                color: '#2C1A0E',
-                fontFamily: 'DM Mono'
-              }}
-              type="text"
-              placeholder="000000"
-              value={otp}
-              onChange={e => setOtp(e.target.value)}
-              maxLength={6}
-              disabled={isLoading}
-            />
           </div>
+          <input
+            style={{ 
+              width: '100%', 
+              padding: '12px 14px', 
+              background: '#FAF6EF', 
+              borderRadius: '9px', 
+              textAlign: 'center', 
+              fontSize: '24px', 
+              letterSpacing: '0.2em', 
+              outline: '1px solid rgba(44, 26, 14, 0.18)', 
+              outlineOffset: '-1px', 
+              border: 'none', 
+              color: '#2C1A0E',
+              fontFamily: 'DM Mono',
+              marginBottom: '18.91px'
+            }}
+            type="text"
+            placeholder="000000"
+            value={otp}
+            onChange={e => setOtp(e.target.value)}
+            maxLength={6}
+            disabled={isLoading}
+          />
 
-          <div style={{ marginBottom: '18px' }}>
-            <button
-              type="submit"
-              style={{ 
-                width: '100%', 
-                padding: '13px 24px', 
-                background: '#E8600A', 
-                boxShadow: '0px 3px 0px #C04E06', 
-                borderRadius: '9px', 
-                outline: '2px solid #C04E06', 
-                outlineOffset: '-2px',
-                fontWeight: 600, 
-                color: '#FFFFFF', 
-                fontSize: '15px', 
-                fontFamily: 'DM Sans',
-                letterSpacing: '0.15px', 
-                cursor: 'pointer', 
-                border: 'none', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                gap: '8px'
-              }}
-              disabled={isLoading}
-            >
-              {isLoading ? "Verifying..." : "Verify OTP"}
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
-                <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
-              </svg>
-            </button>
-          </div>
+          <button
+            type="submit"
+            style={{ 
+              width: '100%', 
+              padding: '13px 24px', 
+              background: '#E8600A', 
+              boxShadow: '0px 3px 0px #C04E06', 
+              borderRadius: '9px', 
+              outline: '2px solid #C04E06', 
+              outlineOffset: '-2px',
+              fontWeight: 600, 
+              color: '#FFFFFF', 
+              fontSize: '15px', 
+              fontFamily: 'DM Sans',
+              letterSpacing: '0.15px', 
+              cursor: 'pointer', 
+              border: 'none', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '8px',
+              marginBottom: '18px'
+            }}
+            disabled={isLoading}
+          >
+            {isLoading ? "Verifying..." : "Verify OTP"}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M4.67 12L11.33 5.33" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+              <path d="M4.67 5.33H11.33V12" stroke="#FFFFFF" strokeWidth="1.67" strokeLinecap="round"/>
+            </svg>
+          </button>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <button 
@@ -298,8 +321,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
                 color: '#7A5C40', 
                 background: 'none', 
                 border: 'none', 
-                cursor: 'pointer',
-                textDecoration: 'none'
+                cursor: 'pointer'
               }}
             >
               ← Change number
@@ -400,10 +422,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
               fontFamily: 'DM Sans',
               letterSpacing: '0.15px', 
               cursor: 'pointer', 
-              border: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              border: 'none'
             }}
             disabled={isLoading}
           >
@@ -428,7 +447,6 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
       <div style={{ 
         width: 420, 
         height: 423,
-        maxWidth: '100%', 
         position: 'relative',
         background: '#FFFCF8', 
         boxShadow: '0px 24px 80px rgba(44, 26, 14, 0.18)', 
@@ -436,7 +454,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
         outline: '1px solid rgba(44, 26, 14, 0.10)', 
         outlineOffset: '-1px'
       }}>
-        {/* Close button */}
+        {/* Close button - exactly as in Figma */}
         <button
           onClick={onClose}
           style={{ 
@@ -458,7 +476,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
           </svg>
         </button>
 
-        {/* Content wrapper */}
+        {/* Content - exact padding from Figma */}
         <div style={{ 
           paddingTop: 28, 
           paddingBottom: 32, 
@@ -466,14 +484,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
           paddingRight: 28,
           display: 'flex',
           flexDirection: 'column',
-          gap: '5.10px'
+          gap: 5.1
         }}>
-          {/* Header with line */}
+          {/* QUICK LOGIN header */}
           <div style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            gap: 7,
-            marginBottom: 0
+            gap: 7
           }}>
             <div style={{ 
               width: 18, 
@@ -489,25 +506,37 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
               textTransform: 'uppercase', 
               letterSpacing: '1.33px' 
             }}>
-              Quick Login
+              QUICK LOGIN
             </div>
           </div>
 
           {/* Title */}
-          <div style={{ paddingTop: '0.90px' }}>
-            <div style={{ color: '#2C1A0E', fontSize: 26, fontFamily: 'Fraunces', fontWeight: 900, lineHeight: '28.60px' }}>
+          <div style={{ paddingTop: 0.9 }}>
+            <div style={{ 
+              color: '#2C1A0E', 
+              fontSize: 26, 
+              fontFamily: 'Fraunces', 
+              fontWeight: 900, 
+              lineHeight: '28.60px' 
+            }}>
               Login with{' '}
               <span style={{ color: '#E8600A', fontStyle: 'italic', fontWeight: 700 }}>WhatsApp</span>
             </div>
           </div>
 
           {/* Description */}
-          <div style={{ color: '#7A5C40', fontSize: 13, fontFamily: 'DM Sans', fontWeight: 400, lineHeight: '20.15px' }}>
+          <div style={{ 
+            color: '#7A5C40', 
+            fontSize: 13, 
+            fontFamily: 'DM Sans', 
+            fontWeight: 400, 
+            lineHeight: '20.15px' 
+          }}>
             We'll send a one-time code to verify your number. Takes 30 seconds.
           </div>
 
-          {/* Form area */}
-          <div style={{ position: 'relative', marginTop: 0 }}>
+          {/* Form Area */}
+          <div style={{ position: 'relative' }}>
             {errorMessage && (
               <div style={{ 
                 background: '#FEF2F2', 
@@ -525,23 +554,23 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
 
             {renderContent()}
 
-            {/* Sign in link */}
+            {/* Sign up link */}
             <div style={{ 
-              height: '29.90px', 
+              height: 29.9,
               position: 'relative',
-              marginTop: '12.90px',
+              marginTop: 12.9,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center'
             }}>
-              {/* <span style={{ 
+              <span style={{ 
                 color: '#7A5C40', 
                 fontSize: 13, 
                 fontFamily: 'DM Sans', 
                 fontWeight: 400 
               }}>
-                Already have an account?{' '}
-              </span> */}
+                Don't have an account?{' '}
+              </span>
               <button
                 onClick={onSwitchToRegister}
                 style={{ 
@@ -553,11 +582,11 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
                   border: 'none', 
                   cursor: 'pointer',
                   padding: 0,
-                  textDecoration: 'none'
+                  borderBottom: '1px solid transparent'
                 }}
                 disabled={isLoading}
               >
-                Sign in
+                Sign up
               </button>
             </div>
           </div>

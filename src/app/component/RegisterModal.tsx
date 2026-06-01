@@ -10,16 +10,10 @@ interface RegisterModalProps {
 }
 
 export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
-  // Removed: register, login (email) — not needed anymore
   const { sendWhatsAppOTP, verifyWhatsAppOTP, completeWhatsAppRegistration } = useAuth();
   const router = useRouter();
 
-  // Removed: authMethod state — always WhatsApp now
   const [step, setStep] = useState<"phone" | "otp" | "register">("phone");
-
-  // Removed: username, email, password, confirmPassword state
-
-  // WhatsApp registration state — all kept exactly as before
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [tempToken, setTempToken] = useState("");
@@ -32,9 +26,6 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
   if (!isOpen) return null;
 
-  // Removed: handleEmailRegister, getPasswordStrength, passwordStrength
-
-  // Send OTP — unchanged
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
@@ -55,7 +46,6 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     setIsLoading(false);
   };
 
-  // Verify OTP — unchanged
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
@@ -75,7 +65,6 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     setIsLoading(false);
   };
 
-  // Complete registration — unchanged
   const handleCompleteRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
@@ -90,7 +79,6 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     setIsLoading(false);
   };
 
-  // Resend OTP — unchanged
   const resendOTP = async () => {
     if (resendCooldown > 0) return;
     setErrorMessage("");
@@ -113,42 +101,134 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   const renderContent = () => {
     if (step === "phone") {
       return (
-        <form onSubmit={handleSendOTP} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
+        <form onSubmit={handleSendOTP} style={{ width: '100%' }}>
+          {/* WhatsApp Number Label */}
+          <div style={{ marginBottom: '5px' }}>
+            <div style={{ 
+              color: '#2C1A0E', 
+              fontSize: '12px', 
+              fontFamily: 'DM Sans', 
+              fontWeight: 600, 
+              letterSpacing: '0.12px' 
+            }}>
               WhatsApp Number
-            </label>
-            <div style={{ display: 'flex', background: '#FAF6EF', overflow: 'hidden', borderRadius: 9, outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '12px 14px', background: '#F3EDE0', borderRight: '1px solid rgba(44,26,14,0.18)' }}>
-                <span style={{ fontSize: 14, fontFamily: 'monospace', color: '#4A2C14' }}>🇮🇳</span>
-                <span style={{ fontSize: 13.5, fontFamily: 'monospace', fontWeight: 500, color: '#4A2C14' }}>+91</span>
-              </div>
-              <input
-                style={{ flex: 1, padding: '12px 14px', background: '#FAF6EF', border: 'none', outline: 'none', fontSize: 13.5, color: '#2C1A0E' }}
-                type="tel"
-                placeholder="Enter 10-digit mobile number"
-                value={whatsappNumber}
-                onChange={e => setWhatsappNumber(e.target.value)}
-                disabled={isLoading}
-                required
-              />
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 12, background: '#FFF0E4', borderRadius: 9, outline: '1px solid rgba(232,96,10,0.18)', outlineOffset: -1 }}>
-            <div style={{ width: 28, height: 28, background: '#E8600A', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          {/* Phone Input */}
+          <div style={{ 
+            display: 'flex', 
+            background: '#FAF6EF', 
+            overflow: 'hidden', 
+            borderRadius: '9px', 
+            outline: '1px solid rgba(44, 26, 14, 0.18)', 
+            outlineOffset: '-1px',
+            marginBottom: '18.91px'
+          }}>
+            <div style={{ 
+              padding: '11px 12px 11px 14px', 
+              background: '#F3EDE0', 
+              borderRight: '1px solid rgba(44, 26, 14, 0.18)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}>
+              <span style={{ 
+                minWidth: '24.78px', 
+                fontSize: '14px', 
+                fontFamily: 'DM Mono', 
+                fontWeight: 500, 
+                color: '#4A2C14' 
+              }}>🇮🇳</span>
+              <span style={{ 
+                fontSize: '13.5px', 
+                fontFamily: 'DM Mono', 
+                fontWeight: 500, 
+                color: '#4A2C14' 
+              }}>+91</span>
+            </div>
+            <input
+              style={{ 
+                flex: 1, 
+                padding: '12px 14px 11px 14px', 
+                background: '#FAF6EF', 
+                border: 'none', 
+                outline: 'none', 
+                fontSize: '13.5px', 
+                fontFamily: 'DM Sans',
+                fontWeight: 400,
+                color: '#2C1A0E'
+              }}
+              type="tel"
+              placeholder="Enter 10-digit mobile number"
+              value={whatsappNumber}
+              onChange={e => setWhatsappNumber(e.target.value)}
+              disabled={isLoading}
+              required
+            />
+          </div>
+
+          {/* Info Box */}
+          <div style={{ 
+            marginBottom: '22px',
+            padding: '10px 14px', 
+            background: '#FFF0E4', 
+            borderRadius: '9px', 
+            outline: '1px solid rgba(232, 96, 10, 0.18)', 
+            outlineOffset: '-1px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px'
+          }}>
+            <div style={{ 
+              width: '28px', 
+              height: '28px', 
+              background: '#E8600A', 
+              borderRadius: '8px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              flexShrink: 0
+            }}>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M10.5 4.5L5.25 9.75L3.5 8" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round"/>
+                <rect x="1.75" y="1.75" width="10.5" height="10.5" rx="1.5" stroke="white" strokeWidth="1.28"/>
+                <path d="M4.67 7L6.33 8.67L9.33 5.33" stroke="white" strokeWidth="1.28" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <span style={{ fontSize: 12.5, color: '#4A2C14' }}>
+            <div style={{ 
+              fontSize: '12.5px', 
+              fontFamily: 'DM Sans', 
+              fontWeight: 400, 
+              color: '#4A2C14',
+              lineHeight: '18.13px'
+            }}>
               We'll send a verification code via WhatsApp — no spam, ever.
-            </span>
+            </div>
           </div>
 
+          {/* Send OTP Button */}
           <button
             type="submit"
-            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            style={{ 
+              width: '100%', 
+              padding: '13px 24px', 
+              background: '#E8600A', 
+              boxShadow: '0px 3px 0px #C04E06', 
+              borderRadius: '9px', 
+              outline: '2px solid #C04E06', 
+              outlineOffset: '-2px',
+              fontWeight: 600, 
+              color: '#FFFFFF', 
+              fontSize: '15px', 
+              fontFamily: 'DM Sans',
+              letterSpacing: '0.15px', 
+              cursor: 'pointer', 
+              border: 'none', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '8px'
+            }}
             disabled={isLoading}
           >
             {isLoading ? "Sending..." : "Send OTP"}
@@ -163,29 +243,66 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
     if (step === "otp") {
       return (
-        <form onSubmit={handleVerifyOTP} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
+        <form onSubmit={handleVerifyOTP} style={{ width: '100%' }}>
+          <div style={{ marginBottom: '5px' }}>
+            <div style={{ 
+              color: '#2C1A0E', 
+              fontSize: '12px', 
+              fontFamily: 'DM Sans', 
+              fontWeight: 600, 
+              letterSpacing: '0.12px' 
+            }}>
               Verification Code
-            </label>
-            <input
-              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, textAlign: 'center', fontSize: 24, letterSpacing: '0.2em', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none', color: '#2C1A0E' }}
-              type="text"
-              placeholder="000000"
-              value={otp}
-              onChange={e => setOtp(e.target.value)}
-              maxLength={6}
-              disabled={isLoading}
-              required
-            />
-            <p style={{ fontSize: 12, color: '#A68660', marginTop: 4 }}>
-              Enter the code sent to +91 {whatsappNumber}
-            </p>
+            </div>
           </div>
+          <input
+            style={{ 
+              width: '100%', 
+              padding: '12px 14px', 
+              background: '#FAF6EF', 
+              borderRadius: '9px', 
+              textAlign: 'center', 
+              fontSize: '24px', 
+              letterSpacing: '0.2em', 
+              outline: '1px solid rgba(44, 26, 14, 0.18)', 
+              outlineOffset: '-1px', 
+              border: 'none', 
+              color: '#2C1A0E',
+              fontFamily: 'DM Mono',
+              marginBottom: '18.91px'
+            }}
+            type="text"
+            placeholder="000000"
+            value={otp}
+            onChange={e => setOtp(e.target.value)}
+            maxLength={6}
+            disabled={isLoading}
+            required
+          />
 
           <button
             type="submit"
-            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+            style={{ 
+              width: '100%', 
+              padding: '13px 24px', 
+              background: '#E8600A', 
+              boxShadow: '0px 3px 0px #C04E06', 
+              borderRadius: '9px', 
+              outline: '2px solid #C04E06', 
+              outlineOffset: '-2px',
+              fontWeight: 600, 
+              color: '#FFFFFF', 
+              fontSize: '15px', 
+              fontFamily: 'DM Sans',
+              letterSpacing: '0.15px', 
+              cursor: 'pointer', 
+              border: 'none', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '8px',
+              marginBottom: '18px'
+            }}
             disabled={isLoading}
           >
             {isLoading ? "Verifying..." : "Verify & Continue"}
@@ -195,11 +312,37 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             </svg>
           </button>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
-            <button type="button" onClick={() => setStep("phone")} style={{ fontSize: 13, color: '#A68660', background: 'none', border: 'none', cursor: 'pointer' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <button 
+              type="button" 
+              onClick={() => setStep("phone")} 
+              style={{ 
+                fontSize: '13px', 
+                fontFamily: 'DM Sans',
+                fontWeight: 400,
+                color: '#7A5C40', 
+                background: 'none', 
+                border: 'none', 
+                cursor: 'pointer'
+              }}
+            >
               ← Change number
             </button>
-            <button type="button" onClick={resendOTP} disabled={resendCooldown > 0} style={{ fontSize: 13, color: '#E8600A', background: 'none', border: 'none', cursor: 'pointer' }}>
+            <button 
+              type="button" 
+              onClick={resendOTP} 
+              disabled={resendCooldown > 0} 
+              style={{ 
+                fontSize: '13px', 
+                fontFamily: 'DM Sans',
+                fontWeight: 600,
+                color: '#E8600A', 
+                background: 'none', 
+                border: 'none', 
+                cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
+                opacity: resendCooldown > 0 ? 0.6 : 1
+              }}
+            >
               {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend OTP"}
             </button>
           </div>
@@ -209,13 +352,26 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
     if (step === "register") {
       return (
-        <form onSubmit={handleCompleteRegistration} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
-              Your Name *
-            </label>
+        <form onSubmit={handleCompleteRegistration} style={{ width: '100%' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: '5px' }}>
+              <div style={{ color: '#2C1A0E', fontSize: '12px', fontFamily: 'DM Sans', fontWeight: 600, letterSpacing: '0.12px' }}>
+                Your Name *
+              </div>
+            </div>
             <input
-              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
+              style={{ 
+                width: '100%', 
+                padding: '12px 14px', 
+                background: '#FAF6EF', 
+                borderRadius: '9px', 
+                fontSize: '13.5px', 
+                fontFamily: 'DM Sans',
+                color: '#2C1A0E', 
+                outline: '1px solid rgba(44, 26, 14, 0.18)', 
+                outlineOffset: '-1px', 
+                border: 'none' 
+              }}
               type="text"
               placeholder="Enter your full name"
               value={name}
@@ -224,12 +380,26 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               disabled={isLoading}
             />
           </div>
-          <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#2C1A0E', marginBottom: 4, letterSpacing: '0.12px' }}>
-              Username (Optional)
-            </label>
+
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ marginBottom: '5px' }}>
+              <div style={{ color: '#2C1A0E', fontSize: '12px', fontFamily: 'DM Sans', fontWeight: 600, letterSpacing: '0.12px' }}>
+                Username (Optional)
+              </div>
+            </div>
             <input
-              style={{ width: '100%', padding: '12px 14px', background: '#FAF6EF', borderRadius: 9, fontSize: 13.5, color: '#2C1A0E', outline: '1px solid rgba(44,26,14,0.18)', outlineOffset: -1, border: 'none' }}
+              style={{ 
+                width: '100%', 
+                padding: '12px 14px', 
+                background: '#FAF6EF', 
+                borderRadius: '9px', 
+                fontSize: '13.5px', 
+                fontFamily: 'DM Sans',
+                color: '#2C1A0E', 
+                outline: '1px solid rgba(44, 26, 14, 0.18)', 
+                outlineOffset: '-1px', 
+                border: 'none' 
+              }}
               type="text"
               placeholder="Choose a username"
               value={waUsername}
@@ -237,9 +407,25 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               disabled={isLoading}
             />
           </div>
+
           <button
             type="submit"
-            style={{ width: '100%', padding: '12px 24px', background: '#E8600A', boxShadow: '0px 3px 0px #C04E06', borderRadius: 9, outline: '2px solid #C04E06', outlineOffset: -2, fontWeight: 600, color: '#FFFFFF', fontSize: 15, letterSpacing: '0.15px', cursor: 'pointer', border: 'none' }}
+            style={{ 
+              width: '100%', 
+              padding: '13px 24px', 
+              background: '#E8600A', 
+              boxShadow: '0px 3px 0px #C04E06', 
+              borderRadius: '9px', 
+              outline: '2px solid #C04E06', 
+              outlineOffset: '-2px',
+              fontWeight: 600, 
+              color: '#FFFFFF', 
+              fontSize: '15px', 
+              fontFamily: 'DM Sans',
+              letterSpacing: '0.15px', 
+              cursor: 'pointer', 
+              border: 'none'
+            }}
             disabled={isLoading}
           >
             {isLoading ? "Creating Account..." : "Complete Registration"}
@@ -250,76 +436,158 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999, padding: 16 }}>
-      <div style={{ width: 420, maxWidth: '100%', background: '#FFFCF8', borderRadius: 18, boxShadow: '0px 24px 80px rgba(44,26,14,0.18)', outline: '1px solid rgba(44,26,14,0.10)', outlineOffset: -1, position: 'relative' }}>
-
-        {/* Close Button — unchanged */}
+    <div style={{ 
+      position: 'fixed', 
+      inset: 0, 
+      background: 'rgba(0,0,0,0.5)', 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      zIndex: 9999, 
+      padding: 16 
+    }}>
+      <div style={{ 
+        width: 420, 
+        height: 423,
+        position: 'relative',
+        background: '#FFFCF8', 
+        boxShadow: '0px 24px 80px rgba(44, 26, 14, 0.18)', 
+        borderRadius: '18px', 
+        outline: '1px solid rgba(44, 26, 14, 0.10)', 
+        outlineOffset: '-1px'
+      }}>
+        {/* Close button */}
         <button
           onClick={onClose}
-          style={{ position: 'absolute', top: 12, right: 12, width: 30, height: 30, background: '#F3EDE0', borderRadius: 15, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', zIndex: 10 }}
+          style={{ 
+            position: 'absolute', 
+            top: 14, 
+            right: 16, 
+            width: 'auto',
+            height: 'auto',
+            background: 'transparent', 
+            border: 'none', 
+            cursor: 'pointer', 
+            zIndex: 10,
+            padding: 0
+          }}
           disabled={isLoading}
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M1 1L11 11M1 11L11 1" stroke="#7A5C40" strokeWidth="1.8" strokeLinecap="round"/>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M1 1L13 13M1 13L13 1" stroke="#7A5C40" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
         </button>
 
-        {/* Header bar — no tabs, just WhatsApp branding */}
-        <div style={{ paddingTop: 14, paddingLeft: 16, paddingRight: 16 }}>
-          <div style={{
-            padding: '10px 0',
-            borderTopLeftRadius: 9,
-            borderTopRightRadius: 9,
-            borderLeft: '1px solid rgba(44,26,14,0.18)',
-            borderTop: '1px solid rgba(44,26,14,0.18)',
-            borderRight: '1px solid rgba(44,26,14,0.18)',
-            background: '#FFFCF8',
-            position: 'relative',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <div style={{ width: 18, height: 18, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#E8600A' }}>
-                <span style={{ fontSize: 11 }}>💬</span>
-              </div>
-              <span style={{ fontSize: 13, fontWeight: 600, color: '#E8600A' }}>WhatsApp</span>
-            </div>
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2.5, background: '#E8600A', borderTopLeftRadius: 2, borderTopRightRadius: 2 }} />
-          </div>
-        </div>
-
-        <div style={{ height: 1, background: 'rgba(44,26,14,0.18)' }} />
-
         {/* Content */}
-        <div style={{ padding: '20px 28px 28px 28px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-            <div style={{ width: 16, height: 1.5, background: '#E8600A', borderRadius: 100 }} />
-            <span style={{ fontSize: 8.5, fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '1.2px', color: '#E8600A' }}>Quick registration</span>
+        <div style={{ 
+          paddingTop: 28, 
+          paddingBottom: 32, 
+          paddingLeft: 28, 
+          paddingRight: 28,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 5.1
+        }}>
+          {/* QUICK REGISTRATION header */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 7
+          }}>
+            <div style={{ 
+              width: 18, 
+              height: 1.5, 
+              background: '#E8600A', 
+              borderRadius: 100 
+            }} />
+            <div style={{ 
+              color: '#E8600A', 
+              fontSize: '9.5px', 
+              fontFamily: 'DM Sans', 
+              fontWeight: 400, 
+              textTransform: 'uppercase', 
+              letterSpacing: '1.33px' 
+            }}>
+              QUICK REGISTRATION
+            </div>
           </div>
 
-          <h2 style={{ fontSize: 24, fontWeight: 900, lineHeight: '26px', marginBottom: 2 }}>
-            <span style={{ color: '#2C1A0E' }}>Register with </span>
-            <span style={{ color: '#E8600A', fontStyle: 'italic' }}>Tailio</span>
-          </h2>
+          {/* Title */}
+          <div style={{ paddingTop: 0.9 }}>
+            <div style={{ 
+              color: '#2C1A0E', 
+              fontSize: 26, 
+              fontFamily: 'Fraunces', 
+              fontWeight: 900, 
+              lineHeight: '28.60px' 
+            }}>
+              Register with{' '}
+              <span style={{ color: '#E8600A', fontStyle: 'italic', fontWeight: 700 }}>WhatsApp</span>
+            </div>
+          </div>
 
-          <p style={{ fontSize: 12, color: '#7A5C40', lineHeight: '18px', marginBottom: 2 }}>
+          {/* Description */}
+          <div style={{ 
+            color: '#7A5C40', 
+            fontSize: 13, 
+            fontFamily: 'DM Sans', 
+            fontWeight: 400, 
+            lineHeight: '20.15px' 
+          }}>
             We'll send a one-time code to verify your number. Takes 30 seconds.
-          </p>
+          </div>
 
-          <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {/* Form Area */}
+          <div style={{ position: 'relative' }}>
             {errorMessage && (
-              <div style={{ background: '#FEF2F2', border: '1px solid #FEE2E2', color: '#DC2626', padding: '8px 12px', borderRadius: 9, fontSize: 12 }}>
+              <div style={{ 
+                background: '#FEF2F2', 
+                border: '1px solid #FEE2E2', 
+                color: '#DC2626', 
+                padding: '8px 12px', 
+                borderRadius: 9, 
+                fontSize: 12,
+                marginBottom: 16,
+                fontFamily: 'DM Sans'
+              }}>
                 {errorMessage}
               </div>
             )}
 
             {renderContent()}
 
-            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 8 }}>
+            {/* Sign in link */}
+            <div style={{ 
+              height: 29.9,
+              position: 'relative',
+              marginTop: 12.9,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <span style={{ 
+                color: '#7A5C40', 
+                fontSize: 13, 
+                fontFamily: 'DM Sans', 
+                fontWeight: 400 
+              }}>
+                Already have an account?{' '}
+              </span>
               <button
                 onClick={onSwitchToLogin}
-                style={{ fontSize: 13, color: '#E8600A', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
+                style={{ 
+                  color: '#E8600A', 
+                  fontSize: 13, 
+                  fontFamily: 'DM Sans', 
+                  fontWeight: 600, 
+                  background: 'none', 
+                  border: 'none', 
+                  cursor: 'pointer',
+                  padding: 0
+                }}
                 disabled={isLoading}
               >
-                Already have an account? Sign in
+                Sign in
               </button>
             </div>
           </div>
