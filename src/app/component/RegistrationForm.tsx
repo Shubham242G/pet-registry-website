@@ -569,22 +569,32 @@ export default function RegistrationForm({
             })}
           </div>
 
-          {/* Info Section */}
-          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <div className="flex items-start space-x-3">
-              <Info className="w-5 h-5 text-blue-600 mt-0.5" />
-              <div className="text-sm text-blue-800">
-                <p className="font-medium mb-1">Important Information:</p>
-                <ul className="list-disc list-inside space-y-1 text-blue-700">
-                  <li>All 4 documents are required to complete the registration process</li>
-                  <li>Documents can be uploaded in any order and can be replaced before submission</li>
-                  <li>Once registration is submitted, documents cannot be modified</li>
-                  <li>Payment of ₹999 is required to complete registration</li>
-                  <li>You can pay anytime after uploading documents</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+{/* Municipal OTP Warning Section - Added at the bottom of registration form */}
+<div className="mt-6 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-200">
+  <div className="flex items-start gap-3">
+    <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="white" strokeLinecap="round"/>
+        <circle cx="12" cy="12" r="3" fill="white" stroke="none"/>
+      </svg>
+    </div>
+    <div className="flex-1">
+      <h4 className="font-semibold text-orange-800 text-sm">You'll receive an OTP from your Municipal Corporation</h4>
+      <p className="text-xs text-orange-700 mt-1 leading-relaxed">
+        After submission, the Municipal Corporation will send a verification OTP to your registered number.{' '}
+        <span className="font-bold text-orange-800">You must share this OTP with Tailio on WhatsApp only</span>{' '}
+        — never share it via email, SMS or any other channel. This is the final step to confirm your pet's registration.
+      </p>
+      <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 bg-[#25D366] rounded-full">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+          <path d="M12.032 2.002c-5.523 0-10 4.477-10 10 0 1.752.453 3.476 1.312 4.987L2 22l5.144-1.281c1.462.781 3.112 1.199 4.803 1.199 5.523 0 10-4.477 10-10s-4.477-10-10-10z" />
+        </svg>
+        <span className="text-white text-xs font-semibold">Share only on Tailio's WhatsApp</span>
+      </div>
+    </div>
+  </div>
+</div>
+          
 
           {/* Action Buttons */}
           <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">

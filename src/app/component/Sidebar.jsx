@@ -8,7 +8,8 @@ import {
   Settings, 
   HelpCircle, 
   LogOut,
-  ChevronDown
+  ChevronDown,
+  Info
 } from "lucide-react";
 import { useAuth } from "./context/AuthContext";
 
@@ -20,8 +21,6 @@ export default function Sidebar() {
   const menuItems = [
     { name: "Overview", icon: LayoutDashboard, href: "/dashboard" },
     { name: "Documents", icon: FileText, href: "/documents" },
-    // { name: "Settings", icon: Settings, href: "/dashboard/settings" },
-    // { name: "Help", icon: HelpCircle, href: "/dashboard/help" },
   ];
 
   const handleLogout = () => {
@@ -40,16 +39,7 @@ export default function Sidebar() {
   const userInitial = displayName.charAt(0).toUpperCase();
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex flex-col">
-      {/* Logo */}
-      <div className="p-6">
-        <div className="flex items-center space-x-2">
-          <div className="bg-orange-500 p-1.5 rounded-lg">
-            <PawPrint className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-xl font-semibold text-gray-800">Tailio</span>
-        </div>
-      </div>
+    <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 flex flex-col overflow-y-auto">
 
       {/* User Section - Shows actual logged in user */}
       <div className="px-4 mb-6">
@@ -97,6 +87,38 @@ export default function Sidebar() {
           })}
         </div>
       </nav>
+
+      {/* Important Information Section - Added to Sidebar */}
+      <div className="px-3 py-4 mt-auto">
+        <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+          <div className="flex items-start space-x-2 mb-3">
+            <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+            <span className="text-xs font-semibold text-blue-800">Important Information</span>
+          </div>
+          <ul className="space-y-2">
+            <li className="text-xs text-blue-700 flex items-start gap-1.5">
+              <span className="text-blue-500">•</span>
+              <span>All 4 documents are required to complete the registration process</span>
+            </li>
+            <li className="text-xs text-blue-700 flex items-start gap-1.5">
+              <span className="text-blue-500">•</span>
+              <span>Documents can be uploaded in any order and replaced before submission</span>
+            </li>
+            <li className="text-xs text-blue-700 flex items-start gap-1.5">
+              <span className="text-blue-500">•</span>
+              <span>Once registration is submitted, documents cannot be modified</span>
+            </li>
+            <li className="text-xs text-blue-700 flex items-start gap-1.5">
+              <span className="text-blue-500">•</span>
+              <span>Payment of ₹999 is required to complete registration</span>
+            </li>
+            <li className="text-xs text-blue-700 flex items-start gap-1.5">
+              <span className="text-blue-500">•</span>
+              <span>You can pay anytime after uploading all documents</span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
       {/* Logout */}
       <div className="p-4 border-t border-gray-200">
