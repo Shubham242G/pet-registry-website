@@ -10,7 +10,7 @@ import {
   Camera,
   Syringe,
   Stethoscope,
-  FileText
+  Award
 } from "lucide-react";
 
 interface AddPetModalProps {
@@ -25,11 +25,9 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
   const [form, setForm] = useState({
     // Basic Info
     name: "",
-    breed: "",
     ageYears: "",
     ageMonths: "",
     gender: "",
-    color: "",
     
     // Photo
     profilePicture: "",
@@ -37,11 +35,12 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     // Vaccination Details
     vaccinationCertificateNumber: "",
     vaccinationDate: "",
-    vaccinationValidTill: "",
     
     // Veterinary Doctor Details
     vetName: "",
     vetMobile: "",
+    vetRegistrationNumber: "",
+    vetCouncilName: "",
     
     // Additional
     microchip: "",
@@ -62,17 +61,16 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
         console.log("Editing pet:", petToEdit);
         setForm({
           name: petToEdit.name || "",
-          breed: petToEdit.breed || "",
           ageYears: petToEdit.ageYears?.toString() || "",
           ageMonths: petToEdit.ageMonths?.toString() || "",
           gender: petToEdit.gender || "",
-          color: petToEdit.color || "",
           profilePicture: petToEdit.profilePicture || "",
           vaccinationCertificateNumber: petToEdit.vaccinationCertificateNumber || "",
           vaccinationDate: petToEdit.vaccinationDate ? petToEdit.vaccinationDate.split('T')[0] : "",
-          vaccinationValidTill: petToEdit.vaccinationValidTill ? petToEdit.vaccinationValidTill.split('T')[0] : "",
           vetName: petToEdit.vetName || "",
           vetMobile: petToEdit.vetMobile || "",
+          vetRegistrationNumber: petToEdit.vetRegistrationNumber || "",
+          vetCouncilName: petToEdit.vetCouncilName || "",
           microchip: petToEdit.microchip || "",
           notes: petToEdit.notes || ""
         });
@@ -87,17 +85,16 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
   const resetForm = () => {
     setForm({
       name: "",
-      breed: "",
       ageYears: "",
       ageMonths: "",
       gender: "",
-      color: "",
       profilePicture: "",
       vaccinationCertificateNumber: "",
       vaccinationDate: "",
-      vaccinationValidTill: "",
       vetName: "",
       vetMobile: "",
+      vetRegistrationNumber: "",
+      vetCouncilName: "",
       microchip: "",
       notes: ""
     });
@@ -150,17 +147,16 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       const petData = {
         name: form.name,
         species: "dog",
-        breed: form.breed,
         ageYears: form.ageYears ? parseInt(form.ageYears) : 0,
         ageMonths: form.ageMonths ? parseInt(form.ageMonths) : 0,
         gender: form.gender,
-        color: form.color,
         profilePicture: form.profilePicture,
         vaccinationCertificateNumber: form.vaccinationCertificateNumber,
         vaccinationDate: form.vaccinationDate || null,
-        vaccinationValidTill: form.vaccinationValidTill || null,
         vetName: form.vetName,
         vetMobile: form.vetMobile,
+        vetRegistrationNumber: form.vetRegistrationNumber,
+        vetCouncilName: form.vetCouncilName,
         microchip: form.microchip,
         notes: form.notes
       };
@@ -199,11 +195,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
   };
 
   const genders = ["Male", "Female", "Unknown"];
-  const breeds = [
-    "Labrador Retriever", "German Shepherd", "Golden Retriever", "French Bulldog",
-    "Bulldog", "Poodle", "Beagle", "Rottweiler", "Yorkshire Terrier", "Dachshund",
-    "Siberian Husky", "Great Dane", "Shih Tzu", "Doberman", "Boxer", "Other"
-  ];
 
   // Calculate display age
   const getDisplayAge = () => {
@@ -326,25 +317,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             />
           </div>
 
-          {/* BREED OF DOG */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Breed of Dog <span className="text-red-500">*</span>
-            </label>
-            <select
-              required
-              value={form.breed}
-              onChange={(e) => setForm({ ...form, breed: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white text-gray-900"
-              style={{ color: '#111827' }}
-            >
-              <option value="">Select Breed</option>
-              {breeds.map(breed => (
-                <option key={breed} value={breed} className="text-gray-900">{breed}</option>
-              ))}
-            </select>
-          </div>
-
           {/* AGE AS ON DATE OF REGISTRATION */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -385,33 +357,20 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             )}
           </div>
 
-          {/* GENDER & COLOR */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
-              <select
-                value={form.gender}
-                onChange={(e) => setForm({ ...form, gender: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white text-gray-900"
-                style={{ color: '#111827' }}
-              >
-                <option value="">Select gender</option>
-                {genders.map(g => (
-                  <option key={g} value={g.toLowerCase()} className="text-gray-900">{g}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
-              <input
-                type="text"
-                value={form.color}
-                onChange={(e) => setForm({ ...form, color: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
-                placeholder="e.g., Golden / Cream"
-                style={{ color: '#111827' }}
-              />
-            </div>
+          {/* GENDER */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+            <select
+              value={form.gender}
+              onChange={(e) => setForm({ ...form, gender: e.target.value })}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white text-gray-900"
+              style={{ color: '#111827' }}
+            >
+              <option value="">Select gender</option>
+              {genders.map(g => (
+                <option key={g} value={g.toLowerCase()} className="text-gray-900">{g}</option>
+              ))}
+            </select>
           </div>
 
           {/* VACCINATION DETAILS */}
@@ -448,19 +407,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   required
                   value={form.vaccinationDate}
                   onChange={(e) => setForm({ ...form, vaccinationDate: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900"
-                  style={{ color: '#111827' }}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Valid Till
-                </label>
-                <input
-                  type="date"
-                  value={form.vaccinationValidTill}
-                  onChange={(e) => setForm({ ...form, vaccinationValidTill: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900"
                   style={{ color: '#111827' }}
                 />
@@ -514,6 +460,41 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                     style={{ color: '#111827' }}
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                  <Award className="w-4 h-4 mr-1 text-orange-500" />
+                  Veterinary Doctor Registration Number <span className="text-red-500">*</span>
+                  <span className="text-xs text-gray-500 ml-2">(Max Length 50 Chars)</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  maxLength={50}
+                  value={form.vetRegistrationNumber}
+                  onChange={(e) => setForm({ ...form, vetRegistrationNumber: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
+                  placeholder="Enter doctor's registration number"
+                  style={{ color: '#111827' }}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Name of Council where Doctor is Registered <span className="text-red-500">*</span>
+                  <span className="text-xs text-gray-500 ml-2">(Max Length 100 Chars)</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  maxLength={100}
+                  value={form.vetCouncilName}
+                  onChange={(e) => setForm({ ...form, vetCouncilName: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
+                  placeholder="e.g., Veterinary Council of India, State Veterinary Council"
+                  style={{ color: '#111827' }}
+                />
               </div>
             </div>
           </div>

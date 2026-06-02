@@ -18,13 +18,9 @@ interface Pet {
   _id: string;
   name: string;
   species: string;
-  breed: string;
   ageYears?: number;
   ageMonths?: number;
   gender: string;
-  color: string;
-  microchip: string;
-  notes: string;
   profilePicture?: string;
   isRegistered: boolean;
   registrationStage: number;
@@ -34,6 +30,14 @@ interface Pet {
   registrationTriggered?: boolean;
   createdAt: string;
   updatedAt: string;
+  // Veterinary Doctor Details
+  vetName?: string;
+  vetMobile?: string;
+  vetRegistrationNumber?: string;
+  vetCouncilName?: string;
+  // Vaccination Details
+  vaccinationCertificateNumber?: string;
+  vaccinationDate?: string;
 }
 
 /* ─── small icon components matching Figma ──────────────────────────────── */
@@ -376,17 +380,17 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <button 
-  onClick={() => {
-    const phoneNumber = '918796440840'; // Format: country code + number (without +)
-    const message = 'Hello, I need help with pet registration on Tailio.';
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
-  }}
-  style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 13, paddingBottom: 13, background: '#25D366', boxShadow: '0px 2px 0px #1A9E4A', borderRadius: 9, outline: '2px #1A9E4A solid', outlineOffset: -2, display: 'flex', alignItems: 'center', gap: 9, border: 'none', cursor: 'pointer', flexShrink: 0 }}
->
-  <WaIcon size={16} color="white" />
-  <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700 }}>Chat with us now</span>
-  <ArrowIcon size={14} color="white" />
-</button>
+                    onClick={() => {
+                      const phoneNumber = '918796440840';
+                      const message = 'Hello, I need help with pet registration on Tailio.';
+                      window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+                    }}
+                    style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 13, paddingBottom: 13, background: '#25D366', boxShadow: '0px 2px 0px #1A9E4A', borderRadius: 9, outline: '2px #1A9E4A solid', outlineOffset: -2, display: 'flex', alignItems: 'center', gap: 9, border: 'none', cursor: 'pointer', flexShrink: 0 }}
+                  >
+                    <WaIcon size={16} color="white" />
+                    <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700 }}>Chat with us now</span>
+                    <ArrowIcon size={14} color="white" />
+                  </button>
                 </div>
 
                 {/* Pet selector tabs */}
@@ -452,18 +456,19 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Pet details */}
+                    {/* Pet details - UPDATED: Removed Breed and Colour, added Vet details */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                       {[
-                        { label: 'Breed', value: currentPet.breed || 'Not specified' },
                         { label: 'Member Since', value: currentPet.createdAt ? new Date(currentPet.createdAt).toLocaleDateString() : 'N/A' },
-                        { label: 'Colour', value: currentPet.color || 'Not specified', muted: true },
                         { label: 'Documents', value: `${currentPet.uploadedDocumentsCount || 0}/4 uploaded` },
                         { label: 'Age', value: getFormattedAge(currentPet) },
+                        { label: 'Vet Name', value: currentPet.vetName || 'Not specified' },
+                        { label: 'Vet Registration No.', value: currentPet.vetRegistrationNumber || 'Not specified' },
+                        { label: 'Vet Council', value: currentPet.vetCouncilName || 'Not specified' },
                       ].map(row => (
                         <div key={row.label} style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           <span style={{ color: '#A68660', fontSize: 9.5, fontFamily: F.dmMono, fontWeight: 400, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.14px' }}>{row.label}</span>
-                          <span style={{ color: row.muted ? '#7A5C40' : '#2C1A0E', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 500, lineHeight: '20.25px' }}>{row.value}</span>
+                          <span style={{ color: '#2C1A0E', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 500, lineHeight: '20.25px' }}>{row.value}</span>
                         </div>
                       ))}
                     </div>
