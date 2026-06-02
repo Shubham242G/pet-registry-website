@@ -1,11 +1,10 @@
-// app/layout.tsx
 import type { Metadata } from 'next';
 import { Inter, Archivo_Black } from 'next/font/google';
 import './globals.css';
 import Navbar from './component/Navbar';
 import Providers from './providers';
 import RouteGuard from './component/RouteGuard';
-import FloatingRegisterButton from './component/FloatingRegisterButton'; // ✅ ADD THIS IMPORT
+import FloatersWrapper from './component/FloatersWrapper';
 
 const archive = Archivo_Black({ 
   subsets: ['latin'], 
@@ -65,7 +64,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code', // Replace with your actual Google Search Console code
+    google: 'your-google-verification-code',
   },
   alternates: {
     canonical: 'https://www.tailio.in',
@@ -73,11 +72,7 @@ export const metadata: Metadata = {
   category: 'pet-services',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={`${archive.variable} font-sans`}>
@@ -86,18 +81,15 @@ export default function RootLayout({
             <Navbar />
             <main>{children}</main>
             
-          
-            <FloatingRegisterButton />
+            {/* Your WhatsApp banner */}
+            <div style={{ padding: '16px 20px', background: 'linear-gradient(174deg, #162C18 0%, #0D1F0F 100%)', borderRadius: 13, outline: '1px rgba(37,211,102,0.12) solid', outlineOffset: -1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+              {/* ... banner content ... */}
+            </div>
             
+            <FloatersWrapper />
           </RouteGuard>
         </Providers>
       </body>
     </html>
   );
 }
-
-
-
-
-
-

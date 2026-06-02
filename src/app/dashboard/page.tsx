@@ -375,11 +375,18 @@ export default function Dashboard() {
                       <span style={{ color: 'rgba(200,240,204,0.50)', fontSize: 12, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '16.8px' }}>Prefer help? A Tailio representative guides you through every step on WhatsApp.</span>
                     </div>
                   </div>
-                  <button style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 13, paddingBottom: 13, background: '#25D366', boxShadow: '0px 2px 0px #1A9E4A', borderRadius: 9, outline: '2px #1A9E4A solid', outlineOffset: -2, display: 'flex', alignItems: 'center', gap: 9, border: 'none', cursor: 'pointer', flexShrink: 0 }}>
-                    <WaIcon size={16} color="white" />
-                    <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700 }}>Chat with us now</span>
-                    <ArrowIcon size={14} color="white" />
-                  </button>
+                  <button 
+  onClick={() => {
+    const phoneNumber = '918796440840'; // Format: country code + number (without +)
+    const message = 'Hello, I need help with pet registration on Tailio.';
+    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+  }}
+  style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 13, paddingBottom: 13, background: '#25D366', boxShadow: '0px 2px 0px #1A9E4A', borderRadius: 9, outline: '2px #1A9E4A solid', outlineOffset: -2, display: 'flex', alignItems: 'center', gap: 9, border: 'none', cursor: 'pointer', flexShrink: 0 }}
+>
+  <WaIcon size={16} color="white" />
+  <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700 }}>Chat with us now</span>
+  <ArrowIcon size={14} color="white" />
+</button>
                 </div>
 
                 {/* Pet selector tabs */}
