@@ -1,18 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
-
-// ── Module-level flag — survives component unmount/remount ──────────────────
-// A useRef resets to false every time the component remounts (which happens
-// when FloatersWrapper conditionally renders it). A module-level variable
-// persists for the lifetime of the page, so the DOM injection truly runs once.
-let wapbizInjected = false;
+import { useEffect, useRef } from 'react';
 
 export default function WapbizWidget() {
+  const injected = useRef(false);
 
   useEffect(() => {
-    if (wapbizInjected) return;
-    wapbizInjected = true;
+    if (injected.current) return;
+    injected.current = true;
 
     // Google Fonts
     const link = document.createElement('link');
@@ -76,9 +71,9 @@ export default function WapbizWidget() {
     button.id = 'wapbiz-btn';
 
     const icon = document.createElement('img');
-    icon.src = '/images/whhatsapp-icon.png';
-    icon.style.width = '22px';
-    icon.style.height = '22px';
+    icon.src = '/images/whhtsapp-icon.png';
+    icon.style.width = '30px';
+    icon.style.height = '30px';
 
     const buttonText = document.createElement('span');
     buttonText.textContent = 'Chat with us';
@@ -178,11 +173,13 @@ export default function WapbizWidget() {
     document.body.appendChild(button);
     document.body.appendChild(widget);
 
-    // ── Cleanup removes DOM nodes but does NOT reset wapbizInjected ──────────
-    // If cleanup reset the flag, a remount would re-inject and cause the
-    // disappearing button bug. The DOM nodes are cleaned up so there's no
-    // leak, but the flag stays true so injection never runs a second time.
+    // ── Cleanup: remove DOM nodes AND reset the ref ───────────────────────
+    // When FloatersWrapper unmounts WapbizWidget (e.g. during logout flow),
+    // the ref must reset so the next mount re-injects the button.
+    // Using a ref (not a module-level flag) means each component instance
+    // tracks its own injection — so remounts always re-inject cleanly.
     return () => {
+      injected.current = false;
       const btn = document.getElementById('wapbiz-btn');
       const wgt = document.getElementById('wapbiz-widget');
       const sty = document.getElementById('wapbiz-styles');

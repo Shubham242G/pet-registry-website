@@ -77,12 +77,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${archive.variable} font-sans`}>
         <Providers>
-          <RouteGuard>
             <Navbar />
             <main>{children}</main>
             {/* ── Floaters: WhatsApp on desktop, Register button on mobile ── */}
             <FloatersWrapper />
-          </RouteGuard>
         </Providers>
       </body>
     </html>
