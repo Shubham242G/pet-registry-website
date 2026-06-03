@@ -18,7 +18,7 @@ export default function FloatersWrapper() {
       {isMobile && <FloatingRegisterButton />}
 
       {/* Desktop only: WhatsApp widget */}
-      {!isMobile && <WapbizWidget />}
+      {/* {!isMobile && <WapbizWidget />} */}
     </>
   );
 }
