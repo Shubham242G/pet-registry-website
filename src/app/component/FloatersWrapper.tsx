@@ -1,22 +1,24 @@
 'use client';
 
 import { useDeviceType } from '../hooks/useDeviceType';
-import { useAuth } from './context/AuthContext'; // Adjust path as needed
+import { useAuth } from './context/AuthContext';
 import FloatingRegisterButton from './FloatingRegisterButton';
 import WapbizWidget from './WapbizWidget';
 
 export default function FloatersWrapper() {
   const isMobile = useDeviceType();
-  const { isAuthenticated } = useAuth(); // Use your auth context
-  const isLoggedIn = isAuthenticated;
+  const { isAuthenticated, loading } = useAuth();
+
+
+  if (isAuthenticated) return null;
 
   return (
     <>
-      {/* Registration floater - ONLY on mobile and when NOT logged in */}
-      {isMobile && !isLoggedIn && <FloatingRegisterButton />}
-      
-      {/* WhatsApp floater - ONLY when NOT logged in (visible on both mobile & desktop) */}
-      {!isLoggedIn && <WapbizWidget />}
+      {/* Mobile only: paw registration button */}
+      {isMobile && <FloatingRegisterButton />}
+
+      {/* Desktop only: WhatsApp widget */}
+      {!isMobile && <WapbizWidget />}
     </>
   );
 }

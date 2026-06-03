@@ -80,12 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <RouteGuard>
             <Navbar />
             <main>{children}</main>
-            
-            {/* Your WhatsApp banner */}
-            <div style={{ padding: '16px 20px', background: 'linear-gradient(174deg, #162C18 0%, #0D1F0F 100%)', borderRadius: 13, outline: '1px rgba(37,211,102,0.12) solid', outlineOffset: -1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-              {/* ... banner content ... */}
-            </div>
-            
+            {/* ── Floaters: WhatsApp on desktop, Register button on mobile ── */}
             <FloatersWrapper />
           </RouteGuard>
         </Providers>

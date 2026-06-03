@@ -737,7 +737,7 @@ export default function Dashboard() {
                   </div>
                 )}
 
-                {/* Quick Tips */}
+                {/* Quick Tips
                 {currentPet && (
                   <div style={{ padding: '16px 18px', background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column' }}>
                     <div style={{ paddingBottom: 12, display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -766,7 +766,7 @@ export default function Dashboard() {
                       </div>
                     ))}
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           )}

@@ -1,213 +1,194 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+
+// ── Module-level flag — survives component unmount/remount ──────────────────
+// A useRef resets to false every time the component remounts (which happens
+// when FloatersWrapper conditionally renders it). A module-level variable
+// persists for the lifetime of the page, so the DOM injection truly runs once.
+let wapbizInjected = false;
 
 export default function WapbizWidget() {
-  const scriptRef = useRef<HTMLScriptElement | null>(null);
 
   useEffect(() => {
-    // Original Wapbiz script - COMPLETE VERSION
-    const scriptCode = `(function(){
-  var e=document.createElement("link");
-  e.href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap",
-  e.rel="stylesheet",
-  document.head.appendChild(e);
-  
-  var t=document.createElement("style");
-  t.innerHTML="\\n            body, button, div { font-family: 'Poppins', sans-serif; }\\n            #wapbiz-btn { position: fixed; z-index: 9999; display:flex; align-items:center; }\\n            #wapbiz-widget{ position: fixed; z-index: 9998; width: 380px; max-width: calc(100vw - 24px); background: #FFFFFF; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); display: none; flex-direction: column; justify-content: space-between; overflow: hidden; }\\n            @media (max-width: 480px) { #wapbiz-widget{ width: calc(100vw - 16px); left: 8px !important; right: 8px !important; bottom: 80px !important; top: auto !important; border-radius: 14px; } }",
-  document.head.appendChild(t);
-  
-  var n="bottom-right",
-      l="#4DC247",
-      i="Tailio",
-      p=!1,
-      o=document.createElement("button");
-  o.id="wapbiz-btn",
-  o.style.position="fixed",
-  o.style.zIndex="9999",
-  o.style.backgroundColor=l,
-  o.style.color="#FFFFFF",
-  o.style.border="none",
-  o.style.padding="8px 16px",
-  o.style.borderRadius="25px",
-  o.style.cursor="pointer",
-  o.style.display="flex",
-  o.style.alignItems="center",
-  o.style.bottom="20px",
-  o.style.right="20px";
-  
-  var d=document.createElement("img");
-  d.src="https://img.icons8.com/?size=100&id=QkXeKixybtww&format=png&color=000000",
-  d.alt="WhatsApp Icon",
-  d.style.width="35px",
-  d.style.height="35px";
-  
-  var s=document.createElement("span");
-  s.innerText="Chat with us",
-  s.style.marginLeft="10px",
-  s.style.fontWeight="500",
-  s.style.fontSize="14px",
-  o.appendChild(d),
-  o.appendChild(s);
-  
-  var a=document.createElement("div");
-  a.id="wapbiz-widget",
-  a.style.position="fixed",
-  a.style.zIndex="9998",
-  a.style.backgroundColor="#FFFFFF",
-  a.style.borderRadius="10px",
-  a.style.boxShadow="0 2px 4px rgba(0,0,0,0.15)",
-  a.style.display="none",
-  a.style.flexDirection="column",
-  a.style.justifyContent="space-between",
-  a.style.bottom="100px",
-  a.style.right="20px";
-  
-  var r=document.createElement("div");
-  r.style.backgroundColor="#ee9b0f",
-  r.style.color="#FFFFFF",
-  r.style.padding="15px",
-  r.style.borderTopLeftRadius="10px",
-  r.style.borderTopRightRadius="10px",
-  r.style.display="flex",
-  r.style.alignItems="center",
-  r.style.justifyContent="space-between";
-  
-  var y=document.createElement("div");
-  y.style.display="flex",
-  y.style.alignItems="center";
-  
-  var c=document.createElement("img");
-  c.src="https://api.wapp.biz/uploads/file-1174707529053375.jpg",
-  c.alt="Profile Avatar",
-  c.style.width="40px",
-  c.style.height="40px",
-  c.style.borderRadius="50%",
-  c.style.objectFit="cover",
-  c.style.marginRight="10px";
-  
-  var x=document.createElement("div");
-  x.style.display="flex",
-  x.style.flexDirection="column",
-  x.style.justifyContent="center";
-  
-  var m=document.createElement("div");
-  m.innerText=i,
-  m.style.fontSize="16px",
-  m.style.fontWeight="500",
-  m.style.color="#FFFFFF";
-  
-  var h=document.createElement("div");
-  h.innerText="online",
-  h.style.fontSize="12px",
-  h.style.color="#C1C1C1",
-  x.appendChild(m),
-  x.appendChild(h),
-  y.appendChild(c),
-  y.appendChild(x);
-  
-  var u=document.createElement("div");
-  u.style.marginLeft="auto";
-  
-  var f=document.createElement("button");
-  f.style.color="#FFFFFF",
-  f.style.background="transparent",
-  f.style.border="none",
-  f.style.cursor="pointer",
-  f.style.fontSize="24px",
-  f.innerHTML="&times;",
-  f.onclick=function(){ a.style.display="none", p=!1, o.innerHTML="", o.appendChild(d), o.appendChild(s), o.style.padding="8px 16px" },
-  u.appendChild(f),
-  r.appendChild(y),
-  r.appendChild(u),
-  a.appendChild(r);
-  
-  var b=document.createElement("div");
-  b.style.height="140px",
-  b.style.paddingLeft="15px",
-  b.style.paddingTop="15px",
-  b.style.backgroundColor="#E5DDD5",
-  b.style.display="flex",
-  b.style.alignItems="flex-start",
-  b.style.justifyContent="flex-start";
-  
-  var g=document.createElement("div");
-  g.style.width="80%",
-  g.style.backgroundColor="#FFFFFF",
-  g.style.padding="10px",
-  g.style.borderRadius="10px",
-  g.style.boxShadow="0 2px 4px rgba(0,0,0,0.05)";
-  
-  var F=document.createElement("div");
-  F.innerText=i,
-  F.style.fontSize="15px",
-  F.style.fontWeight="500",
-  F.style.color="#828886";
-  
-  var C=document.createElement("div");
-  C.innerText="Hi, how can I help you?",
-  C.style.fontSize="14px",
-  g.appendChild(F),
-  g.appendChild(C),
-  b.appendChild(g),
-  a.appendChild(b);
-  
-  var v=document.createElement("div");
-  v.style.display="flex",
-  v.style.justifyContent="center",
-  v.style.padding="20px 20px 10px 20px";
-  
-  var w=document.createElement("button");
-  w.style.width="90%",
-  w.style.height="35px",
-  w.style.backgroundColor=l,
-  w.style.borderRadius="30px",
-  w.style.color="#FFFFFF",
-  w.style.fontSize="15px",
-  w.style.fontWeight="500",
-  w.style.cursor="pointer",
-  w.style.border="none",
-  w.innerText="Start chat",
-  w.onclick=function(){ window.open("https://app.wapp.biz/sr/6a1de58e49df8d2fd4890c26","_blank") },
-  v.appendChild(w),
-  a.appendChild(v);
-  
-  var E=document.createElement("div");
-  E.style.textAlign="center",
-  E.style.fontSize="12px",
-  E.style.fontFamily="Poppins, sans-serif",
-  E.style.color="#666",
-  E.style.paddingBottom="8px",
-  E.innerHTML='Powered by <a href="https://wapbiz.com/" style="color: #4DC247; text-decoration: none;">Wapbiz</a>',
-  a.appendChild(E);
-  
-  o.onclick=function(){ p=!p, a.style.display=p?"flex":"none" };
-  
-  document.body.appendChild(o),
-  document.body.appendChild(a);
-})()`;
-    
-    const script = document.createElement('script');
-    script.textContent = scriptCode;
-    document.body.appendChild(script);
-    scriptRef.current = script;
+    if (wapbizInjected) return;
+    wapbizInjected = true;
 
-    // Cleanup function
+    // Google Fonts
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    // Styles
+    const style = document.createElement('style');
+    style.id = 'wapbiz-styles';
+    style.textContent = `
+      #wapbiz-btn {
+        position: fixed;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #4DC247;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        bottom: 20px;
+        right: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: transform 0.2s;
+      }
+      #wapbiz-btn:hover { transform: scale(1.05); }
+      #wapbiz-widget {
+        position: fixed;
+        z-index: 9998;
+        width: 380px;
+        max-width: calc(100vw - 24px);
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        bottom: 100px;
+        right: 20px;
+        font-family: 'Poppins', sans-serif;
+      }
+      @media (max-width: 480px) {
+        #wapbiz-widget {
+          width: calc(100vw - 32px);
+          left: 16px;
+          right: 16px;
+          bottom: 80px;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Button
+    const button = document.createElement('button');
+    button.id = 'wapbiz-btn';
+
+    const icon = document.createElement('img');
+    icon.src = '/images/whhatsapp-icon.png';
+    icon.style.width = '22px';
+    icon.style.height = '22px';
+
+    const buttonText = document.createElement('span');
+    buttonText.textContent = 'Chat with us';
+
+    button.appendChild(icon);
+    button.appendChild(buttonText);
+
+    // Widget
+    const widget = document.createElement('div');
+    widget.id = 'wapbiz-widget';
+
+    // Header
+    const header = document.createElement('div');
+    header.style.cssText = 'background: #075E54; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between;';
+
+    const headerLeft = document.createElement('div');
+    headerLeft.style.cssText = 'display: flex; align-items: center; gap: 10px;';
+
+    const avatar = document.createElement('img');
+    avatar.src = 'https://ui-avatars.com/api/?name=Tailio&background=E8600A&color=white&rounded=true&size=40';
+    avatar.style.cssText = 'width: 40px; height: 40px; border-radius: 50%; object-fit: cover;';
+
+    const headerInfo = document.createElement('div');
+    const title = document.createElement('div');
+    title.textContent = 'Tailio';
+    title.style.cssText = 'font-size: 16px; font-weight: 500;';
+    const status = document.createElement('div');
+    status.textContent = 'Online';
+    status.style.cssText = 'font-size: 12px; color: #DCF8C6;';
+    headerInfo.appendChild(title);
+    headerInfo.appendChild(status);
+
+    headerLeft.appendChild(avatar);
+    headerLeft.appendChild(headerInfo);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.cssText = 'color: white; background: transparent; border: none; cursor: pointer; font-size: 24px;';
+
+    header.appendChild(headerLeft);
+    header.appendChild(closeBtn);
+
+    // Message area
+    const messageArea = document.createElement('div');
+    messageArea.style.cssText = 'height: 140px; padding: 15px; background: #ECE5DD; display: flex; align-items: flex-start;';
+
+    const messageBubble = document.createElement('div');
+    messageBubble.style.cssText = 'max-width: 80%; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);';
+
+    const sender = document.createElement('div');
+    sender.textContent = 'Tailio';
+    sender.style.cssText = 'font-size: 15px; font-weight: 500; color: #075E54;';
+
+    const message = document.createElement('div');
+    message.textContent = 'Hi, how can I help you?';
+    message.style.cssText = 'font-size: 14px; color: black;';
+
+    messageBubble.appendChild(sender);
+    messageBubble.appendChild(message);
+    messageArea.appendChild(messageBubble);
+
+    // Button area
+    const buttonArea = document.createElement('div');
+    buttonArea.style.cssText = 'display: flex; justify-content: center; padding: 20px;';
+
+    const chatBtn = document.createElement('button');
+    chatBtn.textContent = 'Start Chat';
+    chatBtn.style.cssText = 'width: 90%; height: 40px; background: #4DC247; border-radius: 30px; color: white; font-size: 15px; font-weight: 500; cursor: pointer; border: none;';
+
+    buttonArea.appendChild(chatBtn);
+
+    // Footer
+    const footer = document.createElement('div');
+    footer.style.cssText = 'text-align: center; font-size: 11px; color: #999; padding-bottom: 12px;';
+    footer.innerHTML = 'Powered by <a href="https://wapbiz.com/" target="_blank" style="color: #4DC247; text-decoration: none;">Wapbiz</a>';
+
+    // Assemble
+    widget.appendChild(header);
+    widget.appendChild(messageArea);
+    widget.appendChild(buttonArea);
+    widget.appendChild(footer);
+
+    // Events
+    let isOpen = false;
+    button.onclick = () => {
+      isOpen = !isOpen;
+      widget.style.display = isOpen ? 'flex' : 'none';
+    };
+    closeBtn.onclick = () => {
+      widget.style.display = 'none';
+      isOpen = false;
+    };
+    chatBtn.onclick = () => {
+      window.open('https://app.wapp.biz/sr/6a1de58e49df8d2fd4890c26', '_blank');
+    };
+
+    document.body.appendChild(button);
+    document.body.appendChild(widget);
+
+    // ── Cleanup removes DOM nodes but does NOT reset wapbizInjected ──────────
+    // If cleanup reset the flag, a remount would re-inject and cause the
+    // disappearing button bug. The DOM nodes are cleaned up so there's no
+    // leak, but the flag stays true so injection never runs a second time.
     return () => {
-      if (scriptRef.current && document.body.contains(scriptRef.current)) {
-        document.body.removeChild(scriptRef.current);
-      }
-      
-      const button = document.getElementById('wapbiz-btn');
-      const widget = document.getElementById('wapbiz-widget');
-      
-      if (button && document.body.contains(button)) {
-        document.body.removeChild(button);
-      }
-      
-      if (widget && document.body.contains(widget)) {
-        document.body.removeChild(widget);
-      }
+      const btn = document.getElementById('wapbiz-btn');
+      const wgt = document.getElementById('wapbiz-widget');
+      const sty = document.getElementById('wapbiz-styles');
+      if (btn) btn.remove();
+      if (wgt) wgt.remove();
+      if (sty) sty.remove();
     };
   }, []);
 
