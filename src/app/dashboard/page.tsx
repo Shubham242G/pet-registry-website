@@ -367,9 +367,7 @@ export default function Dashboard() {
                 {/* WhatsApp agent banner */}
                 <div style={{ padding: '16px 20px', background: 'linear-gradient(174deg, #162C18 0%, #0D1F0F 100%)', borderRadius: 13, outline: '1px rgba(37,211,102,0.12) solid', outlineOffset: -1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 42, height: 42, background: '#25D366', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <WaIcon size={21} color="white" />
-                    </div>
+                    
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       <div style={{ display: 'inline-flex', alignSelf: 'flex-start', paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: 'rgba(37,211,102,0.18)', borderRadius: 100, alignItems: 'center', gap: 6 }}>
                         <div style={{ width: 6, height: 6, background: '#6EE09A', borderRadius: 3 }} />
@@ -380,17 +378,34 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <button 
-                    onClick={() => {
-                      const phoneNumber = '918796440840';
-                      const message = 'Hello, I need help with pet registration on Tailio.';
-                      window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
-                    }}
-                    style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 13, paddingBottom: 13, background: '#25D366', boxShadow: '0px 2px 0px #1A9E4A', borderRadius: 9, outline: '2px #1A9E4A solid', outlineOffset: -2, display: 'flex', alignItems: 'center', gap: 9, border: 'none', cursor: 'pointer', flexShrink: 0 }}
-                  >
-                    <WaIcon size={16} color="white" />
-                    <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700 }}>Chat with us now</span>
-                    <ArrowIcon size={14} color="white" />
-                  </button>
+  onClick={() => {
+    const phoneNumber = '918796440840';
+    const message = 'Hello, I need help with pet registration on Tailio.';
+    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+  }}
+  style={{ 
+    paddingLeft: 24, 
+    paddingRight: 24, 
+    paddingTop: 13, 
+    paddingBottom: 13, 
+    background: '#25D366', 
+    boxShadow: '0px 2px 0px #1A9E4A', 
+    borderRadius: 9, 
+    outline: '2px #1A9E4A solid', 
+    outlineOffset: -2, 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: 9, 
+    border: 'none', 
+    cursor: 'pointer', 
+    flexShrink: 0 
+  }}
+>
+  <img src="/images/whhtsapp-icon.png" alt="WhatsApp" width="30" height="30" />
+  <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700 }}>
+    Chat with us now
+  </span>
+</button>
                 </div>
 
                 {/* Pet selector tabs */}
