@@ -287,11 +287,11 @@ export default function Dashboard() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#FAF6EF', fontFamily: F.dmSans }}>
-      {/* Sidebar */}
-      <div className="hidden md:block"><Sidebar /></div>
+      {/* Sidebar - component handles its own responsive behavior */}
+      <Sidebar />
 
-      {/* Main content */}
-      <div className="md:pl-64">
+      {/* Main content - padding left on desktop, padding bottom on mobile for bottom nav */}
+      <div className="md:pl-64 pb-16 md:pb-0">
         <div style={{ paddingTop: 30, paddingLeft: isMobile ? 16 : 40, paddingRight: isMobile ? 16 : 40 }}>
 
           {/* ── HEADER ── */}
@@ -378,34 +378,34 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <button 
-  onClick={() => {
-    const phoneNumber = '918796440840';
-    const message = 'Hello, I need help with pet registration on Tailio.';
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
-  }}
-  style={{ 
-    paddingLeft: 24, 
-    paddingRight: 24, 
-    paddingTop: 13, 
-    paddingBottom: 13, 
-    background: '#25D366', 
-    boxShadow: '0px 2px 0px #1A9E4A', 
-    borderRadius: 9, 
-    outline: '2px #1A9E4A solid', 
-    outlineOffset: -2, 
-    display: 'flex', 
-    alignItems: 'center', 
-    gap: 9, 
-    border: 'none', 
-    cursor: 'pointer', 
-    flexShrink: 0 
-  }}
->
-  <img src="/images/whhtsapp-icon.png" alt="WhatsApp" width="30" height="30" />
-  <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700 }}>
-    Chat with us now
-  </span>
-</button>
+                    onClick={() => {
+                      const phoneNumber = '918796440840';
+                      const message = 'Hello, I need help with pet registration on Tailio.';
+                      window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+                    }}
+                    style={{ 
+                      paddingLeft: 24, 
+                      paddingRight: 24, 
+                      paddingTop: 13, 
+                      paddingBottom: 13, 
+                      background: '#25D366', 
+                      boxShadow: '0px 2px 0px #1A9E4A', 
+                      borderRadius: 9, 
+                      outline: '2px #1A9E4A solid', 
+                      outlineOffset: -2, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 9, 
+                      border: 'none', 
+                      cursor: 'pointer', 
+                      flexShrink: 0 
+                    }}
+                  >
+                    <img src="/images/whhtsapp-icon.png" alt="WhatsApp" width="30" height="30" />
+                    <span style={{ color: 'white', fontSize: 15, fontFamily: F.dmSans, fontWeight: 700 }}>
+                      Chat with us now
+                    </span>
+                  </button>
                 </div>
 
                 {/* Pet selector tabs */}
@@ -592,60 +592,6 @@ export default function Dashboard() {
                     </div>
                   </div>
                 )}
-
-                {/* ── REQUIRED DOCUMENTS CARD ── */}
-                {/* {currentPet && (
-                  <div style={{ background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                      <div style={{ width: 12, height: 12, position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ width: 8, height: 10, left: 2, top: 1, position: 'absolute', outline: '1px #A68660 solid', outlineOffset: -0.5 }} />
-                        <div style={{ width: 3, height: 3, left: 7, top: 1, position: 'absolute', outline: '1px #A68660 solid', outlineOffset: -0.5 }} />
-                      </div>
-                      <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15.75px', letterSpacing: '1.05px' }}>Required Documents</span>
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      {[
-                        { key: 'antiRabiesCertificate', label: 'Anti-Rabies Certificate', sub: 'Issued by registered vet' },
-                        { key: 'idProof', label: 'Applicant ID Proof', sub: 'Aadhaar / PAN / Passport' },
-                        { key: 'residenceProof', label: 'Residence Proof', sub: 'Electricity bill / Rental agreement' },
-                        { key: 'ownerWithPetPhoto', label: 'Photo with Pet Dog', sub: 'Both faces clearly visible' },
-                      ].map((doc, idx) => {
-                        const uploaded = (currentPet.uploadedDocumentsCount || 0) > idx;
-                        return (
-                          <div
-                            key={doc.key}
-                            style={{ padding: '13px 14px', background: uploaded ? '#E6F6ED' : '#FAF6EF', borderRadius: 13, outline: `1px ${uploaded ? '#A8DDB8' : 'rgba(44,26,14,0.08)'} solid`, outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 8, marginTop: idx > 0 ? 4 : 0 }}
-                          >
-                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
-                              <div style={{ width: 30, height: 30, background: uploaded ? '#E6F6ED' : '#F3EDE0', borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                <div style={{ width: 14, height: 14, position: 'relative', overflow: 'hidden' }}>
-                                  <div style={{ width: 9.33, height: 6.42, left: 2.33, top: 3.5, position: 'absolute', outline: `1.46px ${uploaded ? '#1A6B3A' : '#A68660'} solid`, outlineOffset: -0.73 }} />
-                                </div>
-                              </div>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                                <span style={{ color: '#2C1A0E', fontSize: 12.5, fontFamily: F.dmSans, fontWeight: 600, lineHeight: '16.25px' }}>{doc.label}</span>
-                                <span style={{ color: '#7A5C40', fontSize: 11, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '14.85px' }}>{doc.sub}</span>
-                              </div>
-                            </div>
-                            {uploaded && (
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '15.75px' }}>Document uploaded</span>
-                                <div style={{ display: 'flex', gap: 4 }}>
-                                  <div style={{ width: 26, height: 26, background: '#FFFCF8', borderRadius: 5, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                                    <PreviewIcon size={11} color="#7A5C40" />
-                                  </div>
-                                  <div style={{ width: 26, height: 26, background: '#FFFCF8', borderRadius: 5, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                                    <DeleteDocIcon size={11} color="#7A5C40" />
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )} */}
               </div>
 
               {/* ── RIGHT COLUMN ── */}
@@ -751,37 +697,6 @@ export default function Dashboard() {
                     </div>
                   </div>
                 )}
-
-                {/* Quick Tips
-                {currentPet && (
-                  <div style={{ padding: '16px 18px', background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ paddingBottom: 12, display: 'flex', alignItems: 'center', gap: 7 }}>
-                      <div style={{ width: 11, height: 11, position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ width: 9.17, height: 9.17, left: 0.92, top: 0.92, position: 'absolute', outline: '0.92px #E8600A solid', outlineOffset: -0.46 }} />
-                      </div>
-                      <span style={{ color: '#A68660', fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15.75px', letterSpacing: '1.05px' }}>Quick Tips</span>
-                    </div>
-                    {[
-                      { bold: 'All 4 documents uploaded.', normal: " You're ready to pay and submit." },
-                      { normal: 'Pay ', bold: '₹999', normal2: ' to complete registration and receive your certificate.' },
-                      { normal: 'Expect an ', bold: 'OTP from the Municipal Corporation', normal2: ' — share it only on Tailio\'s WhatsApp.' },
-                      { normal: 'Certificate delivered within ', bold: '24–72 hours', normal2: ' of approval.' },
-                    ].map((tip, i, arr) => (
-                      <div key={i} style={{ paddingTop: 8, paddingBottom: 8, borderBottom: i < arr.length - 1 ? '1px rgba(44,26,14,0.10) solid' : 'none', display: 'flex', alignItems: 'flex-start', gap: 9 }}>
-                        <div style={{ width: 19, height: 19, background: '#FFF0E4', borderRadius: 9.5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                          <div style={{ width: 10, height: 10, position: 'relative', overflow: 'hidden' }}>
-                            <div style={{ width: 6.67, height: 4.58, left: 1.67, top: 2.5, position: 'absolute', outline: '1.04px #E8600A solid', outlineOffset: -0.52 }} />
-                          </div>
-                        </div>
-                        <span style={{ fontSize: 12, fontFamily: F.dmSans, lineHeight: '18px' }}>
-                          {tip.bold && <span style={{ color: '#2C1A0E', fontWeight: 600 }}>{tip.bold}</span>}
-                          {tip.normal && <span style={{ color: '#7A5C40', fontWeight: 400 }}>{tip.normal}</span>}
-                          {(tip as any).normal2 && <span style={{ color: '#7A5C40', fontWeight: 400 }}>{(tip as any).normal2}</span>}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )} */}
               </div>
             </div>
           )}

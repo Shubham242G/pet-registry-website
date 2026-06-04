@@ -25,6 +25,64 @@ import {
   FileIcon as FilePdf
 } from "lucide-react";
 
+// Import the same bottom navigation component from Sidebar
+// Since the Sidebar component exports its own mobile bottom nav,
+// we need to either extract it or re-create it here
+
+// Mobile Bottom Navigation Component
+function MobileBottomNav() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  const menuItems = [
+    { name: "Overview", icon: LayoutDashboard, href: "/dashboard" },
+    { name: "Documents", icon: FileText, href: "/documents" },
+  ];
+
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden" style={{ background: '#2C1A0E', borderTop: '1px solid rgba(232,96,10,0.3)' }}>
+      <div className="flex justify-around items-center px-4 py-2">
+        {menuItems.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-all"
+              style={{
+                backgroundColor: isActive ? '#E8600A' : 'transparent',
+                color: isActive ? 'white' : '#E8600A',
+              }}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="text-xs font-medium">{item.name}</span>
+            </Link>
+          );
+        })}
+        <button
+          onClick={handleLogout}
+          className="flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-all"
+          style={{ color: '#E8600A' }}
+        >
+          <LogOut className="w-5 h-5" />
+          <span className="text-xs font-medium">Logout</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Don't forget to import missing dependencies
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { LayoutDashboard, LogOut } from "lucide-react";
+
 interface Document {
   id: string;
   name: string;
@@ -323,13 +381,16 @@ export default function DocumentsPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 font-['Nunito']">
+    <div className="flex min-h-screen bg-gray-50 font-['Nunito'] pb-16 md:pb-0">
       {/* Sidebar - hidden on mobile */}
       <div className="hidden md:block">
         <Sidebar />
       </div>
       
-      {/* Main Content - No left padding on mobile */}
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
+      
+      {/* Main Content */}
       <div className="flex-1 md:ml-64">
         <div className="p-4 md:p-8">
           {/* Header */}
