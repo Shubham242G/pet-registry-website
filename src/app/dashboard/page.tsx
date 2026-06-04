@@ -292,7 +292,7 @@ export default function Dashboard() {
 
       {/* Main content */}
       <div className="md:pl-64">
-        <div style={{ paddingTop: 54, paddingLeft: isMobile ? 16 : 40, paddingRight: isMobile ? 16 : 40 }}>
+        <div style={{ paddingTop: 30, paddingLeft: isMobile ? 16 : 40, paddingRight: isMobile ? 16 : 40 }}>
 
           {/* ── HEADER ── */}
           <div style={{ marginLeft: 28, marginRight: 28, display: 'flex', flexDirection: 'column', gap: 5 }}>
@@ -594,7 +594,7 @@ export default function Dashboard() {
                 )}
 
                 {/* ── REQUIRED DOCUMENTS CARD ── */}
-                {currentPet && (
+                {/* {currentPet && (
                   <div style={{ background: '#FFFCF8', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 14 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                       <div style={{ width: 12, height: 12, position: 'relative', overflow: 'hidden' }}>
@@ -645,7 +645,7 @@ export default function Dashboard() {
                       })}
                     </div>
                   </div>
-                )}
+                )} */}
               </div>
 
               {/* ── RIGHT COLUMN ── */}

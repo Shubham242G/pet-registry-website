@@ -74,15 +74,6 @@ export default function Sidebar() {
         className="fixed left-0 top-0 h-full w-64 flex-col overflow-y-auto hidden md:flex" 
         style={{ background: '#2C1A0E' }}
       >
-        {/* Logo Section */}
-        <div className="p-6 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-          <div className="flex items-center space-x-2">
-            <div className="bg-orange-500 p-1.5 rounded-lg">
-              <PawPrint className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-semibold text-white">Tailio</span>
-          </div>
-        </div>
 
         {/* User Section */}
         <div className="px-4 mt-6 mb-4">

@@ -88,7 +88,7 @@ export default function WhyTailioSection() {
                 fontFamily: 'Fraunces',
                 fontWeight: 900,
                 lineHeight: isMobile ? '1.3' : '64.48px'
-              }}>Both paths lead to registration.<br/>Only one's built with </span>
+              }}>Both paths lead to registration.<br />Only one's built with </span>
               <span style={{
                 color: '#E8600A',
                 fontSize: isMobile ? 32 : 48,
@@ -196,8 +196,8 @@ export default function WhyTailioSection() {
                   </div>
                   <div>
                     <span style={{ color: 'rgba(250, 246, 239, 0.60)', fontSize: 13, fontFamily: 'DM Sans', fontWeight: 400, lineHeight: '18.85px' }}>
-                                      Launch offer — all-inclusive. Municipal portal charges ₹100–500 and still sends you to the office
-                                    </span>
+                      Launch offer — all-inclusive. Municipal portal charges ₹100–500 and still sends you to the office
+                    </span>
                   </div>
                 </div>
               </div>
@@ -210,8 +210,8 @@ export default function WhyTailioSection() {
                   </div>
                   <div>
                     <span style={{ color: 'rgba(250, 246, 239, 0.60)', fontSize: 13, fontFamily: 'DM Sans', fontWeight: 400, lineHeight: '18.85px' }}>
-                                      Certificate delivery after submission. No follow-ups needed — we handle everything
-                                    </span>
+                      Certificate delivery after submission. No follow-ups needed — we handle everything
+                    </span>
                   </div>
                 </div>
               </div>
@@ -224,8 +224,8 @@ export default function WhyTailioSection() {
                   </div>
                   <div>
                     <span style={{ color: 'rgba(250, 246, 239, 0.60)', fontSize: 13, fontFamily: 'DM Sans', fontWeight: 400, lineHeight: '18.85px' }}>
-                                      Zero buffering. Zero endless forms. Zero broken links.
-                                    </span>
+                      Zero buffering. Zero endless forms. Zero broken links.
+                    </span>
                   </div>
                 </div>
               </div>
@@ -236,237 +236,245 @@ export default function WhyTailioSection() {
 
       {/* Feature Icons Row */}
       <div style={{
-        alignSelf: 'stretch',
-        background: '#2C1A0E',
-        padding: '64px 20px',
+  alignSelf: 'stretch',
+  background: '#2C1A0E',
+  padding: '64px 20px',
+  display: 'flex',
+  justifyContent: 'center',
+  flexWrap: 'wrap',
+  gap: 30
+}}>
+  {[
+    { icon: '/images/govt.png', text: 'Legally valid registration' },
+    { icon: '/images/smartphone-1.png', text: '100% online, from your phone' },
+    { icon: '/images/lightning.png', text: 'Done in under 60 seconds' },
+    { icon: '/images/call-log.png', text: 'Support in under 2 hours' },
+    { icon: '/images/remindersss.png', text: 'WhatsApp & email reminders' }
+  ].map((feature, idx) => (
+    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{
+        width: 30,
+        height: 30,
         display: 'flex',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        gap: 30
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
-        {[
-          { icon: '🐾', text: 'Legally valid registration' },
-          { icon: '📱', text: '100% online, from your phone' },
-          { icon: '⚡', text: 'Done in under 60 seconds' },
-          { icon: '💬', text: 'Support in under 2 hours' },
-          { icon: '🔔', text: 'WhatsApp & email reminders' }
-        ].map((feature, idx) => (
-          <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{
-              width: 16,
-              height: 16,
-              background: '#FF8C3A',
-              borderRadius: 4,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <span style={{ fontSize: 10 }}>{feature.icon}</span>
-            </div>
-            <span style={{ color: 'rgba(250, 246, 239, 0.65)', fontSize: 13.5, fontFamily: 'DM Sans', fontWeight: 500 }}>
-              {feature.text}
-            </span>
-            {idx < 4 && (
-              <div style={{ width: 1, height: 28, background: 'rgba(255, 255, 255, 0.10)', marginLeft: 12 }} />
-            )}
-          </div>
-        ))}
+        <img src={feature.icon} alt="" style={{ width: '100%', height: '100%' }} />
       </div>
+      <span style={{ color: 'rgba(250, 246, 239, 0.65)', fontSize: 13.5, fontFamily: 'DM Sans', fontWeight: 500 }}>
+        {feature.text}
+      </span>
+      {idx < 4 && (
+        <div style={{ width: 1, height: 28, background: 'rgba(255, 255, 255, 0.10)', marginLeft: 12 }} />
+      )}
+    </div>
+  ))}
+</div>
+
 
       {/* Comparison Section */}
+<div style={{
+  alignSelf: 'stretch',
+  padding: isMobile ? '40px 20px' : '80px 40px',
+  background: '#F3EDE0'
+}}>
+  <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ marginBottom: 30 }}>
       <div style={{
-        alignSelf: 'stretch',
-        padding: isMobile ? '40px 20px' : '80px 40px',
-        background: '#F3EDE0'
+        display: 'inline-flex',
+        padding: '5px 14px',
+        background: '#FFF0E4',
+        borderRadius: 100,
+        outline: '1px solid #FFCCA0',
+        marginBottom: 20
       }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ marginBottom: 30 }}>
-            <div style={{
-              display: 'inline-flex',
-              padding: '5px 14px',
-              background: '#FFF0E4',
-              borderRadius: 100,
-              outline: '1px solid #FFCCA0',
-              marginBottom: 20
-            }}>
-              <span style={{ color: '#C04E06', fontSize: 10, fontFamily: 'DM Sans', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.20px' }}>
-                Tailio vs Municipal Portal
-              </span>
-            </div>
-            <h2 style={{
-              color: '#2C1A0E',
-              fontSize: isMobile ? 28 : 40,
-              fontFamily: 'Fraunces',
-              fontWeight: 900,
-              lineHeight: '44px',
-              marginBottom: 15
-            }}>
-              Or spend your <span style={{ color: '#E8600A', fontStyle: 'italic' }}>weekend</span> on the MCD portal.
-            </h2>
-            <p style={{ color: '#7A5C40', fontSize: 14.5, fontFamily: 'DM Sans', maxWidth: 540 }}>
-              The municipal portal works. Eventually. Probably. Here's the difference in numbers.
-            </p>
-          </div>
-
-          {/* Comparison Table */}
-          <div style={{
-            background: '#FFFCF8',
-            borderRadius: 18,
-            overflowX: 'auto',
-            boxShadow: '0px 4px 20px rgba(44, 26, 14, 0.08)',
-            outline: '1px solid rgba(44, 26, 14, 0.10)'
-          }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: 'left', padding: '16px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 500, textTransform: 'uppercase' }}>What you get</th>
-                  <th style={{ textAlign: 'center', padding: '16px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 500, textTransform: 'uppercase' }}>Tailio</th>
-                  <th style={{ textAlign: 'center', padding: '16px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 500, textTransform: 'uppercase' }}>Municipal Portal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { label: "Time to register", sub: "From start to submission", tailio: "Under 1 minute", portal: "2–4 weeks", icon: "⏱️" },
-                  { label: "Works on your phone", sub: "No opening laptops for filing the form", tailio: "✓", portal: "✗", icon: "📱" },
-                  { label: "Digital certificate", sub: "Always accessible on profile", tailio: "✓", portal: "✗", icon: "📄" },
-                  { label: "Renewal reminders", sub: "WhatsApp, SMS & email", tailio: "✓", portal: "✗", icon: "🔔" },
-                  { label: "Vaccination tracker", sub: "Schedule, record, share with vets", tailio: "✓", portal: "✗", icon: "💉" },
-                  { label: "Legal pet profile", sub: "Proof of ownership on record", tailio: "✓", portal: "✗", icon: "📋" },
-                  { label: "Registration cost", sub: "All-inclusive, no surprises", tailio: "₹999", portal: "₹100–500 + effort", icon: "💰" },
-                  { label: "If you wait, the fine is…", sub: "Municipal enforcement active now", tailio: "None", portal: "₹10,000+", icon: "⚠️" }
-                ].map((row, idx) => (
-                  <tr key={idx} style={{ borderBottom: idx < 7 ? '1px solid rgba(44, 26, 14, 0.10)' : 'none' }}>
-                    <td style={{ padding: '18px 24px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                        <div style={{
-                          width: 34,
-                          height: 34,
-                          background: '#F3EDE0',
-                          borderRadius: 9,
-                          outline: '1px solid rgba(44, 26, 14, 0.10)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          <span style={{ fontSize: 16 }}>{row.icon}</span>
-                        </div>
-                        <div>
-                          <div style={{ fontWeight: 600, color: '#2C1A0E', fontSize: '13.5px' }}>{row.label}</div>
-                          <div style={{ color: '#A68660', fontSize: 11 }}>{row.sub}</div>
-                        </div>
-                      </div>
-                    </td>
-                    <td style={{
-                      padding: '18px 24px',
-                      textAlign: 'center',
-                      background: idx % 2 === 0 ? 'rgba(232, 96, 10, 0.04)' : 'transparent',
-                      fontWeight: 700,
-                      color: '#2C1A0E'
-                    }}>
-                      {row.tailio === '✓' ? (
-                        <div style={{ width: 28, height: 28, background: '#2C1A0E', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
-                            <path d="M1.5 5L4.5 8L11 1" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                          </svg>
-                        </div>
-                      ) : row.tailio}
-                    </td>
-                    <td style={{
-                      padding: '18px 24px',
-                      textAlign: 'center',
-                      color: row.portal === '₹10,000+' ? '#C04E06' : '#A68660',
-                      fontWeight: row.portal === '₹10,000+' ? 700 : 400,
-                      fontStyle: row.portal === '₹10,000+' ? 'italic' : 'normal'
-                    }}>
-                      {row.portal === '✗' ? (
-                        <div style={{ width: 28, height: 28, border: '1px solid rgba(44, 26, 14, 0.18)', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                            <path d="M1 1L10 10M10 1L1 10" stroke="#A68660" strokeWidth="1.5" strokeLinecap="round" />
-                          </svg>
-                        </div>
-                      ) : row.portal}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <span style={{ color: '#C04E06', fontSize: 10, fontFamily: 'DM Sans', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.20px' }}>
+          Tailio vs Municipal Portal
+        </span>
       </div>
-
-      {/* Features Grid Section */}
-      <div style={{
-        alignSelf: 'stretch',
-        padding: isMobile ? '40px 20px' : '80px 40px',
-        background: '#FAF6EF'
+      <h2 style={{
+        color: '#2C1A0E',
+        fontSize: isMobile ? 28 : 40,
+        fontFamily: 'Fraunces',
+        fontWeight: 900,
+        lineHeight: '44px',
+        marginBottom: 15
       }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ marginBottom: 30 }}>
-            <div style={{
-              display: 'inline-flex',
-              padding: '5px 14px',
-              background: '#FFF0E4',
-              borderRadius: 100,
-              outline: '1px solid #FFCCA0',
-              marginBottom: 20
-            }}>
-              <span style={{ color: '#C04E06', fontSize: 10, fontFamily: 'DM Sans', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.20px' }}>
-                What you actually get
-              </span>
-            </div>
-            <h2 style={{
-              color: '#2C1A0E',
-              fontSize: isMobile ? 28 : 40,
-              fontFamily: 'Fraunces',
-              fontWeight: 900,
-              lineHeight: '44px'
-            }}>
-              Six reasons pet parents <span style={{ color: '#E8600A', fontStyle: 'italic' }}>choose Tailio</span>.
-            </h2>
-            <p style={{ color: '#7A5C40', fontSize: 14.5, fontFamily: 'DM Sans', maxWidth: 540 }}>
-              Every feature was built because a pet parent needed it - not because it looked good in a pitch deck.
-            </p>
-          </div>
+        Or spend your <span style={{ color: '#E8600A', fontStyle: 'italic' }}>weekend</span> on the MCD portal.
+      </h2>
+      <p style={{ color: '#7A5C40', fontSize: 14.5, fontFamily: 'DM Sans', maxWidth: 540 }}>
+        The municipal portal works. Eventually. Probably. Here's the difference in numbers.
+      </p>
+    </div>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
-            gap: 20
+    {/* Comparison Table */}
+    <div style={{
+  background: '#FFFCF8',
+  borderRadius: 18,
+  overflowX: 'auto',
+  boxShadow: '0px 4px 20px rgba(44, 26, 14, 0.08)',
+  outline: '1px solid rgba(44, 26, 14, 0.10)'
+}}>
+  <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
+    <thead>
+      <tr>
+        <th style={{ textAlign: 'left', padding: '16px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 500, textTransform: 'uppercase' }}>What you get</th>
+        <th style={{ 
+          textAlign: 'center', 
+          padding: '8px 24px',  // Reduced from 16px to 8px
+          borderBottom: '1px solid rgba(44, 26, 14, 0.10)', 
+          color: '#A68660', 
+          fontSize: 13, 
+          fontWeight: 500, 
+          textTransform: 'uppercase',
+          lineHeight: 1  // Added to reduce line height
+        }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: 8,
+            margin: 0  // Ensure no extra margin
           }}>
-            {[
-              { title: "Done in 60 seconds flat", desc: "Three fields, four uploads, one click. We've timed it. The average pet parent is done before their chai goes cold.", icon: "⚡" },
-              { title: "Legally valid. Always.", desc: "We file directly with MCD, Noida Authority, and GMC. The certificate you receive is the official government-issued document — not a Tailio proxy.", icon: "✓" },
-              { title: "Never miss a renewal", desc: "WhatsApp, SMS, and email reminders before your annual expiry. We ping you a week out, three days out, and the day of — you can't forget.", icon: "🔔" },
-              { title: "Vaccination tracker built in", desc: "Log every shot, set reminders, and share your pet's health record with any vet — digitally. No paper booklets that get lost in a move.", icon: "💉" },
-              { title: "Digital certificate", desc: "Your certificate lives on your Tailio profile — always accessible, never losable. Share it with your RWA, building society, or vet in two taps.", icon: "📄" },
-              { title: "Support that actually responds", desc: "Our team responds in under 2 hours — not 2 weeks. Real humans, not automated replies. We're pet parents too.", icon: "💬" }
-            ].map((feature, idx) => (
-              <div key={idx} style={{
-                background: '#FFFCF8',
-                borderRadius: 18,
-                padding: '26px 24px',
-                outline: '1px solid rgba(44, 26, 14, 0.10)'
-              }}>
-                <div style={{
-                  width: 44,
-                  height: 44,
-                  background: '#FFF0E4',
-                  borderRadius: 9,
-                  outline: '1px solid #FFCCA0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: 16
-                }}>
-                  <span style={{ fontSize: 22 }}>{feature.icon}</span>
-                </div>
-                <h3 style={{ color: '#2C1A0E', fontSize: 16, fontFamily: 'DM Sans', fontWeight: 700, marginBottom: 10 }}>{feature.title}</h3>
-                <p style={{ color: '#7A5C40', fontSize: 13, fontFamily: 'DM Sans', lineHeight: '21.45px' }}>{feature.desc}</p>
+            <span style={{ fontSize: 13 }}>Tailio</span>  {/* Added text back */}
+          </div>
+        </th>
+        <th style={{ textAlign: 'center', padding: '16px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 500, textTransform: 'uppercase' }}>Municipal Portal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {[
+        { label: "Time to register", sub: "From start to submission", tailio: "Under 1 minute", portal: "2–4 weeks" },
+        { label: "Works on your phone", sub: "No opening laptops for filing the form", tailio: "✓", portal: "✗" },
+        { label: "Digital certificate", sub: "Always accessible on profile", tailio: "✓", portal: "✗" },
+        { label: "Renewal reminders", sub: "WhatsApp, SMS & email", tailio: "✓", portal: "✗" },
+        { label: "Vaccination tracker", sub: "Schedule, record, share with vets", tailio: "✓", portal: "✗" },
+        { label: "Legal pet profile", sub: "Proof of ownership on record", tailio: "✓", portal: "✗" },
+        { label: "Registration cost", sub: "All-inclusive, no surprises", tailio: "₹999", portal: "₹100–500 + effort" },
+        { label: "If you wait, the fine is…", sub: "Municipal enforcement active now", tailio: "None", portal: "₹10,000+" }
+      ].map((row, idx) => (
+        <tr key={idx} style={{ borderBottom: idx < 7 ? '1px solid rgba(44, 26, 14, 0.10)' : 'none' }}>
+          <td style={{ padding: '18px 24px' }}>
+            <div>
+              <div style={{ fontWeight: 600, color: '#2C1A0E', fontSize: '13.5px' }}>{row.label}</div>
+              <div style={{ color: '#A68660', fontSize: 11 }}>{row.sub}</div>
+            </div>
+          </td>
+          <td style={{
+            padding: '18px 24px',
+            textAlign: 'center',
+            background: idx % 2 === 0 ? 'rgba(232, 96, 10, 0.04)' : 'transparent',
+            fontWeight: 700,
+            color: '#2C1A0E'
+          }}>
+            {row.tailio === '✓' ? (
+              <div style={{ width: 28, height: 28, background: '#2C1A0E', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+                  <path d="M1.5 5L4.5 8L11 1" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                </svg>
               </div>
-            ))}
-          </div>
-        </div>
+            ) : row.tailio}
+          </td>
+          <td style={{
+            padding: '18px 24px',
+            textAlign: 'center',
+            color: row.portal === '₹10,000+' ? '#C04E06' : '#A68660',
+            fontWeight: row.portal === '₹10,000+' ? 700 : 400,
+            fontStyle: row.portal === '₹10,000+' ? 'italic' : 'normal'
+          }}>
+            {row.portal === '✗' ? (
+              <div style={{ width: 28, height: 28, border: '1px solid rgba(44, 26, 14, 0.18)', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                  <path d="M1 1L10 10M10 1L1 10" stroke="#A68660" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </div>
+            ) : row.portal}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+  </div>
+</div>
+      {/* Features Grid Section */}
+      {/* Features Grid Section */}
+<div style={{
+  alignSelf: 'stretch',
+  padding: isMobile ? '40px 20px' : '80px 40px',
+  background: '#FAF6EF'
+}}>
+  <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ marginBottom: 30 }}>
+      <div style={{
+        display: 'inline-flex',
+        padding: '5px 14px',
+        background: '#FFF0E4',
+        borderRadius: 100,
+        outline: '1px solid #FFCCA0',
+        marginBottom: 20
+      }}>
+        <span style={{ color: '#C04E06', fontSize: 10, fontFamily: 'DM Sans', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.20px' }}>
+          What you actually get
+        </span>
       </div>
+      <h2 style={{
+        color: '#2C1A0E',
+        fontSize: isMobile ? 28 : 40,
+        fontFamily: 'Fraunces',
+        fontWeight: 900,
+        lineHeight: '44px'
+      }}>
+        Six reasons pet parents <span style={{ color: '#E8600A', fontStyle: 'italic' }}>choose Tailio</span>.
+      </h2>
+      <p style={{ color: '#7A5C40', fontSize: 14.5, fontFamily: 'DM Sans', maxWidth: 540 }}>
+        Every feature was built because a pet parent needed it - not because it looked good in a pitch deck.
+      </p>
+    </div>
+
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+      gap: 20
+    }}>
+      {[
+        { title: "Done in 60 seconds flat", desc: "Three fields, four uploads, one click. We've timed it. The average pet parent is done before their chai goes cold.", icon: "/images/timer-1.png" },
+        { title: "Legally valid. Always.", desc: "We file directly with MCD, Noida Authority, and GMC. The certificate you receive is the official government-issued document — not a Tailio proxy.", icon: "/images/legally.png" },
+        { title: "Never miss a renewal", desc: "WhatsApp, SMS, and email reminders before your annual expiry. We ping you a week out, three days out, and the day of — you can't forget.", icon: "/images/never-miss.png" },
+        { title: "Vaccination tracker built in", desc: "Log every shot, set reminders, and share your pet's health record with any vet — digitally. No paper booklets that get lost in a move.", icon: "/images/vaccine-tracker-color.png" },
+        { title: "Digital certificate", desc: "Your certificate lives on your Tailio profile — always accessible, never losable. Share it with your RWA, building society, or vet in two taps.", icon: "/images/support-that-actually-color.png" },
+        { title: "Support that actually responds", desc: "Our team responds in under 2 hours — not 2 weeks. Real humans, not automated replies. We're pet parents too.", icon: "/images/digital-certrificate-color.png" }
+      ].map((feature, idx) => (
+        <div key={idx} style={{
+          background: '#FFFCF8',
+          borderRadius: 18,
+          padding: '26px 24px',
+          outline: '1px solid rgba(44, 26, 14, 0.10)'
+        }}>
+          <div style={{
+            width: 44,
+            height: 44,
+            background: '#FFF0E4',
+            borderRadius: 9,
+            outline: '1px solid #FFCCA0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 16
+          }}>
+            <img 
+              src={feature.icon} 
+              alt="" 
+              style={{ width: 24, height: 24, objectFit: 'contain' }}
+            />
+          </div>
+          <h3 style={{ color: '#2C1A0E', fontSize: 16, fontFamily: 'DM Sans', fontWeight: 700, marginBottom: 10 }}>{feature.title}</h3>
+          <p style={{ color: '#7A5C40', fontSize: 13, fontFamily: 'DM Sans', lineHeight: '21.45px' }}>{feature.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
 
       {/* Fines Section */}
       <div style={{
@@ -511,10 +519,10 @@ export default function WhyTailioSection() {
             marginBottom: 40
           }}>
             {[
-              { city: "Gurugram", amount: "Pending", desc: "Registration strongly encouraged. Fines to be announced — act now.", icon: "🏛️" },
-              { city: "Delhi", amount: "₹500+", desc: "Fee enforcement underway. Fines escalating with each MCD drive.", icon: "🏢" },
-              { city: "Noida", amount: "₹10,000", desc: "Highest fine in NCR. Noida authority actively penalising non-compliance.", icon: "🏗️" },
-              { city: "Ghaziabad", amount: "₹5,000", desc: "Registration fee raised from ₹200 to ₹1,000 in April 2024.", icon: "🏘️" }
+              { city: "Gurugram", amount: "Pending", desc: "Registration strongly encouraged. Fines to be announced — act now.", icon: "/images/gurugram.png" },
+              { city: "Delhi", amount: "₹500+", desc: "Fee enforcement underway. Fines escalating with each MCD drive.", icon: "/images/delhi.png" },
+              { city: "Noida", amount: "₹10,000", desc: "Highest fine in NCR. Noida authority actively penalising non-compliance.", icon: "/images/noida.png" },
+              { city: "Ghaziabad", amount: "₹5,000", desc: "Registration fee raised from ₹200 to ₹1,000 in April 2024.", icon: "/images/ghaziabad.png" }
             ].map((fine) => (
               <div key={fine.city} style={{
                 background: 'rgba(255, 140, 58, 0.08)',
@@ -526,15 +534,21 @@ export default function WhyTailioSection() {
                 <div style={{ marginBottom: 10 }}>
                   <span style={{ color: 'rgba(255, 140, 58, 0.60)', fontSize: 9, fontFamily: 'DM Sans', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.26px' }}>{fine.city}</span>
                 </div>
-                <div style={{ marginBottom: 10 }}>
-                  <span style={{ fontSize: 40 }}>{fine.icon}</span>
+                <div style={{ marginBottom: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', height: 40 }}>
+                  <img
+                    src={fine.icon}
+                    alt={fine.city}
+                    width={60}
+                    height={60}
+                    style={{ objectFit: 'contain' }}
+                  />
                 </div>
                 <div style={{ marginBottom: 8 }}>
                   <span style={{ color: fine.amount === 'Pending' ? 'rgba(250, 246, 239, 0.28)' : '#FF8C3A', fontSize: fine.amount === 'Pending' ? 15 : 26, fontFamily: 'Fraunces', fontWeight: 900 }}>
                     {fine.amount}
                   </span>
                 </div>
-                <p style={{ color: 'rgba(250, 246, 239, 0.38)', fontSize: 11, fontFamily: 'DM Sans', lineHeight: '16.50px' }}>{fine.desc}</p>
+                <p style={{ color: 'rgba(250, 246, 239, 0.38)', fontSize: 11, fontFamily: 'DM Sans', lineHeight: '16.50px', margin: 0 }}>{fine.desc}</p>
               </div>
             ))}
           </div>
@@ -570,7 +584,11 @@ export default function WhyTailioSection() {
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <span style={{ fontSize: 24 }}>⚠️</span>
+              <img 
+              src='/images/warning.png' 
+              alt="" 
+              style={{ width: 35, height: 34, objectFit: 'contain' }}
+            />
             </div>
             <div style={{ flex: 1 }}>
               <h3 style={{ color: '#2C1A0E', fontSize: 24, fontFamily: 'Fraunces', fontStyle: 'italic', fontWeight: 700, marginBottom: 10 }}>
@@ -673,49 +691,66 @@ export default function WhyTailioSection() {
 
       {/* Final CTA */}
       <div style={{
-        width: '100%',
-        padding: isMobile ? '60px 20px' : '100px 40px',
-        background: 'linear-gradient(164deg, #C04E06 0%, #E8600A 60%, #FF8C3A 100%)',
-        textAlign: 'center'
+  width: '100%',
+  padding: isMobile ? '60px 20px' : '100px 40px',
+  background: 'linear-gradient(164deg, #C04E06 0%, #E8600A 60%, #FF8C3A 100%)',
+  textAlign: 'center'
+}}>
+  <div style={{ maxWidth: 520, margin: '0 auto' }}>
+    {/* Paw image centered above the heading */}
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      marginBottom: 24  // Adds padding between paw and heading
+    }}>
+      <img 
+        src='/images/paw-2.png' 
+        alt="" 
+        style={{ width: 90, height: 90, objectFit: 'contain' }}
+      />
+    </div>
+    
+    <h2 style={{
+      color: 'white',
+      fontSize: isMobile ? 36 : 58,
+      fontFamily: 'Fraunces',
+      fontWeight: 900,
+      lineHeight: '62.64px',
+      marginBottom: 20,
+      marginTop: 0  // Ensures no extra top margin
+    }}>
+      Upload Less. <br />Move Faster.
+    </h2>
+    
+    <p style={{ color: 'rgba(255, 255, 255, 0.82)', fontSize: 16, fontFamily: 'DM Sans', lineHeight: '26.40px', marginBottom: 30 }}>
+      Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad & Gurugram who are already compliant.
+    </p>
+    
+    <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
+      <button style={{
+        padding: '14px 32px',
+        background: 'white',
+        borderRadius: 9,
+        border: 'none',
+        cursor: 'pointer',
+        boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.15)',
+        outline: '2px solid rgba(255, 255, 255, 0.30)'
       }}>
-        <div style={{ maxWidth: 520, margin: '0 auto' }}>
-          <h2 style={{
-            color: 'white',
-            fontSize: isMobile ? 36 : 58,
-            fontFamily: 'Fraunces',
-            fontWeight: 900,
-            lineHeight: '62.64px',
-            marginBottom: 20
-          }}>
-            Upload Less. <br />Move Faster.
-          </h2>
-          <p style={{ color: 'rgba(255, 255, 255, 0.82)', fontSize: 16, fontFamily: 'DM Sans', lineHeight: '26.40px', marginBottom: 30 }}>
-            Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad & Gurugram who are already compliant.
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <button style={{
-              padding: '14px 32px',
-              background: 'white',
-              borderRadius: 9,
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.15)',
-              outline: '2px solid rgba(255, 255, 255, 0.30)'
-            }}>
-              <span style={{ color: '#C04E06', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 700 }}>Register Your Pet — ₹999 →</span>
-            </button>
-            <button style={{
-              padding: '14px 28px',
-              background: 'transparent',
-              borderRadius: 9,
-              border: '1px solid rgba(255, 255, 255, 0.40)',
-              cursor: 'pointer'
-            }}>
-              <span style={{ color: 'white', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 500 }}>See how it works</span>
-            </button>
-          </div>
-        </div>
-      </div>
+        <span style={{ color: '#C04E06', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 700 }}>Register Your Pet — ₹999 →</span>
+      </button>
+      <button style={{
+        padding: '14px 28px',
+        background: 'transparent',
+        borderRadius: 9,
+        border: '1px solid rgba(255, 255, 255, 0.40)',
+        cursor: 'pointer'
+      }}>
+        <span style={{ color: 'white', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 500 }}>See how it works</span>
+      </button>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 }
