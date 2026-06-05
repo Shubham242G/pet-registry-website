@@ -24,6 +24,8 @@ import {
   FileCode,
   FileIcon as FilePdf
 } from "lucide-react";
+import Link from "next/link";
+
 
 // Import the same bottom navigation component from Sidebar
 // Since the Sidebar component exports its own mobile bottom nav,
@@ -79,7 +81,7 @@ function MobileBottomNav() {
 }
 
 // Don't forget to import missing dependencies
-import Link from "next/link";
+
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, LogOut } from "lucide-react";
 
