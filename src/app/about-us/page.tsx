@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import Footer from '../component/Footer';
 
 const F = {
   fraunces: 'Fraunces, Georgia, serif',
@@ -245,7 +246,7 @@ export default function AboutPage() {
             <div style={{ paddingTop: 8 }}>
               {[
                 { period: 'Early 2025', title: 'The problem identified', desc: "After the Supreme Court's ABC Rules 2023 directive, we saw thousands of pet parents scrambling with no clear path to compliance.", v: 1 },
-                { period: 'Mid 2025', title: 'Team formed & built', desc: 'Four co-founders — combining expertise in technology, legal compliance, design, and operations — came together to build Tailio.', v: 2 },
+                { period: 'Mid 2025', title: 'Team formed & built', desc: 'Four co-founders — combining expertise in technology, legal compliance, design, and operations — came together to build Tailio, under Truzo Infotech Private Limited.', v: 2 },
                 { period: 'Early 2026', title: 'Launched across Delhi NCR', desc: 'Went live in Delhi, Noida, Ghaziabad, and Gurugram — filing directly with each municipal corporation on behalf of pet parents.', v: 3 },
               ].map((item, i, arr) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 20, paddingBottom: i < arr.length - 1 ? 28 : 0 }}>
@@ -607,74 +608,7 @@ export default function AboutPage() {
       </div>
 
       {/* ── FOOTER ────────────────────────────────────────────────────────── */}
-      <div style={{ background: '#1C0F07', width: '100%' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '32px 20px 0' : '40px 40px 0' }}>
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
-            gap: isMobile ? 28 : 32, 
-            paddingBottom: 20, 
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
-            alignItems: 'flex-start'
-          }}>
-            {/* Brand Column */}
-            <div>
-              <div style={{ marginBottom: 12 }}>
-                <Image 
-                  src="/images/tailio.png" 
-                  alt="Tailio" 
-                  width={180} 
-                  height={54} 
-                  style={{ objectFit: 'contain' }} 
-                />
-              </div>
-            </div>
-            
-            {/* Platform Column */}
-            <div>
-              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Platform</span>
-              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
-                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Cities Column */}
-            <div>
-              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Cities</span>
-              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
-                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Company Column */}
-            <div>
-              <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Company</span>
-              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
-                  <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          {/* Copyright */}
-          <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
-            <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(12, 11, 10) }}>
-              © 2026 Tailio. All rights reserved.
-            </span>
-          </div>
-        </div>
-      </div>
+      <Footer/>
 
     </div>
   );

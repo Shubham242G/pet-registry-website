@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Footer from "../component/Footer";
 
 export default function LandingPage() {
   const [isMobile, setIsMobile] = useState(false);
@@ -760,6 +761,8 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
+
+        <Footer/>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import RegisterModal from './component/RegisterModal';
 import LoginModal from './component/LoginModal';
+import Footer from './component/Footer';
 
 const F = {
   fraunces: 'Fraunces, Georgia, serif',
@@ -15,49 +16,49 @@ const F = {
 /* ─── Shared Badge Component ─────────────────────────────────────────────── */
 function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     setIsMobile(window.innerWidth <= 768);
   }, []);
-  
+
   if (dark) {
     return (
-      <div style={{ 
-        display: 'inline-flex', alignItems: 'center', 
-        padding: '5px 14px', 
-        background: 'rgba(255,255,255,0.06)', 
-        borderRadius: 100, 
-        outline: '1px rgba(255,255,255,0.10) solid', 
-        outlineOffset: -1 
+      <div style={{
+        display: 'inline-flex', alignItems: 'center',
+        padding: '5px 14px',
+        background: 'rgba(255,255,255,0.06)',
+        borderRadius: 100,
+        outline: '1px rgba(255,255,255,0.10) solid',
+        outlineOffset: -1
       }}>
-        <span style={{ 
-          color: 'rgba(250,246,239,0.55)', 
-          fontSize: isMobile ? 8 : 9.5, 
-          fontFamily: F.dmMono, 
-          fontWeight: 500, 
-          textTransform: 'uppercase', 
-          letterSpacing: '1.24px' 
+        <span style={{
+          color: 'rgba(250,246,239,0.55)',
+          fontSize: isMobile ? 8 : 9.5,
+          fontFamily: F.dmMono,
+          fontWeight: 500,
+          textTransform: 'uppercase',
+          letterSpacing: '1.24px'
         }}>{text}</span>
       </div>
     );
   }
   return (
-    <div style={{ 
-      display: 'inline-flex', alignItems: 'center', 
-      padding: '5px 14px', 
-      background: '#FFF0E4', 
-      borderRadius: 100, 
-      outline: '1px #FFCCA0 solid', 
-      outlineOffset: -1 
+    <div style={{
+      display: 'inline-flex', alignItems: 'center',
+      padding: '5px 14px',
+      background: '#FFF0E4',
+      borderRadius: 100,
+      outline: '1px #FFCCA0 solid',
+      outlineOffset: -1
     }}>
-      <span style={{ 
-        color: '#C04E06', 
-        fontSize: isMobile ? 9 : 10, 
-        fontFamily: F.dmSans, 
-        fontWeight: 500, 
-        textTransform: 'uppercase', 
-        lineHeight: '15px', 
-        letterSpacing: '1.20px' 
+      <span style={{
+        color: '#C04E06',
+        fontSize: isMobile ? 9 : 10,
+        fontFamily: F.dmSans,
+        fontWeight: 500,
+        textTransform: 'uppercase',
+        lineHeight: '15px',
+        letterSpacing: '1.20px'
       }}>{text}</span>
     </div>
   );
@@ -67,58 +68,58 @@ function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
 function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ 
-      background: '#FFFCF8', 
-      borderRadius: 13, 
-      outline: '1px rgba(44,26,14,0.10) solid', 
-      outlineOffset: -1, 
-      overflow: 'hidden' 
+    <div style={{
+      background: '#FFFCF8',
+      borderRadius: 13,
+      outline: '1px rgba(44,26,14,0.10) solid',
+      outlineOffset: -1,
+      overflow: 'hidden'
     }}>
       <button
         onClick={() => setOpen(o => !o)}
-        style={{ 
-          width: '100%', 
-          padding: 20, 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          background: 'none', 
-          border: 'none', 
-          cursor: 'pointer', 
-          textAlign: 'left', 
-          gap: 16 
+        style={{
+          width: '100%',
+          padding: 20,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
+          gap: 16
         }}
       >
-        <span style={{ 
-          color: '#2C1A0E', 
-          fontSize: 14.5, 
-          fontFamily: F.dmSans, 
-          fontWeight: 600, 
-          lineHeight: '20.30px' 
+        <span style={{
+          color: '#2C1A0E',
+          fontSize: 14.5,
+          fontFamily: F.dmSans,
+          fontWeight: 600,
+          lineHeight: '20.30px'
         }}>{question}</span>
-        <div style={{ 
-          width: 26, 
-          height: 26, 
-          background: '#FFF0E4', 
-          borderRadius: 13, 
-          outline: '1px #FFCCA0 solid', 
-          outlineOffset: -1, 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          flexShrink: 0 
+        <div style={{
+          width: 26,
+          height: 26,
+          background: '#FFF0E4',
+          borderRadius: 13,
+          outline: '1px #FFCCA0 solid',
+          outlineOffset: -1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0
         }}>
           <span style={{ color: '#C04E06', fontSize: 16, fontFamily: F.dmSans, fontWeight: 700 }}>{open ? '−' : '+'}</span>
         </div>
       </button>
-      
+
       {/* Answer section - only visible when open */}
       {open && (
-        <div style={{ 
-          padding: '0 20px 20px 20px', 
-          color: '#7A5C40', 
-          fontSize: 14, 
-          fontFamily: F.dmSans, 
+        <div style={{
+          padding: '0 20px 20px 20px',
+          color: '#7A5C40',
+          fontSize: 14,
+          fontFamily: F.dmSans,
           lineHeight: '1.6',
           borderTop: '1px solid rgba(44,26,14,0.08)',
           paddingTop: 16
@@ -144,12 +145,12 @@ export default function HomePage() {
     };
     handleResize();
     window.addEventListener('resize', handleResize);
-    
+
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@500&display=swap';
     document.head.appendChild(link);
-    
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -189,36 +190,36 @@ export default function HomePage() {
       {/* ══════════════════════════════════════
           HERO SECTION
       ══════════════════════════════════════ */}
-      <div style={{ 
-        background: '#FAF6EF', 
-        width: '100%', 
-        position: 'relative', 
-        minHeight: isMobile ? 600 : 770, 
-        overflow: 'hidden' 
+      <div style={{
+        background: '#FAF6EF',
+        width: '100%',
+        position: 'relative',
+        minHeight: isMobile ? 600 : 770,
+        overflow: 'hidden'
       }}>
         {/* Full Background Image */}
-        <div style={{ 
-          position: 'absolute', 
-          inset: 0, 
-          width: '100%', 
-          height: '100%', 
-          zIndex: 0 
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0
         }}>
-          <Image 
-            src="/images/coffe-bean-print.png" 
-            alt="Background" 
-            fill 
-            style={{ 
-              objectFit: 'cover', 
+          <Image
+            src="/images/coffe-bean-print.png"
+            alt="Background"
+            fill
+            style={{
+              objectFit: 'cover',
               objectPosition: 'center',
               imageRendering: 'auto',
-            }} 
-            priority 
+            }}
+            priority
             quality={100}
             sizes="100vw"
           />
         </div>
-        
+
         {/* Overlay */}
         <div style={{
           position: 'absolute',
@@ -226,40 +227,40 @@ export default function HomePage() {
           background: 'rgba(250, 246, 239, 0.85)',
           zIndex: 1,
         }} />
-        
+
         {/* Hero Content */}
-        <div style={{ 
-          position: 'relative', 
-          zIndex: 3, 
-          maxWidth: 1200, 
-          margin: '0 auto', 
-          padding: isMobile ? '40px 20px' : '60px 40px 80px', 
-          display: 'flex', 
+        <div style={{
+          position: 'relative',
+          zIndex: 3,
+          maxWidth: 1200,
+          margin: '0 auto',
+          padding: isMobile ? '40px 20px' : '60px 40px 80px',
+          display: 'flex',
           flexDirection: isMobile ? 'column' : 'row',
-          alignItems: 'center', 
+          alignItems: 'center',
           justifyContent: 'center',
-          gap: isMobile ? 40 : 77 
+          gap: isMobile ? 40 : 77
         }}>
           {/* Left Column - Text Content */}
-          <div style={{ 
-            width: isMobile ? '100%' : 652, 
-            display: 'flex', 
-            flexDirection: 'column', 
+          <div style={{
+            width: isMobile ? '100%' : 652,
+            display: 'flex',
+            flexDirection: 'column',
             gap: 14.9,
             textAlign: isMobile ? 'center' : 'left',
             alignItems: isMobile ? 'center' : 'flex-start'
           }}>
             {/* Compliance Pill */}
-            <div style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
               justifyContent: 'center',
-              padding: '7px 16px', 
-              background: '#2C1A0E', 
-              borderRadius: 100, 
-              gap: 8, 
-              alignSelf: isMobile ? 'center' : 'flex-start', 
-              flexWrap: 'wrap' 
+              padding: '7px 16px',
+              background: '#2C1A0E',
+              borderRadius: 100,
+              gap: 8,
+              alignSelf: isMobile ? 'center' : 'flex-start',
+              flexWrap: 'wrap'
             }}>
               <span style={{ color: 'rgba(255,243,224,0.75)', fontSize: getResponsiveFontSize(11.5, 10, 9), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '17.25px' }}>
                 Supreme Court of India has mandated pet registration
@@ -269,30 +270,30 @@ export default function HomePage() {
 
             {/* Headline - Explicit colors set */}
             <div style={{ paddingTop: 5.1, textAlign: isMobile ? 'center' : 'left' }}>
-              <div style={{ 
-                color: '#2C1A0E', 
-                fontSize: getResponsiveFontSize(64, 48, 32), 
-                fontFamily: F.fraunces, 
-                fontWeight: 900, 
+              <div style={{
+                color: '#2C1A0E',
+                fontSize: getResponsiveFontSize(64, 48, 32),
+                fontFamily: F.fraunces,
+                fontWeight: 900,
                 lineHeight: 1.2,
                 whiteSpace: 'nowrap'
               }}>
                 Your pet deserves
               </div>
-              <div style={{ 
-                fontSize: getResponsiveFontSize(64, 48, 32), 
-                fontFamily: F.fraunces, 
+              <div style={{
+                fontSize: getResponsiveFontSize(64, 48, 32),
+                fontFamily: F.fraunces,
                 lineHeight: 1.2,
                 whiteSpace: 'nowrap'
               }}>
                 <span style={{ color: '#2C1A0E', fontWeight: 900 }}>an</span>
                 <span style={{ color: '#E8600A', fontStyle: 'italic', fontWeight: 700 }}> identity,</span>
               </div>
-              <div style={{ 
-                color: '#2C1A0E', 
-                fontSize: getResponsiveFontSize(64, 48, 32), 
-                fontFamily: F.fraunces, 
-                fontWeight: 900, 
+              <div style={{
+                color: '#2C1A0E',
+                fontSize: getResponsiveFontSize(64, 48, 32),
+                fontFamily: F.fraunces,
+                fontWeight: 900,
                 lineHeight: 1.2,
                 whiteSpace: 'nowrap'
               }}>
@@ -301,12 +302,12 @@ export default function HomePage() {
             </div>
 
             {/* Description */}
-            <p style={{ 
-              maxWidth: isMobile ? '100%' : 480, 
-              color: '#7A5C40', 
-              fontSize: getResponsiveFontSize(14.5, 13, 12), 
-              fontFamily: F.dmSans, 
-              lineHeight: '23.93px', 
+            <p style={{
+              maxWidth: isMobile ? '100%' : 480,
+              color: '#7A5C40',
+              fontSize: getResponsiveFontSize(14.5, 13, 12),
+              fontFamily: F.dmSans,
+              lineHeight: '23.93px',
               margin: 0,
               textAlign: isMobile ? 'center' : 'left'
             }}>
@@ -314,41 +315,41 @@ export default function HomePage() {
             </p>
 
             {/* CTA Buttons */}
-            <div style={{ 
-              display: 'flex', 
-              gap: 12, 
-              flexWrap: 'wrap', 
-              paddingTop: 9.1, 
+            <div style={{
+              display: 'flex',
+              gap: 12,
+              flexWrap: 'wrap',
+              paddingTop: 9.1,
               paddingBottom: 25.1,
               justifyContent: isMobile ? 'center' : 'flex-start'
             }}>
-              <button onClick={handleOpenRegisterModal} style={{ 
-                padding: isMobile ? '11px 20px' : '13px 26px', 
-                background: '#E8600A', 
-                boxShadow: '0px 2px 0px #C04E06', 
-                borderRadius: 9, 
-                outline: '2px #C04E06 solid', 
-                outlineOffset: -2, 
-                color: '#FFFFFF', 
-                fontSize: getResponsiveFontSize(15, 14, 13), 
-                fontFamily: F.dmSans, 
-                fontWeight: 600, 
-                textDecoration: 'none', 
-                cursor: 'pointer', 
+              <button onClick={handleOpenRegisterModal} style={{
+                padding: isMobile ? '11px 20px' : '13px 26px',
+                background: '#E8600A',
+                boxShadow: '0px 2px 0px #C04E06',
+                borderRadius: 9,
+                outline: '2px #C04E06 solid',
+                outlineOffset: -2,
+                color: '#FFFFFF',
+                fontSize: getResponsiveFontSize(15, 14, 13),
+                fontFamily: F.dmSans,
+                fontWeight: 600,
+                textDecoration: 'none',
+                cursor: 'pointer',
                 border: 'none'
               }}>
                 Register Your Pet →
               </button>
-              <a href="#why-register" style={{ 
-                padding: isMobile ? '11px 20px' : '14.25px 20px 15.25px', 
-                borderRadius: 9, 
-                outline: '1px rgba(44,26,14,0.18) solid', 
-                outlineOffset: -1, 
-                color: '#2C1A0E', 
-                fontSize: getResponsiveFontSize(14, 13, 12), 
-                fontFamily: F.dmSans, 
-                fontWeight: 500, 
-                textDecoration: 'none', 
+              <a href="#why-register" style={{
+                padding: isMobile ? '11px 20px' : '14.25px 20px 15.25px',
+                borderRadius: 9,
+                outline: '1px rgba(44,26,14,0.18) solid',
+                outlineOffset: -1,
+                color: '#2C1A0E',
+                fontSize: getResponsiveFontSize(14, 13, 12),
+                fontFamily: F.dmSans,
+                fontWeight: 500,
+                textDecoration: 'none',
                 display: 'inline-block'
               }}>
                 Why it matters
@@ -356,11 +357,11 @@ export default function HomePage() {
             </div>
 
             {/* Stats Strip */}
-            <div style={{ 
-              width: isMobile ? '100%' : 554, 
-              display: 'flex', 
-              flexWrap: isMobile ? 'wrap' : 'nowrap', 
-              borderRadius: 13, 
+            <div style={{
+              width: isMobile ? '100%' : 554,
+              display: 'flex',
+              flexWrap: isMobile ? 'wrap' : 'nowrap',
+              borderRadius: 13,
               overflow: 'hidden',
               background: 'transparent',
               gap: isMobile ? 8 : 0
@@ -371,9 +372,9 @@ export default function HomePage() {
                 { num: '1 min', label: 'To register on Tailio' },
                 { num: '33M+', label: 'Pet dogs in India' },
               ].map((s, i) => (
-                <div key={i} style={{ 
-                  flex: 1, 
-                  padding: isMobile ? '12px 8px' : '16px 12px', 
+                <div key={i} style={{
+                  flex: 1,
+                  padding: isMobile ? '12px 8px' : '16px 12px',
                   textAlign: 'center',
                   background: isMobile ? '#F3EDE0' : 'transparent',
                   borderRadius: isMobile ? 12 : 0,
@@ -389,12 +390,12 @@ export default function HomePage() {
           {/* Hero Image */}
           {!isMobile && (
             <div style={{ position: 'relative', width: 580, height: 580, flexShrink: 0 }}>
-              <Image 
-                src="/images/homeBanner.png" 
-                alt="Happy pet with owner" 
-                fill 
-                style={{ objectFit: 'contain' }} 
-                priority 
+              <Image
+                src="/images/homeBanner.png"
+                alt="Happy pet with owner"
+                fill
+                style={{ objectFit: 'contain' }}
+                priority
               />
             </div>
           )}
@@ -407,26 +408,26 @@ export default function HomePage() {
       <div id="why-register" style={{ background: '#FAF6EF', width: '100%' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px' : '45px 40px' }}>
           <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 20, marginBottom: 40 }}>
-            
+
             {/* Left Column */}
             <div style={{ width: isMobile ? '100%' : 548, display: 'flex', flexDirection: 'column' }}>
-              <div style={{ 
-                display: 'inline-flex', 
-                alignItems: 'center', 
-                padding: '5px 14px', 
-                background: '#FFF0E4', 
-                borderRadius: 100, 
-                outline: '1px #FFCCA0 solid', 
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '5px 14px',
+                background: '#FFF0E4',
+                borderRadius: 100,
+                outline: '1px #FFCCA0 solid',
                 outlineOffset: -1,
                 width: 'fit-content'
               }}>
-                <span style={{ 
-                  color: '#C04E06', 
-                  fontSize: getResponsiveFontSize(10, 9, 9), 
-                  fontFamily: F.dmSans, 
-                  fontWeight: 500, 
-                  textTransform: 'uppercase', 
-                  lineHeight: '15px', 
+                <span style={{
+                  color: '#C04E06',
+                  fontSize: getResponsiveFontSize(10, 9, 9),
+                  fontFamily: F.dmSans,
+                  fontWeight: 500,
+                  textTransform: 'uppercase',
+                  lineHeight: '15px',
                   letterSpacing: '1.20px',
                   whiteSpace: 'nowrap'
                 }}>It's the law now</span>
@@ -437,7 +438,7 @@ export default function HomePage() {
               <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), fontFamily: F.dmSans, lineHeight: '23.93px', marginBottom: 20 }}>
                 The Supreme Court of India, through the Animal Birth Control (ABC) Rules 2023, has directed all municipal corporations in Delhi NCR to enforce mandatory pet registration.
               </p>
-              
+
               {/* Feature List */}
               {[
                 { title: 'Mandated by the Supreme Court', desc: "The ABC Rules 2023 and the SC's landmark August 2025 order directed Delhi NCR authorities to enforce registration for all pet animals — not just dogs.", icon: '/images/supreme-court.png' },
@@ -473,7 +474,7 @@ export default function HomePage() {
               <div style={{ background: '#FFFCF8', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', boxShadow: '0px 4px 20px rgba(44,26,14,0.08)', overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <div style={{ padding: isMobile ? '20px' : '24px 24px 20px', flex: 1 }}>
                   <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.2px', marginBottom: 16 }}>Why Registration Matters</div>
-                  
+
                   <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
                     {[
                       { title: 'Legal Identity & Protection', desc: 'Legal ID — proof of ownership and legal status.', icon: '/images/document.png' },
@@ -519,13 +520,13 @@ export default function HomePage() {
       <div style={{ background: '#2C1A0E', width: '100%' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: getResponsivePadding(), textAlign: 'center' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-            <div style={{ 
-              display: 'inline-flex', alignItems: 'center', 
-              padding: '5px 14px', 
-              background: 'rgba(255,140,58,0.12)', 
-              borderRadius: 100, 
-              outline: '1px rgba(255,140,58,0.20) solid', 
-              outlineOffset: -1 
+            <div style={{
+              display: 'inline-flex', alignItems: 'center',
+              padding: '5px 14px',
+              background: 'rgba(255,140,58,0.12)',
+              borderRadius: 100,
+              outline: '1px rgba(255,140,58,0.20) solid',
+              outlineOffset: -1
             }}>
               <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.40px' }}>Know the fines</span>
             </div>
@@ -655,134 +656,134 @@ export default function HomePage() {
       {/* ══════════════════════════════════════
           HOW IT WORKS SECTION
       ══════════════════════════════════════ */}
-<div style={{ background: '#F3EDE0', width: '100%' }}>
-  <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding() }}>
-    <div style={{ marginBottom: 60 }}>
-      <Badge text="HOW IT WORKS" />
-      <div style={{ marginTop: 18, display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', gap: isMobile ? 20 : 0 }}>
-        <div>
-          <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '64.48px' }}>Two screens.</div>
-          <div style={{ color: '#E8600A', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '64.48px' }}>One minute.</div>
-        </div>
-        <button onClick={handleOpenRegisterModal} style={{ padding: isMobile ? '12px 24px' : '14px 28px', background: '#E8600A', borderRadius: 9, color: '#FFFFFF', fontWeight: 600, cursor: 'pointer', border: 'none' }}>
-          Start Registration →
-        </button>
-      </div>
-    </div>
-
-    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 24, alignItems: 'start' }}>
-      {/* Step 1 */}
-      <div 
-        style={{ 
-          background: '#FFFCF8', 
-          borderRadius: 20, 
-          padding: isMobile ? '20px' : '24px 28px',
-          transition: 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)',
-          cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-16px) scale(1.02)';
-          e.currentTarget.style.boxShadow = '0 30px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)';
-          e.currentTarget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0) scale(1)';
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-          <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>1</span>
-          <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Register & add your pet's details</span>
-        </div>
-        <div style={{ background: '#FAF6EF', borderRadius: 13, padding: 20, marginBottom: 16 }}>
-          {[
-            { label: "Pet's Name", value: 'Bruno', active: true },
-            { label: 'Breed', value: 'Shih Tzu', active: false },
-            { label: 'Age', value: '3 years', active: false },
-          ].map((field) => (
-            <div key={field.label} style={{ marginBottom: 12 }}>
-              <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(9, 8, 8), fontFamily: F.dmMono, marginBottom: 5 }}>{field.label}</div>
-              <div style={{ padding: '10px 14px', background: '#FFFCF8', borderRadius: 9, outline: field.active ? '1px #E8600A solid' : '1px rgba(44,26,14,0.18) solid', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12) }}>{field.value}</span>
-                {field.active && <div style={{ width: 1.5, height: 16, background: '#E8600A' }} />}
+      <div style={{ background: '#F3EDE0', width: '100%' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding() }}>
+          <div style={{ marginBottom: 60 }}>
+            <Badge text="HOW IT WORKS" />
+            <div style={{ marginTop: 18, display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', gap: isMobile ? 20 : 0 }}>
+              <div>
+                <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '64.48px' }}>Two screens.</div>
+                <div style={{ color: '#E8600A', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '64.48px' }}>One minute.</div>
               </div>
-            </div>
-          ))}
-          <div style={{ padding: '14px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600 }}>Continue</div>
-        </div>
-        <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>
-          A handful of fields. No PDFs to download, no notarised forms, no Sunday lost to paperwork.
-        </p>
-      </div>
-
-      {/* Step 2 */}
-      <div 
-        style={{ 
-          background: '#FFFCF8', 
-          borderRadius: 20, 
-          padding: isMobile ? '20px' : '24px 28px',
-          transition: 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)',
-          cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-16px) scale(1.02)';
-          e.currentTarget.style.boxShadow = '0 30px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)';
-          e.currentTarget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0) scale(1)';
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-          <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>2</span>
-          <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Upload your 4 documents</span>
-        </div>
-        {[
-          { label: 'Anti-Rabies Vaccination Certificate', file: 'vax-record-bruno.pdf', done: true, icon: '/images/vaccine.png' },
-          { label: 'Applicant ID Proof', file: 'aadhaar-card.pdf', done: true, icon: '/images/certificate-1.png' },
-          { label: 'Address Proof', file: 'electricity-bill.pdf', done: true, icon: '/images/target.png' },
-          { label: 'Photo with Your Pet', file: 'Tap to upload →', done: true, icon: '/images/photograph.png' },
-        ].map((doc) => (
-          <div key={doc.label} style={{ padding: 14, background: '#FAF6EF', borderRadius: 13, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 38, height: 38, background: '#FFF0E4', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Image src={doc.icon} alt={doc.label} width={24} height={24} style={{ objectFit: 'contain' }} />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ color: '#2C1A0E', fontWeight: 600, fontSize: getResponsiveFontSize(13, 12, 11) }}>{doc.label}</div>
-              <div style={{ color: doc.done ? '#A68660' : '#C04E06', fontSize: getResponsiveFontSize(11, 10, 9) }}>{doc.file}</div>
-            </div>
-            <div style={{ 
-              width: 22, 
-              height: 22, 
-              background: doc.done ? '#E6F6ED' : '#F3EDE0', 
-              borderRadius: 11, 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              flexShrink: 0 
-            }}>
-              {doc.done && (
-                <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 4.5L4.5 8L11 1" stroke="#1A6B3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              )}
+              <button onClick={handleOpenRegisterModal} style={{ padding: isMobile ? '12px 24px' : '14px 28px', background: '#E8600A', borderRadius: 9, color: '#FFFFFF', fontWeight: 600, cursor: 'pointer', border: 'none' }}>
+                Start Registration →
+              </button>
             </div>
           </div>
-        ))}
-        <div style={{ padding: '12px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600, marginBottom: 16 }}>Submit Documents</div>
-        <div style={{ padding: '11px 14px', background: '#E6F6ED', borderRadius: 9, marginBottom: 16 }}>
-          <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 700 }}>Certificate in 24–72 hrs.</span>
-          <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 500 }}> We handle the municipal filing — you'll receive your official digital certificate by email once approved.</span>
+
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 24, alignItems: 'start' }}>
+            {/* Step 1 */}
+            <div
+              style={{
+                background: '#FFFCF8',
+                borderRadius: 20,
+                padding: isMobile ? '20px' : '24px 28px',
+                transition: 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-16px) scale(1.02)';
+                e.currentTarget.style.boxShadow = '0 30px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
+                <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>1</span>
+                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Register & add your pet's details</span>
+              </div>
+              <div style={{ background: '#FAF6EF', borderRadius: 13, padding: 20, marginBottom: 16 }}>
+                {[
+                  { label: "Pet's Name", value: 'Bruno', active: true },
+                  { label: 'Breed', value: 'Shih Tzu', active: false },
+                  { label: 'Age', value: '3 years', active: false },
+                ].map((field) => (
+                  <div key={field.label} style={{ marginBottom: 12 }}>
+                    <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(9, 8, 8), fontFamily: F.dmMono, marginBottom: 5 }}>{field.label}</div>
+                    <div style={{ padding: '10px 14px', background: '#FFFCF8', borderRadius: 9, outline: field.active ? '1px #E8600A solid' : '1px rgba(44,26,14,0.18) solid', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12) }}>{field.value}</span>
+                      {field.active && <div style={{ width: 1.5, height: 16, background: '#E8600A' }} />}
+                    </div>
+                  </div>
+                ))}
+                <div style={{ padding: '14px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600 }}>Continue</div>
+              </div>
+              <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>
+                A handful of fields. No PDFs to download, no notarised forms, no Sunday lost to paperwork.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div
+              style={{
+                background: '#FFFCF8',
+                borderRadius: 20,
+                padding: isMobile ? '20px' : '24px 28px',
+                transition: 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-16px) scale(1.02)';
+                e.currentTarget.style.boxShadow = '0 30px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
+                <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>2</span>
+                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Upload your 4 documents</span>
+              </div>
+              {[
+                { label: 'Anti-Rabies Vaccination Certificate', file: 'vax-record-bruno.pdf', done: true, icon: '/images/vaccine.png' },
+                { label: 'Applicant ID Proof', file: 'aadhaar-card.pdf', done: true, icon: '/images/certificate-1.png' },
+                { label: 'Address Proof', file: 'electricity-bill.pdf', done: true, icon: '/images/target.png' },
+                { label: 'Photo with Your Pet', file: 'Tap to upload →', done: true, icon: '/images/photograph.png' },
+              ].map((doc) => (
+                <div key={doc.label} style={{ padding: 14, background: '#FAF6EF', borderRadius: 13, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 38, height: 38, background: '#FFF0E4', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Image src={doc.icon} alt={doc.label} width={24} height={24} style={{ objectFit: 'contain' }} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ color: '#2C1A0E', fontWeight: 600, fontSize: getResponsiveFontSize(13, 12, 11) }}>{doc.label}</div>
+                    <div style={{ color: doc.done ? '#A68660' : '#C04E06', fontSize: getResponsiveFontSize(11, 10, 9) }}>{doc.file}</div>
+                  </div>
+                  <div style={{
+                    width: 22,
+                    height: 22,
+                    background: doc.done ? '#E6F6ED' : '#F3EDE0',
+                    borderRadius: 11,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    {doc.done && (
+                      <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 4.5L4.5 8L11 1" stroke="#1A6B3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div style={{ padding: '12px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600, marginBottom: 16 }}>Submit Documents</div>
+              <div style={{ padding: '11px 14px', background: '#E6F6ED', borderRadius: 9, marginBottom: 16 }}>
+                <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 700 }}>Certificate in 24–72 hrs.</span>
+                <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 500 }}> We handle the municipal filing — you'll receive your official digital certificate by email once approved.</span>
+              </div>
+              <p style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(20, 18, 16), fontWeight: 700, margin: '0 0 8px' }}>Upload, we'll do the rest.</p>
+              <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>No broken websites, no photocopies. We file directly with your municipality on your behalf.</p>
+            </div>
+          </div>
         </div>
-        <p style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(20, 18, 16), fontWeight: 700, margin: '0 0 8px' }}>Upload, we'll do the rest.</p>
-        <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>No broken websites, no photocopies. We file directly with your municipality on your behalf.</p>
       </div>
-    </div>
-  </div>
-</div>
 
       {/* ══════════════════════════════════════
           PRICING SECTION
@@ -790,7 +791,7 @@ export default function HomePage() {
       <div style={{ background: '#2C1A0E', width: '100%' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto', padding: getResponsivePadding() }}>
           <div style={{ background: '#3A1F0A', borderRadius: 24, overflow: 'hidden', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' }}>
-            
+
             {/* Left Column */}
             <div style={{ padding: isMobile ? '32px' : '44px', borderRight: !isMobile ? '1px solid rgba(255,255,255,0.07)' : 'none', display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 14px', background: 'rgba(255,255,255,0.06)', borderRadius: 100, outline: '1px rgba(255,255,255,0.10) solid', outlineOffset: -1, width: 'fit-content' }}>
@@ -803,7 +804,7 @@ export default function HomePage() {
               <p style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13.5, 12, 11), marginTop: 16, marginBottom: 24 }}>
                 No hidden charges, no surprise fees. ₹999 covers your complete pet registration filing, certificate, and everything in between.
               </p>
-              
+
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, flex: 1 }}>
                 {[
                   { title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.', icon: '/images/office-1.png' },
@@ -827,12 +828,12 @@ export default function HomePage() {
               <div style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 14px', background: 'rgba(255,255,255,0.06)', borderRadius: 100, outline: '1px rgba(255,255,255,0.10) solid', outlineOffset: -1, width: 'fit-content' }}>
                 <span style={{ color: 'rgba(250,246,239,0.55)', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.24px', whiteSpace: 'nowrap' }}>All Inclusive</span>
               </div>
-              
+
               <div style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 14px', background: '#FFE600', borderRadius: 100, width: 'fit-content' }}>
                 <div style={{ width: 6, height: 6, background: '#C04E06', borderRadius: 3 }} />
                 <span style={{ color: '#1A0A00', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Launch Offer — Save ₹1,000</span>
               </div>
-              
+
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, marginTop: 14, flexWrap: 'wrap' }}>
                 <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(22, 18, 16), paddingBottom: 14 }}>₹</span>
                 <span style={{ color: '#FAF6EF', fontSize: getResponsiveFontSize(90, 70, 50), fontFamily: F.fraunces, fontWeight: 900 }}>999</span>
@@ -902,49 +903,46 @@ export default function HomePage() {
       </div>
 
       {/* ══════════════════════════════════════
-          FAQ SECTION
-      ══════════════════════════════════════ */}
-      {/* ══════════════════════════════════════
     FAQ SECTION
 ══════════════════════════════════════ */}
-<div style={{ background: '#FAF6EF', width: '100%' }}>
-  <div style={{ maxWidth: 800, margin: '0 auto', padding: getResponsivePadding(), textAlign: 'center' }}>
-    <Badge text="Common questions" />
-    <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, marginTop: 16, marginBottom: 16 }}>Everything you want to know</div>
-    <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), marginBottom: 40 }}>If it's not here, our support team responds within 60 minutes.</p>
+      <div style={{ background: '#FAF6EF', width: '100%' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto', padding: getResponsivePadding(), textAlign: 'center' }}>
+          <Badge text="Common questions" />
+          <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, marginTop: 16, marginBottom: 16 }}>Everything you want to know</div>
+          <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), marginBottom: 40 }}>If it's not here, our support team responds within 60 minutes.</p>
 
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      {[
-        { 
-          q: 'Is pet registration really mandatory in Delhi NCR?', 
-          a: 'Yes, the Supreme Court of India has mandated pet registration across Delhi NCR through the Animal Birth Control (ABC) Rules 2023. All pet owners in Delhi, Noida, Ghaziabad, and Gurugram are required to register their pets with the respective municipal corporations.'
-        },
-        { 
-          q: 'Is Tailio\'s registration legally valid?', 
-          a: 'Absolutely. We file directly with MCD, Noida Authority, and GMC. The certificate you receive is the official government-issued document — not a Tailio proxy. Your registration is legally valid across India.'
-        },
-        { 
-          q: 'What documents do I need to register?', 
-          a: 'You need 4 documents: (1) Anti-Rabies Vaccination Certificate, (2) Applicant ID Proof (Aadhaar, PAN, Passport, or Voter ID), (3) Address Proof (Aadhaar, electricity/water bill, rental agreement, or bank statement), and (4) A clear photo with your pet.'
-        },
-        { 
-          q: 'How much does registration cost on Tailio?', 
-          a: 'Registration costs ₹999 all-inclusive (launch offer, regular price ₹1,999). This covers municipal filing, digital certificate, vaccination tracker, and renewal reminders. No hidden charges.'
-        },
-        { 
-          q: 'Can I register cats and other pets — not just dogs?', 
-          a: 'Currently, we support dog registration across Delhi NCR. Support for cats and other pets is coming soon. Stay tuned!'
-        },
-        { 
-          q: 'What happens if I don\'t register?', 
-          a: 'Municipal authorities can seize unregistered pets during disputes or complaints. You may also face fines up to ₹10,000. Unregistered pets have no legal standing, leaving both you and your pet unprotected.'
-        },
-      ].map((item) => (
-        <FaqItem key={item.q} question={item.q} answer={item.a} />
-      ))}
-    </div>
-  </div>
-</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {[
+              {
+                q: 'Is pet registration really mandatory in Delhi NCR?',
+                a: 'Yes, the Supreme Court of India has mandated pet registration across Delhi NCR through the Animal Birth Control (ABC) Rules 2023. All pet owners in Delhi, Noida, Ghaziabad, and Gurugram are required to register their pets with the respective municipal corporations.'
+              },
+              {
+                q: 'Is Tailio\'s registration legally valid?',
+                a: 'Absolutely. We file directly with MCD, Noida Authority, and GMC. The certificate you receive is the official government-issued document — not a Tailio proxy. Your registration is legally valid across India.'
+              },
+              {
+                q: 'What documents do I need to register?',
+                a: 'You need 4 documents: (1) Anti-Rabies Vaccination Certificate, (2) Applicant ID Proof (Aadhaar, PAN, Passport, or Voter ID), (3) Address Proof (Aadhaar, electricity/water bill, rental agreement, or bank statement), and (4) A clear photo with your pet.'
+              },
+              {
+                q: 'How much does registration cost on Tailio?',
+                a: 'Registration costs ₹999 all-inclusive (launch offer, regular price ₹1,999). This covers municipal filing, digital certificate, vaccination tracker, and renewal reminders. No hidden charges.'
+              },
+              {
+                q: 'Can I register cats and other pets — not just dogs?',
+                a: 'Currently, we support dog registration across Delhi NCR. Support for cats and other pets is coming soon. Stay tuned!'
+              },
+              {
+                q: 'What happens if I don\'t register?',
+                a: 'Municipal authorities can seize unregistered pets during disputes or complaints. You may also face fines up to ₹10,000. Unregistered pets have no legal standing, leaving both you and your pet unprotected.'
+              },
+            ].map((item) => (
+              <FaqItem key={item.q} question={item.q} answer={item.a} />
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* ══════════════════════════════════════
           FINAL CTA BANNER
@@ -960,15 +958,15 @@ export default function HomePage() {
               <ellipse cx="72" cy="38" rx="11" ry="13" fill="#FFFFFF" transform="rotate(15, 72, 38)" />
             </svg>
           </div>
-          
+
           <div style={{ color: '#FFFFFF', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '58.24px', marginBottom: 16 }}>
             One Form<br />One Minute<br />One Year of Security
           </div>
-          
+
           <p style={{ color: 'rgba(255,255,255,0.82)', fontSize: getResponsiveFontSize(15, 13, 12), maxWidth: 520, margin: '0 auto 20px' }}>
             Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad &amp; Gurugram who are already compliant.
           </p>
-          
+
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button onClick={handleOpenRegisterModal} style={{ padding: isMobile ? '12px 24px' : '14px 32px', background: '#FFFFFF', borderRadius: 9, color: '#C04E06', fontWeight: 600, textDecoration: 'none', cursor: 'pointer', border: 'none' }}>
               Register Now
@@ -983,81 +981,16 @@ export default function HomePage() {
       {/* ══════════════════════════════════════
           FOOTER
       ══════════════════════════════════════ */}
-      <div style={{ background: '#1C0F07', width: '100%' }}>
-  <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '32px 20px 0' : '40px 40px 0' }}>
-    <div style={{ 
-      display: 'grid', 
-      gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
-      gap: isMobile ? 28 : 32, 
-      paddingBottom: 20, 
-      borderBottom: '1px solid rgba(255,255,255,0.06)',
-      alignItems: 'flex-start'
-    }}>
-      {/* Brand Column */}
-      <div>
-        <div style={{ marginBottom: 12 }}>
-          <Image 
-            src="/images/tailio.png" 
-            alt="Tailio" 
-            width={180} 
-            height={54} 
-            style={{ objectFit: 'contain' }} 
-          />
-        </div>
-      </div>
+      <Footer/>
+
       
-      {/* Platform Column */}
-      <div>
-        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Platform</span>
-        <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {['Pet Registration', 'Digital Pet ID', 'Vaccination Tracker', 'Lost Pet QR'].map((item) => (
-            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
-              {item}
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      {/* Cities Column */}
-      <div>
-        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Cities</span>
-        <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {['Delhi', 'Noida', 'Ghaziabad', 'Gurugram'].map((item) => (
-            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
-              {item}
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      {/* Company Column */}
-      <div>
-        <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(11, 10, 10), textTransform: 'uppercase', letterSpacing: '1.2px', fontWeight: 500 }}>Company</span>
-        <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {['About Tailio', 'Privacy Policy', 'Terms of Service', 'Contact Us'].map((item) => (
-            <div key={item} style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13, 12, 11), cursor: 'pointer' }}>
-              {item}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-    
-    {/* Copyright */}
-    <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
-      <span style={{ color: 'rgba(250,246,239,0.25)', fontSize: getResponsiveFontSize(12, 11, 10) }}>
-        © 2026 Tailio. All rights reserved.
-      </span>
-    </div>
-  </div>
-</div>
       {/* Modals */}
       <RegisterModal
         isOpen={showRegisterModal}
         onClose={handleCloseRegisterModal}
         onSwitchToLogin={handleSwitchToLogin}
       />
-      
+
       <LoginModal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}

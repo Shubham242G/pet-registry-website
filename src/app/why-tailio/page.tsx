@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Footer from "../component/Footer";
 
 export default function WhyTailioSection() {
   const [isMobile, setIsMobile] = useState(false);
@@ -750,6 +751,8 @@ export default function WhyTailioSection() {
     </div>
   </div>
 </div>
+
+<Footer/>
 
     </div>
   );
