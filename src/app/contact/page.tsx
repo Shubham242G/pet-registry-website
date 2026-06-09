@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Footer from '../component/Footer';
 
 const F = {
@@ -25,16 +26,17 @@ export default function ContactPage() {
   const [selectedSubject, setSelectedSubject] = useState('Certificate issue');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  // Add resize handler
-  useState(() => {
+  // Use useEffect for window-dependent code
+  useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
       setIsTablet(window.innerWidth <= 1024 && window.innerWidth > 768);
     };
+    
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  });
+  }, []);
 
   const getResponsiveFontSize = (desktop: number, tablet: number, mobile: number) => {
     if (isMobile) return mobile;
@@ -78,6 +80,19 @@ export default function ContactPage() {
     });
   };
 
+  // Add font links
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap';
+    document.head.appendChild(link);
+    return () => {
+      if (document.head.contains(link)) {
+        document.head.removeChild(link);
+      }
+    };
+  }, []);
+
   return (
     <div style={{
       width: "100%",
@@ -98,7 +113,7 @@ export default function ContactPage() {
         overflow: "hidden",
       }}>
         {/* Decorative paw prints */}
-        <div style={{ position: "absolute", left: 76.8, top: 37.69, opacity: 0.05 }}>
+        <div style={{ position: "absolute", left: 76.8, top: 37.69, opacity: 0.05, pointerEvents: "none" }}>
           <svg width="90" height="90" viewBox="0 0 90 90" fill="none">
             <path d="M21.6 54L46.8 32.4L3.93 42.34L64.08 34.34L16.89 25.07L55.39 21.95" stroke="#FF8C3A" strokeWidth="2"/>
           </svg>
@@ -149,7 +164,7 @@ export default function ContactPage() {
         {/* Contact Form */}
         <div style={{
           flex: 1,
-          minWidth: 400,
+          minWidth: 300,
           background: "#FFFCF8",
           borderRadius: 24,
           outline: "1px solid rgba(44, 26, 14, 0.18)",
@@ -197,8 +212,8 @@ export default function ContactPage() {
             </div>
 
             {/* Name Fields */}
-            <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
-              <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", gap: 16, marginBottom: 16, flexWrap: "wrap" }}>
+              <div style={{ flex: 1, minWidth: 150 }}>
                 <label style={{ fontSize: 11.5, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.81, color: "#7A5C40", marginBottom: 6, display: "block" }}>
                   First name <span style={{ color: "#E8600A" }}>*</span>
                 </label>
@@ -222,7 +237,7 @@ export default function ContactPage() {
                   }}
                 />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 150 }}>
                 <label style={{ fontSize: 11.5, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.81, color: "#7A5C40", marginBottom: 6, display: "block" }}>
                   Last name <span style={{ color: "#E8600A" }}>*</span>
                 </label>
@@ -275,8 +290,8 @@ export default function ContactPage() {
             </div>
 
             {/* Phone and City */}
-            <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
-              <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", gap: 16, marginBottom: 16, flexWrap: "wrap" }}>
+              <div style={{ flex: 1, minWidth: 150 }}>
                 <label style={{ fontSize: 11.5, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.81, color: "#7A5C40", marginBottom: 6, display: "block" }}>Phone number</label>
                 <input
                   type="tel"
@@ -298,7 +313,7 @@ export default function ContactPage() {
                   }}
                 />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 150 }}>
                 <label style={{ fontSize: 11.5, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.81, color: "#7A5C40", marginBottom: 6, display: "block" }}>Your city</label>
                 <select
                   name="city"
@@ -415,7 +430,7 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Info Cards */}
-        <div style={{ width: 420 }}>
+        <div style={{ width: 420, maxWidth: "100%" }}>
           {/* WhatsApp Card */}
           <div style={{
             padding: 24,
@@ -436,8 +451,15 @@ export default function ContactPage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 20,
-              }}>💬</div>
+              }}>
+                <Image 
+                  src="/images/whatsapp-black.png"
+                  alt="WhatsApp"
+                  width={24}
+                  height={24}
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
               <div>
                 <div style={{ fontSize: 11, fontWeight: 500, textTransform: "uppercase", letterSpacing: 1.1, color: "#A68660" }}>Fastest response</div>
                 <div style={{ fontSize: 18, fontFamily: F.fraunces, fontWeight: 700, color: "#2C1A0E" }}>WhatsApp Support</div>
@@ -471,8 +493,15 @@ export default function ContactPage() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 20,
-              }}>✉️</div>
+              }}>
+                <Image 
+                  src="/images/email.png"
+                  alt="Email"
+                  width={24}
+                  height={24}
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
               <div>
                 <div style={{ fontSize: 11, fontWeight: 500, textTransform: "uppercase", letterSpacing: 1.1, color: "#A68660" }}>Email us</div>
                 <div style={{ fontSize: 18, fontFamily: F.fraunces, fontWeight: 700, color: "#2C1A0E" }}>info@tailio.in</div>

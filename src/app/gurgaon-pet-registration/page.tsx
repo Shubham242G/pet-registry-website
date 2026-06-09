@@ -293,13 +293,19 @@ export default function GurugramLanding() {
           </div>
           <div style={{ marginTop: 17 }}>
             {[
-              { text: "Pet can be seized by municipal authorities", icon: "🔒" },
-              { text: "No legal proof of ownership without registration", icon: "📄" },
-              { text: "MCG portal fee ₹100–500 · 2–3 weeks wait", icon: "⏰" },
+              { text: "Pet can be seized by municipal authorities", icon: "/images/lock.png" },
+              { text: "No legal proof of ownership without registration", icon: "/images/certificate-1.png" },
+              { text: "MCG portal fee ₹100–500 · 2–3 weeks wait", icon: "/images/timer.png" },
             ].map((item, idx) => (
               <div key={idx} style={{ height: 51, borderBottom: idx < 2 ? "1px solid rgba(255, 255, 255, 0.06)" : "none", display: "flex", alignItems: "center" }}>
                 <div style={{ width: 28, height: 28, background: "rgba(232, 96, 10, 0.16)", borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", marginRight: 12 }}>
-                  <span style={{ fontSize: 14 }}>{item.icon}</span>
+                  <Image 
+                    src={item.icon}
+                    alt={item.text}
+                    width={16}
+                    height={16}
+                    style={{ objectFit: "contain" }}
+                  />
                 </div>
                 <span style={{ fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 400, color: "rgba(244, 228, 207, 0.58)" }}>{item.text}</span>
               </div>
@@ -337,14 +343,20 @@ export default function GurugramLanding() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
             {[
-              { title: "Legal Identity & Protection", desc: "Unique MCG ID — proof of ownership and full legal status. Legally protected at all times.", icon: "🛡️" },
-              { title: "Vaccination Tracking", desc: "Digital vaccination records always up to date. WhatsApp & email reminders before every booster.", icon: "💉" },
-              { title: "Lost Pet Recovery", desc: "3× more likely to be returned if lost or stolen. QR tag links to your pet's verified profile.", icon: "🔍" },
-              { title: "Travel Certificate", desc: "Registration certificate required for travelling with your pet on flights, trains and intercity transport.", icon: "✈️" },
+              { title: "Legal Identity & Protection", desc: "Unique MCG ID — proof of ownership and full legal status. Legally protected at all times.", icon: "/images/shield-2.png" },
+              { title: "Vaccination Tracking", desc: "Digital vaccination records always up to date. WhatsApp & email reminders before every booster.", icon: "/images/vaccine.png" },
+              { title: "Lost Pet Recovery", desc: "3× more likely to be returned if lost or stolen. QR tag links to your pet's verified profile.", icon: "/images/widget.png" },
+              { title: "Travel Certificate", desc: "Registration certificate required for travelling with your pet on flights, trains and intercity transport.", icon: "/images/certif-icate.png" },
             ].map((item, idx) => (
               <div key={idx} style={{ padding: "20px", background: "#FFFCF8", borderRadius: 13, border: "1px solid rgba(44, 26, 14, 0.10)", textAlign: "left" }}>
                 <div style={{ width: 36, height: 36, background: "#FFF0E4", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 5 }}>
-                  <span style={{ fontSize: 20 }}>{item.icon}</span>
+                  <Image 
+                    src={item.icon}
+                    alt={item.title}
+                    width={24}
+                    height={24}
+                    style={{ objectFit: "contain" }}
+                  />
                 </div>
                 <div style={{ fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 600, color: "#2C1A0E", marginTop: 5 }}>{item.title}</div>
                 <div style={{ fontSize: 12.5, fontFamily: F.dmSans, fontWeight: 400, color: "#7A5C40", lineHeight: "20px", marginTop: 6 }}>{item.desc}</div>
@@ -378,15 +390,21 @@ export default function GurugramLanding() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: 24 }}>
             {[
-              { id: 1, name: "Anti-Rabies Certificate", desc: "Issued by a registered vet confirming your pet received their anti-rabies vaccine.", details: ["Pet's name, gender & age", "Vaccination date & due date", "Vet's signature & hospital stamp"], icon: "📋" },
-              { id: 2, name: "Applicant ID Proof", desc: "Any government-issued photo ID of the pet owner. Must be valid and clearly legible.", details: ["Aadhaar Card", "PAN Card", "Passport or Voter ID"], icon: "🪪" },
-              { id: 3, name: "Address Proof", desc: "Proof you reside in Gurugram. Must show your current address clearly.", details: ["Aadhaar Card (serves as both)", "Electricity or water bill", "Rental agreement or bank statement"], icon: "📍" },
-              { id: 4, name: "Photo with Your Pet", desc: "A clear, recent photo of you with your pet dog. Both faces must be clearly visible.", details: ["Good natural lighting", "Both owner & pet clearly visible", "Taken within last 3 months"], icon: "📸" },
+              { id: 1, name: "Anti-Rabies Certificate", desc: "Issued by a registered vet confirming your pet received their anti-rabies vaccine.", details: ["Pet's name, gender & age", "Vaccination date & due date", "Vet's signature & hospital stamp"], icon: "/images/certif-icate.png" },
+              { id: 2, name: "Applicant ID Proof", desc: "Any government-issued photo ID of the pet owner. Must be valid and clearly legible.", details: ["Aadhaar Card", "PAN Card", "Passport or Voter ID"], icon: "/images/id.png" },
+              { id: 3, name: "Address Proof", desc: "Proof you reside in Gurugram. Must show your current address clearly.", details: ["Aadhaar Card (serves as both)", "Electricity or water bill", "Rental agreement or bank statement"], icon: "/images/location.png" },
+              { id: 4, name: "Photo with Your Pet", desc: "A clear, recent photo of you with your pet dog. Both faces must be clearly visible.", details: ["Good natural lighting", "Both owner & pet clearly visible", "Taken within last 3 months"], icon: "/images/photograph.png" },
             ].map((doc) => (
               <div key={doc.id} style={{ padding: 28, background: "rgba(255, 255, 255, 0.04)", borderRadius: 18, border: "1px solid rgba(255, 255, 255, 0.08)", textAlign: "left" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div style={{ width: 36, height: 36, background: "rgba(232, 96, 10, 0.14)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: 20 }}>{doc.icon}</span>
+                    <Image 
+                      src={doc.icon}
+                      alt={doc.name}
+                      width={24}
+                      height={24}
+                      style={{ objectFit: "contain" }}
+                    />
                   </div>
                   <div style={{ width: 24, height: 24, background: "#E8600A", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <span style={{ fontSize: 12, fontFamily: F.dmSans, fontWeight: 700, color: "white" }}>{doc.id}</span>
@@ -439,14 +457,20 @@ export default function GurugramLanding() {
           <div style={{ position: "absolute", left: 52, width: 1.5, height: "calc(100% - 100px)", background: "linear-gradient(180deg, #E8600A 0%, rgba(232, 96, 10, 0.10) 100%)" }} />
 
           {[
-            { number: 1, title: "Register & add your pet's details", desc: "Fill in your pet's name, breed, age and your contact details. Under 60 seconds, works on any phone. No PDFs to download, no notarised forms.", tags: ["Pet name & breed", "Age & gender", "Under 60 seconds"], icon: "📝" },
-            { number: 2, title: "Upload your 4 documents", desc: "Upload digitally — JPG, PNG or PDF. No photocopies, no office visit. We handle the MCG filing on your behalf.", tags: ["Anti-Rabies Cert", "ID + Address Proof", "Photo with pet"], icon: "📎" },
-            { number: 3, title: "We file with MCG. You get your certificate.", desc: "Tailio submits directly to MCG (Municipal Corporation of Gurugram). Your official digital certificate arrives by email within 24–72 hours. No office visit. Ever.", showCard: true, icon: "📜" },
+            { number: 1, title: "Register & add your pet's details", desc: "Fill in your pet's name, breed, age and your contact details. Under 60 seconds, works on any phone. No PDFs to download, no notarised forms.", tags: ["Pet name & breed", "Age & gender", "Under 60 seconds"], icon: "/images/registration.png" },
+            { number: 2, title: "Upload your 4 documents", desc: "Upload digitally — JPG, PNG or PDF. No photocopies, no office visit. We handle the MCG filing on your behalf.", tags: ["Anti-Rabies Cert", "ID + Address Proof", "Photo with pet"], icon: "/images/id.png" },
+            { number: 3, title: "We file with MCG. You get your certificate.", desc: "Tailio submits directly to MCG (Municipal Corporation of Gurugram). Your official digital certificate arrives by email within 24–72 hours. No office visit. Ever.", showCard: true, icon: "/images/certif-icate.png" },
           ].map((step) => (
             <div key={step.number} style={{ marginBottom: 48, marginLeft: 100, position: "relative" }}>
               <div style={{ background: "#FFFCF8", borderRadius: 18, border: "1px solid rgba(44, 26, 14, 0.10)", padding: 32 }}>
                 <div style={{ width: 36, height: 36, background: "#FFF0E4", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 5 }}>
-                  <span style={{ fontSize: 20 }}>{step.icon}</span>
+                  <Image 
+                    src={step.icon}
+                    alt={step.title}
+                    width={24}
+                    height={24}
+                    style={{ objectFit: "contain" }}
+                  />
                 </div>
                 <h3 style={{ fontSize: 19, fontFamily: F.dmSans, fontWeight: 600, color: "#2C1A0E", marginTop: 5 }}>{step.title}</h3>
                 <p style={{ fontSize: 14.5, fontFamily: F.dmSans, fontWeight: 400, color: "#7A5C40", lineHeight: "23.93px", marginTop: 7 }}>{step.desc}</p>
@@ -616,7 +640,16 @@ export default function GurugramLanding() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
                 <span style={{ fontSize: 14, fontFamily: F.dmSans, fontWeight: 600, color: "#2C1A0E" }}>Radhika Nair</span>
-                <span style={{ padding: "3px 9px", background: "#FFF0E4", borderRadius: 100, border: "1px solid #FFCCA0", fontSize: 11, fontFamily: F.dmSans, fontWeight: 600, color: "#C04E06" }}>🐾 Mochi</span>
+                <span style={{ padding: "3px 9px", background: "#FFF0E4", borderRadius: 100, border: "1px solid #FFCCA0", fontSize: 11, fontFamily: F.dmSans, fontWeight: 600, color: "#C04E06" }}>
+                  <Image 
+                    src="/images/paw-2.png"
+                    alt="Paw"
+                    width={12}
+                    height={12}
+                    style={{ display: "inline", marginRight: 4 }}
+                  />
+                  Mochi
+                </span>
               </div>
               <div style={{ fontSize: 12, fontFamily: F.dmSans, fontWeight: 400, color: "#7A5C40", marginTop: 4 }}>DLF Phase 4, Gurugram</div>
             </div>
