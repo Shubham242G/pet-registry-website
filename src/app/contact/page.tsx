@@ -516,54 +516,55 @@ export default function ContactPage() {
           </div>
 
           {/* Company Info Card */}
-          <div style={{
-            padding: 24,
-            background: "#2C1A0E",
-            borderRadius: 18,
-            position: "relative",
-            overflow: "hidden",
-          }}>
-            <div style={{ fontSize: 10, fontWeight: 400, textTransform: "uppercase", letterSpacing: 1.5, color: "rgba(255, 252, 248, 0.35)", marginBottom: 4 }}>Parent Company</div>
-            <div style={{ fontSize: 20, fontFamily: F.fraunces, fontWeight: 700, color: "#FFFCF8", marginBottom: 4 }}>Truzo Infotech Pvt. Ltd.</div>
-            <div style={{ fontSize: 12, color: "rgba(255, 252, 248, 0.40)", letterSpacing: 0.72, marginBottom: 10 }}>CIN · U62010HR2026PTC144118</div>
-            <div style={{ height: 1, background: "rgba(255, 255, 255, 0.08)", marginBottom: 9 }} />
-            <p style={{ fontSize: 13, color: "rgba(255, 252, 248, 0.52)", lineHeight: 1.65, marginBottom: 7 }}>
-              Tailio is a product of Truzo Infotech Private Limited, a Delhi based tech company building digital-first civic compliance tools for Indian pet owners and urban households.
-            </p>
-            <p style={{ fontSize: 12.5, color: "rgba(255, 252, 248, 0.38)", lineHeight: 1.7, letterSpacing: 0.25, marginBottom: 6 }}>
-              Registered Office - 412, Emaar Colonnade, Sector-66, Golf Course Extension Road, Gurgaon- 122101, Haryana.
-            </p>
-            <div style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "5px 10px",
-              background: "rgba(255, 255, 255, 0.05)",
-              borderRadius: 4,
-              outline: "1px solid rgba(255, 255, 255, 0.08)",
-              outlineOffset: -1,
-            }}>
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <rect x="1.25" y="1.25" width="7.5" height="7.5" stroke="rgba(255, 252, 248, 0.28)" strokeWidth="0.83"/>
-              </svg>
-              <span style={{ fontSize: 10, color: "rgba(255, 252, 248, 0.28)", letterSpacing: 0.6 }}>Legal entity · incorporated in India</span>
-            </div>
+<div style={{
+  padding: 24,
+  background: "#2C1A0E",
+  borderRadius: 18,
+  position: "relative",
+  overflow: "hidden",
+}}>
+  <div style={{ fontSize: 10, fontWeight: 400, textTransform: "uppercase", letterSpacing: 1.5, color: "rgba(255, 252, 248, 0.35)", marginBottom: 4 }}>Parent Company</div>
+  <div style={{ fontSize: 20, fontFamily: F.fraunces, fontWeight: 700, color: "#FFFCF8", marginBottom: 4 }}>Truzo Infotech Pvt. Ltd.</div>
+  <div style={{ fontSize: 12, color: "rgba(255, 252, 248, 0.40)", letterSpacing: 0.72, marginBottom: 4 }}>CIN · U62010HR2026PTC144118</div>
+  <div style={{ fontSize: 12, color: "rgba(255, 252, 248, 0.40)", letterSpacing: 0.72, marginBottom: 10 }}>GSTIN · 06AANCT0649J1Z0</div>
+  <div style={{ height: 1, background: "rgba(255, 255, 255, 0.08)", marginBottom: 9 }} />
+  <p style={{ fontSize: 13, color: "rgba(255, 252, 248, 0.52)", lineHeight: 1.65, marginBottom: 7 }}>
+    Tailio is a product of Truzo Infotech Private Limited, a Delhi based tech company building digital-first civic compliance tools for Indian pet owners and urban households.
+  </p>
+  <p style={{ fontSize: 12.5, color: "rgba(255, 252, 248, 0.38)", lineHeight: 1.7, letterSpacing: 0.25, marginBottom: 6 }}>
+    Registered Office - 412, Emaar Colonnade, Sector-66, Golf Course Extension Road, Gurgaon- 122101, Haryana.
+  </p>
+  <div style={{
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "5px 10px",
+    background: "rgba(255, 255, 255, 0.05)",
+    borderRadius: 4,
+    outline: "1px solid rgba(255, 255, 255, 0.08)",
+    outlineOffset: -1,
+  }}>
+    <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+      <rect x="1.25" y="1.25" width="7.5" height="7.5" stroke="rgba(255, 252, 248, 0.28)" strokeWidth="0.83"/>
+    </svg>
+    <span style={{ fontSize: 10, color: "rgba(255, 252, 248, 0.28)", letterSpacing: 0.6 }}>Legal entity · incorporated in India</span>
+  </div>
 
-            {/* Decorative paw print */}
-            <div style={{
-              position: "absolute",
-              right: -30,
-              bottom: -30,
-              width: 130,
-              height: 130,
-              opacity: 0.06,
-              pointerEvents: "none",
-            }}>
-              <svg width="130" height="130" viewBox="0 0 130 130" fill="none">
-                <path d="M31.2 78L67.6 46.8L5.67 61.16L92.57 49.6L24.39 36.22L80 31.7" stroke="#FF8C3A" strokeWidth="2"/>
-              </svg>
-            </div>
-          </div>
+  {/* Decorative paw print */}
+  <div style={{
+    position: "absolute",
+    right: -30,
+    bottom: -30,
+    width: 130,
+    height: 130,
+    opacity: 0.06,
+    pointerEvents: "none",
+  }}>
+    <svg width="130" height="130" viewBox="0 0 130 130" fill="none">
+      <path d="M31.2 78L67.6 46.8L5.67 61.16L92.57 49.6L24.39 36.22L80 31.7" stroke="#FF8C3A" strokeWidth="2"/>
+    </svg>
+  </div>
+</div>
         </div>
       </div>
 
