@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import PaymentButton from './PaymentButton';
 import { useRouter } from 'next/navigation';
+import { useAuth } from "./context/AuthContext";
 
 interface RegistrationFormProps {
   petId: string;
@@ -55,6 +56,25 @@ export default function RegistrationForm({
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
   const router = useRouter();
+  const { user } = useAuth();
+
+  // Get registration amount based on user's city
+  const getRegistrationAmount = () => {
+    if (!user) return 999;
+    // Check if user city is ghaziabad (case insensitive)
+    const isGhaziabad = user.city?.toLowerCase() === 'ghaziabad';
+    return isGhaziabad ? 1499 : 999;
+  };
+
+  const [registrationAmount, setRegistrationAmount] = useState(getRegistrationAmount());
+
+  // Update amount when user changes
+  useEffect(() => {
+    const newAmount = getRegistrationAmount();
+    console.log("User city:", user?.city);
+    console.log("Registration amount:", newAmount);
+    setRegistrationAmount(newAmount);
+  }, [user]);
 
   // Document configuration
   const documents = [
@@ -102,7 +122,6 @@ export default function RegistrationForm({
         const data = await response.json();
         setRegistrationStatus(data);
         
-        // Check if payment is already completed
         if (data.paymentStatus === 'completed') {
           setPaymentCompleted(true);
         }
@@ -130,7 +149,6 @@ export default function RegistrationForm({
     setError("");
     setSuccess("");
     
-    // Convert file to Base64
     const reader = new FileReader();
     reader.onloadend = async () => {
       const base64String = reader.result as string;
@@ -157,14 +175,11 @@ export default function RegistrationForm({
           setSuccess(data.message);
           await fetchStatus();
           
-          // If all documents are uploaded, check payment status
           if (data.hasAllDocuments) {
             if (paymentCompleted) {
-              // Payment already done, trigger registration
               setSuccess('All documents uploaded! Completing registration...');
               await actuallyTriggerRegistration();
             } else {
-              // Show payment modal
               setSuccess('🎉 All documents uploaded! Please complete payment to finish registration.');
               setPendingRegistration({
                 petId: petId,
@@ -233,7 +248,9 @@ export default function RegistrationForm({
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
-          paymentVerified: true 
+          paymentVerified: true,
+          paidAmount: registrationAmount,
+          city: user?.city
         })
       });
       
@@ -244,11 +261,8 @@ export default function RegistrationForm({
         setFormSubmitted(true);
         await fetchStatus();
         
-        // Close the modal after 2 seconds and refresh parent
         setTimeout(() => {
           onSuccess();
-          // Optional: Redirect to dashboard or pet page
-          // router.push('/pages/dashboard');
         }, 2000);
       } else {
         setError(data.message || 'Failed to complete registration');
@@ -261,12 +275,11 @@ export default function RegistrationForm({
     }
   };
 
-  // Handle payment success callback from PaymentButton
+  // Handle payment success callback
   const handlePaymentSuccess = async () => {
     setShowPaymentModal(false);
     setPaymentCompleted(true);
     
-    // Check if all documents are uploaded
     if (registrationStatus?.hasAllDocuments) {
       setSuccess('Payment successful! Completing registration...');
       await actuallyTriggerRegistration();
@@ -276,15 +289,13 @@ export default function RegistrationForm({
     }
   };
 
-  // Show payment modal before triggering registration (manual trigger)
+  // Show payment modal before triggering registration
   const handleTriggerRegistration = async () => {
-    // Check if payment is already completed
     if (paymentCompleted) {
       await actuallyTriggerRegistration();
       return;
     }
     
-    // Show payment modal
     setPendingRegistration({
       petId: petId,
       petName: petName,
@@ -295,7 +306,6 @@ export default function RegistrationForm({
 
   // Handle view document
   const handleViewDocument = (fileData: string, mimeType: string) => {
-    // Create a blob from base64 and open in new tab
     const byteCharacters = atob(fileData.split(',')[1]);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -323,7 +333,6 @@ export default function RegistrationForm({
   const hasAllDocuments = registrationStatus?.hasAllDocuments || false;
   const registrationTriggered = registrationStatus?.registrationTriggered || false;
 
-  // If form is submitted successfully, show success message
   if (formSubmitted || (registrationTriggered && !viewOnly)) {
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -422,7 +431,7 @@ export default function RegistrationForm({
                   <span className="font-medium">
                     {paymentCompleted 
                       ? "All ready! Click below to complete registration." 
-                      : "All documents uploaded! Payment required to complete registration."}
+                      : `All documents uploaded! Payment of ₹${registrationAmount} required to complete registration.`}
                   </span>
                 </div>
                 <button
@@ -433,7 +442,7 @@ export default function RegistrationForm({
                   {triggeringRegistration ? (
                     <><Loader2 className="w-4 h-4 animate-spin" /><span>Processing...</span></>
                   ) : (
-                    <><Send className="w-4 h-4" /><span>{paymentCompleted ? "Complete Registration →" : "Pay ₹999 & Submit"}</span></>
+                    <><Send className="w-4 h-4" /><span>{paymentCompleted ? "Complete Registration →" : `Pay ₹${registrationAmount} & Submit`}</span></>
                   )}
                 </button>
               </div>
@@ -446,6 +455,27 @@ export default function RegistrationForm({
               </div>
             )}
           </div>
+        </div>
+
+        {/* Price Display based on User's City */}
+        <div className="mx-6 mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Registration Fee</h3>
+              <p className="text-sm text-gray-600">
+                Based on your registered city: <strong>{user?.city === 'ghaziabad' ? 'Ghaziabad' : (user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : 'Standard')}</strong>
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-3xl font-bold text-orange-600">₹{registrationAmount}</p>
+              {registrationAmount === 1499 && (
+                <p className="text-xs text-green-600">Special Ghaziabad pricing applied</p>
+              )}
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 mt-3">
+            One-time payment for lifetime registration. This fee applies to each pet you register.
+          </p>
         </div>
 
         {/* Success/Error Messages */}
@@ -532,7 +562,7 @@ export default function RegistrationForm({
                     </div>
                   ) : (
                     !viewOnly && !registrationTriggered && (
-                      <label className={`mt-3 border-2 border-dashed rounded-lg p-4 flex flex-col items-center cursor-pointer transition-all hover:border-orange-500 hover:bg-orange-50`}>
+                      <label className="mt-3 border-2 border-dashed rounded-lg p-4 flex flex-col items-center cursor-pointer transition-all hover:border-orange-500 hover:bg-orange-50">
                         <Upload className="w-8 h-8 text-gray-400" />
                         <span className="text-sm text-gray-500 mt-2">Click to upload</span>
                         <span className="text-xs text-gray-400 mt-1">{doc.accept.includes('pdf') ? 'PDF or Image' : 'Image'} (Max 5MB)</span>
@@ -546,7 +576,7 @@ export default function RegistrationForm({
                             if (file) {
                               await handleFileUpload(file, doc.name);
                             }
-                            e.target.value = ''; // Reset input
+                            e.target.value = '';
                           }}
                         />
                       </label>
@@ -569,32 +599,48 @@ export default function RegistrationForm({
             })}
           </div>
 
-{/* Municipal OTP Warning Section - Added at the bottom of registration form */}
-<div className="mt-6 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-200">
-  <div className="flex items-start gap-3">
-    <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="white" strokeLinecap="round"/>
-        <circle cx="12" cy="12" r="3" fill="white" stroke="none"/>
-      </svg>
-    </div>
-    <div className="flex-1">
-      <h4 className="font-semibold text-orange-800 text-sm">You'll receive an OTP from your Municipal Corporation</h4>
-      <p className="text-xs text-orange-700 mt-1 leading-relaxed">
-        After submission, the Municipal Corporation will send a verification OTP to your registered number.{' '}
-        <span className="font-bold text-orange-800">You must share this OTP with Tailio on WhatsApp only</span>{' '}
-        — never share it via email, SMS or any other channel. This is the final step to confirm your pet's registration.
-      </p>
-      <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 bg-[#25D366] rounded-full">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-          <path d="M12.032 2.002c-5.523 0-10 4.477-10 10 0 1.752.453 3.476 1.312 4.987L2 22l5.144-1.281c1.462.781 3.112 1.199 4.803 1.199 5.523 0 10-4.477 10-10s-4.477-10-10-10z" />
-        </svg>
-        <span className="text-white text-xs font-semibold">Share only on Tailio's WhatsApp</span>
-      </div>
-    </div>
-  </div>
-</div>
-          
+          {/* Municipal OTP Warning Section */}
+          <div className="mt-6 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-200">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="white" strokeLinecap="round"/>
+                  <circle cx="12" cy="12" r="3" fill="white" stroke="none"/>
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-orange-800 text-sm">You'll receive an OTP from your Municipal Corporation</h4>
+                <p className="text-xs text-orange-700 mt-1 leading-relaxed">
+                  After submission, the Municipal Corporation will send a verification OTP to your registered number.{' '}
+                  <span className="font-bold text-orange-800">You must share this OTP with Tailio on WhatsApp only</span>{' '}
+                  — never share it via email, SMS or any other channel. This is the final step to confirm your pet's registration.
+                </p>
+                <div className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 bg-[#25D366] rounded-full">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                    <path d="M12.032 2.002c-5.523 0-10 4.477-10 10 0 1.752.453 3.476 1.312 4.987L2 22l5.144-1.281c1.462.781 3.112 1.199 4.803 1.199 5.523 0 10-4.477 10-10s-4.477-10-10-10z" />
+                  </svg>
+                  <span className="text-white text-xs font-semibold">Share only on Tailio's WhatsApp</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Info Section */}
+          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div className="flex items-start space-x-3">
+              <Info className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium mb-1">Important Information:</p>
+                <ul className="list-disc list-inside space-y-1 text-blue-700">
+                  <li>All 4 documents are required to complete the registration process</li>
+                  <li>Documents can be uploaded in any order and can be replaced before submission</li>
+                  <li>Once registration is submitted, documents cannot be modified</li>
+                  <li>Payment of ₹{registrationAmount} is required to complete registration</li>
+                  <li>You can pay anytime after uploading documents</li>
+                </ul>
+              </div>
+            </div>
+          </div>
 
           {/* Action Buttons */}
           <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
@@ -613,7 +659,7 @@ export default function RegistrationForm({
                 {triggeringRegistration ? (
                   <><Loader2 className="w-5 h-5 animate-spin" /><span>Processing...</span></>
                 ) : (
-                  <><Send className="w-5 h-5" /><span>{paymentCompleted ? "Complete Registration" : "Pay ₹999 & Submit Registration"}</span></>
+                  <><Send className="w-5 h-5" /><span>{paymentCompleted ? "Complete Registration" : `Pay ₹${registrationAmount} & Submit Registration`}</span></>
                 )}
               </button>
             )}
@@ -639,17 +685,22 @@ export default function RegistrationForm({
               <div className="text-5xl mb-3">💳</div>
               <h3 className="text-xl font-bold text-gray-900">Complete Registration</h3>
               <p className="text-gray-600 mt-2">
-                Pay ₹999 to complete registration for <strong>{pendingRegistration.petName}</strong>
+                Pay <span className="text-xl font-bold text-orange-600">₹{registrationAmount}</span> to complete registration for <strong>{pendingRegistration.petName}</strong>
               </p>
               <p className="text-xs text-gray-500 mt-2">
                 One-time payment for lifetime registration
               </p>
+              {registrationAmount === 1499 && (
+                <p className="text-xs text-green-600 mt-1 bg-green-50 p-1 rounded">
+                  ✨ Ghaziabad registration pricing applied
+                </p>
+              )}
             </div>
             
             <PaymentButton
               petId={pendingRegistration.petId}
               petName={pendingRegistration.petName}
-              amount={999}
+              amount={registrationAmount}
               onSuccess={handlePaymentSuccess}
               onFailure={(error) => {
                 setError(`Payment failed: ${error}. Please try again.`);

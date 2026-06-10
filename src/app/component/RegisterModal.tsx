@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import { useRouter } from "next/navigation";
+import CitySelector from "./CitySelector";
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   const [tempToken, setTempToken] = useState("");
   const [name, setName] = useState("");
   const [waUsername, setWaUsername] = useState("");
+  const [city, setCity] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -68,8 +70,14 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   const handleCompleteRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
+    
+    if (!city) {
+      setErrorMessage("Please select your city");
+      return;
+    }
+    
     setIsLoading(true);
-    const result = await completeWhatsAppRegistration(tempToken, name, waUsername);
+    const result = await completeWhatsAppRegistration(tempToken, name, waUsername, city);
     if (result.success) {
       router.push("/dashboard");
       onClose();
@@ -381,7 +389,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             />
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <div style={{ marginBottom: '5px' }}>
               <div style={{ color: '#2C1A0E', fontSize: '12px', fontFamily: 'DM Sans', fontWeight: 600, letterSpacing: '0.12px' }}>
                 Username (Optional)
@@ -408,6 +416,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             />
           </div>
 
+          {/* City Selector Component */}
+          <CitySelector 
+            selectedCity={city}
+            onChange={setCity}
+            error={errorMessage}
+          />
+
           <button
             type="submit"
             style={{ 
@@ -424,7 +439,8 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
               fontFamily: 'DM Sans',
               letterSpacing: '0.15px', 
               cursor: 'pointer', 
-              border: 'none'
+              border: 'none',
+              marginTop: '8px'
             }}
             disabled={isLoading}
           >
@@ -448,7 +464,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     }}>
       <div style={{ 
         width: 420, 
-        height: 423,
+        minHeight: 480,
         position: 'relative',
         background: '#FFFCF8', 
         boxShadow: '0px 24px 80px rgba(44, 26, 14, 0.18)', 
@@ -539,7 +555,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
           {/* Form Area */}
           <div style={{ position: 'relative' }}>
-            {errorMessage && (
+            {errorMessage && !errorMessage.includes("city") && (
               <div style={{ 
                 background: '#FEF2F2', 
                 border: '1px solid #FEE2E2', 
@@ -560,7 +576,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             <div style={{ 
               height: 29.9,
               position: 'relative',
-              marginTop: 12.9,
+              marginTop: 20,
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center'

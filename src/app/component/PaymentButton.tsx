@@ -28,7 +28,6 @@ export default function PaymentButton({
 
   const handlePayment = async () => {
 
-      console.log('Razorpay Key:', process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
     setIsLoading(true);
 
     try {
