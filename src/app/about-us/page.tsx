@@ -598,7 +598,7 @@ export default function AboutPage() {
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', paddingTop: 8 }}>
             <Link href="/register" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '13px 26px', background: 'white', boxShadow: '0px 2px 0px rgba(0,0,0,0.08)', borderRadius: 9, outline: '2px rgba(255,255,255,0.40) solid', outlineOffset: -2, color: '#C04E06', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '21px', textDecoration: 'none' }}>
-              Register Your Pet — ₹999
+              Register Your Pet — ₹299
             </Link>
             <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '13px 24px', background: 'rgba(255,255,255,0.12)', borderRadius: 9, outline: '1px rgba(255,255,255,0.30) solid', outlineOffset: -1, color: 'white', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '21px', textDecoration: 'none' }}>
               Learn More

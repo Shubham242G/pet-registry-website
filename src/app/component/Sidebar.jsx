@@ -167,7 +167,7 @@ export default function Sidebar() {
               </li>
               <li className="text-xs flex items-start gap-1.5" style={{ color: '#F97316' }}>
                 <span style={{ color: '#F97316' }}>•</span>
-                <span>Payment of ₹999 is required to complete registration</span>
+                <span>Payment of ₹299 + fees is required to complete registration</span>
               </li>
               <li className="text-xs flex items-start gap-1.5" style={{ color: '#F97316' }}>
                 <span style={{ color: '#F97316' }}>•</span>

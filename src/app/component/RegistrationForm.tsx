@@ -625,23 +625,7 @@ export default function RegistrationForm({
             </div>
           </div>
 
-          {/* Info Section */}
-          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <div className="flex items-start space-x-3">
-              <Info className="w-5 h-5 text-blue-600 mt-0.5" />
-              <div className="text-sm text-blue-800">
-                <p className="font-medium mb-1">Important Information:</p>
-                <ul className="list-disc list-inside space-y-1 text-blue-700">
-                  <li>All 4 documents are required to complete the registration process</li>
-                  <li>Documents can be uploaded in any order and can be replaced before submission</li>
-                  <li>Once registration is submitted, documents cannot be modified</li>
-                  <li>Payment of ₹{registrationAmount} is required to complete registration</li>
-                  <li>You can pay anytime after uploading documents</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
+        
           {/* Action Buttons */}
           <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
             <button

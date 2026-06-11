@@ -129,7 +129,7 @@ export default function WhyTailioSection() {
                 alignItems: 'center',
                 gap: 7
               }}>
-                <span style={{ color: 'white', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 600 }}>Register Your Pet — ₹999</span>
+                <span style={{ color: 'white', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 600 }}>Register Your Pet — ₹299</span>
                 <span style={{ color: 'white', fontSize: 17.3, fontFamily: 'Fraunces', fontStyle: 'italic', fontWeight: 700 }}>→</span>
               </button>
               <button style={{
@@ -193,11 +193,11 @@ export default function WhyTailioSection() {
               <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.07)', paddingBottom: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ minWidth: 90 }}>
-                    <span style={{ color: '#FF8C3A', fontSize: 32, fontFamily: 'Fraunces', fontWeight: 900 }}>₹999</span>
+                    <span style={{ color: '#FF8C3A', fontSize: 32, fontFamily: 'Fraunces', fontWeight: 900 }}>₹299</span>
                   </div>
                   <div>
                     <span style={{ color: 'rgba(250, 246, 239, 0.60)', fontSize: 13, fontFamily: 'DM Sans', fontWeight: 400, lineHeight: '18.85px' }}>
-                      Launch offer — all-inclusive. Municipal portal charges ₹100–500 and still sends you to the office
+                      Launch offer. Municipal portal charges ₹100–500 and still sends you to the office
                     </span>
                   </div>
                 </div>
@@ -351,7 +351,7 @@ export default function WhyTailioSection() {
         { label: "Renewal reminders", sub: "WhatsApp, SMS & email", tailio: "✓", portal: "✗" },
         { label: "Vaccination tracker", sub: "Schedule, record, share with vets", tailio: "✓", portal: "✗" },
         { label: "Legal pet profile", sub: "Proof of ownership on record", tailio: "✓", portal: "✗" },
-        { label: "Registration cost", sub: "All-inclusive, no surprises", tailio: "₹999", portal: "₹100–500 + effort" },
+        { label: "Registration cost", sub: "No surprises", tailio: "₹299", portal: "₹100–500 + effort" },
         { label: "If you wait, the fine is…", sub: "Municipal enforcement active now", tailio: "None", portal: "₹10,000+" }
       ].map((row, idx) => (
         <tr key={idx} style={{ borderBottom: idx < 7 ? '1px solid rgba(44, 26, 14, 0.10)' : 'none' }}>
@@ -737,7 +737,7 @@ export default function WhyTailioSection() {
         boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.15)',
         outline: '2px solid rgba(255, 255, 255, 0.30)'
       }}>
-        <span style={{ color: '#C04E06', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 700 }}>Register Your Pet — ₹999 →</span>
+        <span style={{ color: '#C04E06', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 700 }}>Register Your Pet — ₹299 →</span>
       </button>
       <button style={{
         padding: '14px 28px',
