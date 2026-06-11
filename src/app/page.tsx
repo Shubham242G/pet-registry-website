@@ -788,172 +788,409 @@ export default function HomePage() {
       {/* ══════════════════════════════════════
           PRICING SECTION
       ══════════════════════════════════════ */}
-      <div style={{ background: '#2C1A0E', width: '100%' }}>
-        <div style={{ maxWidth: 1080, margin: '0 auto', padding: getResponsivePadding() }}>
-          
-          {/* Inner darker box container */}
-          <div style={{ 
-            background: '#1F1108', 
-            borderRadius: 20, 
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
+      <div style={{
+  width: "100%",
+  maxWidth: "900px",
+  background: "#2A1200",
+  overflow: "hidden",
+  borderRadius: "20px",
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap"
+}}>
+  
+  {/* Left Column */}
+  <div style={{
+    flex: 1,
+    padding: "48px 44px",
+    borderRight: "1px solid rgba(255, 255, 255, 0.07)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "19.20px"
+  }}>
+    {/* Simple, Transparent Pricing Badge */}
+    <div style={{
+      padding: "5px 14px",
+      borderRadius: "999px",
+      outline: "1px solid rgba(255, 255, 255, 0.25)",
+      outlineOffset: -1,
+      display: "inline-flex",
+      width: "fit-content"
+    }}>
+      <span style={{
+        color: "rgba(255, 255, 255, 0.70)",
+        fontSize: "10px",
+        fontFamily: "Inter",
+        fontWeight: 600,
+        textTransform: "uppercase",
+        letterSpacing: "1.20px"
+      }}>Simple, Transparent Pricing</span>
+    </div>
+
+    {/* One price. Everything included. */}
+    <div>
+      <div style={{
+        color: "white",
+        fontSize: "44px",
+        fontFamily: "Playfair Display",
+        fontWeight: 900,
+        lineHeight: "46.20px"
+      }}>One price.</div>
+      <div style={{
+        color: "#E07B20",
+        fontSize: "44px",
+        fontFamily: "Playfair Display",
+        fontStyle: "italic",
+        fontWeight: 900,
+        lineHeight: "46.20px"
+      }}>Everything<br/>included.</div>
+    </div>
+
+    {/* Description */}
+    <div style={{ maxWidth: "320px" }}>
+      <span style={{
+        color: "rgba(255, 255, 255, 0.55)",
+        fontSize: "13px",
+        fontFamily: "Inter",
+        fontWeight: 400,
+        lineHeight: "20.80px"
+      }}>No hidden charges, no surprise fees. ₹299 covers<br/>your complete pet registration filing, certificate, and<br/>everything in between. Municipal fees are collected<br/>directly by the authority.</span>
+    </div>
+
+    {/* Features Grid */}
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "16px",
+      marginTop: "12.80px"
+    }}>
+      {[
+        { icon: "🏛️", title: "Municipal Filing", desc: "We handle MCD / Noida\nAuthority / GMC\npaperwork end to end." },
+        { icon: "📋", title: "Official Certificate", desc: "Govt-issued, delivered\nwithin 24–72 hrs." },
+        { icon: "🔆", title: "Vaccination Tracker", desc: "Digital records + auto-\nreminders so you never\nmiss a booster." },
+        { icon: "🔔", title: "Renewal Reminders", desc: "WhatsApp & email alerts\nbefore your annual expiry\ndate." }
+      ].map((item, idx) => (
+        <div key={idx} style={{
+          background: "rgba(255, 255, 255, 0.05)",
+          borderRadius: "12px",
+          padding: "18px 16px",
+          outline: "1px solid rgba(255, 255, 255, 0.07)",
+          outlineOffset: -1
+        }}>
+          <div style={{
+            width: "36px",
+            height: "36px",
+            background: "rgba(224, 123, 32, 0.15)",
+            borderRadius: "8px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "12px"
           }}>
-            
-            {/* Left Column */}
-            <div style={{ 
-              flex: 1, 
-              padding: '48px 44px', 
-              borderRight: !isMobile ? '1px solid rgba(255,255,255,0.07)' : 'none',
-              display: 'flex', 
-              flexDirection: 'column',
-              justifyContent: 'space-between'
-            }}>
-              <div>
-                <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, borderRadius: 999, outline: '1px solid rgba(255,255,255,0.25)', outlineOffset: -1, display: 'inline-flex' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>Simple, Transparent Pricing</span>
-                </div>
-                
-                <div style={{ marginTop: 19.2, flexDirection: 'column', display: 'flex' }}>
-                  <span style={{ color: 'white', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1.2' }}>One price.</span>
-                  <span style={{ color: '#E07B20', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: 'Playfair Display', fontStyle: 'italic', fontWeight: 900, lineHeight: '1.2' }}>Everything<br/>included.</span>
-                </div>
-                
-                <div style={{ marginTop: 19.2 }}>
-                  <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'Inter', fontWeight: 400, lineHeight: '20.80px' }}>No hidden charges, no surprise fees. ₹299 covers your complete pet registration filing, certificate, and everything in between. Municipal fees are collected directly by the authority.</span>
-                </div>
-              </div>
-              
-              {/* Features Grid */}
-              <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
-                {[
-                  { icon: '/images/office-1.png', title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.' },
-                  { icon: '/images/certificate-1.png', title: 'Official Certificate', desc: 'Govt-issued, delivered within 24–72 hrs.' },
-                  { icon: '/images/vaccine.png', title: 'Vaccination Tracker', desc: 'Digital records + auto-reminders so you never miss a booster.' },
-                  { icon: '/images/reminder.png', title: 'Renewal Reminders', desc: 'WhatsApp & email alerts before your annual expiry date.' }
-                ].map((item) => (
-                  <div key={item.title} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: '18px 16px', outline: '1px solid rgba(255,255,255,0.07)' }}>
-                    <div style={{ width: 48, height: 48, background: 'rgba(224,123,32,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                      <img src={item.icon} alt={item.title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
-                    </div>
-                    <div style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600, marginBottom: 6 }}>{item.title}</div>
-                    <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>{item.desc}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Right Column */}
-            <div style={{ 
-              flex: 1, 
-              padding: '48px 44px', 
-              display: 'flex', 
-              flexDirection: 'column',
-              justifyContent: 'space-between'
-            }}>
-              <div>
-                {/* Badge row */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28, flexWrap: 'wrap' }}>
-                  <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, borderRadius: 999, outline: '1px solid rgba(255,255,255,0.25)', outlineOffset: -1 }}>
-                    <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>All Inclusive</span>
-                  </div>
-                  <div style={{ paddingLeft: 12, paddingRight: 12, paddingTop: 5, paddingBottom: 5, background: '#E8C832', borderRadius: 999, display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <div style={{ width: 6, height: 6, background: '#1A0A00', borderRadius: 3 }} />
-                    <span style={{ color: '#1A0A00', fontSize: 10, fontFamily: 'Inter', fontWeight: 700, letterSpacing: '0.60px' }}>LAUNCH OFFER — SAVE ₹300</span>
-                  </div>
-                </div>
-                
-                {/* Price Section */}
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, flexWrap: 'wrap' }}>
-                    <span style={{ color: 'rgba(255,255,255,0.60)', fontSize: getResponsiveFontSize(28, 24, 20), fontFamily: 'Inter', fontWeight: 700, paddingBottom: 14 }}>₹</span>
-                    <span style={{ color: 'white', fontSize: getResponsiveFontSize(88, 70, 50), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1' }}>299</span>
-                    <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: getResponsiveFontSize(60, 48, 36), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1', paddingBottom: 6 }}>/—</span>
-                  </div>
-                  <div style={{ marginTop: 8 }}>
-                    <span style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600 }}>+ Municipal fees (as applicable)</span>
-                  </div>
-                  <div style={{ marginTop: 4 }}>
-                    <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter', textDecoration: 'line-through' }}>Regular price ₹599</span>
-                  </div>
-                  <div>
-                    <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter' }}>Applicable GST will be added as per government regulations</span>
-                  </div>
-                  <div style={{ marginTop: 4 }}>
-                    <span style={{ color: '#E07B20', fontSize: 12, fontFamily: 'Inter', fontWeight: 600 }}>Per pet · Valid for 1 financial year</span>
-                  </div>
-                </div>
-                
-                {/* Checklist */}
-                <div style={{ marginTop: 20, marginBottom: 28 }}>
-                  {[
-                    'Register in under 1 minute, from your phone',
-                    'Legally secured Govt issued certificate',
-                    'Vaccination tracker — schedule, record, share with any vet',
-                    'Processed in 24–72 hours'
-                  ].map((text, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
-                      <img src="/images/correct.png" alt="check" style={{ width: 18, height: 18, marginTop: 2 }} />
-                      <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, fontFamily: 'Inter', lineHeight: '18.20px' }}>{text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                {/* CTA Button */}
-                <button 
-                  onClick={handleOpenRegisterModal}
-                  style={{ 
-                    width: '100%', 
-                    background: '#E07B20', 
-                    border: 'none', 
-                    borderRadius: 10, 
-                    padding: '17px 24px', 
-                    color: 'white', 
-                    fontSize: 15, 
-                    fontFamily: 'Inter', 
-                    fontWeight: 700, 
-                    cursor: 'pointer',
-                    marginBottom: 14,
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = '#C06A18'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = '#E07B20'}
-                >
-                  Register Your Pet — ₹299 →
-                </button>
-                
-                {/* Footer badges */}
-                <div style={{ display: 'flex', gap: 20, marginBottom: 18, flexWrap: 'wrap' }}>
-                  {['Secure payment', 'Legally valid', '24–72 hr approval'].map((badge) => (
-                    <span key={badge} style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontFamily: 'Inter' }}>{badge}</span>
-                  ))}
-                </div>
-                
-                {/* Guarantee Cards */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', borderRadius: 10, outline: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                    <img src="/images/shield-2.png" alt="guarantee" style={{ width: 22, height: 22 }} />
-                    <div>
-                      <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12.5, fontFamily: 'Inter', fontWeight: 700 }}>100% Refund Guarantee</div>
-                      <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>If we can't file your registration, you get every rupee back. No questions asked.</div>
-                    </div>
-                  </div>
-                  <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', borderRadius: 10, outline: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                    <img src="/images/location.png" alt="location" style={{ width: 22, height: 22 }} />
-                    <div>
-                      <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12.5, fontFamily: 'Inter', fontWeight: 700 }}>Available Across India</div>
-                      <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>Delhi, Noida, Gurgaon, Mumbai, Bangalore & 50+ cities covered.</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
+            <span style={{ fontSize: "16px" }}>{item.icon}</span>
+          </div>
+          <div style={{
+            color: "#E07B20",
+            fontSize: "13px",
+            fontFamily: "Inter",
+            fontWeight: 600,
+            marginBottom: "6px"
+          }}>{item.title}</div>
+          <div style={{
+            color: "rgba(255, 255, 255, 0.50)",
+            fontSize: "11.50px",
+            fontFamily: "Inter",
+            fontWeight: 400,
+            lineHeight: "17.25px",
+            whiteSpace: "pre-line"
+          }}>{item.desc}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {/* Right Column */}
+  <div style={{
+    flex: 1,
+    padding: "48px 44px",
+    display: "flex",
+    flexDirection: "column"
+  }}>
+    {/* All Inclusive Badge + Launch Offer */}
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "36.92px",
+      marginBottom: "28px",
+      flexWrap: "wrap"
+    }}>
+      <div style={{
+        padding: "5px 14px",
+        borderRadius: "999px",
+        outline: "1px solid rgba(255, 255, 255, 0.25)",
+        outlineOffset: -1
+      }}>
+        <span style={{
+          color: "rgba(255, 255, 255, 0.70)",
+          fontSize: "10px",
+          fontFamily: "Inter",
+          fontWeight: 600,
+          textTransform: "uppercase",
+          letterSpacing: "1.20px"
+        }}>All Inclusive</span>
+      </div>
+      <div style={{
+        padding: "5px 12px",
+        background: "#E8C832",
+        borderRadius: "999px",
+        display: "flex",
+        alignItems: "center",
+        gap: "6px"
+      }}>
+        <div style={{ width: "6px", height: "6px", background: "#1A0A00", borderRadius: "3px" }} />
+        <span style={{
+          color: "#1A0A00",
+          fontSize: "10px",
+          fontFamily: "Inter",
+          fontWeight: 700,
+          letterSpacing: "0.60px"
+        }}>LAUNCH OFFER — SAVE ₹300</span>
+      </div>
+    </div>
+
+    {/* Price Section */}
+    <div style={{ marginBottom: "16px" }}>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: "2px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start" }}>
+          <div style={{
+            paddingTop: "14px",
+            paddingRight: "2px"
+          }}>
+            <span style={{
+              color: "rgba(255, 255, 255, 0.60)",
+              fontSize: "28px",
+              fontFamily: "Inter",
+              fontWeight: 700,
+              lineHeight: "28px"
+            }}>₹</span>
+          </div>
+        </div>
+        <div>
+          <span style={{
+            color: "#1A0A00",  // Changed to black/dark brown
+            fontSize: "88px",
+            fontFamily: "Playfair Display",
+            fontWeight: 900,
+            lineHeight: "88px"
+          }}>299</span>
+        </div>
+        <div style={{ paddingBottom: "6px", paddingLeft: "4px" }}>
+          <span style={{
+            color: "rgba(255, 255, 255, 0.35)",
+            fontSize: "60px",
+            fontFamily: "Playfair Display",
+            fontWeight: 900,
+            lineHeight: "60px"
+          }}>/—</span>
+        </div>
+      </div>
+      <div>
+        <span style={{
+          color: "#E07B20",
+          fontSize: "13px",
+          fontFamily: "Inter",
+          fontWeight: 600,
+          letterSpacing: "0.26px"
+        }}>+ Municipal fees (as applicable)</span>
+      </div>
+      <div style={{ marginTop: "4px" }}>
+        <span style={{
+          color: "rgba(255, 255, 255, 0.40)",
+          fontSize: "12px",
+          fontFamily: "Inter",
+          fontWeight: 400,
+          textDecoration: "line-through"
+        }}>Regular price ₹599</span>
+      </div>
+      <div>
+        <span style={{
+          color: "rgba(255, 255, 255, 0.40)",
+          fontSize: "12px",
+          fontFamily: "Inter",
+          fontWeight: 400
+        }}>Applicable GST will be added as per government regulations</span>
+      </div>
+      <div style={{ marginTop: "4px" }}>
+        <span style={{
+          color: "#E07B20",
+          fontSize: "12px",
+          fontFamily: "Inter",
+          fontWeight: 600
+        }}>Per pet · Valid for 1 financial year</span>
+      </div>
+    </div>
+
+    {/* Checklist */}
+    <div style={{ marginTop: "20px", marginBottom: "28px" }}>
+      {[
+        "Register in under 1 minute, from your phone",
+        "Legally secured Govt issued certificate",
+        "Vaccination tracker — schedule, record, share with any vet",
+        "Processed in 24–72 hours"
+      ].map((text, idx) => (
+        <div key={idx} style={{
+          display: "flex",
+          alignItems: "flex-start",
+          position: "relative",
+          marginBottom: "10px",
+          minHeight: "20.59px"
+        }}>
+          <span style={{
+            color: "#E07B20",
+            fontSize: "14px",
+            fontFamily: "Inter",
+            fontWeight: 400,
+            lineHeight: "19.60px",
+            width: "13.12px",
+            marginRight: "11px"
+          }}>✓</span>
+          <span style={{
+            color: "rgba(255, 255, 255, 0.75)",
+            fontSize: "13px",
+            fontFamily: "Inter",
+            fontWeight: 400,
+            lineHeight: "18.20px",
+            flex: 1
+          }}>{text}</span>
+        </div>
+      ))}
+    </div>
+
+    {/* CTA Button */}
+    <div style={{ marginBottom: "14px" }}>
+      <button
+        onClick={handleOpenRegisterModal}
+        style={{
+          width: "100%",
+          padding: "17px 24px",
+          background: "#E07B20",
+          borderRadius: "10px",
+          border: "none",
+          cursor: "pointer",
+          textAlign: "center"
+        }}
+      >
+        <span style={{
+          color: "white",
+          fontSize: "15px",
+          fontFamily: "Inter",
+          fontWeight: 700
+        }}>Register Your Pet — ₹299 →</span>
+      </button>
+    </div>
+
+    {/* Footer badges */}
+    <div style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "flex-start",
+      gap: "20px",
+      marginBottom: "18px"
+    }}>
+      {["Secure payment", "Legally valid", "24–72 hr approval"].map((badge) => (
+        <span key={badge} style={{
+          color: "rgba(255, 255, 255, 0.35)",
+          fontSize: "11px",
+          fontFamily: "Inter",
+          fontWeight: 400
+        }}>{badge}</span>
+      ))}
+    </div>
+
+    {/* Guarantee Cards */}
+    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      {/* Refund Guarantee */}
+      <div style={{
+        padding: "14px 16px",
+        background: "rgba(255, 255, 255, 0.04)",
+        borderRadius: "10px",
+        outline: "1px solid rgba(255, 255, 255, 0.07)",
+        outlineOffset: -1,
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "10.31px"
+      }}>
+        <div style={{ paddingTop: "1px", paddingBottom: "1px" }}>
+          <span style={{
+            color: "white",
+            fontSize: "18px",
+            fontFamily: "Inter",
+            fontWeight: 400
+          }}>🛡️</span>
+        </div>
+        <div style={{ flex: 1 }}>
+          <div>
+            <span style={{
+              color: "rgba(255, 255, 255, 0.85)",
+              fontSize: "12.50px",
+              fontFamily: "Inter",
+              fontWeight: 700
+            }}>100% Refund Guarantee</span>
+          </div>
+          <div>
+            <span style={{
+              color: "rgba(255, 255, 255, 0.40)",
+              fontSize: "11.50px",
+              fontFamily: "Inter",
+              fontWeight: 400,
+              lineHeight: "17.25px"
+            }}>If we can't file your registration, you get every rupee<br/>back. No questions asked.</span>
           </div>
         </div>
       </div>
+
+      {/* Available Across India */}
+      <div style={{
+        padding: "14px 16px",
+        background: "rgba(255, 255, 255, 0.04)",
+        borderRadius: "10px",
+        outline: "1px solid rgba(255, 255, 255, 0.07)",
+        outlineOffset: -1,
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "12px"
+      }}>
+        <div style={{ paddingTop: "1px", paddingBottom: "1px" }}>
+          <span style={{
+            color: "white",
+            fontSize: "18px",
+            fontFamily: "Inter",
+            fontWeight: 400
+          }}>📍</span>
+        </div>
+        <div>
+          <div>
+            <span style={{
+              color: "rgba(255, 255, 255, 0.85)",
+              fontSize: "12.50px",
+              fontFamily: "Inter",
+              fontWeight: 700
+            }}>Available Across India</span>
+          </div>
+          <div>
+            <span style={{
+              color: "rgba(255, 255, 255, 0.40)",
+              fontSize: "11.50px",
+              fontFamily: "Inter",
+              fontWeight: 400,
+              lineHeight: "17.25px"
+            }}>Delhi, Noida, Gurgaon, Mumbai, Bangalore & 50+ cities<br/>covered.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
       {/* ══════════════════════════════════════
           TESTIMONIALS
       ══════════════════════════════════════ */}
