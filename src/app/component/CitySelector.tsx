@@ -9,12 +9,10 @@ interface CitySelectorProps {
 }
 
 const cities = [
-  { value: "ghaziabad", label: "Ghaziabad", price: "₹1499", registrationFee: 1499 },
-  { value: "delhi", label: "Delhi", price: "₹999", registrationFee: 999 },
-  { value: "noida", label: "Noida", price: "₹999", registrationFee: 999 },
-  { value: "gurgaon", label: "Gurgaon", price: "₹999", registrationFee: 999 },
-  { value: "faridabad", label: "Faridabad", price: "₹999", registrationFee: 999 },
-  { value: "other", label: "Other City", price: "₹999", registrationFee: 999 },
+  { value: "ghaziabad", label: "Ghaziabad", price: "₹1532.82", registrationFee: 1532.82 },
+  { value: "delhi", label: "Delhi", price: "₹942.82", registrationFee: 942.82 },
+  { value: "noida", label: "Noida", price: "₹942.82", registrationFee: 942.82 },
+  { value: "gurgaon", label: "Gurgaon", price: "₹942.82", registrationFee: 942.82 },
 ];
 
 export default function CitySelector({ selectedCity, onChange, error }: CitySelectorProps) {
@@ -69,46 +67,12 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
         <option value="">Select your city</option>
         {cities.map((city) => (
           <option key={city.value} value={city.value}>
-            {city.label} (Registration {city.price})
+            {city.label} 
           </option>
         ))}
       </select>
       
-      {selectedCity && selectedCityData && (
-        <div style={{
-          marginTop: "12px",
-          padding: "12px 14px",
-          background: "#FFF0E4",
-          borderRadius: "9px",
-          border: "1px solid rgba(232, 96, 10, 0.18)"
-        }}>
-          <p style={{
-            color: "#4A2C14",
-            fontSize: "12.5px",
-            fontFamily: "'DM Sans', sans-serif",
-            margin: 0
-          }}>
-            Registration fee for <strong>{selectedCityData.label}</strong>: 
-            <span style={{
-              fontSize: "18px",
-              fontWeight: "bold",
-              color: "#E8600A",
-              marginLeft: "8px"
-            }}>
-              {selectedCityData.price}
-            </span>
-          </p>
-          <p style={{
-            color: "#7A5C40",
-            fontSize: "11px",
-            fontFamily: "'DM Sans', sans-serif",
-            marginTop: "6px",
-            marginBottom: 0
-          }}>
-            This fee applies to each pet you register. One-time payment for lifetime registration.
-          </p>
-        </div>
-      )}
+      
       
       {error && (
         <p style={{

@@ -790,85 +790,170 @@ export default function HomePage() {
       ══════════════════════════════════════ */}
       <div style={{ background: '#2C1A0E', width: '100%' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto', padding: getResponsivePadding() }}>
-          <div style={{ background: '#3A1F0A', borderRadius: 24, overflow: 'hidden', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' }}>
-
+          
+          {/* Inner darker box container */}
+          <div style={{ 
+            background: '#1F1108', 
+            borderRadius: 20, 
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+          }}>
+            
             {/* Left Column */}
-            <div style={{ padding: isMobile ? '32px' : '44px', borderRight: !isMobile ? '1px solid rgba(255,255,255,0.07)' : 'none', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 14px', background: 'rgba(255,255,255,0.06)', borderRadius: 100, outline: '1px rgba(255,255,255,0.10) solid', outlineOffset: -1, width: 'fit-content' }}>
-                <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.24px', whiteSpace: 'nowrap' }}>Simple, transparent pricing</span>
+            <div style={{ 
+              flex: 1, 
+              padding: '48px 44px', 
+              borderRight: !isMobile ? '1px solid rgba(255,255,255,0.07)' : 'none',
+              display: 'flex', 
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, borderRadius: 999, outline: '1px solid rgba(255,255,255,0.25)', outlineOffset: -1, display: 'inline-flex' }}>
+                  <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>Simple, Transparent Pricing</span>
+                </div>
+                
+                <div style={{ marginTop: 19.2, flexDirection: 'column', display: 'flex' }}>
+                  <span style={{ color: 'white', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1.2' }}>One price.</span>
+                  <span style={{ color: '#E07B20', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: 'Playfair Display', fontStyle: 'italic', fontWeight: 900, lineHeight: '1.2' }}>Everything<br/>included.</span>
+                </div>
+                
+                <div style={{ marginTop: 19.2 }}>
+                  <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'Inter', fontWeight: 400, lineHeight: '20.80px' }}>No hidden charges, no surprise fees. ₹299 covers your complete pet registration filing, certificate, and everything in between. Municipal fees are collected directly by the authority.</span>
+                </div>
               </div>
-              <div style={{ marginTop: 22 }}>
-                <div style={{ color: '#FAF6EF', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontWeight: 900 }}>One price.</div>
-                <div style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>Everything included.</div>
-              </div>
-              <p style={{ color: 'rgba(250,246,239,0.45)', fontSize: getResponsiveFontSize(13.5, 12, 11), marginTop: 16, marginBottom: 24 }}>
-                No hidden charges, no surprise fees. ₹999 covers your complete pet registration filing, certificate, and everything in between.
-              </p>
-
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16, flex: 1 }}>
+              
+              {/* Features Grid */}
+              <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
                 {[
-                  { title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.', icon: '/images/office-1.png' },
-                  { title: 'Official Certificate', desc: 'Govt-issued, delivered within 24–72 hrs.', icon: '/images/certificate-1.png' },
-                  { title: 'Vaccination Tracker', desc: 'Digital records + auto-reminders so you never miss a booster.', icon: '/images/target.png' },
-                  { title: 'Renewal Reminders', desc: 'WhatsApp & email alerts before your annual expiry date.', icon: '/images/reminder.png' },
+                  { icon: '/images/office-1.png', title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.' },
+                  { icon: '/images/certificate-1.png', title: 'Official Certificate', desc: 'Govt-issued, delivered within 24–72 hrs.' },
+                  { icon: '/images/vaccine.png', title: 'Vaccination Tracker', desc: 'Digital records + auto-reminders so you never miss a booster.' },
+                  { icon: '/images/reminder.png', title: 'Renewal Reminders', desc: 'WhatsApp & email alerts before your annual expiry date.' }
                 ].map((item) => (
-                  <div key={item.title} style={{ padding: 16, background: 'rgba(255,255,255,0.04)', borderRadius: 13, outline: '1px rgba(255,255,255,0.07) solid', display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ width: 40, height: 40, background: 'rgba(255,140,58,0.10)', borderRadius: 9, outline: '1px rgba(255,140,58,0.15) solid', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Image src={item.icon} alt={item.title} width={24} height={24} style={{ objectFit: 'contain' }} />
+                  <div key={item.title} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: '18px 16px', outline: '1px solid rgba(255,255,255,0.07)' }}>
+                    <div style={{ width: 48, height: 48, background: 'rgba(224,123,32,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                      <img src={item.icon} alt={item.title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
                     </div>
-                    <div style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(12.5, 11, 10), fontWeight: 600, marginBottom: 4 }}>{item.title}</div>
-                    <div style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(11, 10, 9), lineHeight: '16.5px' }}>{item.desc}</div>
+                    <div style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600, marginBottom: 6 }}>{item.title}</div>
+                    <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>{item.desc}</div>
                   </div>
                 ))}
               </div>
             </div>
-
+            
             {/* Right Column */}
-            <div style={{ padding: isMobile ? '32px' : '44px', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 14px', background: 'rgba(255,255,255,0.06)', borderRadius: 100, outline: '1px rgba(255,255,255,0.10) solid', outlineOffset: -1, width: 'fit-content' }}>
-                <span style={{ color: 'rgba(250,246,239,0.55)', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.24px', whiteSpace: 'nowrap' }}>All Inclusive</span>
-              </div>
-
-              <div style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 14px', background: '#FFE600', borderRadius: 100, width: 'fit-content' }}>
-                <div style={{ width: 6, height: 6, background: '#C04E06', borderRadius: 3 }} />
-                <span style={{ color: '#1A0A00', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Launch Offer — Save ₹1,000</span>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, marginTop: 14, flexWrap: 'wrap' }}>
-                <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(22, 18, 16), paddingBottom: 14 }}>₹</span>
-                <span style={{ color: '#FAF6EF', fontSize: getResponsiveFontSize(90, 70, 50), fontFamily: F.fraunces, fontWeight: 900 }}>999</span>
-                <span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(56, 44, 32), paddingBottom: 4 }}>/-</span>
-              </div>
-              <div><span style={{ color: 'rgba(250,246,239,0.35)', fontSize: getResponsiveFontSize(12, 11, 10) }}>Regular price </span><span style={{ textDecoration: 'line-through', color: 'rgba(250,246,239,0.35)', fontSize: getResponsiveFontSize(12, 11, 10) }}>₹1,999</span></div>
-              <div><span style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(11.5, 10, 9) }}>Inclusive of all taxes & GST</span></div>
-              <div><span style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(12, 11, 10), fontWeight: 600 }}>Per pet · Valid for 1 year</span></div>
-
-              <div style={{ marginTop: 16 }}>
-                {['Register in under 1 minute, from your phone', 'Legally secured Govt issued certificate', 'Vaccination tracker — schedule, record, share with any vet', 'Processed in 24–72 hours'].map((item) => (
-                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                    <div style={{ width: 18, height: 18, background: 'rgba(232,96,10,0.18)', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: '#FF8C3A' }}>✓</div>
-                    <span style={{ color: 'rgba(250,246,239,0.70)', fontSize: getResponsiveFontSize(13, 12, 11) }}>{item}</span>
+            <div style={{ 
+              flex: 1, 
+              padding: '48px 44px', 
+              display: 'flex', 
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                {/* Badge row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28, flexWrap: 'wrap' }}>
+                  <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, borderRadius: 999, outline: '1px solid rgba(255,255,255,0.25)', outlineOffset: -1 }}>
+                    <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>All Inclusive</span>
                   </div>
-                ))}
-              </div>
-
-              <button onClick={handleOpenRegisterModal} style={{ display: 'block', textAlign: 'center', padding: isMobile ? '12px 20px' : '15px 20px', background: '#E8600A', borderRadius: 9, color: '#FFFFFF', textDecoration: 'none', fontWeight: 600, marginTop: 24, cursor: 'pointer', border: 'none', width: '100%' }}>
-                Register Your Pet — ₹999 →
-              </button>
-
-              <div style={{ display: 'flex', gap: 20, marginTop: 18, flexWrap: 'wrap' }}>
-                {['Secure payment', 'Legally valid', '24–72 hr approval'].map((badge) => (
-                  <div key={badge} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    {/* <div style={{ width: 13, height: 13, background: 'rgba(250,246,239,0.10)', borderRadius: 2 }} /> */}
-                    <span style={{ color: 'rgba(250,246,239,0.38)', fontSize: getResponsiveFontSize(12, 11, 10) }}>{badge}</span>
+                  <div style={{ paddingLeft: 12, paddingRight: 12, paddingTop: 5, paddingBottom: 5, background: '#E8C832', borderRadius: 999, display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div style={{ width: 6, height: 6, background: '#1A0A00', borderRadius: 3 }} />
+                    <span style={{ color: '#1A0A00', fontSize: 10, fontFamily: 'Inter', fontWeight: 700, letterSpacing: '0.60px' }}>LAUNCH OFFER — SAVE ₹300</span>
                   </div>
-                ))}
+                </div>
+                
+                {/* Price Section */}
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, flexWrap: 'wrap' }}>
+                    <span style={{ color: 'rgba(255,255,255,0.60)', fontSize: getResponsiveFontSize(28, 24, 20), fontFamily: 'Inter', fontWeight: 700, paddingBottom: 14 }}>₹</span>
+                    <span style={{ color: 'white', fontSize: getResponsiveFontSize(88, 70, 50), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1' }}>299</span>
+                    <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: getResponsiveFontSize(60, 48, 36), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1', paddingBottom: 6 }}>/—</span>
+                  </div>
+                  <div style={{ marginTop: 8 }}>
+                    <span style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600 }}>+ Municipal fees (as applicable)</span>
+                  </div>
+                  <div style={{ marginTop: 4 }}>
+                    <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter', textDecoration: 'line-through' }}>Regular price ₹599</span>
+                  </div>
+                  <div>
+                    <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter' }}>Applicable GST will be added as per government regulations</span>
+                  </div>
+                  <div style={{ marginTop: 4 }}>
+                    <span style={{ color: '#E07B20', fontSize: 12, fontFamily: 'Inter', fontWeight: 600 }}>Per pet · Valid for 1 financial year</span>
+                  </div>
+                </div>
+                
+                {/* Checklist */}
+                <div style={{ marginTop: 20, marginBottom: 28 }}>
+                  {[
+                    'Register in under 1 minute, from your phone',
+                    'Legally secured Govt issued certificate',
+                    'Vaccination tracker — schedule, record, share with any vet',
+                    'Processed in 24–72 hours'
+                  ].map((text, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
+                      <img src="/images/correct.png" alt="check" style={{ width: 18, height: 18, marginTop: 2 }} />
+                      <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, fontFamily: 'Inter', lineHeight: '18.20px' }}>{text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                {/* CTA Button */}
+                <button 
+                  onClick={handleOpenRegisterModal}
+                  style={{ 
+                    width: '100%', 
+                    background: '#E07B20', 
+                    border: 'none', 
+                    borderRadius: 10, 
+                    padding: '17px 24px', 
+                    color: 'white', 
+                    fontSize: 15, 
+                    fontFamily: 'Inter', 
+                    fontWeight: 700, 
+                    cursor: 'pointer',
+                    marginBottom: 14,
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#C06A18'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = '#E07B20'}
+                >
+                  Register Your Pet — ₹299 →
+                </button>
+                
+                {/* Footer badges */}
+                <div style={{ display: 'flex', gap: 20, marginBottom: 18, flexWrap: 'wrap' }}>
+                  {['Secure payment', 'Legally valid', '24–72 hr approval'].map((badge) => (
+                    <span key={badge} style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, fontFamily: 'Inter' }}>{badge}</span>
+                  ))}
+                </div>
+                
+                {/* Guarantee Cards */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', borderRadius: 10, outline: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                    <img src="/images/shield-2.png" alt="guarantee" style={{ width: 22, height: 22 }} />
+                    <div>
+                      <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12.5, fontFamily: 'Inter', fontWeight: 700 }}>100% Refund Guarantee</div>
+                      <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>If we can't file your registration, you get every rupee back. No questions asked.</div>
+                    </div>
+                  </div>
+                  <div style={{ padding: '14px 16px', background: 'rgba(255,255,255,0.04)', borderRadius: 10, outline: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                    <img src="/images/location.png" alt="location" style={{ width: 22, height: 22 }} />
+                    <div>
+                      <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12.5, fontFamily: 'Inter', fontWeight: 700 }}>Available Across India</div>
+                      <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>Delhi, Noida, Gurgaon, Mumbai, Bangalore & 50+ cities covered.</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+            
           </div>
         </div>
       </div>
-
       {/* ══════════════════════════════════════
           TESTIMONIALS
       ══════════════════════════════════════ */}

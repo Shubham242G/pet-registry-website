@@ -4,6 +4,8 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Footer from '../component/Footer';
+import RegisterModal from '../component/RegisterModal';
+import LoginModal from '../component/LoginModal';
 
 const F = {
   fraunces: 'Fraunces, Georgia, serif',
@@ -12,6 +14,9 @@ const F = {
 };
 
 export default function NoidaLanding() {
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   useEffect(() => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -23,6 +28,24 @@ export default function NoidaLanding() {
       }
     };
   }, []);
+
+  const handleOpenRegisterModal = () => {
+    setShowRegisterModal(true);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setShowRegisterModal(false);
+  };
+
+  const handleSwitchToLogin = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
+  };
+
+  const handleSwitchToRegister = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
+  };
 
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
@@ -45,7 +68,7 @@ export default function NoidaLanding() {
   },
   {
     question: "How much does registration cost on Tailio?",
-    answer: "Registration costs ₹999 for a limited time (regular price ₹1,999). This is a one-time, all-inclusive fee with no hidden charges. It includes Noida Authority municipal filing, official government certificate, vaccination tracker, renewal reminders, and legal pet profile."
+    answer: "Registration costs ₹299 + municipal fees (launch offer, regular price ₹599 + municipal fees). This includes municipal filing, digital certificate, vaccination tracker, and renewal reminders. No hidden charges."
   },
   {
     question: "How long does it take to get the certificate?",
@@ -118,7 +141,7 @@ const toggleFaq = (index: number) => {
           </p>
 
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "8px", marginTop: "38px" }}>
-            {["₹999 one-time, all-inclusive", "Noida Authority accepted", "Certificate in 24–72 hrs", "No office visit needed"].map((text) => (
+            {["₹299 + municipal fees", "Noida Authority accepted", "Certificate in 24–72 hrs", "No office visit needed"].map((text) => (
               <div key={text} style={{ display: "inline-flex", alignItems: "center", gap: "7px", padding: "7px 14px", background: "#FFFCF8", borderRadius: "100px", outline: "1px solid rgba(44, 26, 14, 0.18)", outlineOffset: "-1px" }}>
                 <div style={{ width: "6px", height: "6px", background: "#E8600A", borderRadius: "3px" }} />
                 <span style={{ fontSize: "13px", fontFamily: F.dmSans, fontWeight: 500, color: "#2C1A0E" }}>{text}</span>
@@ -127,35 +150,41 @@ const toggleFaq = (index: number) => {
           </div>
 
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "12px", marginTop: "38px" }}>
-            <button style={{
-              padding: "14px 28px",
-              background: "#E8600A",
-              boxShadow: "0px 2px 0px #C04E06",
-              borderRadius: "9px",
-              outline: "2px #C04E06 solid",
-              outlineOffset: "-2px",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "15.50px",
-              fontFamily: F.dmSans,
-              fontWeight: 600,
-              color: "white",
-            }}>
-              Register Your Pet — ₹999
+            <button 
+              onClick={handleOpenRegisterModal}
+              style={{
+                padding: "14px 28px",
+                background: "#E8600A",
+                boxShadow: "0px 2px 0px #C04E06",
+                borderRadius: "9px",
+                outline: "2px #C04E06 solid",
+                outlineOffset: "-2px",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "15.50px",
+                fontFamily: F.dmSans,
+                fontWeight: 600,
+                color: "white",
+              }}>
+              Register Your Pet — ₹299 + fees →
             </button>
-            <button style={{
-              padding: "12px 20px",
-              borderRadius: "9px",
-              outline: "1px solid rgba(44, 26, 14, 0.18)",
-              outlineOffset: "-1px",
-              border: "none",
-              background: "transparent",
-              cursor: "pointer",
-              fontSize: "14px",
-              fontFamily: F.dmSans,
-              fontWeight: 500,
-              color: "#2C1A0E",
-            }}>
+            <button 
+              onClick={() => {
+                document.getElementById('process-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              style={{
+                padding: "12px 20px",
+                borderRadius: "9px",
+                outline: "1px solid rgba(44, 26, 14, 0.18)",
+                outlineOffset: "-1px",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontFamily: F.dmSans,
+                fontWeight: 500,
+                color: "#2C1A0E",
+              }}>
               See how it works
             </button>
           </div>
@@ -381,7 +410,7 @@ const toggleFaq = (index: number) => {
       </div>
 
       {/* Process Section */}
-      <div style={{ maxWidth: "1120px", margin: "0 auto", padding: "80px 40px", background: "#FAF6EF" }}>
+      <div id="process-section" style={{ maxWidth: "1120px", margin: "0 auto", padding: "80px 40px", background: "#FAF6EF" }}>
         <div style={{ textAlign: "center", marginBottom: 52 }}>
           <div style={{
             display: "inline-flex",
@@ -518,7 +547,7 @@ const toggleFaq = (index: number) => {
               { feature: "Works on your phone", sub: "No office visit needed", tailio: "✓", portal: "✗", isIcon: true },
               { feature: "Digital certificate", sub: "Stored on your profile", tailio: "✓", portal: "✗", isIcon: true },
               { feature: "Vaccination reminders", sub: "WhatsApp, SMS & email", tailio: "✓", portal: "✗", isIcon: true },
-              { feature: "Registration cost", sub: "One-time, all-inclusive", tailio: "₹999", portal: "₹100–500" },
+              { feature: "Registration cost", sub: "One-time, all-inclusive", tailio: "₹299 + fees", portal: "₹100–500" },
               { feature: "If you wait, the fine is…", sub: "Noida Authority enforcement active", tailio: "None", portal: "₹10,000", isWarning: true },
             ].map((item, idx) => (
               <div key={idx} style={{ display: "flex", background: "#FFFCF8", borderBottom: idx < 5 ? "1px solid rgba(44, 26, 14, 0.10)" : "none" }}>
@@ -530,7 +559,7 @@ const toggleFaq = (index: number) => {
                   {item.isIcon ? (
                     <span style={{ fontSize: 18, color: "#2C1A0E" }}>{item.tailio}</span>
                   ) : (
-                    <span style={{ fontSize: 14, fontFamily: F.dmSans, fontWeight: item.tailio === "₹999" ? 700 : 400, color: "#2C1A0E" }}>{item.tailio}</span>
+                    <span style={{ fontSize: 14, fontFamily: F.dmSans, fontWeight: item.tailio === "₹299 + fees" ? 700 : 400, color: "#2C1A0E" }}>{item.tailio}</span>
                   )}
                 </div>
                 <div style={{ flex: 2, padding: "25px 26px", textAlign: "center" }}>
@@ -595,7 +624,7 @@ const toggleFaq = (index: number) => {
         </div>
       </div>
 
-      {/* Pricing Section */}
+      {/* Pricing Section - New Integrated Box */}
       <div style={{ width: "100%", background: "#2C1A0E", padding: "88px 40px" }}>
         <div style={{ maxWidth: "1120px", margin: "0 auto", textAlign: "center" }}>
           <div style={{
@@ -617,76 +646,112 @@ const toggleFaq = (index: number) => {
             Sixty seconds from here to legally issued. Certificate valid with Noida Authority.
           </p>
 
-          <div style={{ maxWidth: 620, margin: "0 auto", padding: 44, background: "rgba(255, 255, 255, 0.04)", borderRadius: 18, border: "1px solid rgba(232, 96, 10, 0.28)", position: "relative", overflow: "hidden" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px", background: "#FFF4E4", borderRadius: 100, border: "1px solid #FFCCA0", marginBottom: 20 }}>
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <path d="M0.83 0.83L9.17 9.17M0.83 9.17L9.17 0.83" stroke="#B85C00" strokeWidth="1"/>
-              </svg>
-              <span style={{ fontSize: 11, fontFamily: F.dmSans, fontWeight: 600, color: "#B85C00" }}>Launch Offer — Save ₹1,000</span>
-            </div>
-
-            <div style={{ display: "flex", alignItems: "flex-end", gap: 5 }}>
-              <span style={{ fontSize: 36, fontFamily: F.fraunces, fontWeight: 900, color: "#E8600A" }}>₹</span>
-              <span style={{ fontSize: 72, fontFamily: F.fraunces, fontWeight: 900, color: "#F4E4CF", lineHeight: 1 }}>999</span>
-            </div>
-            <div style={{ fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 400, textDecoration: "line-through", color: "rgba(244, 228, 207, 0.28)" }}>Regular price ₹1,999</div>
-            <div style={{ fontSize: 12.5, fontFamily: F.dmSans, fontWeight: 400, color: "rgba(244, 228, 207, 0.36)", marginTop: 4 }}>Per pet · Valid 1 year · All taxes inclusive · Noida Authority accepted</div>
-
-            <div style={{ marginTop: 28, textAlign: "left" }}>
-              {[
-                "Noida Authority Municipal Filing — all paperwork end to end",
-                "Official Govt Certificate — delivered within 24–72 hrs",
-                "Vaccination Tracker — digital records + auto-reminders",
-                "Renewal Reminders — WhatsApp & email before expiry",
-                "Legal Pet Profile — proof of ownership always on record",
-              ].map((item, idx) => (
-                <div key={idx} style={{ height: 43, borderBottom: idx < 4 ? "1px solid rgba(255, 255, 255, 0.05)" : "none", display: "flex", alignItems: "center" }}>
-                  <div style={{ width: 24, height: 24, background: "rgba(232, 96, 10, 0.15)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", marginRight: 10 }}>
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6L4.5 8.5L10 3" stroke="#F4A56A" strokeWidth="1.25" strokeLinecap="round"/>
-                    </svg>
-                  </div>
-                  <span style={{ fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 400, color: "rgba(244, 228, 207, 0.60)" }}>{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <button style={{
-              width: "100%",
-              marginTop: 24,
-              padding: "17px",
-              background: "#E8600A",
-              boxShadow: "0px 4px 0px #C04E06",
-              borderRadius: 100,
-              border: "2px solid #C04E06",
-              fontSize: 16.5,
-              fontFamily: F.dmSans,
-              fontWeight: 700,
-              letterSpacing: "0.17px",
-              color: "white",
-              cursor: "pointer",
-            }}>
-              Register Your Pet — ₹999 →
-            </button>
-
-            <div style={{ display: "flex", justifyContent: "center", gap: 22, flexWrap: "wrap", marginTop: 12 }}>
-              {["Secure payment", "Legally valid", "24–72 hr approval"].map((text) => (
-                <div key={text} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                  <div style={{ width: 12, height: 12, border: "1px solid rgba(244, 228, 207, 0.30)", borderRadius: 2 }} />
-                  <span style={{ fontSize: 12, fontFamily: F.dmSans, fontWeight: 400, color: "rgba(244, 228, 207, 0.30)" }}>{text}</span>
-                </div>
-              ))}
-            </div>
-
+          {/* Centered Pricing Box */}
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
             <div style={{
-              position: "absolute",
-              width: 200,
-              height: 200,
-              right: -59,
-              top: -59,
-              background: "radial-gradient(ellipse 70.71% 70.71% at 50% 50%, rgba(232, 96, 10, 0.16) 0%, rgba(232, 96, 10, 0) 70%)",
-              borderRadius: "50%",
-            }} />
+              background: "rgba(255, 255, 255, 0.04)",
+              borderRadius: 24,
+              padding: "50px 46px 40px",
+              outline: "1px solid rgba(212, 82, 26, 0.28)",
+              position: "relative",
+              maxWidth: 560,
+              width: "100%"
+            }}>
+              <div style={{ position: "absolute", top: -1, left: -1, right: -1, bottom: -1, borderRadius: 23, pointerEvents: "none" }} />
+              
+              {/* Badge row - centered */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginBottom: 32, flexWrap: "wrap" }}>
+                <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, borderRadius: 999, outline: "1px solid rgba(255,255,255,0.25)", outlineOffset: -1 }}>
+                  <span style={{ color: "rgba(255,255,255,0.70)", fontSize: 10, fontFamily: "Inter", fontWeight: 600, textTransform: "uppercase", letterSpacing: "1.20px" }}>All Inclusive</span>
+                </div>
+                <div style={{ paddingLeft: 12, paddingRight: 12, paddingTop: 5, paddingBottom: 5, background: "#E8C832", borderRadius: 999, display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ width: 6, height: 6, background: "#1A0A00", borderRadius: 3 }} />
+                  <span style={{ color: "#1A0A00", fontSize: 10, fontFamily: "Inter", fontWeight: 700, letterSpacing: "0.60px" }}>LAUNCH OFFER — SAVE ₹300</span>
+                </div>
+              </div>
+              
+              {/* Price Section - centered */}
+              <div style={{ marginBottom: 20, textAlign: "center" }}>
+                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
+                  <span style={{ color: "rgba(255,255,255,0.60)", fontSize: 28, fontFamily: "Inter", fontWeight: 700, paddingBottom: 14 }}>₹</span>
+                  <span style={{ color: "white", fontSize: 88, fontFamily: "Playfair Display", fontWeight: 900, lineHeight: "1" }}>299</span>
+                  <span style={{ color: "rgba(255,255,255,0.35)", fontSize: 60, fontFamily: "Playfair Display", fontWeight: 900, lineHeight: "1", paddingBottom: 6 }}>/—</span>
+                </div>
+                <div style={{ marginTop: 8 }}>
+                  <span style={{ color: "#E07B20", fontSize: 13, fontFamily: "Inter", fontWeight: 600 }}>+ Municipal fees (as applicable)</span>
+                </div>
+                <div style={{ marginTop: 4 }}>
+                  <span style={{ color: "rgba(255,255,255,0.40)", fontSize: 12, fontFamily: "Inter", textDecoration: "line-through" }}>Regular price ₹599</span>
+                </div>
+                <div>
+                  <span style={{ color: "rgba(255,255,255,0.40)", fontSize: 12, fontFamily: "Inter" }}>Applicable GST will be added as per government regulations</span>
+                </div>
+                <div style={{ marginTop: 4 }}>
+                  <span style={{ color: "#E07B20", fontSize: 12, fontFamily: "Inter", fontWeight: 600 }}>Per pet · Valid for 1 financial year · Noida Authority accepted</span>
+                </div>
+              </div>
+              
+              {/* Checklist - left aligned for readability */}
+              <div style={{ marginTop: 24, marginBottom: 32, textAlign: "left" }}>
+                {[
+                  "Noida Authority Municipal Filing — all paperwork end to end",
+                  "Official Govt Certificate — delivered within 24–72 hrs",
+                  "Vaccination Tracker — digital records + auto-reminders",
+                  "Renewal Reminders — WhatsApp & email before expiry",
+                  "Legal Pet Profile — proof of ownership always on record",
+                ].map((item, idx) => (
+                  <div key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
+                    <div style={{ width: 20, height: 20, background: "rgba(224, 123, 32, 0.15)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 6L4.5 8.5L10 3" stroke="#E07B20" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </div>
+                    <span style={{ color: "rgba(255,255,255,0.75)", fontSize: 13, fontFamily: "Inter", lineHeight: "18.20px" }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+              
+              {/* CTA Button */}
+              <button 
+                onClick={handleOpenRegisterModal}
+                style={{ 
+                  width: "100%", 
+                  background: "#D4521A",
+                  boxShadow: "0px 6px 0px #A83E10",
+                  border: "none", 
+                  borderRadius: 100, 
+                  padding: "18px 20px", 
+                  color: "white", 
+                  fontSize: 17, 
+                  fontFamily: "DM Sans", 
+                  fontWeight: 700, 
+                  cursor: "pointer",
+                  marginBottom: 20,
+                  transition: "all 0.2s ease"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "#C06A18"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "#D4521A"}
+              >
+                Register Your Pet — ₹299 + municipal fees →
+              </button>
+              
+              {/* Footer badges */}
+              <div style={{ display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap" }}>
+                {["Secure payment", "Legally valid with Noida Authority", "24–72 hr approval"].map((text) => (
+                  <span key={text} style={{ color: "rgba(255,255,255,0.30)", fontSize: 12, fontFamily: "DM Sans" }}>{text}</span>
+                ))}
+              </div>
+
+              <div style={{
+                position: "absolute",
+                width: 200,
+                height: 200,
+                right: -59,
+                top: -59,
+                background: "radial-gradient(ellipse 70.71% 70.71% at 50% 50%, rgba(232, 96, 10, 0.16) 0%, rgba(232, 96, 10, 0) 70%)",
+                borderRadius: "50%",
+              }} />
+            </div>
           </div>
         </div>
       </div>
@@ -711,55 +776,65 @@ const toggleFaq = (index: number) => {
           </h2>
         </div>
 
-        <div style={{ maxWidth: 716, margin: "0 auto", padding: "80px 40px", background: "#FAF6EF" }}>
-
-  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-    {faqs.map((faq, idx) => (
-      <div key={idx} style={{ background: "#FFFCF8", borderRadius: 13, border: "1px solid rgba(44, 26, 14, 0.18)", overflow: "hidden" }}>
-        <div 
-          style={{ 
-            padding: "18px 20px", 
-            display: "flex", 
-            justifyContent: "space-between", 
-            alignItems: "center",
-            cursor: "pointer"
-          }}
-          onClick={() => toggleFaq(idx)}
-        >
-          <span style={{ fontSize: 14.5, fontFamily: F.dmSans, fontWeight: 600, color: "#2C1A0E" }}>{faq.question}</span>
-          <div style={{ 
-            width: openFaq === idx ? 36 : 26, 
-            height: openFaq === idx ? 16 : 26, 
-            background: openFaq === idx ? "#FFF0E4" : "#F3EDE0", 
-            borderRadius: 13, 
-            border: "1px solid rgba(44, 26, 14, 0.18)", 
-            display: "flex", 
-            alignItems: "center", 
-            justifyContent: "center",
-            transition: "all 0.2s ease"
-          }}>
-            {openFaq === idx ? (
-              <div style={{ width: 36, height: 16, background: "#FFF0E4", borderRadius: 13, border: "1px solid rgba(232, 96, 10, 0.30)", transform: "rotate(45deg)" }} />
-            ) : (
-              <span style={{ fontSize: 18, color: "#E8600A", fontWeight: 500 }}>+</span>
-            )}
-          </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {faqs.map((faq, idx) => (
+            <div key={idx} style={{ background: "#FFFCF8", borderRadius: 13, border: "1px solid rgba(44, 26, 14, 0.18)", overflow: "hidden" }}>
+              <div 
+                style={{ 
+                  padding: "18px 20px", 
+                  display: "flex", 
+                  justifyContent: "space-between", 
+                  alignItems: "center",
+                  cursor: "pointer"
+                }}
+                onClick={() => toggleFaq(idx)}
+              >
+                <span style={{ fontSize: 14.5, fontFamily: F.dmSans, fontWeight: 600, color: "#2C1A0E" }}>{faq.question}</span>
+                <div style={{ 
+                  width: openFaq === idx ? 36 : 26, 
+                  height: openFaq === idx ? 16 : 26, 
+                  background: openFaq === idx ? "#FFF0E4" : "#F3EDE0", 
+                  borderRadius: 13, 
+                  border: "1px solid rgba(44, 26, 14, 0.18)", 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  transition: "all 0.2s ease"
+                }}>
+                  {openFaq === idx ? (
+                    <div style={{ width: 36, height: 16, background: "#FFF0E4", borderRadius: 13, border: "1px solid rgba(232, 96, 10, 0.30)", transform: "rotate(45deg)" }} />
+                  ) : (
+                    <span style={{ fontSize: 18, color: "#E8600A", fontWeight: 500 }}>+</span>
+                  )}
+                </div>
+              </div>
+              
+              {openFaq === idx && (
+                <div style={{ padding: "14px 20px 18px", borderTop: "1px solid rgba(44, 26, 14, 0.10)" }}>
+                  <p style={{ margin: 0, fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 400, color: "#7A5C40", lineHeight: "22.95px" }}>
+                    {faq.answer}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-        
-        {openFaq === idx && (
-          <div style={{ padding: "14px 20px 18px", borderTop: "1px solid rgba(44, 26, 14, 0.10)" }}>
-            <p style={{ margin: 0, fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 400, color: "#7A5C40", lineHeight: "22.95px" }}>
-              {faq.answer}
-            </p>
-          </div>
-        )}
-      </div>
-    ))}
-  </div>
-</div>
       </div>
 
       <Footer/>
+
+      {/* Modals */}
+      <RegisterModal
+        isOpen={showRegisterModal}
+        onClose={handleCloseRegisterModal}
+        onSwitchToLogin={handleSwitchToLogin}
+      />
+
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSwitchToRegister={handleSwitchToRegister}
+      />
     </div>
   );
 }
