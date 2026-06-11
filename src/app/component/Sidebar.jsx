@@ -7,7 +7,10 @@ import {
   FileText, 
   LogOut,
   ChevronDown,
-  Info
+  Info,
+  Building2,
+  Receipt,
+  Calculator
 } from "lucide-react";
 import { useAuth } from "./context/AuthContext";
 
@@ -25,6 +28,23 @@ export default function Sidebar() {
     logout();
     router.push("/");
   };
+
+  // Get price breakdown based on user's city
+  const getPriceBreakdown = () => {
+    if (!user?.city) return null;
+    
+    const isGhaziabad = user.city.toLowerCase() === 'ghaziabad';
+    const municipalFee = isGhaziabad ? 1000 : 500;
+    const serviceFee = 299;
+    const subtotal = municipalFee + serviceFee;
+    const cgst = subtotal * 0.08;
+    const sgst = subtotal * 0.08;
+    const total = subtotal + cgst + sgst;
+    
+    return { municipalFee, serviceFee, subtotal, cgst, sgst, total, isGhaziabad };
+  };
+
+  const priceBreakdown = getPriceBreakdown();
 
   // Don't render sidebar if not authenticated
   if (!isAuthenticated || !user) {
@@ -139,8 +159,63 @@ export default function Sidebar() {
           </div>
         </nav>
 
-        {/* Important Information Section - FIXED ORANGE TEXT */}
-        <div className="px-3 py-4 mt-auto">
+        {/* Price Breakdown Section */}
+        {priceBreakdown && (
+          <div className="px-3 py-3">
+            <div 
+              className="rounded-xl p-4" 
+              style={{ 
+                backgroundColor: 'rgba(232,96,10,0.12)', 
+                border: '1px solid rgba(232,96,10,0.3)'
+              }}
+            >
+              <div className="flex items-start space-x-2 mb-3">
+                <Calculator className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                <span className="text-xs font-semibold tracking-wide" style={{ color: '#F97316' }}>PRICE BREAKDOWN</span>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span style={{ color: '#F97316' }}>Municipal Fee:</span>
+                  <span style={{ color: '#F97316' }}>₹{priceBreakdown.municipalFee}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span style={{ color: '#F97316' }}>Tailio Service:</span>
+                  <span style={{ color: '#F97316' }}>₹{priceBreakdown.serviceFee}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span style={{ color: '#F97316' }}>Subtotal:</span>
+                  <span style={{ color: '#F97316' }}>₹{priceBreakdown.subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span style={{ color: '#F97316' }}>CGST (8%):</span>
+                  <span style={{ color: '#F97316' }}>₹{priceBreakdown.cgst.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span style={{ color: '#F97316' }}>SGST (8%):</span>
+                  <span style={{ color: '#F97316' }}>₹{priceBreakdown.sgst.toFixed(2)}</span>
+                </div>
+                <div className="border-t border-orange-500/30 pt-2 mt-1">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold" style={{ color: '#F97316' }}>Total Amount:</span>
+                    <span className="text-sm font-bold" style={{ color: '#FF8C42' }}>₹{priceBreakdown.total.toFixed(2)}</span>
+                  </div>
+                </div>
+                {priceBreakdown.isGhaziabad ? (
+                  <p className="text-xs mt-2" style={{ color: '#FDA04E' }}>
+                    ℹ️ Ghaziabad: ₹1,000 GMC fee
+                  </p>
+                ) : (
+                  <p className="text-xs mt-2" style={{ color: '#FDA04E' }}>
+                    ℹ️ Standard: ₹500 municipal fee
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Important Information Section */}
+        <div className="px-3 py-2">
           <div 
             className="rounded-xl p-4" 
             style={{ 
@@ -167,7 +242,7 @@ export default function Sidebar() {
               </li>
               <li className="text-xs flex items-start gap-1.5" style={{ color: '#F97316' }}>
                 <span style={{ color: '#F97316' }}>•</span>
-                <span>Payment of ₹299 + fees is required to complete registration</span>
+                <span>Payment includes municipal fee + service charge + GST (18%)</span>
               </li>
               <li className="text-xs flex items-start gap-1.5" style={{ color: '#F97316' }}>
                 <span style={{ color: '#F97316' }}>•</span>

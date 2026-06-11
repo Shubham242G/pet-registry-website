@@ -60,8 +60,6 @@ export default function PaymentButton({
         description: `Registration fee for ${petName}`,
         order_id: orderData.orderId,
 
-        // FIX: Added method config — this is what was causing QR-only display.
-        // Without this, Razorpay defaults to showing only a QR code in test mode.
         method: {
           upi: true,
           card: true,

@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 
 interface CitySelectorProps {
   selectedCity: string;
-  onChange: (city: string) => void;
+  onChange: (city: string, price: number) => void;
   error?: string;
 }
 
 const cities = [
-  { value: "ghaziabad", label: "Ghaziabad", price: "₹1532.82", registrationFee: 1532.82 },
-  { value: "delhi", label: "Delhi", price: "₹942.82", registrationFee: 942.82 },
-  { value: "noida", label: "Noida", price: "₹942.82", registrationFee: 942.82 },
-  { value: "gurgaon", label: "Gurgaon", price: "₹942.82", registrationFee: 942.82 },
+  { value: "ghaziabad", label: "Ghaziabad", price: 1532.82, displayPrice: "₹1,532.82" },
+  { value: "delhi", label: "Delhi", price: 942.82, displayPrice: "₹942.82" },
+  { value: "noida", label: "Noida", price: 942.82, displayPrice: "₹942.82" },
+  { value: "gurgaon", label: "Gurgaon", price: 942.82, displayPrice: "₹942.82" },
 ];
 
 export default function CitySelector({ selectedCity, onChange, error }: CitySelectorProps) {
@@ -21,6 +21,14 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
   useEffect(() => {
     setIsMobile(window.innerWidth <= 768);
   }, []);
+
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const cityValue = e.target.value;
+    const selectedCityData = cities.find(c => c.value === cityValue);
+    if (selectedCityData && onChange) {
+      onChange(cityValue, selectedCityData.price);
+    }
+  };
 
   const selectedCityData = cities.find(c => c.value === selectedCity);
 
@@ -49,7 +57,7 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
       
       <select
         value={selectedCity}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleCityChange}
         style={{
           width: "100%",
           padding: "12px 14px",
@@ -67,11 +75,10 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
         <option value="">Select your city</option>
         {cities.map((city) => (
           <option key={city.value} value={city.value}>
-            {city.label} 
+            {city.label}
           </option>
         ))}
       </select>
-      
       
       
       {error && (

@@ -21,12 +21,18 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   const [name, setName] = useState("");
   const [waUsername, setWaUsername] = useState("");
   const [city, setCity] = useState("");
+  const [registrationFee, setRegistrationFee] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
 
   if (!isOpen) return null;
+
+  const handleCityChange = (selectedCity: string, fee: number) => {
+    setCity(selectedCity);
+    setRegistrationFee(fee);
+  };
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +83,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     }
     
     setIsLoading(true);
-    const result = await completeWhatsAppRegistration(tempToken, name, waUsername, city);
+    const result = await completeWhatsAppRegistration(tempToken, name, waUsername, city, registrationFee);
     if (result.success) {
       router.push("/dashboard");
       onClose();
@@ -416,10 +422,10 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             />
           </div>
 
-          {/* City Selector Component */}
+          {/* City Selector Component - Fixed with proper onChange handler */}
           <CitySelector 
             selectedCity={city}
-            onChange={setCity}
+            onChange={handleCityChange}
             error={errorMessage}
           />
 

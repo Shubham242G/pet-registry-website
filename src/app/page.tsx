@@ -802,46 +802,60 @@ export default function HomePage() {
             
             {/* Left Column */}
             <div style={{ 
-              flex: 1, 
-              padding: '48px 44px', 
-              borderRight: !isMobile ? '1px solid rgba(255,255,255,0.07)' : 'none',
-              display: 'flex', 
-              flexDirection: 'column',
-              justifyContent: 'space-between'
-            }}>
-              <div>
-                <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, borderRadius: 999, outline: '1px solid rgba(255,255,255,0.25)', outlineOffset: -1, display: 'inline-flex' }}>
-                  <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>Simple, Transparent Pricing</span>
-                </div>
-                
-                <div style={{ marginTop: 19.2, flexDirection: 'column', display: 'flex' }}>
-                  <span style={{ color: 'white', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1.2' }}>One price.</span>
-                  <span style={{ color: '#E07B20', fontSize: getResponsiveFontSize(44, 36, 28), fontFamily: 'Playfair Display', fontStyle: 'italic', fontWeight: 900, lineHeight: '1.2' }}>Everything<br/>included.</span>
-                </div>
-                
-                <div style={{ marginTop: 19.2 }}>
-                  <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'Inter', fontWeight: 400, lineHeight: '20.80px' }}>No hidden charges, no surprise fees. ₹299 covers your complete pet registration filing, certificate, and everything in between. Municipal fees are collected directly by the authority.</span>
-                </div>
-              </div>
-              
-              {/* Features Grid */}
-              <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
-                {[
-                  { icon: '/images/office-1.png', title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.' },
-                  { icon: '/images/certificate-1.png', title: 'Official Certificate', desc: 'Govt-issued, delivered within 24–72 hrs.' },
-                  { icon: '/images/vaccine.png', title: 'Vaccination Tracker', desc: 'Digital records + auto-reminders so you never miss a booster.' },
-                  { icon: '/images/reminder.png', title: 'Renewal Reminders', desc: 'WhatsApp & email alerts before your annual expiry date.' }
-                ].map((item) => (
-                  <div key={item.title} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: '18px 16px', outline: '1px solid rgba(255,255,255,0.07)' }}>
-                    <div style={{ width: 48, height: 48, background: 'rgba(224,123,32,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                      <img src={item.icon} alt={item.title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
-                    </div>
-                    <div style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600, marginBottom: 6 }}>{item.title}</div>
-                    <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>{item.desc}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+  flex: 1, 
+  padding: '48px 44px', 
+  borderRight: !isMobile ? '1px solid rgba(255,255,255,0.07)' : 'none',
+  display: 'flex', 
+  flexDirection: 'column',
+  justifyContent: 'space-between'
+}}>
+  <div>
+    <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, borderRadius: 999, outline: '1px solid rgba(255,255,255,0.25)', outlineOffset: -1, display: 'inline-flex' }}>
+      <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>Simple, Transparent Pricing</span>
+    </div>
+    
+    <div style={{ marginTop: 19.2, flexDirection: 'column', display: 'flex' }}>
+      <span style={{ 
+        color: 'white', 
+        fontSize: getResponsiveFontSize(44, 36, 28), 
+        fontFamily: 'Fraunces', 
+        fontWeight: 900, 
+        lineHeight: '1.2' 
+      }}>One price.</span>
+      <span style={{ 
+        color: '#E07B20', 
+        fontSize: getResponsiveFontSize(44, 36, 28), 
+        fontFamily: 'Fraunces', 
+        fontStyle: 'italic', 
+        fontWeight: 900, 
+        lineHeight: '1.2' 
+      }}>Everything<br/>included.</span>
+    </div>
+    
+    <div style={{ marginTop: 19.2 }}>
+      <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'Inter', fontWeight: 400, lineHeight: '20.80px' }}>No hidden charges, no surprise fees. ₹299 covers your complete pet registration filing, certificate, and everything in between. Municipal fees are collected directly by the authority.</span>
+    </div>
+  </div>
+  
+  {/* Features Grid */}
+  <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
+    {[
+      { icon: '/images/office-1.png', title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.' },
+      { icon: '/images/certificate-1.png', title: 'Official Certificate', desc: 'Govt-issued, delivered within 24–72 hrs.' },
+      { icon: '/images/vaccine.png', title: 'Vaccination Tracker', desc: 'Digital records + auto-reminders so you never miss a booster.' },
+      { icon: '/images/reminder.png', title: 'Renewal Reminders', desc: 'WhatsApp & email alerts before your annual expiry date.' }
+    ].map((item) => (
+      <div key={item.title} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: 12, padding: '18px 16px', outline: '1px solid rgba(255,255,255,0.07)' }}>
+        <div style={{ width: 48, height: 48, background: 'rgba(224,123,32,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+          <img src={item.icon} alt={item.title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
+        </div>
+        <div style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600, marginBottom: 6 }}>{item.title}</div>
+        <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>{item.desc}</div>
+      </div>
+    ))}
+  </div>
+</div>
+
             
             {/* Right Column */}
             <div style={{ 

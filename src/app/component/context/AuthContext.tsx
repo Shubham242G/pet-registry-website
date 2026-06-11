@@ -32,7 +32,7 @@ interface AuthContextType {
     tempToken?: string;
     error?: string;
   }>;
-  completeWhatsAppRegistration: (tempToken: string, name: string, username?: string, city?: string) => Promise<{ success: boolean; error?: string }>;
+  completeWhatsAppRegistration: (tempToken: string, name: string, username?: string, city?: string, registrationFee?: number) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -274,10 +274,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // WhatsApp: Complete registration - UPDATED to include city
-  const completeWhatsAppRegistration = async (tempToken: string, name: string, username?: string, city?: string) => {
+  // WhatsApp: Complete registration - UPDATED to include registrationFee
+  const completeWhatsAppRegistration = async (tempToken: string, name: string, username?: string, city?: string, registrationFee?: number) => {
     try {
-      const data = await apiFetch("/whatsapp-auth/complete-registration", "POST", { tempToken, name, username, city });
+      const data = await apiFetch("/whatsapp-auth/complete-registration", "POST", { 
+        tempToken, 
+        name, 
+        username, 
+        city, 
+        registrationFee 
+      });
       if (data.success) {
         saveAuthData(data.token, data.user);
         return { success: true };

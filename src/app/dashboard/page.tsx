@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import AddPetModal from "../component/AddPetModal";
 import RegistrationForm from "../component/RegistrationForm";
 import Sidebar from '../component/Sidebar';
+import PaymentButton from "../component/PaymentButton";
 
 const F = {
   fraunces: "'Fraunces', Georgia, serif",
@@ -39,6 +40,14 @@ interface Pet {
   vaccinationCertificateNumber?: string;
   vaccinationDate?: string;
 }
+
+// City price mapping (fallback if user doesn't have registrationFee)
+const cityPrices: { [key: string]: number } = {
+  ghaziabad: 1532.82,
+  delhi: 942.82,
+  noida: 942.82,
+  gurgaon: 942.82,
+};
 
 /* ─── small icon components matching Figma ──────────────────────────────── */
 function PawIcon({ size = 28, color = '#A68660' }: { size?: number; color?: string }) {
@@ -103,53 +112,6 @@ function CheckmarkIcon({ size = 11, color = 'white' }: { size?: number; color?: 
   );
 }
 
-function WaIcon({ size = 21, color = 'white' }: { size?: number; color?: string }) {
-  const s = size / 21;
-  return (
-    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ width: 15.75 * s, height: 15.75 * s, left: 2.63 * s, top: 2.62 * s, position: 'absolute', background: color }} />
-    </div>
-  );
-}
-
-function ArrowIcon({ size = 14, color = 'white' }: { size?: number; color?: string }) {
-  const s = size / 14;
-  return (
-    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ width: 4.08 * s, height: 8.17 * s, left: 7 * s, top: 2.92 * s, position: 'absolute', outline: `1.46px ${color} solid`, outlineOffset: -0.73 * s }} />
-    </div>
-  );
-}
-
-function PaymentIcon({ size = 14, color = 'white' }: { size?: number; color?: string }) {
-  const s = size / 14;
-  return (
-    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ width: 6.42 * s, height: 6.42 * s, left: 6.42 * s, top: 1.17 * s, position: 'absolute', outline: `1.17px ${color} solid`, outlineOffset: -0.58 * s }} />
-      <div style={{ width: 11.67 * s, height: 11.67 * s, left: 1.17 * s, top: 1.17 * s, position: 'absolute', outline: `1.17px ${color} solid`, outlineOffset: -0.58 * s }} />
-    </div>
-  );
-}
-
-function PreviewIcon({ size = 11, color = '#7A5C40' }: { size?: number; color?: string }) {
-  const s = size / 11;
-  return (
-    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ width: 10.08 * s, height: 7.33 * s, left: 0.46 * s, top: 1.83 * s, position: 'absolute', outline: `0.92px ${color} solid`, outlineOffset: -0.46 * s }} />
-      <div style={{ width: 2.75 * s, height: 2.75 * s, left: 4.13 * s, top: 4.13 * s, position: 'absolute', outline: `0.92px ${color} solid`, outlineOffset: -0.46 * s }} />
-    </div>
-  );
-}
-
-function DeleteDocIcon({ size = 11, color = '#7A5C40' }: { size?: number; color?: string }) {
-  const s = size / 11;
-  return (
-    <div style={{ width: size, height: size, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ width: 6.42 * s, height: 7.33 * s, left: 2.29 * s, top: 2.75 * s, position: 'absolute', outline: `0.92px ${color} solid`, outlineOffset: -0.46 * s }} />
-    </div>
-  );
-}
-
 /* ─── Main Dashboard ─────────────────────────────────────────────────────── */
 export default function Dashboard() {
   const { token, isAuthenticated, loading: authLoading, logout, user } = useAuth();
@@ -165,6 +127,7 @@ export default function Dashboard() {
   const [existingRegistration, setExistingRegistration] = useState<any>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ show: boolean; petId: string; petName: string }>({ show: false, petId: '', petName: '' });
   const [isMobile, setIsMobile] = useState(false);
+  const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -184,6 +147,20 @@ export default function Dashboard() {
   useEffect(() => {
     if (token) loadPets();
   }, [token]);
+
+  // Get registration fee based on user's city or stored registrationFee
+  const getRegistrationFee = useCallback(() => {
+    // First try to get from user's registrationFee (set during registration)
+    if (user?.registrationFee && user.registrationFee > 0) {
+      return user.registrationFee;
+    }
+    // Fallback to city-based pricing
+    if (user?.city && cityPrices[user.city]) {
+      return cityPrices[user.city];
+    }
+    // Default to Delhi/Noida/Gurgaon price
+    return 942.82;
+  }, [user]);
 
   const loadPets = useCallback(async () => {
     try {
@@ -256,6 +233,12 @@ export default function Dashboard() {
     setSelectedPet(pet); setExistingRegistration(null); setShowRegistrationForm(true);
   };
 
+  const handlePaymentSuccess = async () => {
+    setShowPaymentSuccess(true);
+    await loadPets();
+    setTimeout(() => setShowPaymentSuccess(false), 5000);
+  };
+
   const getFormattedAge = (pet: Pet) => {
     if (pet.ageYears && pet.ageMonths && pet.ageYears > 0 && pet.ageMonths > 0) return `${pet.ageYears} ${pet.ageYears === 1 ? 'year' : 'years'} ${pet.ageMonths} ${pet.ageMonths === 1 ? 'month' : 'months'}`;
     if (pet.ageYears && pet.ageYears > 0) return `${pet.ageYears} ${pet.ageYears === 1 ? 'year' : 'years'}`;
@@ -274,6 +257,7 @@ export default function Dashboard() {
   const currentPet = selectedPet;
   const allDocsUploaded = currentPet && (currentPet.uploadedDocumentsCount || 0) >= 4;
   const needsPayment = allDocsUploaded && currentPet && currentPet.registrationStage < 2;
+  const registrationFee = getRegistrationFee();
 
   if (authLoading) {
     return (
@@ -352,22 +336,42 @@ export default function Dashboard() {
               {/* ── LEFT COLUMN ── */}
               <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-                {/* All docs uploaded banner */}
-                {needsPayment && (
+                {/* Payment success banner */}
+                {showPaymentSuccess && (
                   <div style={{ padding: '16px 16px', background: '#E6F6ED', borderRadius: 13, outline: '1px #A8DDB8 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{ width: 22, height: 22, background: '#1A6B3A', borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <CheckmarkIcon size={11} color="white" />
                     </div>
                     <span style={{ color: '#1A6B3A', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 500 }}>
-                      🎉 All documents uploaded! Please complete payment to finish registration.
+                      ✅ Payment successful! Your registration is being processed.
                     </span>
+                  </div>
+                )}
+
+                {/* All docs uploaded banner with Payment Button */}
+                {needsPayment && currentPet && (
+                  <div style={{ padding: '16px 16px', background: '#E6F6ED', borderRadius: 13, outline: '1px #A8DDB8 solid', outlineOffset: -1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 22, height: 22, background: '#1A6B3A', borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <CheckmarkIcon size={11} color="white" />
+                      </div>
+                      <span style={{ color: '#1A6B3A', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 500 }}>
+                        🎉 All documents uploaded! Please complete payment to finish registration.
+                      </span>
+                    </div>
+                    <PaymentButton
+                      petId={currentPet._id}
+                      petName={currentPet.name}
+                      amount={registrationFee}
+                      onSuccess={handlePaymentSuccess}
+                      onFailure={(errorMsg) => setError(errorMsg)}
+                    />
                   </div>
                 )}
 
                 {/* WhatsApp agent banner */}
                 <div style={{ padding: '16px 20px', background: 'linear-gradient(174deg, #162C18 0%, #0D1F0F 100%)', borderRadius: 13, outline: '1px rgba(37,211,102,0.12) solid', outlineOffset: -1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       <div style={{ display: 'inline-flex', alignSelf: 'flex-start', paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: 'rgba(37,211,102,0.18)', borderRadius: 100, alignItems: 'center', gap: 6 }}>
                         <div style={{ width: 6, height: 6, background: '#6EE09A', borderRadius: 3 }} />
@@ -471,7 +475,7 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Pet details - UPDATED: Removed Breed and Colour, added Vet details */}
+                    {/* Pet details */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                       {[
                         { label: 'Member Since', value: currentPet.createdAt ? new Date(currentPet.createdAt).toLocaleDateString() : 'N/A' },
