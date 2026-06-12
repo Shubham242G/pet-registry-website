@@ -9,7 +9,7 @@ export default function WapbizWidget() {
     
     // Replace the Wapbiz link with a direct WhatsApp link
     // You need to add your WhatsApp number here (without +, just numbers)
-    const phoneNumber = '8796440840'; // Replace with your actual WhatsApp number
+    const phoneNumber = '+918796440840'; // Replace with your actual WhatsApp number
     const whatsappLink = `https://wa.me/${phoneNumber}`;
     
     const modifiedScript = scriptContent.replace(
