@@ -1,193 +1,123 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useState } from 'react';
 
 export default function WapbizWidget() {
-  const injected = useRef(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const phoneNumber = '1234567890'; // Replace with your WhatsApp number
 
-  useEffect(() => {
-    if (injected.current) return;
-    injected.current = true;
+  const handleChat = () => {
+    window.open(`https://wa.me/${phoneNumber}`, '_blank');
+    setIsOpen(false);
+  };
 
-    // Google Fonts
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
+  return (
+    <>
+      {/* Chat Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          backgroundColor: '#4DC247',
+          color: 'white',
+          border: 'none',
+          padding: '10px 18px',
+          borderRadius: '30px',
+          cursor: 'pointer',
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: 500,
+          fontSize: '14px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        }}
+      >
+        <img 
+          src="https://img.icons8.com/?size=100&id=QkXeKixybttw&format=png&color=000000" 
+          alt="WhatsApp"
+          style={{ width: '30px', height: '30px' }}
+        />
+        <span>Chat with us</span>
+      </button>
 
-    // Styles
-    const style = document.createElement('style');
-    style.id = 'wapbiz-styles';
-    style.textContent = `
-      #wapbiz-btn {
-        position: fixed;
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background-color: #4DC247;
-        color: white;
-        border: none;
-        padding: 10px 18px;
-        border-radius: 30px;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 500;
-        font-size: 14px;
-        bottom: 20px;
-        right: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transition: transform 0.2s;
-      }
-      #wapbiz-btn:hover { transform: scale(1.05); }
-      #wapbiz-widget {
-        position: fixed;
-        z-index: 9998;
-        width: 380px;
-        max-width: calc(100vw - 24px);
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        display: none;
-        flex-direction: column;
-        overflow: hidden;
-        bottom: 100px;
-        right: 20px;
-        font-family: 'Poppins', sans-serif;
-      }
-      @media (max-width: 480px) {
-        #wapbiz-widget {
-          width: calc(100vw - 32px);
-          left: 16px;
-          right: 16px;
-          bottom: 80px;
-        }
-      }
-    `;
-    document.head.appendChild(style);
+      {/* Widget Popup */}
+      {isOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '100px',
+            right: '20px',
+            zIndex: 9998,
+            width: '380px',
+            maxWidth: 'calc(100vw - 24px)',
+            background: 'white',
+            borderRadius: '12px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            fontFamily: 'Poppins, sans-serif',
+          }}
+        >
+          {/* Header */}
+          <div style={{ background: '#075E54', color: 'white', padding: '15px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <img 
+                src="https://ui-avatars.com/api/?name=Tailio&background=E8600A&color=white&rounded=true&size=40" 
+                alt="Avatar"
+                style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+              />
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 500 }}>Tailio</div>
+                <div style={{ fontSize: '12px', color: '#DCF8C6' }}>Online</div>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsOpen(false)}
+              style={{ color: 'white', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '24px' }}
+            >
+              ×
+            </button>
+          </div>
 
-    // Button
-    const button = document.createElement('button');
-    button.id = 'wapbiz-btn';
+          {/* Message */}
+          <div style={{ height: '140px', padding: '15px', background: '#ECE5DD', display: 'flex', alignItems: 'flex-start' }}>
+            <div style={{ maxWidth: '80%', background: 'white', padding: '10px', borderRadius: '10px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 500, color: '#075E54' }}>Tailio</div>
+              <div style={{ fontSize: '14px', color: 'black' }}>Hi, how can I help you?</div>
+            </div>
+          </div>
 
-    const icon = document.createElement('img');
-    icon.src = '/images/whhtsapp-icon.png';
-    icon.style.width = '30px';
-    icon.style.height = '30px';
+          {/* Button */}
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+            <button 
+              onClick={handleChat}
+              style={{
+                width: '90%',
+                height: '40px',
+                background: '#4DC247',
+                borderRadius: '30px',
+                color: 'white',
+                fontSize: '15px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                border: 'none',
+              }}
+            >
+              Start Chat
+            </button>
+          </div>
 
-    const buttonText = document.createElement('span');
-    buttonText.textContent = 'Chat with us';
-
-    button.appendChild(icon);
-    button.appendChild(buttonText);
-
-    // Widget
-    const widget = document.createElement('div');
-    widget.id = 'wapbiz-widget';
-
-    // Header
-    const header = document.createElement('div');
-    header.style.cssText = 'background: #075E54; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between;';
-
-    const headerLeft = document.createElement('div');
-    headerLeft.style.cssText = 'display: flex; align-items: center; gap: 10px;';
-
-    const avatar = document.createElement('img');
-    avatar.src = 'https://ui-avatars.com/api/?name=Tailio&background=E8600A&color=white&rounded=true&size=40';
-    avatar.style.cssText = 'width: 40px; height: 40px; border-radius: 50%; object-fit: cover;';
-
-    const headerInfo = document.createElement('div');
-    const title = document.createElement('div');
-    title.textContent = 'Tailio';
-    title.style.cssText = 'font-size: 16px; font-weight: 500;';
-    const status = document.createElement('div');
-    status.textContent = 'Online';
-    status.style.cssText = 'font-size: 12px; color: #DCF8C6;';
-    headerInfo.appendChild(title);
-    headerInfo.appendChild(status);
-
-    headerLeft.appendChild(avatar);
-    headerLeft.appendChild(headerInfo);
-
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = '×';
-    closeBtn.style.cssText = 'color: white; background: transparent; border: none; cursor: pointer; font-size: 24px;';
-
-    header.appendChild(headerLeft);
-    header.appendChild(closeBtn);
-
-    // Message area
-    const messageArea = document.createElement('div');
-    messageArea.style.cssText = 'height: 140px; padding: 15px; background: #ECE5DD; display: flex; align-items: flex-start;';
-
-    const messageBubble = document.createElement('div');
-    messageBubble.style.cssText = 'max-width: 80%; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);';
-
-    const sender = document.createElement('div');
-    sender.textContent = 'Tailio';
-    sender.style.cssText = 'font-size: 15px; font-weight: 500; color: #075E54;';
-
-    const message = document.createElement('div');
-    message.textContent = 'Hi, how can I help you?';
-    message.style.cssText = 'font-size: 14px; color: black;';
-
-    messageBubble.appendChild(sender);
-    messageBubble.appendChild(message);
-    messageArea.appendChild(messageBubble);
-
-    // Button area
-    const buttonArea = document.createElement('div');
-    buttonArea.style.cssText = 'display: flex; justify-content: center; padding: 20px;';
-
-    const chatBtn = document.createElement('button');
-    chatBtn.textContent = 'Start Chat';
-    chatBtn.style.cssText = 'width: 90%; height: 40px; background: #4DC247; border-radius: 30px; color: white; font-size: 15px; font-weight: 500; cursor: pointer; border: none;';
-
-    buttonArea.appendChild(chatBtn);
-
-    // Footer
-    const footer = document.createElement('div');
-    footer.style.cssText = 'text-align: center; font-size: 11px; color: #999; padding-bottom: 12px;';
-    footer.innerHTML = 'Powered by <a href="https://wapbiz.com/" target="_blank" style="color: #4DC247; text-decoration: none;">Wapbiz</a>';
-
-    // Assemble
-    widget.appendChild(header);
-    widget.appendChild(messageArea);
-    widget.appendChild(buttonArea);
-    widget.appendChild(footer);
-
-    // Events
-    let isOpen = false;
-    button.onclick = () => {
-      isOpen = !isOpen;
-      widget.style.display = isOpen ? 'flex' : 'none';
-    };
-    closeBtn.onclick = () => {
-      widget.style.display = 'none';
-      isOpen = false;
-    };
-    chatBtn.onclick = () => {
-      window.open('https://app.wapp.biz/sr/6a1de58e49df8d2fd4890c26', '_blank');
-    };
-
-    document.body.appendChild(button);
-    document.body.appendChild(widget);
-
-    // ── Cleanup: remove DOM nodes AND reset the ref ───────────────────────
-    // When FloatersWrapper unmounts WapbizWidget (e.g. during logout flow),
-    // the ref must reset so the next mount re-injects the button.
-    // Using a ref (not a module-level flag) means each component instance
-    // tracks its own injection — so remounts always re-inject cleanly.
-    return () => {
-      injected.current = false;
-      const btn = document.getElementById('wapbiz-btn');
-      const wgt = document.getElementById('wapbiz-widget');
-      const sty = document.getElementById('wapbiz-styles');
-      if (btn) btn.remove();
-      if (wgt) wgt.remove();
-      if (sty) sty.remove();
-    };
-  }, []);
-
-  return null;
+          {/* Footer */}
+          <div style={{ textAlign: 'center', fontSize: '12px', color: '#666', paddingBottom: '12px' }}>
+            Powered by <a href="https://wapbiz.com/" target="_blank" style={{ color: '#4DC247', textDecoration: 'none' }}>Wapbiz</a>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
