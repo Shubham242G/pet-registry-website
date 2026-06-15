@@ -28,13 +28,13 @@ interface AddPetModalProps {
 }
 
 const REQUIRED_DOCS = [
-  { name: "antiRabiesCertificate", label: "Anti-Rabies Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate from your vet" },
-  { name: "idProof", label: "ID Proof", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or any government ID" },
-  { name: "residenceProof", label: "Residence Proof", icon: FileText, accept: ".pdf,image/*", description: "Electricity bill, Rental agreement, or address proof" },
-  { name: "ownerWithPetPhoto", label: "Owner with Pet Photo", icon: ImageIcon, accept: "image/*", description: "Recent photo of you with your pet — both faces visible" },
+  { name: "antiRabiesCertificate", label: "Anti-Rabies Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate" },
+  { name: "idProof", label: "ID Proof", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or government ID" },
+  { name: "residenceProof", label: "Residence Proof", icon: FileText, accept: ".pdf,image/*", description: "Electricity bill, Rental agreement" },
+  { name: "ownerWithPetPhoto", label: "Owner with Pet Photo", icon: ImageIcon, accept: "image/*", description: "Recent photo of you with your pet" },
 ];
 
-const STEPS = ["Pet Details", "Upload Documents", "Pay & Register"];
+const STEPS = ["Pet Details", "Upload Docs", "Pay & Register"];
 
 function getPrice(city: string) {
   const isGhaziabad = city?.toLowerCase() === "ghaziabad";
@@ -66,7 +66,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
   const uploadedCount = Object.keys(uploadedDocs).length;
   const allDocsUploaded = uploadedCount === 4;
 
-  // ── Reset state on open ───────────────────────────────────────────────────
   useEffect(() => {
     if (!isOpen) return;
     setError("");
@@ -100,12 +99,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     if (fileInputRef.current) fileInputRef.current.value = "";
   }, [isOpen, petToEdit, resumePetId]);
 
-  // ── Fetch existing docs from DB when resuming ─────────────────────────────
-  // The docs are stored in MongoDB on every upload. When the user closes the
-  // modal and reopens in resume mode, uploadedDocs state is empty because it
-  // only lives in React memory. This effect calls GET /registration/:petId/status
-  // which returns the full documents array including fileData (base64), fileName,
-  // fileSize, and mimeType — exactly the shape uploadedDocs expects.
   useEffect(() => {
     if (!isOpen || !resumePetId || !token) return;
 
@@ -125,14 +118,13 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             docsMap[doc.documentName] = {
               fileName: doc.fileName,
               fileSize: doc.fileSize,
-              fileData: doc.fileData,  // base64 — needed for view button
+              fileData: doc.fileData,
               mimeType: doc.mimeType,
             };
           }
           setUploadedDocs(docsMap);
         }
       } catch {
-        // Non-fatal — user just sees empty state and can re-upload
         console.error("Failed to load existing documents");
       } finally {
         setFetchingDocs(false);
@@ -181,7 +173,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       } else {
         const response = await apiFetch("/pets", "POST", petData, token!);
         setCreatedPetId(response._id);
-        onPetAdded(); // refresh list only — does NOT close modal
+        onPetAdded();
         setStep(1);
       }
     } catch {
@@ -271,44 +263,51 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     }
   };
 
-  const labelStyle: React.CSSProperties = { display: "block", color: "#2C1A0E", fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, letterSpacing: "0.12px", marginBottom: 5 };
-  const inputStyle: React.CSSProperties = { width: "100%", padding: "11px 14px", background: "#FAF6EF", borderRadius: 9, fontSize: 13.5, fontFamily: "'DM Sans', sans-serif", color: "#2C1A0E", outline: "1px solid rgba(44,26,14,0.18)", outlineOffset: -1, border: "none" };
-
   const Stepper = () => (
-    <div style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: 24 }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, gap: 8 }}>
       {STEPS.map((label, i) => (
-        <div key={i} style={{ display: "flex", alignItems: "center", flex: i < STEPS.length - 1 ? 1 : "unset" }}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-            <div style={{ width: 28, height: 28, borderRadius: 14, background: i < step ? "#1A6B3A" : i === step ? "#E8600A" : "#EBE1CE", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              {i < step ? <CheckCircle size={14} color="white" /> : <span style={{ color: i === step ? "white" : "#A68660", fontSize: 12, fontWeight: 700 }}>{i + 1}</span>}
-            </div>
-            <span style={{ fontSize: 10, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, color: i === step ? "#E8600A" : i < step ? "#1A6B3A" : "#A68660", whiteSpace: "nowrap" }}>{label}</span>
+        <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, gap: 6 }}>
+          <div style={{
+            width: 32, height: 32, borderRadius: 16,
+            background: i < step ? "#1A6B3A" : i === step ? "#E8600A" : "#EBE1CE",
+            display: "flex", alignItems: "center", justifyContent: "center"
+          }}>
+            {i < step ? <CheckCircle size={16} color="white" /> : <span style={{ color: i === step ? "white" : "#A68660", fontSize: 13, fontWeight: 700 }}>{i + 1}</span>}
           </div>
-          {i < STEPS.length - 1 && (
-            <div style={{ flex: 1, height: 2, background: i < step ? "#1A6B3A" : "#EBE1CE", marginBottom: 18, marginLeft: 6, marginRight: 6 }} />
-          )}
+          <span style={{
+            fontSize: 10, textAlign: "center",
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+            color: i === step ? "#E8600A" : i < step ? "#1A6B3A" : "#A68660"
+          }}>{label}</span>
         </div>
       ))}
     </div>
   );
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.60)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 16 }}>
-      <div style={{ background: "#FFFCF8", borderRadius: 18, width: "100%", maxWidth: 620, maxHeight: "92vh", overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0px 24px 80px rgba(44,26,14,0.18)", outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
+      display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 12
+    }}>
+      <div style={{
+        background: "#FFFCF8", borderRadius: 20, width: "100%", maxWidth: 500,
+        maxHeight: "90vh", overflow: "hidden", display: "flex", flexDirection: "column",
+        boxShadow: "0 24px 80px rgba(44,26,14,0.18)"
+      }}>
 
-        {/* HEADER */}
-        <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid rgba(44,26,14,0.08)", flexShrink: 0 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+        {/* Header */}
+        <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(44,26,14,0.08)", flexShrink: 0 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ width: 36, height: 36, background: "#E8600A", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <PawPrint size={18} color="white" />
               </div>
               <div>
-                <div style={{ color: "#2C1A0E", fontSize: 17, fontFamily: "'Fraunces', serif", fontWeight: 900 }}>
-                  {petToEdit ? "Edit Pet" : resumePetId ? "Continue Registration" : "Add & Register Pet"}
+                <div style={{ color: "#2C1A0E", fontSize: 16, fontFamily: "'Fraunces', serif", fontWeight: 900 }}>
+                  {petToEdit ? "Edit Pet" : resumePetId ? "Continue" : "Register Pet"}
                 </div>
-                <div style={{ color: "#A68660", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
-                  {petToEdit ? "Update your pet's information" : resumePetId ? "Pick up where you left off" : "Fill details, upload docs, pay — all in one place"}
+                <div style={{ color: "#A68660", fontSize: 11, fontFamily: "'DM Sans', sans-serif" }}>
+                  {petToEdit ? "Update info" : resumePetId ? "Pick up where you left" : "Add & register in one go"}
                 </div>
               </div>
             </div>
@@ -319,158 +318,169 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
           {!petToEdit && <Stepper />}
         </div>
 
-        {/* BODY */}
-        <div style={{ overflowY: "auto", flex: 1, padding: "20px 24px 24px" }}>
+        {/* Body */}
+        <div style={{ overflowY: "auto", flex: 1, padding: "16px 20px 20px" }}>
 
-          {/* Success */}
           {success && (
-            <div style={{ textAlign: "center", padding: "32px 0" }}>
-              <div style={{ width: 72, height: 72, background: "#E6F6ED", borderRadius: 36, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
-                <CheckCircle size={36} color="#1A6B3A" />
+            <div style={{ textAlign: "center", padding: "24px 0" }}>
+              <div style={{ width: 56, height: 56, background: "#E6F6ED", borderRadius: 28, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
+                <CheckCircle size={28} color="#1A6B3A" />
               </div>
-              <div style={{ color: "#2C1A0E", fontSize: 20, fontFamily: "'Fraunces', serif", fontWeight: 900, marginBottom: 8 }}>
+              <div style={{ color: "#2C1A0E", fontSize: 18, fontFamily: "'Fraunces', serif", fontWeight: 900, marginBottom: 6 }}>
                 {petToEdit ? "Pet Updated!" : "Registration Submitted!"}
               </div>
-              <div style={{ color: "#7A5C40", fontSize: 13, fontFamily: "'DM Sans', sans-serif" }}>
-                {petToEdit ? "Your pet's information has been updated." : "Your pet registration has been submitted. You'll receive the license within 7–10 business days."}
+              <div style={{ color: "#7A5C40", fontSize: 12, fontFamily: "'DM Sans', sans-serif", lineHeight: "18px" }}>
+                {petToEdit ? "Pet info updated." : "License will be delivered in 7-10 business days."}
               </div>
             </div>
           )}
 
-          {/* Error */}
           {!success && error && (
-            <div style={{ background: "#FDECEA", borderRadius: 9, padding: "10px 14px", display: "flex", alignItems: "center", gap: 8, marginBottom: 16, outline: "1px solid #F5B8B5", outlineOffset: -1 }}>
+            <div style={{ background: "#FDECEA", borderRadius: 9, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
               <AlertCircle size={14} color="#A0251E" />
-              <span style={{ color: "#A0251E", fontSize: 13, fontFamily: "'DM Sans', sans-serif" }}>{error}</span>
+              <span style={{ color: "#A0251E", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>{error}</span>
             </div>
           )}
 
-          {/* STEP 0 */}
+          {/* Step 0 - Pet Details */}
           {!success && step === 0 && (
-            <form onSubmit={handlePetSubmit} style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+            <form onSubmit={handlePetSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-                <div onClick={() => fileInputRef.current?.click()} style={{ width: 100, height: 100, borderRadius: 13, background: "#F3EDE0", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", outline: "2px dashed rgba(44,26,14,0.18)", outlineOffset: -2 }}>
+                <div onClick={() => fileInputRef.current?.click()} style={{
+                  width: 80, height: 80, borderRadius: 12, background: "#F3EDE0",
+                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                  overflow: "hidden", outline: "2px dashed rgba(44,26,14,0.18)", outlineOffset: -2
+                }}>
                   {profilePreview
                     ? <img src={profilePreview} alt="pet" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <div style={{ textAlign: "center" }}><Camera size={28} color="#A68660" /><div style={{ color: "#A68660", fontSize: 10, fontFamily: "'DM Sans', sans-serif", marginTop: 4 }}>Add photo</div></div>
+                    : <div style={{ textAlign: "center" }}><Camera size={24} color="#A68660" /><div style={{ color: "#A68660", fontSize: 9 }}>Add photo</div></div>
                   }
                 </div>
-                <span style={{ color: "#7A5C40", fontSize: 11, fontFamily: "'DM Sans', sans-serif" }}>Photo of owner with pet — JPEG/PNG, max 2MB</span>
+                <span style={{ color: "#7A5C40", fontSize: 10 }}>Photo with pet · JPEG/PNG, max 2MB</span>
                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png" onChange={handlePhotoUpload} style={{ display: "none" }} />
               </div>
 
               <div>
-                <label style={labelStyle}>Name of Pet Dog <span style={{ color: "#E8600A" }}>*</span></label>
-                <input style={inputStyle} type="text" required maxLength={50} placeholder="Enter pet's name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
+                <label style={{ display: "block", color: "#2C1A0E", fontSize: 12, fontWeight: 600, marginBottom: 5 }}>Pet Name <span style={{ color: "#E8600A" }}>*</span></label>
+                <input style={{ width: "100%", padding: "11px 14px", background: "#FAF6EF", borderRadius: 9, fontSize: 13, outline: "1px solid rgba(44,26,14,0.18)", border: "none" }} type="text" required placeholder="Enter pet's name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
               </div>
 
               <div>
-                <label style={labelStyle}>Age as on Registration Date <span style={{ color: "#E8600A" }}>*</span></label>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                  <div>
-                    <input style={inputStyle} type="number" required min={0} max={50} placeholder="Years" value={form.ageYears} onChange={(e) => setForm((f) => ({ ...f, ageYears: e.target.value }))} />
-                    <div style={{ color: "#A68660", fontSize: 10, fontFamily: "'DM Mono', monospace", marginTop: 3 }}>YEARS</div>
+                <label style={{ display: "block", color: "#2C1A0E", fontSize: 12, fontWeight: 600, marginBottom: 5 }}>Age <span style={{ color: "#E8600A" }}>*</span></label>
+                <div style={{ display: "flex", gap: 12 }}>
+                  <div style={{ flex: 1 }}>
+                    <input style={{ width: "100%", padding: "11px 14px", background: "#FAF6EF", borderRadius: 9, fontSize: 13, outline: "1px solid rgba(44,26,14,0.18)", border: "none" }} type="number" min={0} max={50} placeholder="Years" value={form.ageYears} onChange={(e) => setForm((f) => ({ ...f, ageYears: e.target.value }))} />
                   </div>
-                  <div>
-                    <input style={inputStyle} type="number" required min={0} max={11} placeholder="Months" value={form.ageMonths} onChange={(e) => setForm((f) => ({ ...f, ageMonths: e.target.value }))} />
-                    <div style={{ color: "#A68660", fontSize: 10, fontFamily: "'DM Mono', monospace", marginTop: 3 }}>MONTHS</div>
+                  <div style={{ flex: 1 }}>
+                    <input style={{ width: "100%", padding: "11px 14px", background: "#FAF6EF", borderRadius: 9, fontSize: 13, outline: "1px solid rgba(44,26,14,0.18)", border: "none" }} type="number" min={0} max={11} placeholder="Months" value={form.ageMonths} onChange={(e) => setForm((f) => ({ ...f, ageMonths: e.target.value }))} />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label style={labelStyle}>Gender</label>
-                <select style={{ ...inputStyle, cursor: "pointer" }} value={form.gender} onChange={(e) => setForm((f) => ({ ...f, gender: e.target.value }))}>
+                <label style={{ display: "block", color: "#2C1A0E", fontSize: 12, fontWeight: 600, marginBottom: 5 }}>Gender</label>
+                <select style={{ width: "100%", padding: "11px 14px", background: "#FAF6EF", borderRadius: 9, fontSize: 13, outline: "1px solid rgba(44,26,14,0.18)", border: "none" }} value={form.gender} onChange={(e) => setForm((f) => ({ ...f, gender: e.target.value }))}>
                   <option value="">Select gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
               </div>
 
-              <div style={{ padding: "12px 14px", background: "#F3EDE0", borderRadius: 9, outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
-                <div style={{ color: "#A68660", fontSize: 10, fontFamily: "'DM Mono', monospace", letterSpacing: "1px", marginBottom: 2 }}>YOUR CITY (FROM ACCOUNT)</div>
-                <div style={{ color: "#2C1A0E", fontSize: 13.5, fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>{user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Not set"}</div>
-                <div style={{ color: "#A68660", fontSize: 11, fontFamily: "'DM Sans', sans-serif", marginTop: 2 }}>Registration fee: <strong style={{ color: "#E8600A" }}>₹{price.total.toFixed(2)}</strong> (incl. GST)</div>
+              <div style={{ padding: "10px 12px", background: "#F3EDE0", borderRadius: 9 }}>
+                <div style={{ color: "#A68660", fontSize: 9, letterSpacing: "1px", marginBottom: 2 }}>YOUR CITY</div>
+                <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>{user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Not set"}</div>
               </div>
 
-              <button type="submit" disabled={loading} style={{ width: "100%", padding: "13px 24px", background: loading ? "#EBE1CE" : "#E8600A", boxShadow: loading ? "none" : "0px 3px 0px #C04E06", borderRadius: 9, outline: loading ? "none" : "2px solid #C04E06", outlineOffset: -2, border: "none", cursor: loading ? "not-allowed" : "pointer", color: loading ? "#A68660" : "white", fontSize: 15, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                {loading ? <><Loader2 size={16} className="animate-spin" /> Creating pet...</> : petToEdit ? "Update Pet" : "Next — Upload Documents →"}
+              <button type="submit" disabled={loading} style={{
+                width: "100%", padding: "12px 20px", background: loading ? "#EBE1CE" : "#E8600A",
+                boxShadow: loading ? "none" : "0px 2px 0px #C04E06", borderRadius: 9, outline: loading ? "none" : "1px solid #C04E06", outlineOffset: -1,
+                border: "none", cursor: loading ? "not-allowed" : "pointer", color: loading ? "#A68660" : "white",
+                fontSize: 14, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 8
+              }}>
+                {loading ? <><Loader2 size={14} className="animate-spin" /> Creating...</> : petToEdit ? "Update Pet" : "Continue →"}
               </button>
             </form>
           )}
 
-          {/* STEP 1 */}
+          {/* Step 1 - Documents */}
           {!success && step === 1 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-
-              {/* Spinner while loading existing docs from DB */}
               {fetchingDocs && (
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "20px 0" }}>
-                  <Loader2 size={18} color="#E8600A" className="animate-spin" />
-                  <span style={{ color: "#7A5C40", fontSize: 13, fontFamily: "'DM Sans', sans-serif" }}>Loading your existing documents...</span>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "16px 0" }}>
+                  <Loader2 size={16} color="#E8600A" className="animate-spin" />
+                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Loading documents...</span>
                 </div>
               )}
 
               {!fetchingDocs && (
                 <>
-                  {resumePetId && (
-                    <div style={{ padding: "10px 14px", background: "#F3EDE0", borderRadius: 9, outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
-                      <span style={{ color: "#7A5C40", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
-                        📋 Resuming registration — {uploadedCount > 0 ? `${uploadedCount}/4 documents already uploaded.` : "upload your 4 documents and pay to complete."}
-                      </span>
-                    </div>
-                  )}
-
-                  <div style={{ padding: "10px 16px", background: uploadedCount === 4 ? "#E6F6ED" : "#FFF4E4", borderRadius: 9, outline: `1px solid ${uploadedCount === 4 ? "#A8DDB8" : "#FFCCA0"}`, outlineOffset: -1, display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ width: 22, height: 22, background: uploadedCount === 4 ? "#1A6B3A" : "#E8600A", borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <div style={{
+                    padding: "12px 16px", background: uploadedCount === 4 ? "#E6F6ED" : "#FFF4E4", borderRadius: 9,
+                    outline: `1px solid ${uploadedCount === 4 ? "#A8DDB8" : "#FFCCA0"}`, outlineOffset: -1,
+                    display: "flex", alignItems: "center", gap: 10
+                  }}>
+                    <div style={{
+                      width: 24, height: 24, background: uploadedCount === 4 ? "#1A6B3A" : "#E8600A", borderRadius: 12,
+                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                    }}>
                       {uploadedCount === 4 ? <CheckCircle size={12} color="white" /> : <span style={{ color: "white", fontSize: 11, fontWeight: 700 }}>{uploadedCount}</span>}
                     </div>
-                    <span style={{ color: uploadedCount === 4 ? "#1A6B3A" : "#B85C00", fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>
-                      {uploadedCount === 4 ? "All 4 documents uploaded — ready to pay!" : `${uploadedCount}/4 documents uploaded. Upload all 4 to continue.`}
+                    <span style={{ color: uploadedCount === 4 ? "#1A6B3A" : "#B85C00", fontSize: 12, fontWeight: 500 }}>
+                      {uploadedCount === 4 ? "All documents uploaded!" : `${uploadedCount}/4 documents uploaded`}
                     </span>
                   </div>
 
                   <div style={{ height: 6, background: "#EBE1CE", borderRadius: 100, overflow: "hidden" }}>
-                    <div style={{ height: 6, borderRadius: 100, background: uploadedCount === 4 ? "#1A6B3A" : "#E8600A", width: `${(uploadedCount / 4) * 100}%`, transition: "width 0.4s" }} />
+                    <div style={{ height: 6, borderRadius: 100, background: uploadedCount === 4 ? "#1A6B3A" : "#E8600A", width: `${(uploadedCount / 4) * 100}%` }} />
                   </div>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                     {REQUIRED_DOCS.map((doc) => {
                       const uploaded = uploadedDocs[doc.name];
                       const isUploading = uploading === doc.name;
                       const DocIcon = doc.icon;
                       return (
-                        <div key={doc.name} style={{ background: uploaded ? "#F0FBF4" : "#FAF6EF", borderRadius: 11, outline: `1px solid ${uploaded ? "#A8DDB8" : "rgba(44,26,14,0.12)"}`, outlineOffset: -1, padding: "14px 14px" }}>
-                          <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>
-                            <div style={{ width: 28, height: 28, borderRadius: 7, background: uploaded ? "#C6ECDA" : "#F3EDE0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                              <DocIcon size={13} color={uploaded ? "#1A6B3A" : "#A68660"} />
+                        <div key={doc.name} style={{
+                          background: uploaded ? "#F0FBF4" : "#FAF6EF", borderRadius: 11,
+                          outline: `1px solid ${uploaded ? "#A8DDB8" : "rgba(44,26,14,0.12)"}`, outlineOffset: -1,
+                          padding: 12
+                        }}>
+                          <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
+                            <div style={{
+                              width: 32, height: 32, borderRadius: 8, background: uploaded ? "#C6ECDA" : "#F3EDE0",
+                              display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                            }}>
+                              <DocIcon size={14} color={uploaded ? "#1A6B3A" : "#A68660"} />
                             </div>
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                              <div style={{ color: "#2C1A0E", fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, lineHeight: "16px" }}>{doc.label}</div>
-                              <div style={{ color: "#A68660", fontSize: 10, fontFamily: "'DM Sans', sans-serif", marginTop: 2, lineHeight: "14px" }}>{doc.description}</div>
+                            <div style={{ flex: 1 }}>
+                              <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>{doc.label}</div>
+                              <div style={{ color: "#A68660", fontSize: 10, marginTop: 2 }}>{doc.description}</div>
                             </div>
-                            {uploaded && <CheckCircle size={14} color="#1A6B3A" />}
+                            {uploaded && <CheckCircle size={16} color="#1A6B3A" />}
                           </div>
 
                           {uploaded ? (
-                            <div style={{ background: "white", borderRadius: 7, padding: "8px 10px", outline: "1px solid rgba(44,26,14,0.08)", outlineOffset: -1 }}>
+                            <div style={{ background: "white", borderRadius: 8, padding: "8px 10px" }}>
                               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, minWidth: 0 }}>
-                                  <FileCheck size={12} color="#1A6B3A" style={{ flexShrink: 0 }} />
-                                  <span style={{ color: "#2C1A0E", fontSize: 11, fontFamily: "'DM Sans', sans-serif", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{uploaded.fileName}</span>
+                                  <FileCheck size={12} color="#1A6B3A" />
+                                  <span style={{ fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{uploaded.fileName}</span>
                                 </div>
-                                <div style={{ display: "flex", gap: 4, flexShrink: 0, marginLeft: 6 }}>
-                                  <button onClick={() => handleViewDoc(uploaded.fileData, uploaded.mimeType)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }} title="View"><Eye size={13} color="#7A5C40" /></button>
-                                  <button onClick={() => handleDeleteDoc(doc.name)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }} title="Delete"><Trash2 size={13} color="#A0251E" /></button>
+                                <div style={{ display: "flex", gap: 6 }}>
+                                  <button onClick={() => handleViewDoc(uploaded.fileData, uploaded.mimeType)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><Eye size={14} color="#7A5C40" /></button>
+                                  <button onClick={() => handleDeleteDoc(doc.name)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><Trash2 size={14} color="#A0251E" /></button>
                                 </div>
                               </div>
-                              <div style={{ color: "#A68660", fontSize: 10, fontFamily: "'DM Mono', monospace", marginTop: 3 }}>{(uploaded.fileSize / 1024).toFixed(1)} KB</div>
                             </div>
                           ) : (
-                            <label style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 10px", borderRadius: 8, border: "2px dashed rgba(44,26,14,0.15)", cursor: isUploading ? "not-allowed" : "pointer", background: isUploading ? "#F3EDE0" : "transparent" }}>
+                            <label style={{
+                              display: "flex", flexDirection: "column", alignItems: "center",
+                              padding: "12px", borderRadius: 8, border: "2px dashed rgba(44,26,14,0.15)",
+                              cursor: isUploading ? "not-allowed" : "pointer", background: isUploading ? "#F3EDE0" : "transparent"
+                            }}>
                               {isUploading ? <Loader2 size={20} color="#E8600A" className="animate-spin" /> : <Upload size={20} color="#A68660" />}
-                              <span style={{ color: "#A68660", fontSize: 10, fontFamily: "'DM Sans', sans-serif", marginTop: 5, textAlign: "center" }}>{isUploading ? "Uploading..." : "Click to upload"}</span>
-                              <span style={{ color: "#C0A882", fontSize: 9, fontFamily: "'DM Sans', sans-serif", marginTop: 2 }}>{doc.accept.includes("pdf") ? "PDF or Image" : "Image"} · Max 5MB</span>
+                              <span style={{ color: "#A68660", fontSize: 11, marginTop: 4 }}>{isUploading ? "Uploading..." : "Tap to upload"}</span>
+                              <span style={{ color: "#C0A882", fontSize: 9, marginTop: 2 }}>{doc.accept.includes("pdf") ? "PDF or Image" : "Image"} · Max 5MB</span>
                               <input type="file" accept={doc.accept} style={{ display: "none" }} disabled={!!uploading} onChange={(e) => { const file = e.target.files?.[0]; if (file) handleDocUpload(file, doc.name); e.target.value = ""; }} />
                             </label>
                           )}
@@ -479,72 +489,75 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                     })}
                   </div>
 
-                  <button onClick={() => setStep(2)} disabled={!allDocsUploaded} style={{ width: "100%", padding: "13px 24px", marginTop: 4, background: allDocsUploaded ? "#E8600A" : "#EBE1CE", boxShadow: allDocsUploaded ? "0px 3px 0px #C04E06" : "none", borderRadius: 9, outline: allDocsUploaded ? "2px solid #C04E06" : "none", outlineOffset: -2, border: "none", cursor: allDocsUploaded ? "pointer" : "not-allowed", color: allDocsUploaded ? "white" : "#A68660", fontSize: 15, fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>
-                    {allDocsUploaded ? "Next — Pay & Register →" : `Upload all 4 documents to continue (${uploadedCount}/4)`}
+                  <button onClick={() => setStep(2)} disabled={!allDocsUploaded} style={{
+                    width: "100%", padding: "12px 20px", marginTop: 4,
+                    background: allDocsUploaded ? "#E8600A" : "#EBE1CE",
+                    boxShadow: allDocsUploaded ? "0px 2px 0px #C04E06" : "none",
+                    borderRadius: 9, outline: allDocsUploaded ? "1px solid #C04E06" : "none", outlineOffset: -1,
+                    border: "none", cursor: allDocsUploaded ? "pointer" : "not-allowed",
+                    color: allDocsUploaded ? "white" : "#A68660", fontSize: 14, fontWeight: 600
+                  }}>
+                    {allDocsUploaded ? "Continue →" : `Upload ${4 - uploadedCount} more`}
                   </button>
                 </>
               )}
             </div>
           )}
 
-          {/* STEP 2 */}
+          {/* Step 2 - Payment */}
           {!success && step === 2 && (
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div style={{ background: "#F3EDE0", borderRadius: 11, outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1, padding: "16px 18px" }}>
-                <div style={{ color: "#A68660", fontSize: 10, fontFamily: "'DM Mono', monospace", letterSpacing: "1px", marginBottom: 8 }}>REGISTRATION SUMMARY</div>
-                {[
-                  { label: "City", value: user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Standard" },
-                  { label: "Documents", value: "4/4 ✓", green: true },
-                ].map((row) => (
-                  <div key={row.label} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ color: "#7A5C40", fontSize: 13, fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
-                    <span style={{ color: row.green ? "#1A6B3A" : "#2C1A0E", fontSize: 13, fontFamily: "'DM Sans', sans-serif", fontWeight: 600 }}>{row.value}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div style={{ background: "#FFFCF8", borderRadius: 11, outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1, padding: "16px 18px", display: "flex", flexDirection: "column", gap: 8 }}>
-                <div style={{ color: "#A68660", fontSize: 10, fontFamily: "'DM Mono', monospace", letterSpacing: "1px", marginBottom: 4 }}>FEE BREAKDOWN</div>
-                {[
-                  { label: "Municipal Fee", value: `₹${price.municipalFee}` },
-                  { label: "Tailio Service Fee", value: `₹${price.serviceFee}` },
-                  { label: "Subtotal", value: `₹${price.subtotal.toFixed(2)}` },
-                  { label: "CGST (8%)", value: `₹${price.cgst.toFixed(2)}` },
-                  { label: "SGST (8%)", value: `₹${price.sgst.toFixed(2)}` },
-                ].map((row) => (
-                  <div key={row.label} style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>{row.value}</span>
-                  </div>
-                ))}
-                <div style={{ borderTop: "1px solid rgba(44,26,14,0.10)", paddingTop: 8, display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ color: "#2C1A0E", fontSize: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 700 }}>Total (incl. GST)</span>
-                  <span style={{ color: "#E8600A", fontSize: 18, fontFamily: "'DM Sans', sans-serif", fontWeight: 700 }}>₹{price.total.toFixed(2)}</span>
+              <div style={{ background: "#F3EDE0", borderRadius: 11, padding: "14px 16px" }}>
+                <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>SUMMARY</div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ color: "#7A5C40", fontSize: 12 }}>City</span>
+                  <span style={{ color: "#2C1A0E", fontSize: 12, fontWeight: 600 }}>{user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Standard"}</span>
                 </div>
-                <div style={{ color: "#A68660", fontSize: 11, fontFamily: "'DM Sans', sans-serif" }}>
-                  {price.isGhaziabad ? "Ghaziabad: ₹1,000 GMC fee + ₹299 Tailio + 16% GST" : "Standard: ₹500 municipal fee + ₹299 Tailio + 16% GST"}
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Documents</span>
+                  <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>4/4 ✓</span>
                 </div>
               </div>
 
-              <div style={{ padding: "12px 14px", background: "#FFF4E4", borderRadius: 9, outline: "1px solid rgba(232,96,10,0.20)", outlineOffset: -1 }}>
-                <div style={{ color: "#B85C00", fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, marginBottom: 4 }}>📋 Important — Municipal OTP</div>
-                <div style={{ color: "#7A5C40", fontSize: 12, fontFamily: "'DM Sans', sans-serif", lineHeight: "18px" }}>
-                  After submission, your Municipal Corporation will send a verification OTP. <strong>Share this OTP only on Tailio's WhatsApp</strong> — never via SMS or email.
+              <div style={{ background: "#FFFCF8", borderRadius: 11, padding: "14px 16px", outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
+                <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>FEE BREAKDOWN</div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Municipal Fee</span>
+                  <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{price.municipalFee}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Service Fee</span>
+                  <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{price.serviceFee}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ color: "#7A5C40", fontSize: 12 }}>CGST + SGST (16%)</span>
+                  <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{(price.cgst + price.sgst).toFixed(2)}</span>
+                </div>
+                <div style={{ borderTop: "1px solid rgba(44,26,14,0.10)", paddingTop: 8, marginTop: 4, display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: "#2C1A0E", fontSize: 14, fontWeight: 700 }}>Total</span>
+                  <span style={{ color: "#E8600A", fontSize: 18, fontWeight: 700 }}>₹{price.total.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <div style={{ padding: "10px 12px", background: "#FFF4E4", borderRadius: 9 }}>
+                <div style={{ color: "#B85C00", fontSize: 11, fontWeight: 600, marginBottom: 4 }}>📋 Important</div>
+                <div style={{ color: "#7A5C40", fontSize: 11, lineHeight: "16px" }}>
+                  Municipal Corporation will send an OTP. <strong>Share it only on Tailio's WhatsApp</strong>.
                 </div>
               </div>
 
               {createdPetId && (
-                <PaymentButton petId={createdPetId} petName={form.name || "your pet"} amount={price.total} onSuccess={handlePaymentSuccess} onFailure={(err) => setError(`Payment failed: ${err}. Please try again.`)} />
+                <PaymentButton petId={createdPetId} petName={form.name || "your pet"} amount={price.total} onSuccess={handlePaymentSuccess} onFailure={(err) => setError(`Payment failed: ${err}`)} />
               )}
 
               {loading && (
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "8px 0" }}>
                   <Loader2 size={16} color="#E8600A" className="animate-spin" />
-                  <span style={{ color: "#7A5C40", fontSize: 13, fontFamily: "'DM Sans', sans-serif" }}>Completing registration...</span>
+                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Processing...</span>
                 </div>
               )}
 
-              <button onClick={() => setStep(1)} style={{ background: "none", border: "none", cursor: "pointer", color: "#7A5C40", fontSize: 13, fontFamily: "'DM Sans', sans-serif", textAlign: "center", padding: "4px 0" }}>
+              <button onClick={() => setStep(1)} style={{ background: "none", border: "none", cursor: "pointer", color: "#7A5C40", fontSize: 12, textAlign: "center", padding: "4px 0" }}>
                 ← Back to documents
               </button>
             </div>

@@ -1,14 +1,14 @@
 'use client';
  
-import { useDeviceType } from '../hooks/useDeviceType';
 import { useAuth } from './context/AuthContext';
 import WapbizWidget from './WapbizWidget';
  
 export default function FloatersWrapper() {
   const { isAuthenticated, loading } = useAuth();
  
-  // Once auth resolves and user is confirmed logged in → hide everything
-  if (!loading && isAuthenticated) return null;
+  // Don't show anything while auth is loading
+  if (loading) return null;
  
-  return <WapbizWidget />;
+  // Show widget only when user is NOT authenticated
+  return !isAuthenticated ? <WapbizWidget /> : null;
 }

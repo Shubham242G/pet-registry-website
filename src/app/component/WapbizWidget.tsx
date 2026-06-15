@@ -1,33 +1,209 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { useAuth } from './context/AuthContext';
 
 export default function WapbizWidget() {
-  useEffect(() => {
-    // Replace the chat link in the injected script
-    const scriptContent = atob('IWZ1bmN0aW9uKCl7dmFyIGU9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgibGluayIpO2UuaHJlZj0iaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3MyP2ZhbWlseT1Qb3BwaW5zOndnaHRAMzAwOzQwMDs1MDA7NjAwOzcwMCZkaXNwbGF5PXN3YXAiLGUucmVsPSJzdHlsZXNoZWV0Iixkb2N1bWVudC5oZWFkLmFwcGVuZENoaWxkKGUpO3ZhciB0PWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoInN0eWxlIik7dC5pbm5lckhUTUw9IlxuICAgICAgICAgICAgYm9keSwgYnV0dG9uLCBkaXYgeyBmb250LWZhbWlseTogJ1BvcHBpbnMnLCBzYW5zLXNlcmlmOyB9XG5cbiAgICAgICAgICAgICN3YXBwYml6LWJ0biB7IHBvc2l0aW9uOiBmaXhlZDsgei1pbmRleDogOTk5OTsgZGlzcGxheTpmbGV4OyBhbGlnbi1pdGVtczpjZW50ZXI7IH1cblxuICAgICAgICAgICAgI3dhcHBiaXotd2lkZ2V0e1xuICAgICAgICAgICAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgICAgICAgICAgIHotaW5kZXg6IDk5OTg7XG4gICAgICAgICAgICAgIHdpZHRoOiAzODBweDtcbiAgICAgICAgICAgICAgbWF4LXdpZHRoOiBjYWxjKDEwMHZ3IC0gMjRweCk7XG4gICAgICAgICAgICAgIGJhY2tncm91bmQ6ICNGRkZGRkY7XG4gICAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDEwcHg7XG4gICAgICAgICAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsMCwwLDAuMTUpO1xuICAgICAgICAgICAgICBkaXNwbGF5OiBub25lO1xuICAgICAgICAgICAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICAgICAgICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XG4gICAgICAgICAgICAgIG92ZXJmbG93OiBoaWRkZW47XG4gICAgICAgICAgICB9XG5cbiAgICAgICAgICAgIEBtZWRpYSAobWF4LXdpZHRoOiA0ODBweCkge1xuICAgICAgICAgICAgICAjd2FwcGJpei13aWRnZXR7XG4gICAgICAgICAgICAgICAgd2lkdGg6IGNhbGMoMTAwdncgLSAxNnB4KTtcbiAgICAgICAgICAgICAgICBsZWZ0OiA4cHggIWltcG9ydGFudDtcbiAgICAgICAgICAgICAgICByaWdodDogOHB4ICFpbXBvcnRhbnQ7XG4gICAgICAgICAgICAgICAgYm90dG9tOiA4MHB4ICFpbXBvcnRhbnQ7XG4gICAgICAgICAgICAgICAgdG9wOiBhdXRvICFpbXBvcnRhbnQ7XG4gICAgICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogMTRweDtcbiAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuICAgICAgICAgICIsZG9jdW1lbnQuaGVhZC5hcHBlbmRDaGlsZCh0KTt2YXIgbj0iYm90dG9tLXJpZ2h0IixsPSIjNERDMjQ3IixpPSJUYWlsaW8iLHA9ITEsbz1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJidXR0b24iKTtvLmlkPSJ3YXBwYml6LWJ0biIsby5zdHlsZS5wb3NpdGlvbj0iZml4ZWQiLG8uc3R5bGUuekluZGV4PSI5OTk5IixvLnN0eWxlLmJhY2tncm91bmRDb2xvcj1sLG8uc3R5bGUuY29sb3I9IiNGRkZGRkYiLG8uc3R5bGUuYm9yZGVyPSJub25lIixvLnN0eWxlLnBhZGRpbmc9IjhweCAxNnB4IixvLnN0eWxlLmJvcmRlclJhZGl1cz0iMjVweCIsby5zdHlsZS5jdXJzb3I9InBvaW50ZXIiLG8uc3R5bGUuZGlzcGxheT0iZmxleCIsby5zdHlsZS5hbGlnbkl0ZW1zPSJjZW50ZXIiO3ZhciBkPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImltZyIpO2Quc3JjPSJodHRwczovL2ltZy5pY29uczguY29tLz9zaXplPTEwMCZpZD1Ra1hlS2l4eWJ0dHcmZm9ybWF0PXBuZyZjb2xvcj0wMDAwMDAiLGQuYWx0PSJXaGF0c0FwcCBJY29uIixkLnN0eWxlLndpZHRoPSIzNXB4IixkLnN0eWxlLmhlaWdodD0iMzVweCI7dmFyIHM9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgic3BhbiIpO3MuaW5uZXJUZXh0PSJDaGF0IHdpdGggdXMiLHMuc3R5bGUubWFyZ2luTGVmdD0iMTBweCIscy5zdHlsZS5mb250V2VpZ2h0PSI1MDAiLHMuc3R5bGUuZm9udFNpemU9IjE0cHgiLHA/KG8uc3R5bGUucGFkZGluZz0iOHB4IDJweCA4cHggMTJweCIsby5hcHBlbmRDaGlsZChkKSk6KG8uYXBwZW5kQ2hpbGQoZCksby5hcHBlbmRDaGlsZChzKSksbi5pbmNsdWRlcygiYm90dG9tIik/by5zdHlsZS5ib3R0b209IjIwcHgiOm8uc3R5bGUudG9wPSIyMHB4IixuLmluY2x1ZGVzKCJyaWdodCIpP28uc3R5bGUucmlnaHQ9IjIwcHgiOm8uc3R5bGUubGVmdD0iMjBweCI7dmFyIGE9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiZGl2Iik7c3dpdGNoKGEuaWQ9IndhcHBiaXotd2lkZ2V0IixhLnN0eWxlLnBvc2l0aW9uPSJmaXhlZCIsYS5zdHlsZS56SW5kZXg9Ijk5OTgiLGEuc3R5bGUuYmFja2dyb3VuZENvbG9yPSIjRkZGRkZGIixhLnN0eWxlLmJvcmRlclJhZGl1cz0iMTBweCIsYS5zdHlsZS5ib3hTaGFkb3c9IjAgMnB4IDRweCByZ2JhKDAsMCwwLDAuMTUpIixhLnN0eWxlLmRpc3BsYXk9Im5vbmUiLGEuc3R5bGUuZmxleERpcmVjdGlvbj0iY29sdW1uIixhLnN0eWxlLmp1c3RpZnlDb250ZW50PSJzcGFjZS1iZXR3ZWVuIixuKXtjYXNlInRvcC1sZWZ0IjphLnN0eWxlLnRvcD0iMTAwcHgiLGEuc3R5bGUubGVmdD0iMjBweCI7YnJlYWs7Y2FzZSJ0b3AtcmlnaHQiOmRlZmF1bHQ6YS5zdHlsZS50b3A9IjEwMHB4IixhLnN0eWxlLnJpZ2h0PSIyMHB4IjticmVhaztjYXNlImJvdHRvbS1sZWZ0IjphLnN0eWxlLmJvdHRvbT0iMTAwcHgiLGEuc3R5bGUubGVmdD0iMjBweCI7YnJlYWs7Y2FzZSJib3R0b20tcmlnaHQiOmEuc3R5bGUuYm90dG9tPSIxMDBweCIsYS5zdHlsZS5yaWdodD0iMjBweCJ9dmFyIHI9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiZGl2Iik7ci5zdHlsZS5iYWNrZ3JvdW5kQ29sb3I9IiMwQTVGNTQiLHIuc3R5bGUuY29sb3I9IiNGRkZGRkYiLHIuc3R5bGUucGFkZGluZz0iMTVweCIsci5zdHlsZS5ib3JkZXJUb3BMZWZ0UmFkaXVzPSIxMHB4IixyLnN0eWxlLmJvcmRlclRvcFJpZ2h0UmFkaXVzPSIxMHB4IixyLnN0eWxlLmRpc3BsYXk9ImZsZXgiLHIuc3R5bGUuYWxpZ25JdGVtcz0iY2VudGVyIixyLnN0eWxlLmp1c3RpZnlDb250ZW50PSJzcGFjZS1iZXR3ZWVuIjt2YXIgeT1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTt5LnN0eWxlLmRpc3BsYXk9ImZsZXgiLHkuc3R5bGUuYWxpZ25JdGVtcz0iY2VudGVyIjt2YXIgYz1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJpbWciKTtjLnNyYz0iaHR0cHM6Ly9hcGkud2FwcC5iaXovdXBsb2Fkcy9maWxlLTExNzQ3MDc1MjkwNTMzNzUuanBnIixjLmFsdD0iUHJvZmlsZSBBdmF0YXIiLGMuc3R5bGUud2lkdGg9IjQwcHgiLGMuc3R5bGUuaGVpZ2h0PSI0MHB4IixjLnN0eWxlLmJvcmRlclJhZGl1cz0iNTAlIixjLnN0eWxlLm9iamVjdEZpdD0iY292ZXIiLGMuc3R5bGUubWFyZ2luUmlnaHQ9IjEwcHgiO3ZhciB4PWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpO3guc3R5bGUuZGlzcGxheT0iZmxleCIseC5zdHlsZS5mbGV4RGlyZWN0aW9uPSJjb2x1bW4iLHguc3R5bGUuanVzdGlmeUNvbnRlbnQ9ImNlbnRlciI7dmFyIG09ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiZGl2Iik7bS5pbm5lclRleHQ9aSxtLnN0eWxlLmZvbnRTaXplPSIxNnB4IixtLnN0eWxlLmZvbnRXZWlnaHQ9IjUwMCIsbS5zdHlsZS5jb2xvcj0iI0ZGRkZGRiIseC5hcHBlbmRDaGlsZChtKTt2YXIgaD1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTtoLmlubmVyVGV4dD0ib25saW5lIixoLnN0eWxlLmZvbnRTaXplPSIxMnB4IixoLnN0eWxlLmNvbG9yPSIjQzFDMUMxIix4LmFwcGVuZENoaWxkKGgpLHkuYXBwZW5kQ2hpbGQoYykseS5hcHBlbmRDaGlsZCh4KSxyLmFwcGVuZENoaWxkKHkpO3ZhciB1PWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpO3Uuc3R5bGUubWFyZ2luTGVmdD0iYXV0byI7dmFyIGI9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiYnV0dG9uIik7Yi5zdHlsZS5jb2xvcj0iI0ZGRkZGRiIsYi5zdHlsZS5iYWNrZ3JvdW5kQ29sb3I9InRyYW5zcGFyZW50IixiLnN0eWxlLmJvcmRlcj0ibm9uZSIsYi5zdHlsZS5jdXJzb3I9InBvaW50ZXIiLGIuc3R5bGUuZm9udFNpemU9IjI0cHgiLGIuaW5uZXJIVE1MPSImdGltZXM7IixiLm9uY2xpY2s9ZnVuY3Rpb24oKXthLnN0eWxlLmRpc3BsYXk9Im5vbmUiLHA9ITEsby5pbm5lckhUTUw9IiIsby5hcHBlbmRDaGlsZChkKSxvLmFwcGVuZENoaWxkKHMpLG8uc3R5bGUucGFkZGluZz0iOHB4IDE2cHgifSx1LmFwcGVuZENoaWxkKGIpLHIuYXBwZW5kQ2hpbGQodSksYS5hcHBlbmRDaGlsZChyKTt2YXIgZj1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTtmLnN0eWxlLmhlaWdodD0iMTQwcHgiLGYuc3R5bGUucGFkZGluZ0xlZnQ9IjE1cHgiLGYuc3R5bGUucGFkZGluZ1RvcD0iMTVweCIsZi5zdHlsZS5iYWNrZ3JvdW5kQ29sb3I9IiNFNURERDUiLGYuc3R5bGUuZGlzcGxheT0iZmxleCIsZi5zdHlsZS5hbGlnbkl0ZW1zPSJmbGV4LXN0YXJ0IixmLnN0eWxlLmp1c3RpZnlDb250ZW50PSJmbGV4LXN0YXJ0Ijt2YXIgZz1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTtnLnN0eWxlLndpZHRoPSI4MCUiLGcuc3R5bGUuYmFja2dyb3VuZENvbG9yPSIjRkZGRkZGIixnLnN0eWxlLnBhZGRpbmc9IjEwcHgiLGcuc3R5bGUuYm9yZGVyUmFkaXVzPSIxMHB4IixnLnN0eWxlLmJveFNoYWRvdz0iMCAycHggNHB4IHJnYmEoMCwwLDAsMC4wNSkiO3ZhciBGPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoImRpdiIpO0YuaW5uZXJUZXh0PWksRi5zdHlsZS5mb250U2l6ZT0iMTVweCIsRi5zdHlsZS5mb250V2VpZ2h0PSI1MDAiLEYuc3R5bGUuY29sb3I9IiM4Mjg4ODYiLGcuYXBwZW5kQ2hpbGQoRik7dmFyIEM9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiZGl2Iik7Qy5pbm5lclRleHQ9IkhpLCBob3cgY2FuIEkgaGVscCB5b3U/IixDLnN0eWxlLmZvbnRTaXplPSIxNHB4IixnLmFwcGVuZENoaWxkKEMpLGYuYXBwZW5kQ2hpbGQoZyksYS5hcHBlbmRDaGlsZChmKTt2YXIgdj1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJkaXYiKTt2LnN0eWxlLmRpc3BsYXk9ImZsZXgiLHYuc3R5bGUuanVzdGlmeUNvbnRlbnQ9ImNlbnRlciIsdi5zdHlsZS5wYWRkaW5nPSIyMHB4IDIwcHggMTBweCAyMHB4Ijt2YXIgdz1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJidXR0b24iKTt3LnN0eWxlLndpZHRoPSI5MCUiLHcuc3R5bGUuaGVpZ2h0PSIzNXB4Iix3LnN0eWxlLmJhY2tncm91bmRDb2xvcj1sLHcuc3R5bGUuYm9yZGVyUmFkaXVzPSIzMHB4Iix3LnN0eWxlLmNvbG9yPSIjRkZGRkZGIix3LnN0eWxlLmZvbnRTaXplPSIxNXB4Iix3LnN0eWxlLmZvbnRXZWlnaHQ9IjUwMCIsdy5zdHlsZS5jdXJzb3I9InBvaW50ZXIiLHcuc3R5bGUuYm9yZGVyPSJub25lIix3LmlubmVyVGV4dD0iU3RhcnQgY2hhdCIsdy5vbmNsaWNrPWZ1bmN0aW9uKCl7d2luZG93Lm9wZW4oImh0dHBzOi8vYXBwLndhcHAuYml6L3NyLzZhMmJjYzRiMzc1M2Y2ZTBjNWY2ZmJkYiIsIl9ibGFuayIpfSx2LmFwcGVuZENoaWxkKHcpLGEuYXBwZW5kQ2hpbGQodik7dmFyIEU9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiZGl2Iik7RS5zdHlsZS50ZXh0QWxpZ249ImNlbnRlciIsRS5zdHlsZS5mb250U2l6ZT0iMTJweCIsRS5zdHlsZS5mb250RmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIixFLnN0eWxlLmNvbG9yPSIjNjY2IixFLnN0eWxlLnBhZGRpbmdCb3R0b209IjhweCIsRS5pbm5lckhUTUw9J1Bvd2VyZWQgYnkgPGEgaHJlZj0iaHR0cHM6Ly93YXBwYml6LmNvbS8iIHN0eWxlPSJjb2xvcjogIzREQzI0NzsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyI+V2FwcGJpejwvYT4nLGEuYXBwZW5kQ2hpbGQoRSksby5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsKGZ1bmN0aW9uKCl7cD0hcCxhLnN0eWxlLmRpc3BsYXk9cD8iZmxleCI6Im5vbmUiLG8uaW5uZXJIVE1MPSIiLHA/KG8uc3R5bGUucGFkZGluZz0iOHB4IDhweCA4cHggOHB4IixvLmFwcGVuZENoaWxkKGQpKTooby5zdHlsZS5wYWRkaW5nPSI4cHggMTZweCIsby5hcHBlbmRDaGlsZChkKSxvLmFwcGVuZENoaWxkKHMpKX0pKSxkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKG8pLGRvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQoYSl9KCk7');
-    
-    // Replace the Wapbiz link with a direct WhatsApp link
-    // You need to add your WhatsApp number here (without +, just numbers)
-    const phoneNumber = '+918796440840'; // Replace with your actual WhatsApp number
-    const whatsappLink = `https://wa.me/${phoneNumber}`;
-    
-    const modifiedScript = scriptContent.replace(
-      'https://app.wapp.biz/sr/6a2bcc4b3753f6e0c5f6fbdb',
-      whatsappLink
-    );
-    
-    const script = document.createElement('script');
-    script.innerHTML = modifiedScript;
-    document.body.appendChild(script);
+  const injected = useRef(false);
+  const { isAuthenticated } = useAuth();
 
-    return () => {
-      const btn = document.getElementById('wapbiz-btn');
-      const widget = document.getElementById('wapbiz-widget');
-      if (btn) btn.remove();
-      if (widget) widget.remove();
+  useEffect(() => {
+    // If user is authenticated, don't inject the widget
+    if (isAuthenticated) {
+      // Clean up any existing widget elements if they exist
+      const existingBtn = document.getElementById('wapbiz-btn');
+      const existingWidget = document.getElementById('wapbiz-widget');
+      const existingStyle = document.getElementById('wapbiz-styles');
+      if (existingBtn) existingBtn.remove();
+      if (existingWidget) existingWidget.remove();
+      if (existingStyle) existingStyle.remove();
+      injected.current = false;
+      return;
+    }
+    
+    // If already injected, skip
+    if (injected.current) return;
+    injected.current = true;
+
+    // Google Fonts
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+
+    // Styles
+    const style = document.createElement('style');
+    style.id = 'wapbiz-styles';
+    style.textContent = `
+      #wapbiz-btn {
+        position: fixed;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: #25D366;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        bottom: 20px;
+        right: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: transform 0.2s;
+      }
+      #wapbiz-btn:hover { transform: scale(1.05); }
+      #wapbiz-widget {
+        position: fixed;
+        z-index: 9998;
+        width: 380px;
+        max-width: calc(100vw - 24px);
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        bottom: 100px;
+        right: 20px;
+        font-family: 'Poppins', sans-serif;
+      }
+      @media (max-width: 480px) {
+        #wapbiz-widget {
+          width: calc(100vw - 32px);
+          left: 16px;
+          right: 16px;
+          bottom: 80px;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Button
+    const button = document.createElement('button');
+    button.id = 'wapbiz-btn';
+
+    const icon = document.createElement('img');
+    icon.src = '/images/whhtsapp-icon.png';
+    icon.style.width = '30px';
+    icon.style.height = '30px';
+
+    const buttonText = document.createElement('span');
+    buttonText.textContent = 'Chat with us';
+
+    button.appendChild(icon);
+    button.appendChild(buttonText);
+
+    // Widget
+    const widget = document.createElement('div');
+    widget.id = 'wapbiz-widget';
+
+    // Header
+    const header = document.createElement('div');
+    header.style.cssText = 'background: #075E54; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between;';
+
+    const headerLeft = document.createElement('div');
+    headerLeft.style.cssText = 'display: flex; align-items: center; gap: 10px;';
+
+    const avatar = document.createElement('img');
+    avatar.src = 'https://ui-avatars.com/api/?name=Tailio&background=E8600A&color=white&rounded=true&size=40';
+    avatar.style.cssText = 'width: 40px; height: 40px; border-radius: 50%; object-fit: cover;';
+
+    const headerInfo = document.createElement('div');
+    const title = document.createElement('div');
+    title.textContent = 'Tailio';
+    title.style.cssText = 'font-size: 16px; font-weight: 500;';
+    const status = document.createElement('div');
+    status.textContent = 'Online';
+    status.style.cssText = 'font-size: 12px; color: #DCF8C6;';
+    headerInfo.appendChild(title);
+    headerInfo.appendChild(status);
+
+    headerLeft.appendChild(avatar);
+    headerLeft.appendChild(headerInfo);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.cssText = 'color: white; background: transparent; border: none; cursor: pointer; font-size: 24px;';
+
+    header.appendChild(headerLeft);
+    header.appendChild(closeBtn);
+
+    // Message area
+    const messageArea = document.createElement('div');
+    messageArea.style.cssText = 'height: 140px; padding: 15px; background: #ECE5DD; display: flex; align-items: flex-start;';
+
+    const messageBubble = document.createElement('div');
+    messageBubble.style.cssText = 'max-width: 80%; background: white; padding: 10px; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);';
+
+    const sender = document.createElement('div');
+    sender.textContent = 'Tailio';
+    sender.style.cssText = 'font-size: 15px; font-weight: 500; color: #075E54;';
+
+    const message = document.createElement('div');
+    message.textContent = 'Hi, how can I help you?';
+    message.style.cssText = 'font-size: 14px; color: black;';
+
+    messageBubble.appendChild(sender);
+    messageBubble.appendChild(message);
+    messageArea.appendChild(messageBubble);
+
+    // Button area
+    const buttonArea = document.createElement('div');
+    buttonArea.style.cssText = 'display: flex; justify-content: center; padding: 20px;';
+
+    const chatBtn = document.createElement('button');
+    chatBtn.textContent = 'Start Chat';
+    chatBtn.style.cssText = 'width: 90%; height: 40px; background: #25D366; border-radius: 30px; color: white; font-size: 15px; font-weight: 500; cursor: pointer; border: none;';
+
+    buttonArea.appendChild(chatBtn);
+
+    // Footer
+    const footer = document.createElement('div');
+    footer.style.cssText = 'text-align: center; font-size: 11px; color: #999; padding-bottom: 12px;';
+    footer.innerHTML = 'Powered by <a href="https://wapbiz.com/" target="_blank" style="color: #25D366; text-decoration: none;">Wapbiz</a>';
+
+    // Assemble
+    widget.appendChild(header);
+    widget.appendChild(messageArea);
+    widget.appendChild(buttonArea);
+    widget.appendChild(footer);
+
+    // Events
+    let isOpen = false;
+    button.onclick = () => {
+      isOpen = !isOpen;
+      widget.style.display = isOpen ? 'flex' : 'none';
     };
-  }, []);
+    closeBtn.onclick = () => {
+      widget.style.display = 'none';
+      isOpen = false;
+    };
+    
+    // Replace with your actual WhatsApp number
+    const phoneNumber = '918796440840'; // Your WhatsApp number without +
+    const whatsappUrl = `https://wa.me/${phoneNumber}`;
+    chatBtn.onclick = () => {
+      window.open(whatsappUrl, '_blank');
+    };
+
+    document.body.appendChild(button);
+    document.body.appendChild(widget);
+
+    // Cleanup function
+    return () => {
+      injected.current = false;
+      const btn = document.getElementById('wapbiz-btn');
+      const wgt = document.getElementById('wapbiz-widget');
+      const sty = document.getElementById('wapbiz-styles');
+      if (btn) btn.remove();
+      if (wgt) wgt.remove();
+      if (sty) sty.remove();
+    };
+  }, [isAuthenticated]); // Re-run when authentication state changes
 
   return null;
 }
