@@ -388,41 +388,115 @@ export default function AboutPage() {
 </div>
 
       {/* ── FOUNDERS ──────────────────────────────────────────────────────── */}
-      <div id="founders" style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
+<div id="founders" style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
   <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
         <Badge text="The founders" />
       </div>
-      <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, textAlign: 'center' }}>
+      <div style={{ 
+        color: '#2C1A0E', 
+        fontSize: getResponsiveFontSize(38, 32, 28), 
+        fontFamily: F.fraunces, 
+        fontWeight: 900, 
+        lineHeight: 1.2, 
+        textAlign: 'center',
+        padding: '0 20px'
+      }}>
         Meet the people behind Tailio
       </div>
-      <div style={{ maxWidth: 440, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px', textAlign: 'center' }}>
-        Four people. One shared belief — that every pet deserves a legal identity, and every owner deserves a simple way to provide one.
+      <div style={{ 
+        maxWidth: 540, 
+        color: '#7A5C40', 
+        fontSize: getResponsiveFontSize(14.5, 14, 13), 
+        fontFamily: F.dmSans, 
+        fontWeight: 400, 
+        lineHeight: '23.93px', 
+        textAlign: 'center',
+        padding: '0 20px'
+      }}>
+        One belief — that every pet deserves a legal identity, and every owner deserves a simple way to provide one.
       </div>
     </div>
-  
 
     <div style={{ 
-      display: 'grid', 
-      gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), 
-      gap: 16 
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      maxWidth: 500,
+      margin: '0 auto'
     }}>
       {[
         { num: 1, name: 'Kaavya Chhabra', quote: '"Compliance shouldn\'t feel like punishment."', bio: 'Teacher by profession and devoted pet parent, inspired by Mylo and Felix to celebrate the joy, chaos, companionship, and unforgettable bond pets bring daily.' },
-        { num: 2, name: 'Nitin Verma', quote: '"Responsible pet ownership made simple"', bio: 'Drives partnerships, customer experience, and market expansion, leveraging entrepreneurial expertise across sourcing, automotive detailing, and paint solutions businesses.' },
-        { num: 3, name: 'Akshay Verma', quote: '"Design is not how it looks. It\'s how fast it works."', bio: 'Built a scalable automotive aesthetics business, leading operations, luxury refinishing projects, talent development, and systems focused on quality and sustainable growth.' },
-        { num: 4, name: 'Anukrit Mahajan', quote: '"If it doesn\'t scale, it doesn\'t count."', bio: 'Engineering graduate from Manipal Institute of Technology and MBA from China Europe International Business School, building scalable ecommerce ventures through innovation, strategy, and deep emerging-market expertise.' },
       ].map((f) => (
-        <div key={f.name} style={{ background: '#FFFCF8', overflow: 'hidden', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', outlineOffset: -1, display: 'flex', flexDirection: 'column' }}>
+        <div key={f.name} style={{ 
+          background: '#FFFCF8', 
+          overflow: 'hidden', 
+          borderRadius: 18, 
+          outline: '1px rgba(44,26,14,0.10) solid', 
+          outlineOffset: -1, 
+          display: 'flex', 
+          flexDirection: 'column',
+          width: '100%',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        }}>
           <FounderSilhouette variant={f.num} hideNumber={true} />
-          <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 7 }}>
-            <span style={{ color: '#C04E06', fontSize: getResponsiveFontSize(9.5, 9, 8), fontFamily: F.dmMono, fontWeight: 500, textTransform: 'uppercase', lineHeight: '14.25px', letterSpacing: '1.14px' }}>Co-founder</span>
-            <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(18, 16, 15), fontFamily: F.fraunces, fontWeight: 700, lineHeight: '27px' }}>{f.name}</span>
-            <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontStyle: 'italic', fontWeight: 400, lineHeight: '19.38px' }}>{f.quote}</span>
-            <div style={{ paddingTop: 16, marginTop: 8, borderTop: '1px rgba(44,26,14,0.10) solid', display: 'flex', flexDirection: 'column', gap: 7 }}>
-              <span style={{ color: '#A68660', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 600, textTransform: 'uppercase', lineHeight: '15px', letterSpacing: '0.8px' }}>Background</span>
-              <span style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 12, 11), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '19.38px' }}>{f.bio}</span>
+          <div style={{ padding: isMobile ? 20 : 28, display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div>
+              <span style={{ 
+                color: '#C04E06', 
+                fontSize: getResponsiveFontSize(10, 9, 9), 
+                fontFamily: F.dmMono, 
+                fontWeight: 500, 
+                textTransform: 'uppercase', 
+                lineHeight: '15px', 
+                letterSpacing: '1.14px',
+                display: 'block',
+                marginBottom: 8
+              }}>Co-founder</span>
+              <span style={{ 
+                color: '#2C1A0E', 
+                fontSize: getResponsiveFontSize(22, 20, 18), 
+                fontFamily: F.fraunces, 
+                fontWeight: 700, 
+                lineHeight: '30px',
+                display: 'block',
+                marginBottom: 10
+              }}>{f.name}</span>
+              <span style={{ 
+                color: '#E8600A', 
+                fontSize: getResponsiveFontSize(14, 13, 12), 
+                fontFamily: F.dmSans, 
+                fontWeight: 500, 
+                fontStyle: 'italic',
+                lineHeight: '21px',
+                display: 'block'
+              }}>{f.quote}</span>
+            </div>
+            <div style={{ 
+              paddingTop: 16, 
+              marginTop: 4, 
+              borderTop: '1px solid rgba(44,26,14,0.10)' 
+            }}>
+              <span style={{ 
+                color: '#A68660', 
+                fontSize: getResponsiveFontSize(10, 9, 9), 
+                fontFamily: F.dmSans, 
+                fontWeight: 600, 
+                textTransform: 'uppercase', 
+                lineHeight: '15px', 
+                letterSpacing: '0.8px',
+                display: 'block',
+                marginBottom: 10
+              }}>Background</span>
+              <span style={{ 
+                color: '#7A5C40', 
+                fontSize: getResponsiveFontSize(13, 12, 11.5), 
+                fontFamily: F.dmSans, 
+                fontWeight: 400, 
+                lineHeight: '20px',
+                display: 'block'
+              }}>{f.bio}</span>
             </div>
           </div>
         </div>
