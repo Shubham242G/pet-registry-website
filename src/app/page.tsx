@@ -650,140 +650,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ══════════════════════════════════════
-          HOW IT WORKS SECTION
-      ══════════════════════════════════════ */}
-      {/* ══════════════════════════════════════
-          HOW IT WORKS SECTION
-      ══════════════════════════════════════ */}
-      <div style={{ background: '#F3EDE0', width: '100%' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding() }}>
-          <div style={{ marginBottom: 60 }}>
-            <Badge text="HOW IT WORKS" />
-            <div style={{ marginTop: 18, display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', gap: isMobile ? 20 : 0 }}>
-              <div>
-                <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '64.48px' }}>Two screens.</div>
-                <div style={{ color: '#E8600A', fontSize: getResponsiveFontSize(62, 48, 32), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700, lineHeight: '64.48px' }}>One minute.</div>
-              </div>
-              <button onClick={handleOpenRegisterModal} style={{ padding: isMobile ? '12px 24px' : '14px 28px', background: '#E8600A', borderRadius: 9, color: '#FFFFFF', fontWeight: 600, cursor: 'pointer', border: 'none' }}>
-                Start Registration →
-              </button>
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 24, alignItems: 'start' }}>
-            {/* Step 1 */}
-            <div
-              style={{
-                background: '#FFFCF8',
-                borderRadius: 20,
-                padding: isMobile ? '20px' : '24px 28px',
-                transition: 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-16px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 30px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)';
-                e.currentTarget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-                <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>1</span>
-                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Register & add your pet's details</span>
-              </div>
-              <div style={{ background: '#FAF6EF', borderRadius: 13, padding: 20, marginBottom: 16 }}>
-                {[
-                  { label: "Pet's Name", value: 'Bruno', active: true },
-                  { label: 'Breed', value: 'Shih Tzu', active: false },
-                  { label: 'Age', value: '3 years', active: false },
-                ].map((field) => (
-                  <div key={field.label} style={{ marginBottom: 12 }}>
-                    <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(9, 8, 8), fontFamily: F.dmMono, marginBottom: 5 }}>{field.label}</div>
-                    <div style={{ padding: '10px 14px', background: '#FFFCF8', borderRadius: 9, outline: field.active ? '1px #E8600A solid' : '1px rgba(44,26,14,0.18) solid', display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12) }}>{field.value}</span>
-                      {field.active && <div style={{ width: 1.5, height: 16, background: '#E8600A' }} />}
-                    </div>
-                  </div>
-                ))}
-                <div style={{ padding: '14px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600 }}>Continue</div>
-              </div>
-              <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>
-                A handful of fields. No PDFs to download, no notarised forms, no Sunday lost to paperwork.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div
-              style={{
-                background: '#FFFCF8',
-                borderRadius: 20,
-                padding: isMobile ? '20px' : '24px 28px',
-                transition: 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-16px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 30px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1)';
-                e.currentTarget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)';
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-                <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(40, 32, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>2</span>
-                <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(16, 14, 13), fontWeight: 600 }}>Upload your 4 documents</span>
-              </div>
-              {[
-                { label: 'Anti-Rabies Vaccination Certificate', file: 'vax-record-bruno.pdf', done: true, icon: '/images/vaccine.png' },
-                { label: 'Applicant ID Proof', file: 'aadhaar-card.pdf', done: true, icon: '/images/certificate-1.png' },
-                { label: 'Address Proof', file: 'electricity-bill.pdf', done: true, icon: '/images/target.png' },
-                { label: 'Photo with Your Pet', file: 'Tap to upload →', done: true, icon: '/images/photograph.png' },
-              ].map((doc) => (
-                <div key={doc.label} style={{ padding: 14, background: '#FAF6EF', borderRadius: 13, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ width: 38, height: 38, background: '#FFF0E4', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Image src={doc.icon} alt={doc.label} width={24} height={24} style={{ objectFit: 'contain' }} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ color: '#2C1A0E', fontWeight: 600, fontSize: getResponsiveFontSize(13, 12, 11) }}>{doc.label}</div>
-                    <div style={{ color: doc.done ? '#A68660' : '#C04E06', fontSize: getResponsiveFontSize(11, 10, 9) }}>{doc.file}</div>
-                  </div>
-                  <div style={{
-                    width: 22,
-                    height: 22,
-                    background: doc.done ? '#E6F6ED' : '#F3EDE0',
-                    borderRadius: 11,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    {doc.done && (
-                      <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1 4.5L4.5 8L11 1" stroke="#1A6B3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
-                  </div>
-                </div>
-              ))}
-              <div style={{ padding: '12px 20px', background: '#2C1A0E', borderRadius: 9, textAlign: 'center', color: '#FFFFFF', fontWeight: 600, marginBottom: 16 }}>Submit Documents</div>
-              <div style={{ padding: '11px 14px', background: '#E6F6ED', borderRadius: 9, marginBottom: 16 }}>
-                <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 700 }}>Certificate in 24–72 hrs.</span>
-                <span style={{ color: '#1A6B3A', fontSize: getResponsiveFontSize(11.5, 10, 10), fontWeight: 500 }}> We handle the municipal filing — you'll receive your official digital certificate by email once approved.</span>
-              </div>
-              <p style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(20, 18, 16), fontWeight: 700, margin: '0 0 8px' }}>Upload, we'll do the rest.</p>
-              <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(13.5, 12, 11), margin: 0 }}>No broken websites, no photocopies. We file directly with your municipality on your behalf.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+    
 
       {/* ══════════════════════════════════════
           PRICING SECTION
@@ -877,11 +744,18 @@ export default function HomePage() {
                   </div>
                 </div>
                 
-                {/* Price Section */}
+                {/* Price Section - UPDATED with Fraunces Black for 299 */}
                 <div style={{ marginBottom: 16 }}>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, flexWrap: 'wrap' }}>
                     <span style={{ color: 'rgba(255,255,255,0.60)', fontSize: getResponsiveFontSize(28, 24, 20), fontFamily: 'Inter', fontWeight: 700, paddingBottom: 14 }}>₹</span>
-                    <span style={{ color: 'white', fontSize: getResponsiveFontSize(88, 70, 50), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1' }}>299</span>
+                    <span style={{ 
+                      color: 'white', 
+                      fontSize: getResponsiveFontSize(88, 70, 50), 
+                      fontFamily: "'Fraunces', serif", 
+                      fontWeight: 900,
+                      fontStyle: 'normal',
+                      lineHeight: '1' 
+                    }}>299</span>
                     <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: getResponsiveFontSize(60, 48, 36), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1', paddingBottom: 6 }}>/—</span>
                   </div>
                   <div style={{ marginTop: 8 }}>
