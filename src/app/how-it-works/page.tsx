@@ -558,70 +558,140 @@ export default function LandingPage() {
         </div>
 
         {/* Comparison Section */}
-        <div style={{ width: '100%', background: '#F3EDE0', padding: getResponsivePadding() }}>
-          <div style={{ maxWidth: 1180, margin: '0 auto' }}>
-            <div style={{ marginBottom: 52 }}>
-              <div style={{ display: 'inline-flex', padding: '5px 14px', background: '#FFF0E4', borderRadius: 100, marginBottom: 20, outline: '1px solid #FFCCA0' }}>
-                <span style={{ color: '#C04E06', fontSize: 10, fontFamily: 'DM Sans', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.20px' }}>Tailio vs Municipal Portal</span>
-              </div>
-              <h2 style={{ color: '#2C1A0E', fontSize: isMobile ? '36px' : '52px', fontFamily: 'Fraunces', fontWeight: 900 }}>
-                Or, you could spend a <span style={{ color: '#E8600A', fontStyle: 'italic' }}>weekend</span> at the MCD office.
-              </h2>
-              <p style={{ color: '#7A5C40', fontSize: 15, fontFamily: 'DM Sans', maxWidth: 360, marginTop: 20 }}>
-                The municipal portal works. Eventually. Probably. Here's the difference in numbers.
-              </p>
-            </div>
+<div style={{
+  alignSelf: 'stretch',
+  padding: isMobile ? '40px 20px' : '80px 40px',
+  background: '#F3EDE0'
+}}>
+  <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ marginBottom: 30 }}>
+      <div style={{
+        display: 'inline-flex',
+        padding: '5px 14px',
+        background: '#FFF0E4',
+        borderRadius: 100,
+        outline: '1px solid #FFCCA0',
+        marginBottom: 20
+      }}>
+        <span style={{ color: '#C04E06', fontSize: 10, fontFamily: 'DM Sans', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.20px' }}>
+          Tailio vs Municipal Portal
+        </span>
+      </div>
+      <h2 style={{
+        color: '#2C1A0E',
+        fontSize: isMobile ? 28 : 40,
+        fontFamily: 'Fraunces',
+        fontWeight: 900,
+        lineHeight: '44px',
+        marginBottom: 15
+      }}>
+        Or spend your <span style={{ color: '#E8600A', fontStyle: 'italic' }}>weekend</span> on the MCD portal.
+      </h2>
+      <p style={{ color: '#7A5C40', fontSize: 14.5, fontFamily: 'DM Sans', maxWidth: 540 }}>
+        The municipal portal works. Eventually. Probably. Here's the difference in numbers.
+      </p>
+    </div>
 
-            <div style={{ background: 'white', borderRadius: 18, overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
-                <thead>
-                  <tr>
-                    <th style={{ textAlign: 'left', padding: '17px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 400, textTransform: 'uppercase' }}>What you get</th>
-                    <th style={{ textAlign: 'center', padding: '17px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 400, textTransform: 'uppercase' }}>Tailio</th>
-                    <th style={{ textAlign: 'center', padding: '17px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 400, textTransform: 'uppercase' }}>Municipal Portal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { label: "Time to register", sub: "From start to submission", tailio: "Under 1 minute", portal: "2–4 weeks" },
-                    { label: "Works on your phone", sub: "No opening laptops for filing the form", tailio: "check", portal: "cross" },
-                    { label: "Digital certificate", sub: "Always accessible on profile", tailio: "check", portal: "cross" },
-                    { label: "Renewal reminders", sub: "WhatsApp, SMS & email", tailio: "check", portal: "cross" },
-                    { label: "Vaccination tracker", sub: "Schedule, record, share with vets", tailio: "check", portal: "cross" },
-                    { label: "Legal pet profile", sub: "Proof of ownership on record", tailio: "check", portal: "cross" },
-                    { label: "Registration cost", sub: "All-inclusive, no surprises", tailio: "₹299 + municipal fees", portal: "₹100–500 + effort" },
-                    { label: "If you wait, the fine is…", sub: "Municipal enforcement active now", tailio: "None", portal: "₹10,000+" }
-                  ].map((row, idx) => (
-                    <tr key={idx} style={{ borderBottom: idx < 7 ? '1px solid rgba(44, 26, 14, 0.10)' : 'none' }}>
-                      <td style={{ padding: '18px 24px' }}>
-                        <div style={{ fontWeight: 700, color: '#2C1A0E', fontSize: '13.5px' }}>{row.label}</div>
-                        <div style={{ color: '#A68660', fontSize: 11 }}>{row.sub}</div>
-                      </td>
-                      <td style={{ padding: '18px 24px', textAlign: 'center', background: idx % 2 === 0 ? 'rgba(232, 96, 10, 0.04)' : 'transparent', fontWeight: 700, color: '#2C1A0E' }}>
-                        {row.tailio === 'check' ? (
-                          <div style={{ width: 28, height: 28, background: '#2C1A0E', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
-                              <path d="M1.5 5L4.5 8L11 1" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                            </svg>
-                          </div>
-                        ) : row.tailio}
-                      </td>
-                      <td style={{ padding: '18px 24px', textAlign: 'center', color: row.portal === '₹10,000+' ? '#C04E06' : '#A68660', fontWeight: row.portal === '₹10,000+' ? 700 : 400, fontStyle: row.portal === '₹10,000+' ? 'italic' : 'normal' }}>
-                        {row.portal === 'cross' ? (
-                          <div style={{ width: 30, height: 30, border: '1px solid rgba(44, 26, 14, 0.18)', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                              <path d="M1 1L10 10M10 1L1 10" stroke="#A68660" strokeWidth="1.5" strokeLinecap="round" />
-                            </svg>
-                          </div>
-                        ) : row.portal}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+    {/* Comparison Table */}
+    <div style={{
+      background: '#FFFCF8',
+      borderRadius: 18,
+      overflowX: 'auto',
+      boxShadow: '0px 4px 20px rgba(44, 26, 14, 0.08)',
+      outline: '1px solid rgba(44, 26, 14, 0.10)'
+    }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
+        <thead>
+          <tr>
+            <th style={{ textAlign: 'left', padding: '6px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 500, textTransform: 'uppercase' }}>What you get</th>
+            <th style={{ 
+              textAlign: 'center', 
+              padding: '8px 12px 8px 8px',  // Reduced right padding, minimal left
+              borderBottom: '1px solid rgba(44, 26, 14, 0.10)', 
+              color: '#A68660', 
+              fontSize: 13, 
+              fontWeight: 500, 
+              textTransform: 'uppercase',
+              lineHeight: 1
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: 6,  // Reduced gap between logo and text
+                margin: 0
+              }}>
+                {/* Tailio Brand Symbol */}
+                <img 
+                  src="/images/tailio.png"  // Replace with your actual logo path
+                  alt="Tailio" 
+                  style={{ 
+                    width: 130, 
+                    height: 130,
+                    display: 'block',
+                    flexShrink: 0
+                  }} 
+                />
+              </div>
+            </th>
+            <th style={{ textAlign: 'center', padding: '16px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 500, textTransform: 'uppercase' }}>Municipal Portal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { label: "Time to register", sub: "From start to submission", tailio: "Under 1 minute", portal: "2–4 weeks" },
+            { label: "Works on your phone", sub: "No opening laptops for filing the form", tailio: "✓", portal: "✗" },
+            { label: "Digital certificate", sub: "Always accessible on profile", tailio: "✓", portal: "✗" },
+            { label: "Renewal reminders", sub: "WhatsApp, SMS & email", tailio: "✓", portal: "✗" },
+            { label: "Vaccination tracker", sub: "Schedule, record, share with vets", tailio: "✓", portal: "✗" },
+            { label: "Legal pet profile", sub: "Proof of ownership on record", tailio: "✓", portal: "✗" },
+            { label: "Registration cost", sub: "No surprises", tailio: "₹299", portal: "₹100–500 + effort" },
+            { label: "If you wait, the fine is…", sub: "Municipal enforcement active now", tailio: "None", portal: "₹10,000+" }
+          ].map((row, idx) => (
+            <tr key={idx} style={{ borderBottom: idx < 7 ? '1px solid rgba(44, 26, 14, 0.10)' : 'none' }}>
+              <td style={{ padding: '18px 24px' }}>
+                <div>
+                  <div style={{ fontWeight: 600, color: '#2C1A0E', fontSize: '13.5px' }}>{row.label}</div>
+                  <div style={{ color: '#A68660', fontSize: 11 }}>{row.sub}</div>
+                </div>
+              </td>
+              <td style={{
+                padding: '18px 24px',
+                textAlign: 'center',
+                background: idx % 2 === 0 ? 'rgba(232, 96, 10, 0.04)' : 'transparent',
+                fontWeight: 700,
+                color: '#2C1A0E'
+              }}>
+                {row.tailio === '✓' ? (
+                  <div style={{ width: 28, height: 28, background: '#2C1A0E', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+                      <path d="M1.5 5L4.5 8L11 1" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                ) : row.tailio}
+               </td>
+              <td style={{
+                padding: '18px 24px',
+                textAlign: 'center',
+                color: row.portal === '₹10,000+' ? '#C04E06' : '#A68660',
+                fontWeight: row.portal === '₹10,000+' ? 700 : 400,
+                fontStyle: row.portal === '₹10,000+' ? 'italic' : 'normal'
+              }}>
+                {row.portal === '✗' ? (
+                  <div style={{ width: 28, height: 28, border: '1px solid rgba(44, 26, 14, 0.18)', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                      <path d="M1 1L10 10M10 1L1 10" stroke="#A68660" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                ) : row.portal}
+               </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
         {/* Pricing Section */}
         <div style={{ width: '100%', background: '#2B1F14', padding: getResponsivePadding() }}>

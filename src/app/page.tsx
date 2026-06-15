@@ -602,53 +602,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ══════════════════════════════════════
-          TAILIO vs MUNICIPAL PORTAL
-      ══════════════════════════════════════ */}
-      <div style={{ background: '#FAF6EF', width: '100%' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: getResponsivePadding() }}>
-          <div style={{ marginBottom: 52 }}>
-            <Badge text="Tailio vs Municipal Portal" />
-            <div style={{ marginTop: 20 }}>
-              <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontWeight: 900 }}>Or, you could spend a </span>
-              <span style={{ color: '#E8600A', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 900 }}>weekend</span>
-              <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(52, 40, 28), fontFamily: F.fraunces, fontWeight: 900 }}> at the MCD office.</span>
-            </div>
-            <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(15, 13, 12), maxWidth: 360, marginTop: 20 }}>The municipal portal works. Eventually. Probably. Here's the difference in numbers.</p>
-          </div>
-
-          {/* Comparison Table */}
-          <div style={{ overflowX: 'auto' }}>
-            <div style={{ minWidth: isMobile ? 600 : '100%', background: '#FFFFFF', borderRadius: 18, overflow: 'hidden' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: '1px solid rgba(44,26,14,0.10)' }}>
-                <div style={{ padding: '18px 28px', borderRight: '1px solid rgba(44,26,14,0.10)' }}><span style={{ color: '#A68660', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, textTransform: 'uppercase' }}>What you get</span></div>
-                <div style={{ padding: '18px 28px', background: '#E8600A', textAlign: 'center' }}><span style={{ color: '#401B01', fontSize: getResponsiveFontSize(22, 18, 16), fontFamily: F.fraunces, fontStyle: 'italic', fontWeight: 700 }}>Tailio</span></div>
-                <div style={{ padding: '18px 28px', textAlign: 'center' }}><span style={{ color: '#A68660', fontSize: getResponsiveFontSize(9.5, 8, 8), fontFamily: F.dmMono, textTransform: 'uppercase' }}>Municipal Portal</span></div>
-              </div>
-
-              {[
-                { label: 'Time to register', sub: 'From start to submission', tailio: 'Under 1 minute', portal: '2-3 hrs' },
-                { label: 'Works on your phone', sub: 'No office visit needed', tailio: '✓', portal: '✗' },
-                { label: 'Digital certificate', sub: 'Stored on your profile', tailio: '✓', portal: '✗' },
-                { label: 'Vaccination reminders', sub: 'WhatsApp, SMS & email', tailio: '✓', portal: '✗' },
-                { label: 'Automatic Renewal Reminders', sub: "Never miss a date", tailio: '✓', portal: '✗' },
-                { label: 'If you wait, the fine is…', sub: 'Municipal enforcement active', tailio: 'None', portal: '₹10,000+' },
-              ].map((row, i) => (
-                <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: i < 5 ? '1px solid rgba(44,26,14,0.10)' : 'none' }}>
-                  <div style={{ padding: '20px 28px', borderRight: '1px solid rgba(44,26,14,0.10)' }}>
-                    <div style={{ color: '#2C1A0E', fontWeight: 500, fontSize: getResponsiveFontSize(14, 13, 12) }}>{row.label}</div>
-                    <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(12, 11, 10) }}>{row.sub}</div>
-                  </div>
-                  <div style={{ padding: '20px 28px', background: 'rgba(232,96,10,0.04)', textAlign: 'center', fontWeight: 600, fontSize: getResponsiveFontSize(14, 13, 12), color: '#2C1A0E' }}>{row.tailio}</div>
-                  <div style={{ padding: '20px 28px', textAlign: 'center', fontSize: getResponsiveFontSize(14, 13, 12) }}>
-                    <span style={{ color: row.portal === '✗' ? '#A68660' : '#C04E06' }}>{row.portal}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
     
 

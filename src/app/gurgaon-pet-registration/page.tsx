@@ -563,69 +563,140 @@ export default function GurugramLanding() {
       </div>
 
       {/* Comparison Section */}
-      <div style={{ width: "100%", background: "#F3EDE0", padding: "88px 40px" }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto", textAlign: "center" }}>
-          <div style={{
-            display: "inline-flex",
-            padding: "5px 14px",
-            background: "#FFF0E4",
-            borderRadius: 100,
-            outline: "1px solid #FFCCA0",
-            outlineOffset: -1,
-            marginBottom: 12,
-          }}>
-            <span style={{ fontSize: 10, fontFamily: F.dmSans, fontWeight: 500, textTransform: "uppercase", letterSpacing: 1.2, color: "#C04E06" }}>Tailio vs MCG Portal</span>
-          </div>
-          <h2 style={{ fontSize: 38, fontFamily: F.fraunces, fontWeight: 900, lineHeight: 1.2, marginBottom: 48 }}>
-            Or spend a weekend at the<br />
-            <span style={{ fontStyle: "italic", color: "#E8600A" }}>MCG office.</span>
-          </h2>
-
-          <div style={{ background: "#FFFCF8", borderRadius: 18, overflow: "hidden", boxShadow: "0px 12px 48px rgba(44, 26, 14, 0.12)" }}>
-            <div style={{ display: "flex", background: "#2C1A0E", flexWrap: "wrap" }}>
-              <div style={{ flex: 2, padding: "28px 26px", textAlign: "left" }}>
-                <span style={{ fontSize: 10, fontFamily: F.dmMono, fontWeight: 500, textTransform: "uppercase", letterSpacing: 1, color: "rgba(244, 228, 207, 0.20)" }}>What you get</span>
-              </div>
-              <div style={{ width: 280, padding: "22px 26px", background: "#E8600A", textAlign: "center" }}>
-                <span style={{ fontSize: 20, fontFamily: F.fraunces, fontStyle: "italic", color: "white" }}>Tailio.</span>
-              </div>
-              <div style={{ flex: 1.5, padding: "28px 26px", textAlign: "center" }}>
-                <span style={{ fontSize: 10, fontFamily: F.dmMono, fontWeight: 500, textTransform: "uppercase", letterSpacing: 1, color: "rgba(244, 228, 207, 0.35)" }}>MCG Portal</span>
-              </div>
-            </div>
-
-            {[
-              { feature: "Time to register", sub: "From start to submission", tailio: "Under 1 minute", portal: "2–3 weeks" },
-              { feature: "Works on your phone", sub: "No office visit needed", tailio: "✓", portal: "✗", isIcon: true },
-              { feature: "Digital certificate", sub: "Stored on your profile", tailio: "✓", portal: "✗", isIcon: true },
-              { feature: "Vaccination reminders", sub: "WhatsApp, SMS & email", tailio: "✓", portal: "✗", isIcon: true },
-              { feature: "Registration cost", sub: "One-time, all-inclusive", tailio: "₹299 + fees", portal: "₹100–500" },
-              { feature: "If you wait, the fine is…", sub: "MCG enforcement active", tailio: "None", portal: "Pending", isWarning: true },
-            ].map((item, idx) => (
-              <div key={idx} style={{ display: "flex", background: "#FFFCF8", borderBottom: idx < 5 ? "1px solid rgba(44, 26, 14, 0.10)" : "none", flexWrap: "wrap" }}>
-                <div style={{ flex: 2, padding: "17px 26px", textAlign: "left" }}>
-                  <div style={{ fontSize: 14, fontFamily: F.dmSans, fontWeight: 600, color: "#2C1A0E" }}>{item.feature}</div>
-                  <div style={{ fontSize: 11.5, fontFamily: F.dmSans, fontWeight: 400, color: "#7A5C40" }}>{item.sub}</div>
-                </div>
-                <div style={{ width: 280, padding: "25px 26px", textAlign: "center" }}>
-                  {item.isIcon ? (
-                    <span style={{ fontSize: 18, color: "#2C1A0E" }}>{item.tailio}</span>
-                  ) : (
-                    <span style={{ fontSize: 14, fontFamily: F.dmSans, fontWeight: item.tailio === "₹299 + fees" ? 700 : 400, color: "#2C1A0E" }}>{item.tailio}</span>
-                  )}
-                </div>
-                <div style={{ flex: 1.5, padding: "25px 26px", textAlign: "center" }}>
-                  {item.isIcon ? (
-                    <span style={{ fontSize: 18, color: "#2C1A0E" }}>{item.portal}</span>
-                  ) : (
-                    <span style={{ fontSize: 14, fontFamily: F.dmSans, fontWeight: 400, color: item.isWarning ? "#A0251E" : "#2C1A0E" }}>{item.portal}</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+<div style={{
+  alignSelf: 'stretch',
+  padding: isMobile ? '40px 20px' : '80px 40px',
+  background: '#F3EDE0'
+}}>
+  <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ marginBottom: 30 }}>
+      <div style={{
+        display: 'inline-flex',
+        padding: '5px 14px',
+        background: '#FFF0E4',
+        borderRadius: 100,
+        outline: '1px solid #FFCCA0',
+        marginBottom: 20
+      }}>
+        <span style={{ color: '#C04E06', fontSize: 10, fontFamily: 'DM Sans', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.20px' }}>
+          Tailio vs Municipal Portal
+        </span>
       </div>
+      <h2 style={{
+        color: '#2C1A0E',
+        fontSize: isMobile ? 28 : 40,
+        fontFamily: 'Fraunces',
+        fontWeight: 900,
+        lineHeight: '44px',
+        marginBottom: 15
+      }}>
+        Or spend your <span style={{ color: '#E8600A', fontStyle: 'italic' }}>weekend</span> on the MCD portal.
+      </h2>
+      <p style={{ color: '#7A5C40', fontSize: 14.5, fontFamily: 'DM Sans', maxWidth: 540 }}>
+        The municipal portal works. Eventually. Probably. Here's the difference in numbers.
+      </p>
+    </div>
+
+    {/* Comparison Table */}
+    <div style={{
+      background: '#FFFCF8',
+      borderRadius: 18,
+      overflowX: 'auto',
+      boxShadow: '0px 4px 20px rgba(44, 26, 14, 0.08)',
+      outline: '1px solid rgba(44, 26, 14, 0.10)'
+    }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
+        <thead>
+          <tr>
+            <th style={{ textAlign: 'left', padding: '6px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 500, textTransform: 'uppercase' }}>What you get</th>
+            <th style={{ 
+              textAlign: 'center', 
+              padding: '8px 12px 8px 8px',  // Reduced right padding, minimal left
+              borderBottom: '1px solid rgba(44, 26, 14, 0.10)', 
+              color: '#A68660', 
+              fontSize: 13, 
+              fontWeight: 500, 
+              textTransform: 'uppercase',
+              lineHeight: 1
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: 6,  // Reduced gap between logo and text
+                margin: 0
+              }}>
+                {/* Tailio Brand Symbol */}
+                <img 
+                  src="/images/tailio.png"  // Replace with your actual logo path
+                  alt="Tailio" 
+                  style={{ 
+                    width: 130, 
+                    height: 130,
+                    display: 'block',
+                    flexShrink: 0
+                  }} 
+                />
+              </div>
+            </th>
+            <th style={{ textAlign: 'center', padding: '16px 24px', borderBottom: '1px solid rgba(44, 26, 14, 0.10)', color: '#A68660', fontSize: 13, fontWeight: 500, textTransform: 'uppercase' }}>Municipal Portal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { label: "Time to register", sub: "From start to submission", tailio: "Under 1 minute", portal: "2–4 weeks" },
+            { label: "Works on your phone", sub: "No opening laptops for filing the form", tailio: "✓", portal: "✗" },
+            { label: "Digital certificate", sub: "Always accessible on profile", tailio: "✓", portal: "✗" },
+            { label: "Renewal reminders", sub: "WhatsApp, SMS & email", tailio: "✓", portal: "✗" },
+            { label: "Vaccination tracker", sub: "Schedule, record, share with vets", tailio: "✓", portal: "✗" },
+            { label: "Legal pet profile", sub: "Proof of ownership on record", tailio: "✓", portal: "✗" },
+            { label: "Registration cost", sub: "No surprises", tailio: "₹299", portal: "₹100–500 + effort" },
+            { label: "If you wait, the fine is…", sub: "Municipal enforcement active now", tailio: "None", portal: "₹10,000+" }
+          ].map((row, idx) => (
+            <tr key={idx} style={{ borderBottom: idx < 7 ? '1px solid rgba(44, 26, 14, 0.10)' : 'none' }}>
+              <td style={{ padding: '18px 24px' }}>
+                <div>
+                  <div style={{ fontWeight: 600, color: '#2C1A0E', fontSize: '13.5px' }}>{row.label}</div>
+                  <div style={{ color: '#A68660', fontSize: 11 }}>{row.sub}</div>
+                </div>
+              </td>
+              <td style={{
+                padding: '18px 24px',
+                textAlign: 'center',
+                background: idx % 2 === 0 ? 'rgba(232, 96, 10, 0.04)' : 'transparent',
+                fontWeight: 700,
+                color: '#2C1A0E'
+              }}>
+                {row.tailio === '✓' ? (
+                  <div style={{ width: 28, height: 28, background: '#2C1A0E', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="13" height="10" viewBox="0 0 13 10" fill="none">
+                      <path d="M1.5 5L4.5 8L11 1" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                ) : row.tailio}
+               </td>
+              <td style={{
+                padding: '18px 24px',
+                textAlign: 'center',
+                color: row.portal === '₹10,000+' ? '#C04E06' : '#A68660',
+                fontWeight: row.portal === '₹10,000+' ? 700 : 400,
+                fontStyle: row.portal === '₹10,000+' ? 'italic' : 'normal'
+              }}>
+                {row.portal === '✗' ? (
+                  <div style={{ width: 28, height: 28, border: '1px solid rgba(44, 26, 14, 0.18)', borderRadius: 14, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                      <path d="M1 1L10 10M10 1L1 10" stroke="#A68660" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                ) : row.portal}
+               </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
       {/* Coverage Section */}
       <div style={{ maxWidth: 1120, margin: "0 auto", padding: "80px 40px", textAlign: "center" }}>
