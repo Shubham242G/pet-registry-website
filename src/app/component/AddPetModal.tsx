@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import { apiFetch } from "../services/api";
 import {
   X,
-  PawPrint,
   AlertCircle,
   Loader2,
   CheckCircle,
@@ -14,9 +13,11 @@ import {
   FileCheck,
   Eye,
   Trash2,
+  ChevronLeft,
 } from "lucide-react";
 import PaymentButton from "./PaymentButton";
 import { useAuth } from "./context/AuthContext";
+import Image from "next/image";
 
 interface AddPetModalProps {
   isOpen: boolean;
@@ -47,6 +48,27 @@ function getPrice(city: string) {
   return { municipalFee, serviceFee, subtotal: +subtotal.toFixed(2), cgst: +cgst.toFixed(2), sgst: +sgst.toFixed(2), total: +total.toFixed(2), isGhaziabad };
 }
 
+// Global style to force black text in all inputs
+const inputGlobalStyles = `
+  .modal-input, .modal-input:focus, .modal-input:active, .modal-input:focus-visible {
+    color: #2C1A0E !important;
+    -webkit-text-fill-color: #2C1A0E !important;
+    background-color: #FAF6EF !important;
+  }
+  .modal-input::placeholder {
+    color: #A68660 !important;
+    -webkit-text-fill-color: #A68660 !important;
+  }
+  .modal-select, .modal-select:focus, .modal-select:active {
+    color: #2C1A0E !important;
+    background-color: #FAF6EF !important;
+  }
+  .modal-select option {
+    color: #2C1A0E !important;
+    background-color: #FAF6EF !important;
+  }
+`;
+
 export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToEdit, resumePetId }: AddPetModalProps) {
   const { user } = useAuth();
   const [step, setStep] = useState(0);
@@ -60,11 +82,26 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
   const [fetchingDocs, setFetchingDocs] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
   const price = getPrice(user?.city || "");
   const uploadedCount = Object.keys(uploadedDocs).length;
   const allDocsUploaded = uploadedCount === 4;
+
+  // Inject global styles
+  useEffect(() => {
+    if (!document.getElementById("modal-input-styles")) {
+      const style = document.createElement("style");
+      style.id = "modal-input-styles";
+      style.textContent = inputGlobalStyles;
+      document.head.appendChild(style);
+    }
+    return () => {
+      const style = document.getElementById("modal-input-styles");
+      if (style) style.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -72,6 +109,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     setSuccess(false);
     setUploadedDocs({});
     setUploading(null);
+    setIsSubmitting(false);
 
     if (resumePetId) {
       setCreatedPetId(resumePetId);
@@ -149,6 +187,14 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       setForm((f) => ({ ...f, profilePicture: b64 }));
     };
     reader.readAsDataURL(file);
+  };
+
+  // Go back to previous step
+  const goToPreviousStep = () => {
+    if (step > 0) {
+      setStep(step - 1);
+      setError("");
+    }
   };
 
   const handlePetSubmit = async (e: React.FormEvent) => {
@@ -240,7 +286,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
 
   const handlePaymentSuccess = async () => {
     if (!createdPetId) return;
-    setLoading(true);
+    setIsSubmitting(true);
     setError("");
     try {
       const response = await fetch(`${API_BASE}/registration/${createdPetId}/trigger-registration`, {
@@ -259,7 +305,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     } catch {
       setError("Failed to complete registration. Please contact support.");
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -267,303 +313,521 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, gap: 8 }}>
       {STEPS.map((label, i) => (
         <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, gap: 6 }}>
-          <div style={{
-            width: 32, height: 32, borderRadius: 16,
-            background: i < step ? "#1A6B3A" : i === step ? "#E8600A" : "#EBE1CE",
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }}>
+          <div 
+            style={{
+              width: 32, height: 32, borderRadius: 16,
+              background: i < step ? "#1A6B3A" : i === step ? "#E8600A" : "#EBE1CE",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: i < step ? "pointer" : "default",
+              transition: "all 0.3s ease",
+            }}
+            onClick={() => {
+              if (i < step) {
+                setStep(i);
+                setError("");
+              }
+            }}
+            onMouseEnter={(e) => {
+              if (i < step) {
+                e.currentTarget.style.transform = "scale(1.1)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+          >
             {i < step ? <CheckCircle size={16} color="white" /> : <span style={{ color: i === step ? "white" : "#A68660", fontSize: 13, fontWeight: 700 }}>{i + 1}</span>}
           </div>
           <span style={{
             fontSize: 10, textAlign: "center",
             fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-            color: i === step ? "#E8600A" : i < step ? "#1A6B3A" : "#A68660"
-          }}>{label}</span>
+            color: i === step ? "#E8600A" : i < step ? "#1A6B3A" : "#A68660",
+            cursor: i < step ? "pointer" : "default",
+          }}
+          onClick={() => {
+            if (i < step) {
+              setStep(i);
+              setError("");
+            }
+          }}>
+            {label}
+          </span>
         </div>
       ))}
     </div>
   );
 
+  // Common input style with forced black text
+  const inputStyle = {
+    width: "100%",
+    padding: "11px 14px",
+    background: "#FAF6EF",
+    borderRadius: 9,
+    fontSize: 13,
+    outline: "1px solid rgba(44,26,14,0.18)",
+    border: "none",
+    color: "#2C1A0E",
+    WebkitTextFillColor: "#2C1A0E",
+    WebkitAppearance: "none" as const,
+    MozAppearance: "none" as const,
+    appearance: "none" as const,
+  };
+
+  const selectStyle = {
+    ...inputStyle,
+    cursor: "pointer",
+  };
+
   return (
-    <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
-      display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 12
-    }}>
+    <>
       <div style={{
-        background: "#FFFCF8", borderRadius: 20, width: "100%", maxWidth: 500,
-        maxHeight: "90vh", overflow: "hidden", display: "flex", flexDirection: "column",
-        boxShadow: "0 24px 80px rgba(44,26,14,0.18)"
+        position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
+        display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 12
       }}>
+        <div style={{
+          background: "#FFFCF8", borderRadius: 20, width: "100%", maxWidth: 500,
+          maxHeight: "90vh", overflow: "hidden", display: "flex", flexDirection: "column",
+          boxShadow: "0 24px 80px rgba(44,26,14,0.18)"
+        }}>
 
-        {/* Header */}
-        <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(44,26,14,0.08)", flexShrink: 0 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 36, height: 36, background: "#E8600A", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <PawPrint size={18} color="white" />
-              </div>
-              <div>
-                <div style={{ color: "#2C1A0E", fontSize: 16, fontFamily: "'Fraunces', serif", fontWeight: 900 }}>
-                  {petToEdit ? "Edit Pet" : resumePetId ? "Continue" : "Register Pet"}
-                </div>
-                <div style={{ color: "#A68660", fontSize: 11, fontFamily: "'DM Sans', sans-serif" }}>
-                  {petToEdit ? "Update info" : resumePetId ? "Pick up where you left" : "Add & register in one go"}
-                </div>
-              </div>
-            </div>
-            <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
-              <X size={18} color="#7A5C40" />
-            </button>
-          </div>
-          {!petToEdit && <Stepper />}
-        </div>
-
-        {/* Body */}
-        <div style={{ overflowY: "auto", flex: 1, padding: "16px 20px 20px" }}>
-
-          {success && (
-            <div style={{ textAlign: "center", padding: "24px 0" }}>
-              <div style={{ width: 56, height: 56, background: "#E6F6ED", borderRadius: 28, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
-                <CheckCircle size={28} color="#1A6B3A" />
-              </div>
-              <div style={{ color: "#2C1A0E", fontSize: 18, fontFamily: "'Fraunces', serif", fontWeight: 900, marginBottom: 6 }}>
-                {petToEdit ? "Pet Updated!" : "Registration Submitted!"}
-              </div>
-              <div style={{ color: "#7A5C40", fontSize: 12, fontFamily: "'DM Sans', sans-serif", lineHeight: "18px" }}>
-                {petToEdit ? "Pet info updated." : "License will be delivered in 7-10 business days."}
-              </div>
-            </div>
-          )}
-
-          {!success && error && (
-            <div style={{ background: "#FDECEA", borderRadius: 9, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-              <AlertCircle size={14} color="#A0251E" />
-              <span style={{ color: "#A0251E", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>{error}</span>
-            </div>
-          )}
-
-          {/* Step 0 - Pet Details */}
-          {!success && step === 0 && (
-            <form onSubmit={handlePetSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-                <div onClick={() => fileInputRef.current?.click()} style={{
-                  width: 80, height: 80, borderRadius: 12, background: "#F3EDE0",
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                  overflow: "hidden", outline: "2px dashed rgba(44,26,14,0.18)", outlineOffset: -2
+          {/* Header */}
+          <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(44,26,14,0.08)", flexShrink: 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {/* Company Logo instead of PawPrint */}
+                <div style={{ 
+                  width: 100, 
+                  height: 100, 
+                  borderRadius: 10, 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  overflow: "hidden",
+                  flexShrink: 0,
                 }}>
-                  {profilePreview
-                    ? <img src={profilePreview} alt="pet" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <div style={{ textAlign: "center" }}><Camera size={24} color="#A68660" /><div style={{ color: "#A68660", fontSize: 9 }}>Add photo</div></div>
-                  }
+                  <Image
+                    src="/images/tailio.png"
+                    alt="Tailio"
+                    width={150}
+                    height={150}
+                    style={{ objectFit: "contain" }}
+                  />
                 </div>
-                <span style={{ color: "#7A5C40", fontSize: 10 }}>Photo with pet · JPEG/PNG, max 2MB</span>
-                <input ref={fileInputRef} type="file" accept="image/jpeg,image/png" onChange={handlePhotoUpload} style={{ display: "none" }} />
-              </div>
-
-              <div>
-                <label style={{ display: "block", color: "#2C1A0E", fontSize: 12, fontWeight: 600, marginBottom: 5 }}>Pet Name <span style={{ color: "#E8600A" }}>*</span></label>
-                <input style={{ width: "100%", padding: "11px 14px", background: "#FAF6EF", borderRadius: 9, fontSize: 13, outline: "1px solid rgba(44,26,14,0.18)", border: "none" }} type="text" required placeholder="Enter pet's name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
-              </div>
-
-              <div>
-                <label style={{ display: "block", color: "#2C1A0E", fontSize: 12, fontWeight: 600, marginBottom: 5 }}>Age <span style={{ color: "#E8600A" }}>*</span></label>
-                <div style={{ display: "flex", gap: 12 }}>
-                  <div style={{ flex: 1 }}>
-                    <input style={{ width: "100%", padding: "11px 14px", background: "#FAF6EF", borderRadius: 9, fontSize: 13, outline: "1px solid rgba(44,26,14,0.18)", border: "none" }} type="number" min={0} max={50} placeholder="Years" value={form.ageYears} onChange={(e) => setForm((f) => ({ ...f, ageYears: e.target.value }))} />
+                <div>
+                  <div style={{ color: "#2C1A0E", fontSize: 16, fontFamily: "'Fraunces', serif", fontWeight: 900 }}>
+                    {petToEdit ? "Edit Pet" : resumePetId ? "Continue" : "Register Pet"}
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <input style={{ width: "100%", padding: "11px 14px", background: "#FAF6EF", borderRadius: 9, fontSize: 13, outline: "1px solid rgba(44,26,14,0.18)", border: "none" }} type="number" min={0} max={11} placeholder="Months" value={form.ageMonths} onChange={(e) => setForm((f) => ({ ...f, ageMonths: e.target.value }))} />
+                  <div style={{ color: "#A68660", fontSize: 11, fontFamily: "'DM Sans', sans-serif" }}>
+                    {petToEdit ? "Update info" : resumePetId ? "Pick up where you left" : "Add & register in one go"}
                   </div>
                 </div>
               </div>
-
-              <div>
-                <label style={{ display: "block", color: "#2C1A0E", fontSize: 12, fontWeight: 600, marginBottom: 5 }}>Gender</label>
-                <select style={{ width: "100%", padding: "11px 14px", background: "#FAF6EF", borderRadius: 9, fontSize: 13, outline: "1px solid rgba(44,26,14,0.18)", border: "none" }} value={form.gender} onChange={(e) => setForm((f) => ({ ...f, gender: e.target.value }))}>
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </div>
-
-              <div style={{ padding: "10px 12px", background: "#F3EDE0", borderRadius: 9 }}>
-                <div style={{ color: "#A68660", fontSize: 9, letterSpacing: "1px", marginBottom: 2 }}>YOUR CITY</div>
-                <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>{user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Not set"}</div>
-              </div>
-
-              <button type="submit" disabled={loading} style={{
-                width: "100%", padding: "12px 20px", background: loading ? "#EBE1CE" : "#E8600A",
-                boxShadow: loading ? "none" : "0px 2px 0px #C04E06", borderRadius: 9, outline: loading ? "none" : "1px solid #C04E06", outlineOffset: -1,
-                border: "none", cursor: loading ? "not-allowed" : "pointer", color: loading ? "#A68660" : "white",
-                fontSize: 14, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 8
-              }}>
-                {loading ? <><Loader2 size={14} className="animate-spin" /> Creating...</> : petToEdit ? "Update Pet" : "Continue →"}
+              <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+                <X size={18} color="#7A5C40" />
               </button>
-            </form>
-          )}
+            </div>
+            {!petToEdit && <Stepper />}
+          </div>
 
-          {/* Step 1 - Documents */}
-          {!success && step === 1 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {fetchingDocs && (
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "16px 0" }}>
-                  <Loader2 size={16} color="#E8600A" className="animate-spin" />
-                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Loading documents...</span>
+          {/* Body */}
+          <div style={{ overflowY: "auto", flex: 1, padding: "16px 20px 20px" }}>
+
+            {success && (
+              <div style={{ textAlign: "center", padding: "24px 0" }}>
+                <div style={{ width: 56, height: 56, background: "#E6F6ED", borderRadius: 28, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
+                  <CheckCircle size={28} color="#1A6B3A" />
                 </div>
-              )}
+                <div style={{ color: "#2C1A0E", fontSize: 18, fontFamily: "'Fraunces', serif", fontWeight: 900, marginBottom: 6 }}>
+                  {petToEdit ? "Pet Updated!" : "Registration Submitted!"}
+                </div>
+                <div style={{ color: "#7A5C40", fontSize: 12, fontFamily: "'DM Sans', sans-serif", lineHeight: "18px" }}>
+                  {petToEdit ? "Pet info updated." : "License will be delivered in 7-10 business days."}
+                </div>
+              </div>
+            )}
 
-              {!fetchingDocs && (
-                <>
-                  <div style={{
-                    padding: "12px 16px", background: uploadedCount === 4 ? "#E6F6ED" : "#FFF4E4", borderRadius: 9,
-                    outline: `1px solid ${uploadedCount === 4 ? "#A8DDB8" : "#FFCCA0"}`, outlineOffset: -1,
-                    display: "flex", alignItems: "center", gap: 10
+            {!success && error && (
+              <div style={{ background: "#FDECEA", borderRadius: 9, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+                <AlertCircle size={14} color="#A0251E" />
+                <span style={{ color: "#A0251E", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>{error}</span>
+              </div>
+            )}
+
+            {/* Step 0 - Pet Details */}
+            {!success && step === 0 && (
+              <form onSubmit={handlePetSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                  <div onClick={() => fileInputRef.current?.click()} style={{
+                    width: 80, height: 80, borderRadius: 12, background: "#F3EDE0",
+                    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                    overflow: "hidden", outline: "2px dashed rgba(44,26,14,0.18)", outlineOffset: -2,
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.outline = "2px dashed #E8600A";
+                    e.currentTarget.style.background = "#FFF0E4";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.outline = "2px dashed rgba(44,26,14,0.18)";
+                    e.currentTarget.style.background = "#F3EDE0";
                   }}>
-                    <div style={{
-                      width: 24, height: 24, background: uploadedCount === 4 ? "#1A6B3A" : "#E8600A", borderRadius: 12,
-                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-                    }}>
-                      {uploadedCount === 4 ? <CheckCircle size={12} color="white" /> : <span style={{ color: "white", fontSize: 11, fontWeight: 700 }}>{uploadedCount}</span>}
+                    {profilePreview
+                      ? <img src={profilePreview} alt="pet" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      : <div style={{ textAlign: "center" }}><Camera size={24} color="#A68660" /><div style={{ color: "#A68660", fontSize: 9 }}>Add photo</div></div>
+                    }
+                  </div>
+                  <span style={{ color: "#7A5C40", fontSize: 10 }}>Photo with pet · JPEG/PNG, max 2MB</span>
+                  <input ref={fileInputRef} type="file" accept="image/jpeg,image/png" onChange={handlePhotoUpload} style={{ display: "none" }} />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", color: "#2C1A0E", fontSize: 12, fontWeight: 600, marginBottom: 5 }}>Pet Name <span style={{ color: "#E8600A" }}>*</span></label>
+                  <input 
+                    className="modal-input"
+                    style={inputStyle} 
+                    type="text" 
+                    required 
+                    placeholder="Enter pet's name" 
+                    value={form.name} 
+                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} 
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", color: "#2C1A0E", fontSize: 12, fontWeight: 600, marginBottom: 5 }}>Age <span style={{ color: "#E8600A" }}>*</span></label>
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <div style={{ flex: 1 }}>
+                      <input 
+                        className="modal-input"
+                        style={inputStyle} 
+                        type="number" 
+                        min={0} 
+                        max={50} 
+                        required
+                        placeholder="Years" 
+                        value={form.ageYears} 
+                        onChange={(e) => setForm((f) => ({ ...f, ageYears: e.target.value }))} 
+                      />
                     </div>
-                    <span style={{ color: uploadedCount === 4 ? "#1A6B3A" : "#B85C00", fontSize: 12, fontWeight: 500 }}>
-                      {uploadedCount === 4 ? "All documents uploaded!" : `${uploadedCount}/4 documents uploaded`}
-                    </span>
+                    <div style={{ flex: 1 }}>
+                      <input 
+                        className="modal-input"
+                        style={inputStyle} 
+                        type="number" 
+                        min={0} 
+                        max={11} 
+                        required
+                        placeholder="Months" 
+                        value={form.ageMonths} 
+                        onChange={(e) => setForm((f) => ({ ...f, ageMonths: e.target.value }))} 
+                      />
+                    </div>
                   </div>
+                </div>
 
-                  <div style={{ height: 6, background: "#EBE1CE", borderRadius: 100, overflow: "hidden" }}>
-                    <div style={{ height: 6, borderRadius: 100, background: uploadedCount === 4 ? "#1A6B3A" : "#E8600A", width: `${(uploadedCount / 4) * 100}%` }} />
+                <div>
+                  <label style={{ display: "block", color: "#2C1A0E", fontSize: 12, fontWeight: 600, marginBottom: 5 }}>Gender <span style={{ color: "#E8600A" }}>*</span></label>
+                  <select 
+                    className="modal-select"
+                    style={selectStyle} 
+                    required
+                    value={form.gender} 
+                    onChange={(e) => setForm((f) => ({ ...f, gender: e.target.value }))}
+                  >
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+
+                <div style={{ padding: "10px 12px", background: "#F3EDE0", borderRadius: 9 }}>
+                  <div style={{ color: "#A68660", fontSize: 9, letterSpacing: "1px", marginBottom: 2 }}>YOUR CITY</div>
+                  <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>{user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Not set"}</div>
+                </div>
+
+                <button type="submit" disabled={loading} style={{
+                  width: "100%", padding: "12px 20px", background: loading ? "#EBE1CE" : "#E8600A",
+                  boxShadow: loading ? "none" : "0px 2px 0px #C04E06", borderRadius: 9, outline: loading ? "none" : "1px solid #C04E06", outlineOffset: -1,
+                  border: "none", cursor: loading ? "not-allowed" : "pointer", color: loading ? "#A68660" : "white",
+                  fontSize: 14, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (!loading) {
+                    e.currentTarget.style.background = "#C06A18";
+                    e.currentTarget.style.transform = "scale(1.02)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!loading) {
+                    e.currentTarget.style.background = "#E8600A";
+                    e.currentTarget.style.transform = "scale(1)";
+                  }
+                }}>
+                  {loading ? <><Loader2 size={14} className="animate-spin" /> Creating...</> : petToEdit ? "Update Pet" : "Continue →"}
+                </button>
+              </form>
+            )}
+
+            {/* Step 1 - Documents */}
+            {!success && step === 1 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {/* Back button to go to Step 0 */}
+                <button 
+                  onClick={goToPreviousStep}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#7A5C40",
+                    fontSize: 12,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: 500,
+                    padding: "4px 0",
+                    transition: "all 0.3s ease",
+                    alignSelf: "flex-start",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#E8600A";
+                    e.currentTarget.style.transform = "translateX(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#7A5C40";
+                    e.currentTarget.style.transform = "translateX(0)";
+                  }}
+                >
+                  <ChevronLeft size={16} />
+                  Back to Pet Details
+                </button>
+
+                {fetchingDocs && (
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "16px 0" }}>
+                    <Loader2 size={16} color="#E8600A" className="animate-spin" />
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Loading documents...</span>
                   </div>
+                )}
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {REQUIRED_DOCS.map((doc) => {
-                      const uploaded = uploadedDocs[doc.name];
-                      const isUploading = uploading === doc.name;
-                      const DocIcon = doc.icon;
-                      return (
-                        <div key={doc.name} style={{
-                          background: uploaded ? "#F0FBF4" : "#FAF6EF", borderRadius: 11,
-                          outline: `1px solid ${uploaded ? "#A8DDB8" : "rgba(44,26,14,0.12)"}`, outlineOffset: -1,
-                          padding: 12
-                        }}>
-                          <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
-                            <div style={{
-                              width: 32, height: 32, borderRadius: 8, background: uploaded ? "#C6ECDA" : "#F3EDE0",
-                              display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-                            }}>
-                              <DocIcon size={14} color={uploaded ? "#1A6B3A" : "#A68660"} />
-                            </div>
-                            <div style={{ flex: 1 }}>
-                              <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>{doc.label}</div>
-                              <div style={{ color: "#A68660", fontSize: 10, marginTop: 2 }}>{doc.description}</div>
-                            </div>
-                            {uploaded && <CheckCircle size={16} color="#1A6B3A" />}
-                          </div>
+                {!fetchingDocs && (
+                  <>
+                    <div style={{
+                      padding: "12px 16px", background: uploadedCount === 4 ? "#E6F6ED" : "#FFF4E4", borderRadius: 9,
+                      outline: `1px solid ${uploadedCount === 4 ? "#A8DDB8" : "#FFCCA0"}`, outlineOffset: -1,
+                      display: "flex", alignItems: "center", gap: 10
+                    }}>
+                      <div style={{
+                        width: 24, height: 24, background: uploadedCount === 4 ? "#1A6B3A" : "#E8600A", borderRadius: 12,
+                        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                      }}>
+                        {uploadedCount === 4 ? <CheckCircle size={12} color="white" /> : <span style={{ color: "white", fontSize: 11, fontWeight: 700 }}>{uploadedCount}</span>}
+                      </div>
+                      <span style={{ color: uploadedCount === 4 ? "#1A6B3A" : "#B85C00", fontSize: 12, fontWeight: 500 }}>
+                        {uploadedCount === 4 ? "All documents uploaded!" : `${uploadedCount}/4 documents uploaded`}
+                      </span>
+                    </div>
 
-                          {uploaded ? (
-                            <div style={{ background: "white", borderRadius: 8, padding: "8px 10px" }}>
-                              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, minWidth: 0 }}>
-                                  <FileCheck size={12} color="#1A6B3A" />
-                                  <span style={{ fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{uploaded.fileName}</span>
-                                </div>
-                                <div style={{ display: "flex", gap: 6 }}>
-                                  <button onClick={() => handleViewDoc(uploaded.fileData, uploaded.mimeType)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><Eye size={14} color="#7A5C40" /></button>
-                                  <button onClick={() => handleDeleteDoc(doc.name)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2 }}><Trash2 size={14} color="#A0251E" /></button>
+                    <div style={{ height: 6, background: "#EBE1CE", borderRadius: 100, overflow: "hidden" }}>
+                      <div style={{ height: 6, borderRadius: 100, background: uploadedCount === 4 ? "#1A6B3A" : "#E8600A", width: `${(uploadedCount / 4) * 100}%`, transition: "width 0.4s ease" }} />
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                      {REQUIRED_DOCS.map((doc) => {
+                        const uploaded = uploadedDocs[doc.name];
+                        const isUploading = uploading === doc.name;
+                        const DocIcon = doc.icon;
+                        return (
+                          <div key={doc.name} style={{
+                            background: uploaded ? "#F0FBF4" : "#FAF6EF", borderRadius: 11,
+                            outline: `1px solid ${uploaded ? "#A8DDB8" : "rgba(44,26,14,0.12)"}`, outlineOffset: -1,
+                            padding: 12,
+                            transition: "all 0.3s ease",
+                          }}>
+                            <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
+                              <div style={{
+                                width: 32, height: 32, borderRadius: 8, background: uploaded ? "#C6ECDA" : "#F3EDE0",
+                                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                                transition: "all 0.3s ease",
+                              }}>
+                                <DocIcon size={14} color={uploaded ? "#1A6B3A" : "#A68660"} />
+                              </div>
+                              <div style={{ flex: 1 }}>
+                                <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>{doc.label}</div>
+                                <div style={{ color: "#A68660", fontSize: 10, marginTop: 2 }}>{doc.description}</div>
+                              </div>
+                              {uploaded && <CheckCircle size={16} color="#1A6B3A" />}
+                            </div>
+
+                            {uploaded ? (
+                              <div style={{ background: "white", borderRadius: 8, padding: "8px 10px", transition: "all 0.3s ease" }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, minWidth: 0 }}>
+                                    <FileCheck size={12} color="#1A6B3A" />
+                                    <span style={{ fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#2C1A0E" }}>{uploaded.fileName}</span>
+                                  </div>
+                                  <div style={{ display: "flex", gap: 6 }}>
+                                    <button onClick={() => handleViewDoc(uploaded.fileData, uploaded.mimeType)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, transition: "all 0.3s ease" }}><Eye size={14} color="#7A5C40" /></button>
+                                    <button onClick={() => handleDeleteDoc(doc.name)} style={{ background: "none", border: "none", cursor: "pointer", padding: 2, transition: "all 0.3s ease" }}><Trash2 size={14} color="#A0251E" /></button>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          ) : (
-                            <label style={{
-                              display: "flex", flexDirection: "column", alignItems: "center",
-                              padding: "12px", borderRadius: 8, border: "2px dashed rgba(44,26,14,0.15)",
-                              cursor: isUploading ? "not-allowed" : "pointer", background: isUploading ? "#F3EDE0" : "transparent"
-                            }}>
-                              {isUploading ? <Loader2 size={20} color="#E8600A" className="animate-spin" /> : <Upload size={20} color="#A68660" />}
-                              <span style={{ color: "#A68660", fontSize: 11, marginTop: 4 }}>{isUploading ? "Uploading..." : "Tap to upload"}</span>
-                              <span style={{ color: "#C0A882", fontSize: 9, marginTop: 2 }}>{doc.accept.includes("pdf") ? "PDF or Image" : "Image"} · Max 5MB</span>
-                              <input type="file" accept={doc.accept} style={{ display: "none" }} disabled={!!uploading} onChange={(e) => { const file = e.target.files?.[0]; if (file) handleDocUpload(file, doc.name); e.target.value = ""; }} />
-                            </label>
-                          )}
-                        </div>
-                      );
-                    })}
+                            ) : (
+                              <label style={{
+                                display: "flex", flexDirection: "column", alignItems: "center",
+                                padding: "12px", borderRadius: 8, border: "2px dashed rgba(44,26,14,0.15)",
+                                cursor: isUploading ? "not-allowed" : "pointer", background: isUploading ? "#F3EDE0" : "transparent",
+                                transition: "all 0.3s ease",
+                              }}
+                              onMouseEnter={(e) => {
+                                if (!isUploading) {
+                                  e.currentTarget.style.borderColor = "#E8600A";
+                                  e.currentTarget.style.background = "rgba(232,96,10,0.05)";
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                if (!isUploading) {
+                                  e.currentTarget.style.borderColor = "rgba(44,26,14,0.15)";
+                                  e.currentTarget.style.background = "transparent";
+                                }
+                              }}>
+                                {isUploading ? <Loader2 size={20} color="#E8600A" className="animate-spin" /> : <Upload size={20} color="#A68660" />}
+                                <span style={{ color: "#A68660", fontSize: 11, marginTop: 4 }}>{isUploading ? "Uploading..." : "Tap to upload"}</span>
+                                <span style={{ color: "#C0A882", fontSize: 9, marginTop: 2 }}>{doc.accept.includes("pdf") ? "PDF or Image" : "Image"} · Max 5MB</span>
+                                <input type="file" accept={doc.accept} style={{ display: "none" }} disabled={!!uploading} onChange={(e) => { const file = e.target.files?.[0]; if (file) handleDocUpload(file, doc.name); e.target.value = ""; }} />
+                              </label>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <button onClick={() => setStep(2)} disabled={!allDocsUploaded} style={{
+                      width: "100%", padding: "12px 20px", marginTop: 4,
+                      background: allDocsUploaded ? "#E8600A" : "#EBE1CE",
+                      boxShadow: allDocsUploaded ? "0px 2px 0px #C04E06" : "none",
+                      borderRadius: 9, outline: allDocsUploaded ? "1px solid #C04E06" : "none", outlineOffset: -1,
+                      border: "none", cursor: allDocsUploaded ? "pointer" : "not-allowed",
+                      color: allDocsUploaded ? "white" : "#A68660", fontSize: 14, fontWeight: 600,
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (allDocsUploaded) {
+                        e.currentTarget.style.background = "#C06A18";
+                        e.currentTarget.style.transform = "scale(1.02)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (allDocsUploaded) {
+                        e.currentTarget.style.background = "#E8600A";
+                        e.currentTarget.style.transform = "scale(1)";
+                      }
+                    }}>
+                      {allDocsUploaded ? "Continue →" : `Upload ${4 - uploadedCount} more`}
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Step 2 - Payment */}
+            {!success && step === 2 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {/* Back button to go to Step 1 */}
+                <button 
+                  onClick={goToPreviousStep}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#7A5C40",
+                    fontSize: 12,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: 500,
+                    padding: "4px 0",
+                    transition: "all 0.3s ease",
+                    alignSelf: "flex-start",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#E8600A";
+                    e.currentTarget.style.transform = "translateX(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#7A5C40";
+                    e.currentTarget.style.transform = "translateX(0)";
+                  }}
+                >
+                  <ChevronLeft size={16} />
+                  Back to Documents
+                </button>
+
+                <div style={{ background: "#F3EDE0", borderRadius: 11, padding: "14px 16px" }}>
+                  <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>SUMMARY</div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>City</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12, fontWeight: 600 }}>{user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Standard"}</span>
                   </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Documents</span>
+                    <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>4/4 ✓</span>
+                  </div>
+                </div>
 
-                  <button onClick={() => setStep(2)} disabled={!allDocsUploaded} style={{
-                    width: "100%", padding: "12px 20px", marginTop: 4,
-                    background: allDocsUploaded ? "#E8600A" : "#EBE1CE",
-                    boxShadow: allDocsUploaded ? "0px 2px 0px #C04E06" : "none",
-                    borderRadius: 9, outline: allDocsUploaded ? "1px solid #C04E06" : "none", outlineOffset: -1,
-                    border: "none", cursor: allDocsUploaded ? "pointer" : "not-allowed",
-                    color: allDocsUploaded ? "white" : "#A68660", fontSize: 14, fontWeight: 600
+                <div style={{ background: "#FFFCF8", borderRadius: 11, padding: "14px 16px", outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
+                  <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>FEE BREAKDOWN</div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Municipal Fee</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{price.municipalFee}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Service Fee</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{price.serviceFee}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>CGST + SGST (18%)</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{(price.cgst + price.sgst).toFixed(2)}</span>
+                  </div>
+                  <div style={{ borderTop: "1px solid rgba(44,26,14,0.10)", paddingTop: 8, marginTop: 4, display: "flex", justifyContent: "space-between" }}>
+                    <span style={{ color: "#2C1A0E", fontSize: 14, fontWeight: 700 }}>Total</span>
+                    <span style={{ color: "#E8600A", fontSize: 18, fontWeight: 700 }}>₹{price.total.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div style={{ padding: "10px 12px", background: "#FFF4E4", borderRadius: 9 }}>
+                  <div style={{ color: "#B85C00", fontSize: 11, fontWeight: 600, marginBottom: 4 }}>📋 Important</div>
+                  <div style={{ color: "#7A5C40", fontSize: 11, lineHeight: "16px" }}>
+                    Municipal Corporation will send an OTP. <strong>Share it only on Tailio's WhatsApp</strong>.
+                  </div>
+                </div>
+
+                {createdPetId && (
+                  <PaymentButton petId={createdPetId} petName={form.name || "your pet"} amount={price.total} onSuccess={handlePaymentSuccess} onFailure={(err) => setError(`Payment failed: ${err}`)} />
+                )}
+
+                {isSubmitting && (
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "8px 0" }}>
+                    <Loader2 size={16} color="#E8600A" className="animate-spin" />
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Processing...</span>
+                  </div>
+                )}
+
+                <button onClick={() => setStep(1)} style={{ background: "none", border: "none", cursor: "pointer", color: "#7A5C40", fontSize: 12, textAlign: "center", padding: "4px 0", transition: "all 0.3s ease" }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#E8600A";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#7A5C40";
                   }}>
-                    {allDocsUploaded ? "Continue →" : `Upload ${4 - uploadedCount} more`}
-                  </button>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* Step 2 - Payment */}
-          {!success && step === 2 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <div style={{ background: "#F3EDE0", borderRadius: 11, padding: "14px 16px" }}>
-                <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>SUMMARY</div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ color: "#7A5C40", fontSize: 12 }}>City</span>
-                  <span style={{ color: "#2C1A0E", fontSize: 12, fontWeight: 600 }}>{user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Standard"}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Documents</span>
-                  <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>4/4 ✓</span>
-                </div>
+                  ← Back to documents
+                </button>
               </div>
-
-              <div style={{ background: "#FFFCF8", borderRadius: 11, padding: "14px 16px", outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
-                <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>FEE BREAKDOWN</div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Municipal Fee</span>
-                  <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{price.municipalFee}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Service Fee</span>
-                  <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{price.serviceFee}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ color: "#7A5C40", fontSize: 12 }}>CGST + SGST (16%)</span>
-                  <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{(price.cgst + price.sgst).toFixed(2)}</span>
-                </div>
-                <div style={{ borderTop: "1px solid rgba(44,26,14,0.10)", paddingTop: 8, marginTop: 4, display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ color: "#2C1A0E", fontSize: 14, fontWeight: 700 }}>Total</span>
-                  <span style={{ color: "#E8600A", fontSize: 18, fontWeight: 700 }}>₹{price.total.toFixed(2)}</span>
-                </div>
-              </div>
-
-              <div style={{ padding: "10px 12px", background: "#FFF4E4", borderRadius: 9 }}>
-                <div style={{ color: "#B85C00", fontSize: 11, fontWeight: 600, marginBottom: 4 }}>📋 Important</div>
-                <div style={{ color: "#7A5C40", fontSize: 11, lineHeight: "16px" }}>
-                  Municipal Corporation will send an OTP. <strong>Share it only on Tailio's WhatsApp</strong>.
-                </div>
-              </div>
-
-              {createdPetId && (
-                <PaymentButton petId={createdPetId} petName={form.name || "your pet"} amount={price.total} onSuccess={handlePaymentSuccess} onFailure={(err) => setError(`Payment failed: ${err}`)} />
-              )}
-
-              {loading && (
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "8px 0" }}>
-                  <Loader2 size={16} color="#E8600A" className="animate-spin" />
-                  <span style={{ color: "#7A5C40", fontSize: 12 }}>Processing...</span>
-                </div>
-              )}
-
-              <button onClick={() => setStep(1)} style={{ background: "none", border: "none", cursor: "pointer", color: "#7A5C40", fontSize: 12, textAlign: "center", padding: "4px 0" }}>
-                ← Back to documents
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

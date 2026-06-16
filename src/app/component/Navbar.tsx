@@ -81,9 +81,12 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
-  const isDashboardPage = pathname?.startsWith('/dashboard');
+  // Don't show navbar if user is logged in OR on dashboard page
   if (!isMounted || loading) return null;
-  if (isDashboardPage)       return null;
+  
+  // Hide navbar completely when user is authenticated (logged in)
+  // This ensures navbar is ONLY visible when user is NOT logged in
+  if (isAuthenticated) return null;
 
   return (
     <>
@@ -112,14 +115,34 @@ export default function Navbar() {
           boxSizing: 'border-box',
         }}>
 
-          {/* LOGO - Larger size like desktop */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
+          {/* LOGO with subtle animation */}
+          <Link 
+            href="/" 
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              textDecoration: 'none', 
+              flexShrink: 0,
+              transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.03)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
             <Image
               src="/images/tailio.png"
               alt="Tailio logo"
               width={800}
               height={880}
-              style={{ width: 'auto', height: 230, objectFit: 'contain' }}
+              style={{ 
+                width: 'auto', 
+                height: 230, 
+                objectFit: 'contain',
+                transition: 'filter 0.3s ease',
+              }}
               priority
             />
           </Link>
@@ -141,6 +164,16 @@ export default function Navbar() {
                     whiteSpace: 'nowrap',
                     display: 'inline-flex',
                     alignItems: 'center',
+                    transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    position: 'relative',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#E8600A';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#7A5C40';
+                    e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
                   {link.label}
@@ -151,79 +184,43 @@ export default function Navbar() {
 
           {/* RIGHT SIDE - Auth Buttons + Hamburger */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            {isAuthenticated ? (
-              <>
-                {!isMobile && (
-                  <>
-                    <span style={{ color: '#7A5C40', fontSize: 14, fontFamily: DM_SANS }}>
-                      Welcome, {displayName}
-                    </span>
-                    <button
-                      onClick={handleDashboardClick}
-                      style={{
-                        padding: '9px 18px',
-                        background: '#E8600A',
-                        boxShadow: '0px 1.5px 0px #C04E06',
-                        borderRadius: 9,
-                        outline: '1px #C04E06 solid',
-                        outlineOffset: -1,
-                        color: '#FFFFFF',
-                        fontSize: 13.5,
-                        fontFamily: DM_SANS,
-                        fontWeight: 600,
-                        whiteSpace: 'nowrap',
-                        cursor: 'pointer',
-                        border: 'none',
-                      }}
-                    >
-                      Dashboard
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      style={{
-                        padding: '9px 18px',
-                        background: '#2C1A0E',
-                        borderRadius: 9,
-                        color: '#FFFFFF',
-                        fontSize: 13.5,
-                        fontFamily: DM_SANS,
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        border: 'none',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      Logout
-                    </button>
-                  </>
-                )}
-              </>
-            ) : (
-              !isMobile && (
-                <button
-                  onClick={() => setShowRegister(true)}
-                  style={{
-                    padding: '9px 18px',
-                    background: '#E8600A',
-                    boxShadow: '0px 1.5px 0px #C04E06',
-                    borderRadius: 9,
-                    outline: '1px #C04E06 solid',
-                    outlineOffset: -1,
-                    color: '#FFFFFF',
-                    fontSize: 13.5,
-                    fontFamily: DM_SANS,
-                    fontWeight: 600,
-                    whiteSpace: 'nowrap',
-                    cursor: 'pointer',
-                    border: 'none',
-                  }}
-                >
-                  Register Your Pet
-                </button>
-              )
+            {!isMobile && (
+              <button
+                onClick={() => setShowRegister(true)}
+                style={{
+                  padding: '9px 18px',
+                  background: '#E8600A',
+                  boxShadow: '0px 1.5px 0px #C04E06',
+                  borderRadius: 9,
+                  outline: '1px #C04E06 solid',
+                  outlineOffset: -1,
+                  color: '#FFFFFF',
+                  fontSize: 13.5,
+                  fontFamily: DM_SANS,
+                  fontWeight: 600,
+                  whiteSpace: 'nowrap',
+                  cursor: 'pointer',
+                  border: 'none',
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#C06A18';
+                  e.currentTarget.style.transform = 'translateY(-2px) scale(1.03)';
+                  e.currentTarget.style.boxShadow = '0px 4px 16px rgba(232,96,10,0.35)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#E8600A';
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '0px 1.5px 0px #C04E06';
+                }}
+              >
+                Register Your Pet
+              </button>
             )}
 
-            {/* HAMBURGER — mobile only - with brown color */}
+            {/* HAMBURGER — mobile only */}
             <button
               type="button"
               onClick={() => setMenuOpen((p) => !p)}
@@ -241,28 +238,37 @@ export default function Navbar() {
                 minWidth: 44,
                 minHeight: 44,
                 borderRadius: 8,
+                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#E8600A';
+                e.currentTarget.style.background = 'rgba(232,96,10,0.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(44,26,14,0.18)';
+                e.currentTarget.style.background = 'transparent';
               }}
             >
               <span style={{
                 display: 'block', width: 18, height: 2,
-                background: '#7A5C40',  /* Changed to brown color */
+                background: menuOpen ? '#E8600A' : '#7A5C40',
                 borderRadius: 2,
-                transition: 'transform 0.22s ease, opacity 0.22s ease',
+                transition: 'all 0.22s ease',
                 transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
               }} />
               <span style={{
                 display: 'block', height: 2,
-                background: '#7A5C40',  /* Changed to brown color */
+                background: menuOpen ? '#E8600A' : '#7A5C40',
                 borderRadius: 2,
-                transition: 'opacity 0.22s ease, width 0.22s ease',
+                transition: 'all 0.22s ease',
                 opacity: menuOpen ? 0 : 1,
                 width: menuOpen ? 0 : 18,
               }} />
               <span style={{
                 display: 'block', width: 18, height: 2,
-                background: '#7A5C40',  /* Changed to brown color */
+                background: menuOpen ? '#E8600A' : '#7A5C40',
                 borderRadius: 2,
-                transition: 'transform 0.22s ease, opacity 0.22s ease',
+                transition: 'all 0.22s ease',
                 transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
               }} />
             </button>
@@ -298,6 +304,17 @@ export default function Navbar() {
                       fontFamily: DM_SANS,
                       fontWeight: 500,
                       textDecoration: 'none',
+                      transition: 'all 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#E8600A';
+                      e.currentTarget.style.background = 'rgba(232,96,10,0.05)';
+                      e.currentTarget.style.paddingLeft = '16px';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#7A5C40';
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.paddingLeft = '8px';
                     }}
                   >
                     {link.label}
@@ -307,65 +324,51 @@ export default function Navbar() {
             </ul>
 
             <div style={{ padding: '12px 20px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {isAuthenticated ? (
-                <>
-                  <p style={{ margin: 0, color: '#7A5C40', fontSize: 14, fontFamily: DM_SANS, padding: '4px 8px' }}>
-                    Welcome, {displayName}
-                  </p>
-                  <button
-                    onClick={handleDashboardClick}
-                    style={{
-                      width: '100%', padding: '14px 20px',
-                      background: '#E8600A',
-                      boxShadow: '0px 2px 0px #C04E06',
-                      border: '1px solid #C04E06',
-                      borderRadius: 9, color: '#FFFFFF',
-                      fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
-                    }}
-                  >
-                    Dashboard
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    style={{
-                      width: '100%', padding: '14px 20px',
-                      background: '#2C1A0E',
-                      borderRadius: 9, color: '#FFFFFF',
-                      fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
-                    }}
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => { setShowRegister(true); setMenuOpen(false); }}
-                    style={{
-                      width: '100%', padding: '14px 20px',
-                      background: '#E8600A',
-                      boxShadow: '0px 2px 0px #C04E06',
-                      border: '1px solid #C04E06',
-                      borderRadius: 9, color: '#FFFFFF',
-                      fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
-                    }}
-                  >
-                    Register Your Pet
-                  </button>
-                  <button
-                    onClick={() => { setShowLogin(true); setMenuOpen(false); }}
-                    style={{
-                      width: '100%', padding: '14px 20px',
-                      background: 'transparent',
-                      border: '1px solid #E8600A',
-                      borderRadius: 9, color: '#E8600A',
-                      fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
-                    }}
-                  >
-                    Login
-                  </button>
-                </>
-              )}
+              <button
+                onClick={() => { setShowRegister(true); setMenuOpen(false); }}
+                style={{
+                  width: '100%', padding: '14px 20px',
+                  background: '#E8600A',
+                  boxShadow: '0px 2px 0px #C04E06',
+                  border: '1px solid #C04E06',
+                  borderRadius: 9, color: '#FFFFFF',
+                  fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#C06A18';
+                  e.currentTarget.style.transform = 'scale(1.02)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#E8600A';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                Register Your Pet
+              </button>
+              <button
+                onClick={() => { setShowLogin(true); setMenuOpen(false); }}
+                style={{
+                  width: '100%', padding: '14px 20px',
+                  background: 'transparent',
+                  border: '1px solid #E8600A',
+                  borderRadius: 9, color: '#E8600A',
+                  fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#E8600A';
+                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.transform = 'scale(1.02)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = '#E8600A';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                Login
+              </button>
             </div>
           </div>
         )}
@@ -380,9 +383,17 @@ export default function Navbar() {
             background: 'rgba(44,26,14,0.35)',
             zIndex: 99,
             backdropFilter: 'blur(2px)',
+            animation: 'fadeIn 0.3s ease',
           }}
         />
       )}
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      `}</style>
 
       {/* MODALS */}
       <RegisterModal

@@ -101,8 +101,8 @@ export default function Sidebar() {
           </div>
         </nav>
 
-        {/* Important Information */}
-        <div className="px-3 py-3">
+        {/* Important Information - Moved right after navigation, before flex spacer */}
+        <div className="px-3 py-4 mt-2">
           <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(232,96,10,0.15)", border: "1px solid rgba(232,96,10,0.4)" }}>
             <div className="flex items-start space-x-2 mb-3">
               <Info className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
@@ -124,6 +124,9 @@ export default function Sidebar() {
             </ul>
           </div>
         </div>
+
+        {/* Spacer to push logout to bottom */}
+        <div style={{ flex: 1 }} />
 
         {/* Logout */}
         <div className="p-4 border-t" style={{ borderColor: "rgba(255,255,255,0.1)" }}>

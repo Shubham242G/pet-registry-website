@@ -423,84 +423,101 @@ export default function AboutPage() {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      maxWidth: 500,
-      margin: '0 auto'
+      padding: '0 20px'
     }}>
-      {[
-        { num: 1, name: 'Kaavya Chhabra', quote: '"Compliance shouldn\'t feel like punishment."', bio: 'Teacher by profession and devoted pet parent, inspired by Mylo and Felix to celebrate the joy, chaos, companionship, and unforgettable bond pets bring daily.' },
-      ].map((f) => (
-        <div key={f.name} style={{ 
+      <div style={{ 
+        maxWidth: 420,
+        width: '100%'
+      }}>
+        <div style={{ 
           background: '#FFFCF8', 
           overflow: 'hidden', 
-          borderRadius: 18, 
-          outline: '1px rgba(44,26,14,0.10) solid', 
-          outlineOffset: -1, 
-          display: 'flex', 
-          flexDirection: 'column',
-          width: '100%',
+          borderRadius: 24, 
+          outline: '1px solid rgba(44,26,14,0.10)', 
+          outlineOffset: -1,
+          boxShadow: '0px 8px 24px rgba(44, 26, 14, 0.06)',
           transition: 'transform 0.2s ease, box-shadow 0.2s ease',
         }}>
-          <FounderSilhouette variant={f.num} hideNumber={true} />
-          <div style={{ padding: isMobile ? 20 : 28, display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div>
+          <FounderSilhouette variant={1} hideNumber={true} />
+          <div style={{ padding: isMobile ? 28 : 32, textAlign: 'center' }}>
+            {/* Role Badge */}
+            <div style={{
+              display: 'inline-flex',
+              padding: '4px 12px',
+              background: '#FFF0E4',
+              borderRadius: 100,
+              marginBottom: 16
+            }}>
               <span style={{ 
                 color: '#C04E06', 
-                fontSize: getResponsiveFontSize(10, 9, 9), 
+                fontSize: 9.5, 
                 fontFamily: F.dmMono, 
                 fontWeight: 500, 
                 textTransform: 'uppercase', 
-                lineHeight: '15px', 
-                letterSpacing: '1.14px',
-                display: 'block',
-                marginBottom: 8
+                letterSpacing: '1.14px'
               }}>Co-founder</span>
-              <span style={{ 
-                color: '#2C1A0E', 
-                fontSize: getResponsiveFontSize(22, 20, 18), 
-                fontFamily: F.fraunces, 
-                fontWeight: 700, 
-                lineHeight: '30px',
-                display: 'block',
-                marginBottom: 10
-              }}>{f.name}</span>
-              <span style={{ 
-                color: '#E8600A', 
-                fontSize: getResponsiveFontSize(14, 13, 12), 
-                fontFamily: F.dmSans, 
-                fontWeight: 500, 
-                fontStyle: 'italic',
-                lineHeight: '21px',
-                display: 'block'
-              }}>{f.quote}</span>
             </div>
-            <div style={{ 
-              paddingTop: 16, 
-              marginTop: 4, 
-              borderTop: '1px solid rgba(44,26,14,0.10)' 
+            
+            {/* Name */}
+            <h3 style={{ 
+              color: '#2C1A0E', 
+              fontSize: getResponsiveFontSize(24, 22, 20), 
+              fontFamily: F.fraunces, 
+              fontWeight: 900, 
+              lineHeight: '1.3',
+              marginBottom: 12
             }}>
-              <span style={{ 
+              Kaavya Chhabra
+            </h3>
+            
+            {/* Quote */}
+            <p style={{ 
+              color: '#E8600A', 
+              fontSize: getResponsiveFontSize(15, 14, 13), 
+              fontFamily: F.dmSans, 
+              fontWeight: 500, 
+              fontStyle: 'italic',
+              lineHeight: '1.4',
+              marginBottom: 20,
+              padding: '0 8px'
+            }}>
+              "Compliance shouldn't feel like punishment."
+            </p>
+            
+            {/* Divider */}
+            <div style={{ 
+              height: 1, 
+              background: 'rgba(44,26,14,0.08)',
+              marginBottom: 20
+            }} />
+            
+            {/* Background Section */}
+            <div>
+              <div style={{ 
                 color: '#A68660', 
-                fontSize: getResponsiveFontSize(10, 9, 9), 
+                fontSize: 10, 
                 fontFamily: F.dmSans, 
                 fontWeight: 600, 
                 textTransform: 'uppercase', 
-                lineHeight: '15px', 
                 letterSpacing: '0.8px',
-                display: 'block',
-                marginBottom: 10
-              }}>Background</span>
-              <span style={{ 
+                marginBottom: 12
+              }}>
+                Background
+              </div>
+              <p style={{ 
                 color: '#7A5C40', 
-                fontSize: getResponsiveFontSize(13, 12, 11.5), 
+                fontSize: getResponsiveFontSize(13.5, 13, 12.5), 
                 fontFamily: F.dmSans, 
                 fontWeight: 400, 
-                lineHeight: '20px',
-                display: 'block'
-              }}>{f.bio}</span>
+                lineHeight: '1.5',
+                textAlign: 'center'
+              }}>
+                Teacher by profession and devoted pet parent, inspired by Mylo and Felix to celebrate the joy, chaos, companionship, and unforgettable bond pets bring daily.
+              </p>
             </div>
           </div>
         </div>
-      ))}
+      </div>
     </div>
   </div>
 </div>

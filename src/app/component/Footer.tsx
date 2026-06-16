@@ -32,7 +32,6 @@ export default function Footer() {
     return desktop;
   };
 
-  // Define all links for easier maintenance
   const platformLinks = [
     { name: 'Pet Registration', href: '/pet-registration' },
     { name: 'Digital Pet ID', href: '/digital-pet-id' },
@@ -72,25 +71,25 @@ export default function Footer() {
       <div style={{ 
         maxWidth: 1200, 
         margin: '0 auto', 
-        padding: isMobile ? '32px 20px 0' : '40px 40px 0' 
+        padding: isMobile ? '24px 20px 0' : '28px 40px 0' 
       }}>
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : '1.5fr 1fr 1fr 1fr'), 
-          gap: isMobile ? 28 : 32, 
-          paddingBottom: 20, 
+          gap: isMobile ? 20 : 24, 
+          paddingBottom: 12, 
           borderBottom: '1px solid rgba(255,255,255,0.06)',
           alignItems: 'flex-start'
         }}>
           {/* Brand Column - Links to home */}
           <div>
             <Link href="/" style={{ display: 'inline-block', textDecoration: 'none' }}>
-              <div style={{ marginBottom: 12 }}>
+              <div style={{ marginBottom: 8 }}>
                 <Image 
                   src="/images/tailio.png" 
                   alt="Tailio" 
-                  width={180} 
-                  height={54} 
+                  width={200} 
+                  height={192} 
                   style={{ objectFit: 'contain' }} 
                 />
               </div>
@@ -101,7 +100,7 @@ export default function Footer() {
           <div>
             <span style={{ 
               color: '#FF8C3A', 
-              fontSize: getResponsiveFontSize(11, 10, 10), 
+              fontSize: getResponsiveFontSize(10, 9.5, 9.5), 
               textTransform: 'uppercase', 
               letterSpacing: '1.2px', 
               fontWeight: 500,
@@ -109,13 +108,14 @@ export default function Footer() {
             }}>
               Platform
             </span>
-            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {platformLinks.map((link) => (
                 <Link key={link.name} href={link.href} style={{ textDecoration: 'none' }}>
                   <div 
                     style={{ 
                       ...linkStyle,
-                      fontSize: getResponsiveFontSize(13, 12, 11),
+                      fontSize: getResponsiveFontSize(12.5, 11.5, 11),
+                      padding: '2px 0',
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.color = linkHoverStyle.color}
                     onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(250,246,239,0.45)'}
@@ -131,7 +131,7 @@ export default function Footer() {
           <div>
             <span style={{ 
               color: '#FF8C3A', 
-              fontSize: getResponsiveFontSize(11, 10, 10), 
+              fontSize: getResponsiveFontSize(10, 9.5, 9.5), 
               textTransform: 'uppercase', 
               letterSpacing: '1.2px', 
               fontWeight: 500,
@@ -139,13 +139,14 @@ export default function Footer() {
             }}>
               Cities
             </span>
-            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {cityLinks.map((link) => (
                 <Link key={link.name} href={link.href} style={{ textDecoration: 'none' }}>
                   <div 
                     style={{ 
                       ...linkStyle,
-                      fontSize: getResponsiveFontSize(13, 12, 11),
+                      fontSize: getResponsiveFontSize(12.5, 11.5, 11),
+                      padding: '2px 0',
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.color = linkHoverStyle.color}
                     onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(250,246,239,0.45)'}
@@ -161,7 +162,7 @@ export default function Footer() {
           <div>
             <span style={{ 
               color: '#FF8C3A', 
-              fontSize: getResponsiveFontSize(11, 10, 10), 
+              fontSize: getResponsiveFontSize(10, 9.5, 9.5), 
               textTransform: 'uppercase', 
               letterSpacing: '1.2px', 
               fontWeight: 500,
@@ -169,13 +170,14 @@ export default function Footer() {
             }}>
               Company
             </span>
-            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {companyLinks.map((link) => (
                 <Link key={link.name} href={link.href} style={{ textDecoration: 'none' }}>
                   <div 
                     style={{ 
                       ...linkStyle,
-                      fontSize: getResponsiveFontSize(13, 12, 11),
+                      fontSize: getResponsiveFontSize(12.5, 11.5, 11),
+                      padding: '2px 0',
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.color = linkHoverStyle.color}
                     onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(250,246,239,0.45)'}
@@ -189,10 +191,10 @@ export default function Footer() {
         </div>
         
         {/* Copyright */}
-        <div style={{ textAlign: 'center', padding: '16px 0 24px' }}>
+        <div style={{ textAlign: 'center', padding: '12px 0 16px' }}>
           <span style={{ 
             color: 'rgba(250,246,239,0.25)', 
-            fontSize: getResponsiveFontSize(12, 11, 10),
+            fontSize: getResponsiveFontSize(11, 10.5, 10),
             fontFamily: F.dmSans,
           }}>
             © 2026 Truzo Infotech Pvt. Ltd. All rights reserved.
