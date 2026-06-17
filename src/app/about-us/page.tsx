@@ -388,137 +388,291 @@ export default function AboutPage() {
 </div>
 
       {/* ── FOUNDERS ──────────────────────────────────────────────────────── */}
-<div id="founders" style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
-  <div style={{ maxWidth: 1200, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box' }}>
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 48 }}>
-      <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-        <Badge text="The founders" />
-      </div>
-      <div style={{ 
-        color: '#2C1A0E', 
-        fontSize: getResponsiveFontSize(38, 32, 28), 
-        fontFamily: F.fraunces, 
-        fontWeight: 900, 
-        lineHeight: 1.2, 
-        textAlign: 'center',
-        padding: '0 20px'
+<div id="founders" style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box', paddingTop: 80, paddingBottom: 80 }}>
+  <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px', boxSizing: 'border-box' }}>
+
+    {/* ── Top accent line ── */}
+    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+      <div style={{ width: 32, height: 2.5, background: '#E8600A', borderRadius: 2 }} />
+    </div>
+
+    {/* ── Badge ── */}
+    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+      <div style={{
+        display: 'inline-flex', alignItems: 'center',
+        padding: '5px 14px',
+        borderRadius: 100,
+        border: '1px solid rgba(44,26,14,0.22)',
+        background: 'transparent',
       }}>
-        Meet the people behind Tailio
-      </div>
-      <div style={{ 
-        maxWidth: 540, 
-        color: '#7A5C40', 
-        fontSize: getResponsiveFontSize(14.5, 14, 13), 
-        fontFamily: F.dmSans, 
-        fontWeight: 400, 
-        lineHeight: '23.93px', 
-        textAlign: 'center',
-        padding: '0 20px'
-      }}>
-        One belief — that every pet deserves a legal identity, and every owner deserves a simple way to provide one.
+        <span style={{
+          color: '#2C1A0E',
+          fontSize: 10,
+          fontFamily: F.dmMono,
+          fontWeight: 500,
+          textTransform: 'uppercase',
+          letterSpacing: '1.4px',
+        }}>The Founder</span>
       </div>
     </div>
 
-    <div style={{ 
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '0 20px'
-    }}>
-      <div style={{ 
-        maxWidth: 420,
-        width: '100%'
+    {/* ── Headline ── */}
+    <div style={{ textAlign: 'center', marginBottom: 16 }}>
+      <div style={{
+        color: '#2C1A0E',
+        fontSize: isMobile ? 28 : 38,
+        fontFamily: F.fraunces,
+        fontWeight: 900,
+        lineHeight: 1.15,
+        marginBottom: 4,
       }}>
-        <div style={{ 
-          background: '#FFFCF8', 
-          overflow: 'hidden', 
-          borderRadius: 24, 
-          outline: '1px solid rgba(44,26,14,0.10)', 
-          outlineOffset: -1,
-          boxShadow: '0px 8px 24px rgba(44, 26, 14, 0.06)',
-          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        The person who said
+      </div>
+      <div style={{
+        color: '#E8600A',
+        fontSize: isMobile ? 28 : 38,
+        fontFamily: F.fraunces,
+        fontWeight: 700,
+        fontStyle: 'italic',
+        lineHeight: 1.15,
+      }}>
+        "there has to be a better way."
+      </div>
+    </div>
+
+    {/* ── Subtext ── */}
+    <div style={{ textAlign: 'center', marginBottom: 40 }}>
+      <div style={{ color: '#7A5C40', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '22px' }}>
+        One afternoon at an MCD portal. One frustrated pet parent.
+      </div>
+      <div style={{ color: '#7A5C40', fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 400, lineHeight: '22px' }}>
+        One platform that changed how Delhi NCR registers its pets.
+      </div>
+    </div>
+
+    {/* ── Dark Card ── */}
+    <div style={{
+      background: '#231008',
+      borderRadius: 20,
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      minHeight: isMobile ? 'auto' : 380,
+    }}>
+
+      {/* LEFT: Photo column - Image fills entire section */}
+      <div style={{
+        width: isMobile ? '100%' : '38%',
+        flexShrink: 0,
+        position: 'relative',
+        background: '#1A0A02',
+        minHeight: isMobile ? 320 : 380,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 0,
+        boxSizing: 'border-box',
+        overflow: 'hidden',
+      }}>
+        
+        {/* Founder Image - shifted to the left */}
+        <img 
+          src="/images/founder1.jpeg" 
+          alt="Kaavya Chhabra - Founder" 
+          style={{ 
+            width: '100%', 
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: '30% center',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }} 
+        />
+        
+        {/* "Parent of Mylo & Felix" pill - positioned at bottom */}
+        <div style={{
+          position: 'absolute',
+          bottom: 20,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'inline-flex', 
+          alignItems: 'center', 
+          gap: 6,
+          padding: '6px 16px',
+          background: 'rgba(44,26,14,0.85)',
+          borderRadius: 100,
+          border: '1px solid rgba(232,96,10,0.3)',
+          zIndex: 2,
+          backdropFilter: 'blur(4px)',
+          whiteSpace: 'nowrap',
         }}>
-          <FounderSilhouette variant={1} hideNumber={true} />
-          <div style={{ padding: isMobile ? 28 : 32, textAlign: 'center' }}>
-            {/* Role Badge */}
-            <div style={{
-              display: 'inline-flex',
-              padding: '4px 12px',
-              background: '#FFF0E4',
+          <span style={{ 
+            color: '#E8600A', 
+            fontSize: 11, 
+            fontFamily: F.dmSans, 
+            fontWeight: 500,
+            letterSpacing: '0.3px',
+          }}>
+            Parent of Mylo &amp; Felix
+          </span>
+        </div>
+      </div>
+
+      {/* Divider line */}
+      {!isMobile && (
+        <div style={{ width: 1, background: 'rgba(255,255,255,0.06)', flexShrink: 0 }} />
+      )}
+      {isMobile && (
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.06)' }} />
+      )}
+
+      {/* RIGHT: Info column */}
+      <div style={{
+        flex: 1,
+        padding: isMobile ? '28px 24px' : '36px 40px',
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 0,
+      }}>
+        {/* FOUNDER label with orange dash */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+          <span style={{
+            color: '#E8600A',
+            fontSize: 9.5,
+            fontFamily: F.dmMono,
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            letterSpacing: '1.4px',
+          }}>Founder</span>
+          <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.12)', maxWidth: 60 }} />
+        </div>
+
+        {/* Name */}
+        <div style={{
+          color: '#FFFFFF',
+          fontSize: isMobile ? 36 : 48,
+          fontFamily: F.fraunces,
+          fontWeight: 900,
+          lineHeight: 1.1,
+          marginBottom: 24,
+        }}>
+          Kaavya<br />Chhabra
+        </div>
+
+        {/* Quote block with orange left border */}
+        <div style={{
+          borderLeft: '3px solid #E8600A',
+          paddingLeft: 16,
+          marginBottom: 28,
+        }}>
+          <span style={{
+            color: '#E8600A',
+            fontSize: isMobile ? 15 : 17,
+            fontFamily: F.fraunces,
+            fontWeight: 700,
+            fontStyle: 'italic',
+            lineHeight: 1.4,
+          }}>
+            "Compliance shouldn't feel like punishment."
+          </span>
+        </div>
+
+        {/* Divider */}
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 20 }} />
+
+        {/* THE STORY label */}
+        <div style={{
+          color: 'rgba(255,255,255,0.28)',
+          fontSize: 9,
+          fontFamily: F.dmMono,
+          fontWeight: 500,
+          textTransform: 'uppercase',
+          letterSpacing: '1.6px',
+          marginBottom: 12,
+        }}>
+          The Story
+        </div>
+
+        {/* Story paragraph */}
+        <p style={{
+          color: 'rgba(255,255,255,0.55)',
+          fontSize: 13,
+          fontFamily: F.dmSans,
+          fontWeight: 400,
+          lineHeight: '20px',
+          margin: 0,
+          marginBottom: 24,
+        }}>
+          Kaavya is a teacher with two dogs —{' '}
+          <span style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>Mylo and Felix</span>,
+          {' '}and zero idea that they needed municipal registration. When her housing society sent a notice, she spent{' '}
+          <span style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>three hours on the MCD portal</span>
+          {' '}and gave up. She built Tailio so no pet parent ever has to have that afternoon. What started as frustration became a platform trusted by thousands of families across Delhi NCR.
+        </p>
+
+        {/* Pills row */}
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {['Pet parent of 2', 'Teacher turned founder', 'Delhi NCR'].map((tag) => (
+            <div key={tag} style={{
+              padding: '5px 14px',
               borderRadius: 100,
-              marginBottom: 16
+              border: '1px solid rgba(255,255,255,0.14)',
+              background: 'rgba(255,255,255,0.05)',
             }}>
-              <span style={{ 
-                color: '#C04E06', 
-                fontSize: 9.5, 
-                fontFamily: F.dmMono, 
-                fontWeight: 500, 
-                textTransform: 'uppercase', 
-                letterSpacing: '1.14px'
-              }}>Co-founder</span>
+              <span style={{
+                color: 'rgba(255,255,255,0.55)',
+                fontSize: 11.5,
+                fontFamily: F.dmSans,
+                fontWeight: 400,
+              }}>{tag}</span>
             </div>
-            
-            {/* Name */}
-            <h3 style={{ 
-              color: '#2C1A0E', 
-              fontSize: getResponsiveFontSize(24, 22, 20), 
-              fontFamily: F.fraunces, 
-              fontWeight: 900, 
-              lineHeight: '1.3',
-              marginBottom: 12
-            }}>
-              Kaavya Chhabra
-            </h3>
-            
-            {/* Quote */}
-            <p style={{ 
-              color: '#E8600A', 
-              fontSize: getResponsiveFontSize(15, 14, 13), 
-              fontFamily: F.dmSans, 
-              fontWeight: 500, 
-              fontStyle: 'italic',
-              lineHeight: '1.4',
-              marginBottom: 20,
-              padding: '0 8px'
-            }}>
-              "Compliance shouldn't feel like punishment."
-            </p>
-            
-            {/* Divider */}
-            <div style={{ 
-              height: 1, 
-              background: 'rgba(44,26,14,0.08)',
-              marginBottom: 20
-            }} />
-            
-            {/* Background Section */}
-            <div>
-              <div style={{ 
-                color: '#A68660', 
-                fontSize: 10, 
-                fontFamily: F.dmSans, 
-                fontWeight: 600, 
-                textTransform: 'uppercase', 
-                letterSpacing: '0.8px',
-                marginBottom: 12
-              }}>
-                Background
-              </div>
-              <p style={{ 
-                color: '#7A5C40', 
-                fontSize: getResponsiveFontSize(13.5, 13, 12.5), 
-                fontFamily: F.dmSans, 
-                fontWeight: 400, 
-                lineHeight: '1.5',
-                textAlign: 'center'
-              }}>
-                Teacher by profession and devoted pet parent, inspired by Mylo and Felix to celebrate the joy, chaos, companionship, and unforgettable bond pets bring daily.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
+
+    {/* ── Belief banner ── */}
+    <div style={{
+      marginTop: 24,
+      padding: '18px 22px',
+      background: '#FFFCF8',
+      borderRadius: 14,
+      border: '1px solid rgba(44,26,14,0.09)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 16,
+    }}>
+      <div style={{
+        width: 36,
+        height: 36,
+        background: '#E8600A',
+        borderRadius: 9,
+        flexShrink: 0,
+      }} />
+      <p style={{
+        margin: 0,
+        color: '#2C1A0E',
+        fontSize: 13.5,
+        fontFamily: F.dmSans,
+        fontWeight: 400,
+        lineHeight: '20px',
+      }}>
+        One belief —{' '}
+        <span style={{ color: '#E8600A', fontWeight: 600 }}>every pet deserves a legal identity</span>
+        , and every owner deserves a{' '}
+        <span style={{ color: '#E8600A', fontWeight: 600 }}>simple way</span>
+        {' '}to provide one.
+      </p>
+    </div>
+
+    {/* ── Bottom accent line ── */}
+    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 48 }}>
+      <div style={{ width: 32, height: 2.5, background: '#E8600A', borderRadius: 2 }} />
+    </div>
+
   </div>
 </div>
 
