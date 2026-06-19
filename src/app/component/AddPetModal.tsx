@@ -18,6 +18,7 @@ import {
 import PaymentButton from "./PaymentButton";
 import { useAuth } from "./context/AuthContext";
 import Image from "next/image";
+import CitySelector from "./CitySelector";
 
 interface AddPetModalProps {
   isOpen: boolean;
@@ -72,7 +73,14 @@ const inputGlobalStyles = `
 export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToEdit, resumePetId }: AddPetModalProps) {
   const { user } = useAuth();
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({ name: "", ageYears: "", ageMonths: "", gender: "", profilePicture: "" });
+  const [form, setForm] = useState({ 
+    name: "", 
+    ageYears: "", 
+    ageMonths: "", 
+    gender: "", 
+    profilePicture: "",
+    city: ""  // ✅ Added city field
+  });
   const [profilePreview, setProfilePreview] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [createdPetId, setCreatedPetId] = useState<string | null>(null);
@@ -83,9 +91,9 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [petCityFee, setPetCityFee] = useState(0);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-  const price = getPrice(user?.city || "");
   const uploadedCount = Object.keys(uploadedDocs).length;
   const allDocsUploaded = uploadedCount === 4;
 
@@ -114,7 +122,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     if (resumePetId) {
       setCreatedPetId(resumePetId);
       setStep(1);
-      setForm({ name: "", ageYears: "", ageMonths: "", gender: "", profilePicture: "" });
+      setForm({ name: "", ageYears: "", ageMonths: "", gender: "", profilePicture: "", city: "" });
       setProfilePreview("");
     } else if (petToEdit) {
       setCreatedPetId(null);
@@ -125,12 +133,13 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
         ageMonths: petToEdit.ageMonths?.toString() || "",
         gender: petToEdit.gender || "",
         profilePicture: petToEdit.profilePicture || "",
+        city: petToEdit.city || "",
       });
       setProfilePreview(petToEdit.profilePicture || "");
     } else {
       setCreatedPetId(null);
       setStep(0);
-      setForm({ name: "", ageYears: "", ageMonths: "", gender: "", profilePicture: "" });
+      setForm({ name: "", ageYears: "", ageMonths: "", gender: "", profilePicture: "", city: "" });
       setProfilePreview("");
     }
 
@@ -199,6 +208,13 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
 
   const handlePetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate city
+    if (!form.city) {
+      setError("Please select your pet's registration city");
+      return;
+    }
+    
     setLoading(true);
     setError("");
     try {
@@ -209,6 +225,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
         ageMonths: form.ageMonths ? parseInt(form.ageMonths) : 0,
         gender: form.gender,
         profilePicture: form.profilePicture,
+        city: form.city,
       };
 
       if (petToEdit) {
@@ -289,10 +306,15 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     setIsSubmitting(true);
     setError("");
     try {
+      const petPrice = getPrice(form.city || "");
       const response = await fetch(`${API_BASE}/registration/${createdPetId}/trigger-registration`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ paymentVerified: true, paidAmount: price.total, city: user?.city }),
+        body: JSON.stringify({ 
+          paymentVerified: true, 
+          paidAmount: petPrice.total, 
+          city: form.city 
+        }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -378,6 +400,8 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     cursor: "pointer",
   };
 
+  const petPrice = getPrice(form.city || "");
+
   return (
     <>
       <div style={{
@@ -394,7 +418,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
           <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(44,26,14,0.08)", flexShrink: 0 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                {/* Company Logo instead of PawPrint */}
                 <div style={{ 
                   width: 100, 
                   height: 100, 
@@ -540,9 +563,19 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   </select>
                 </div>
 
-                <div style={{ padding: "10px 12px", background: "#F3EDE0", borderRadius: 9 }}>
-                  <div style={{ color: "#A68660", fontSize: 9, letterSpacing: "1px", marginBottom: 2 }}>YOUR CITY</div>
-                  <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>{user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Not set"}</div>
+                {/* ✅ City Selector for Pet */}
+                <div>
+                  <CitySelector 
+                    selectedCity={form.city}
+                    onChange={(city, fee) => {
+                      setForm((f) => ({ ...f, city }));
+                      setPetCityFee(fee);
+                    }}
+                    error={!form.city && step === 0 ? "Please select your pet's registration city" : ""}
+                  />
+                  <p style={{ color: '#A68660', fontSize: 10, marginTop: 4 }}>
+                    The city where your pet will be registered (determines the municipal fee)
+                  </p>
                 </div>
 
                 <button type="submit" disabled={loading} style={{
@@ -572,7 +605,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             {/* Step 1 - Documents */}
             {!success && step === 1 && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                {/* Back button to go to Step 0 */}
                 <button 
                   onClick={goToPreviousStep}
                   style={{
@@ -733,7 +765,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             {/* Step 2 - Payment */}
             {!success && step === 2 && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                {/* Back button to go to Step 1 */}
                 <button 
                   onClick={goToPreviousStep}
                   style={{
@@ -767,8 +798,10 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                 <div style={{ background: "#F3EDE0", borderRadius: 11, padding: "14px 16px" }}>
                   <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>SUMMARY</div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12 }}>City</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12, fontWeight: 600 }}>{user?.city ? user.city.charAt(0).toUpperCase() + user.city.slice(1) : "Standard"}</span>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Registration City</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12, fontWeight: 600 }}>
+                      {form.city ? form.city.charAt(0).toUpperCase() + form.city.slice(1) : "Not selected"}
+                    </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <span style={{ color: "#7A5C40", fontSize: 12 }}>Documents</span>
@@ -780,19 +813,19 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>FEE BREAKDOWN</div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                     <span style={{ color: "#7A5C40", fontSize: 12 }}>Municipal Fee</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{price.municipalFee}</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.municipalFee}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                     <span style={{ color: "#7A5C40", fontSize: 12 }}>Service Fee</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{price.serviceFee}</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.serviceFee}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12 }}>CGST + SGST (18%)</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{(price.cgst + price.sgst).toFixed(2)}</span>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>CGST + SGST (16%)</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{(petPrice.cgst + petPrice.sgst).toFixed(2)}</span>
                   </div>
                   <div style={{ borderTop: "1px solid rgba(44,26,14,0.10)", paddingTop: 8, marginTop: 4, display: "flex", justifyContent: "space-between" }}>
                     <span style={{ color: "#2C1A0E", fontSize: 14, fontWeight: 700 }}>Total</span>
-                    <span style={{ color: "#E8600A", fontSize: 18, fontWeight: 700 }}>₹{price.total.toFixed(2)}</span>
+                    <span style={{ color: "#E8600A", fontSize: 18, fontWeight: 700 }}>₹{petPrice.total.toFixed(2)}</span>
                   </div>
                 </div>
 
@@ -804,7 +837,13 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                 </div>
 
                 {createdPetId && (
-                  <PaymentButton petId={createdPetId} petName={form.name || "your pet"} amount={price.total} onSuccess={handlePaymentSuccess} onFailure={(err) => setError(`Payment failed: ${err}`)} />
+                  <PaymentButton 
+                    petId={createdPetId} 
+                    petName={form.name || "your pet"} 
+                    amount={petPrice.total} 
+                    onSuccess={handlePaymentSuccess} 
+                    onFailure={(err) => setError(`Payment failed: ${err}`)} 
+                  />
                 )}
 
                 {isSubmitting && (

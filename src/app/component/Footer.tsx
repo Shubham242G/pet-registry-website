@@ -40,10 +40,10 @@ export default function Footer() {
   ];
 
   const cityLinks = [
-    { name: 'Delhi', href: '/delhi-pet-registration' },
-    { name: 'Noida', href: '/noida-pet-registration' },
-    { name: 'Ghaziabad', href: '/ghaziabad-pet-registration' },
-    { name: 'Gurugram', href: '/gurgaon-pet-registration' },
+    { name: 'Delhi', href: '/pet-registration-in-delhi' },
+    { name: 'Noida', href: '/pet-registration-in-noida' },
+    { name: 'Ghaziabad', href: '/pet-registration-in-ghaziabad' },
+    { name: 'Gurugram', href: '/pet-registration-in-gurgaon' },
   ];
 
   const companyLinks = [
@@ -51,6 +51,7 @@ export default function Footer() {
     { name: 'Privacy Policy', href: '/privacy-policy' },
     { name: 'Terms of Service', href: '/terms-of-service' },
     { name: 'Contact Us', href: '/contact' },
+    { name: 'Blogs', href: '/blog' },
   ];
 
   const linkStyle = {
