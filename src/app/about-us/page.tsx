@@ -193,17 +193,16 @@ export default function AboutPage() {
           </div>
           {/* Right — image */}
           {!isMobile && (
-            <div style={{ flexShrink: 0, width: isMobile ? '100%' : 460, height: isMobile ? 'auto' : 460, minHeight: isMobile ? 300 : 460, borderRadius: 20, overflow: 'hidden', position: 'relative' }}>
-              <Image
-                src="/images/about-us-banner.png"
-                alt="Tailio founders illustration"
-                fill={!isMobile}
-                width={isMobile ? 460 : undefined}
-                height={isMobile ? 460 : undefined}
-                style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-              />
-            </div>
-          )}
+  <div style={{ flexShrink: 0, width: 460, height: 460, position: 'relative' }}>
+    <Image
+      src="/images/about-us-banner.jpeg"
+      alt="Tailio founders illustration"
+      fill
+      style={{ objectFit: 'cover', borderRadius: '20px' }}
+    />
+  </div>
+)}
+          
         </div>
       </div>
 

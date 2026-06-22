@@ -5,7 +5,7 @@ import Footer from "../component/Footer";
 export default function GhaziabadPage() {
   return (
     <main className="min-h-screen bg-[#FAF6EF]">
-      {/* Alert Bar */}
+      {/* Alert Bar
       <div className="bg-[#2C1A0E] px-4 sm:px-12 py-2.5 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-sm">
           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -21,7 +21,7 @@ export default function GhaziabadPage() {
         <button className="bg-[#E8600A] hover:bg-[#d45408] px-4 py-2 rounded-lg text-white text-sm font-semibold shadow-[0_1.5px_0_#C04E06] border border-[#C04E06]">
           Register Now →
         </button>
-      </div>
+      </div> */}
 
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-20 pb-12 px-4">

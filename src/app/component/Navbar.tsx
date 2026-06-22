@@ -27,6 +27,7 @@ export default function Navbar() {
   const [isMounted,    setIsMounted]    = useState(false);
   const [displayName,  setDisplayName]  = useState('');
   const [isMobile,     setIsMobile]     = useState(false);
+  const [isHovering,   setIsHovering]   = useState(false);
 
   const { user, logout, isAuthenticated, loading } = useAuth();
 
@@ -123,28 +124,43 @@ export default function Navbar() {
               alignItems: 'center', 
               textDecoration: 'none', 
               flexShrink: 0,
-              transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.03)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
           >
-            <Image
-              src="/images/tailio.png"
-              alt="Tailio logo"
-              width={800}
-              height={880}
-              style={{ 
-                width: 'auto', 
-                height: 230, 
-                objectFit: 'contain',
-                transition: 'filter 0.3s ease',
-              }}
-              priority
-            />
+            <div style={{
+              position: 'relative',
+              display: 'inline-block',
+              transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              transform: isHovering ? 'scale(1.05) rotate(-2deg)' : 'scale(1) rotate(0deg)',
+            }}>
+              {/* Glow effect on hover */}
+              <div style={{
+                position: 'absolute',
+                inset: -8,
+                borderRadius: '50%',
+                background: isHovering ? 'rgba(232,96,10,0.15)' : 'transparent',
+                filter: isHovering ? 'blur(12px)' : 'blur(0px)',
+                transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                pointerEvents: 'none',
+              }} />
+              
+              <Image
+                src="/images/tailio.png"
+                alt="Tailio logo"
+                width={800}
+                height={880}
+                style={{ 
+                  width: 'auto', 
+                  height: 230, 
+                  objectFit: 'contain',
+                  position: 'relative',
+                  transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  filter: isHovering ? 'brightness(1.05) drop-shadow(0 4px 12px rgba(232,96,10,0.2))' : 'brightness(1) drop-shadow(0 0 0 transparent)',
+                }}
+                priority
+              />
+            </div>
           </Link>
 
           {/* DESKTOP NAV LINKS */}
