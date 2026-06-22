@@ -106,16 +106,10 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [editingPet, setEditingPet] = useState<any>(null);
-  // resumePetId: when user clicks "Continue Registration" on an incomplete pet,
-  // we pass the petId into AddPetModal so it skips step 0 and resumes at step 1
   const [resumePetId, setResumePetId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ show: boolean; petId: string; petName: string }>({ show: false, petId: "", petName: "" });
   const [isMobile, setIsMobile] = useState(false);
 
-  // ── selectedPetRef: lets loadPets read the current selectedPet without
-  // being in its dependency array. This prevents loadPets from being
-  // recreated every time selectedPet changes, which was causing the
-  // useEffect([token]) to use a stale version of loadPets.
   const selectedPetRef = useRef<Pet | null>(null);
   selectedPetRef.current = selectedPet;
 
@@ -134,11 +128,6 @@ export default function Dashboard() {
     if (!authLoading && !isAuthenticated) router.push("/");
   }, [authLoading, isAuthenticated, router]);
 
-  // ── loadPets: no selectedPet in deps — uses ref instead ──────────────────
-  // Previously selectedPet was in the useCallback dep array, which caused
-  // loadPets to be recreated on every pet selection. The useEffect that
-  // calls loadPets on token change would then have a stale reference.
-  // Using a ref breaks this cycle cleanly.
   const loadPets = useCallback(async () => {
     if (!token) return;
     try {
@@ -170,7 +159,7 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  }, [token, logout, router]); // selectedPet removed — using ref
+  }, [token, logout, router]);
 
   useEffect(() => {
     if (token) loadPets();
@@ -226,23 +215,45 @@ export default function Dashboard() {
       <div className="md:pl-64">
         <div style={{ paddingTop: 30, paddingLeft: isMobile ? 16 : 40, paddingRight: isMobile ? 16 : 40 }}>
 
-          {/* Header */}
-          <div style={{ marginLeft: isMobile ? 0 : 28, marginRight: isMobile ? 0 : 28, display: "flex", flexDirection: "column", gap: 5, marginBottom: 24 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <span style={{ color: "#A68660", fontSize: 11.5, fontFamily: F.dmSans }}>Tailio</span>
-              <span style={{ color: "#A68660", fontSize: 11.5 }}>›</span>
-              <span style={{ color: "#A68660", fontSize: 11.5, fontFamily: F.dmSans }}>Overview</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-              <span style={{ color: "#2C1A0E", fontSize: 26, fontFamily: F.fraunces, fontWeight: 900 }}>My Dashboard</span>
-              <button
-                onClick={() => { setEditingPet(null); setResumePetId(null); setIsModalOpen(true); }}
-                style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 9, paddingBottom: 9, background: "#E8600A", boxShadow: "0px 2px 0px #C04E06", borderRadius: 9, outline: "2px solid #C04E06", outlineOffset: -2, border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 7 }}
-              >
-                <span style={{ color: "white", fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 600 }}>+ Add Pet</span>
-              </button>
-            </div>
-          </div>
+          {/* Header with Tailio Symbol */}
+<div style={{ marginLeft: isMobile ? 0 : 28, marginRight: isMobile ? 0 : 28, display: "flex", flexDirection: "column", gap: 5, marginBottom: 24 }}>
+  <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+    <span style={{ color: "#A68660", fontSize: 11.5 }}>›</span>
+    <span style={{ color: "#A68660", fontSize: 11.5, fontFamily: F.dmSans }}>Overview</span>
+  </div>
+  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <span style={{ color: "#2C1A0E", fontSize: 26, fontFamily: F.fraunces, fontWeight: 900 }}>My Dashboard</span>
+      {/* Tailio Symbol - Floating, no box */}
+      <img 
+        src="/images/tailio.png" 
+        alt="Tailio" 
+        style={{ 
+          width: 150, 
+          height: 150, 
+          objectFit: "contain",
+          opacity: 0.6,
+          filter: "drop-shadow(0 2px 4px rgba(232,96,10,0.1))",
+          transition: "all 0.3s ease",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.opacity = "0.9";
+          e.currentTarget.style.transform = "scale(1.05) rotate(-3deg)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.opacity = "0.6";
+          e.currentTarget.style.transform = "scale(1) rotate(0deg)";
+        }}
+      />
+    </div>
+    <button
+      onClick={() => { setEditingPet(null); setResumePetId(null); setIsModalOpen(true); }}
+      style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 9, paddingBottom: 9, background: "#E8600A", boxShadow: "0px 2px 0px #C04E06", borderRadius: 9, outline: "2px solid #C04E06", outlineOffset: -2, border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 7 }}
+    >
+      <span style={{ color: "white", fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 600 }}>+ Add Pet</span>
+    </button>
+  </div>
+</div>
 
           {error && (
             <div style={{ margin: "0 28px 16px", padding: "10px 14px", background: "#FDECEA", borderRadius: 9, color: "#A0251E", fontSize: 13, fontFamily: F.dmSans }}>{error}</div>
@@ -272,15 +283,40 @@ export default function Dashboard() {
               {/* LEFT COLUMN */}
               <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 14 }}>
 
-                {/* WhatsApp banner */}
+                {/* WhatsApp banner with Tailio symbol */}
                 <div style={{ padding: "16px 20px", background: "linear-gradient(174deg, #162C18 0%, #0D1F0F 100%)", borderRadius: 13, outline: "1px solid rgba(37,211,102,0.12)", outlineOffset: -1, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                    <div style={{ display: "inline-flex", alignSelf: "flex-start", paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: "rgba(37,211,102,0.18)", borderRadius: 100, alignItems: "center", gap: 6 }}>
-                      <div style={{ width: 6, height: 6, background: "#6EE09A", borderRadius: 3 }} />
-                      <span style={{ color: "#6EE09A", fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600 }}>Agent available now</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                    {/* Tailio symbol in WhatsApp banner */}
+                    <div style={{
+                      width: 44,
+                      height: 44,
+                      background: "rgba(255,255,255,0.06)",
+                      borderRadius: 10,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}>
+                      <img 
+                        src="/images/tailio.png" 
+                        alt="Tailio" 
+                        style={{ 
+                          width: 30, 
+                          height: 30, 
+                          objectFit: "contain",
+                          filter: "brightness(0) invert(1)",
+                          opacity: 0.6,
+                        }} 
+                      />
                     </div>
-                    <span style={{ color: "#C8F0CC", fontSize: 15, fontFamily: F.fraunces, fontWeight: 700 }}>Register via WhatsApp — with live agent support</span>
-                    <span style={{ color: "rgba(200,240,204,0.50)", fontSize: 12, fontFamily: F.dmSans }}>A Tailio representative guides you through every step.</span>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <div style={{ display: "inline-flex", alignSelf: "flex-start", paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: "rgba(37,211,102,0.18)", borderRadius: 100, alignItems: "center", gap: 6 }}>
+                        <div style={{ width: 6, height: 6, background: "#6EE09A", borderRadius: 3 }} />
+                        <span style={{ color: "#6EE09A", fontSize: 10.5, fontFamily: F.dmSans, fontWeight: 600 }}>Agent available now</span>
+                      </div>
+                      <span style={{ color: "#C8F0CC", fontSize: 15, fontFamily: F.fraunces, fontWeight: 700 }}>Register via WhatsApp — with live agent support</span>
+                      <span style={{ color: "rgba(200,240,204,0.50)", fontSize: 12, fontFamily: F.dmSans }}>A Tailio representative guides you through every step.</span>
+                    </div>
                   </div>
                   <button
                     onClick={() => window.open(`https://wa.me/918796440840?text=${encodeURIComponent("Hello, I need help with pet registration on Tailio.")}`, "_blank")}
@@ -368,12 +404,6 @@ export default function Dashboard() {
                           <span style={{ color: "#2C1A0E", fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>Edit Pet Info</span>
                         </button>
 
-                        {/* ── "Continue Registration" — resume doc upload for incomplete pets ──
-                            Shows when: stage < 2 (not yet paid) AND not triggered.
-                            Clicking opens AddPetModal in resume mode — skips step 0,
-                            goes straight to step 1 with the existing petId pre-loaded.
-                            This handles the case where user filled details but closed
-                            the modal before uploading docs or paying. */}
                         {isIncomplete && (
                           <button
                             onClick={() => {
@@ -464,34 +494,60 @@ export default function Dashboard() {
                   </div>
                   <span style={{ color: "#7A5C40", fontSize: 12, fontFamily: F.dmSans }}>{stats.registered} of {stats.total} pets fully registered</span>
                 </div>
+
+                {/* Tailio Symbol - Bottom right card */}
+                <div style={{
+                  padding: "14px 16px",
+                  background: "linear-gradient(135deg, #FFFCF8 0%, #FFF8F0 100%)",
+                  borderRadius: 13,
+                  outline: "1px solid rgba(232,96,10,0.15)",
+                  outlineOffset: -1,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                }}>
+                  <img 
+                    src="/images/tailio.png" 
+                    alt="Tailio" 
+                    style={{ 
+                      width: 36, 
+                      height: 36, 
+                      objectFit: "contain",
+                    }} 
+                  />
+                  <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                    <span style={{ 
+                      color: "#2C1A0E", 
+                      fontSize: 12, 
+                      fontFamily: F.fraunces, 
+                      fontWeight: 700,
+                    }}>
+                      Tailio
+                    </span>
+                    <span style={{ 
+                      color: "#A68660", 
+                      fontSize: 10, 
+                      fontFamily: F.dmSans,
+                    }}>
+                      Pet Registration Platform
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* ── AddPetModal ──────────────────────────────────────────────────────
-          onPetAdded: ONLY refreshes the pet list — does NOT close the modal.
-          Closing is handled separately by onClose.
-          Previously onPetAdded closed the modal AND refreshed, which caused
-          the modal to close immediately after step 0 (pet creation) because
-          AddPetModal calls onPetAdded right after creating the pet.
-
-          resumePetId: passed when user clicks "Continue Registration" on a
-          pet that was created but not completed. AddPetModal will skip step 0
-          and resume at step 1 with the existing pet's data pre-loaded.
-      ── */}
       <AddPetModal
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
           setEditingPet(null);
           setResumePetId(null);
-          loadPets(); // refresh on close regardless
+          loadPets();
         }}
         onPetAdded={() => {
-          // Only refresh pets list — do NOT close the modal here.
-          // The modal manages its own step progression.
           loadPets();
         }}
         token={token}
@@ -499,7 +555,6 @@ export default function Dashboard() {
         resumePetId={resumePetId}
       />
 
-      {/* Delete confirm */}
       {showDeleteConfirm.show && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.60)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 16 }}>
           <div style={{ background: "#FFFCF8", borderRadius: 18, maxWidth: 400, width: "100%", padding: "28px 24px", display: "flex", flexDirection: "column", alignItems: "center", gap: 16, textAlign: "center" }}>

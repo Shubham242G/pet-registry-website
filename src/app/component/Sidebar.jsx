@@ -115,6 +115,7 @@ export default function Sidebar() {
                 "Once registration is submitted, documents cannot be modified",
                 "Payment includes municipal fee + service charge + GST",
                 "You can pay anytime after uploading all documents",
+                "Pricing: ₹299* + municipal fees (Exclusive of GST)", // Added pricing here
               ].map((text, i) => (
                 <li key={i} className="text-xs flex items-start gap-1.5" style={{ color: "#F97316" }}>
                   <span>•</span>
