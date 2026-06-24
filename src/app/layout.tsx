@@ -5,6 +5,7 @@ import Navbar from './component/Navbar';
 import Providers from './providers';
 import RouteGuard from './component/RouteGuard';
 import FloatersWrapper from './component/FloatersWrapper';
+import Script from 'next/script';
 
 const archive = Archivo_Black({ 
   subsets: ['latin'], 
@@ -64,7 +65,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: 'D8i1leGlpnjS5AigMfVS9SveUXmAxlEehoiBRtevFUE', // Added your verification code
   },
   alternates: {
     canonical: 'https://www.tailio.in',
@@ -75,12 +76,34 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        {/* Google Site Verification - Added as meta tag for GSC */}
+        <meta name="google-site-verification" content="D8i1leGlpnjS5AigMfVS9SveUXmAxlEehoiBRtevFUE" />
+      </head>
       <body className={`${archive.variable} font-sans`}>
+        {/* Google Analytics - Using Next.js Script component for optimal loading */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-PD6GYVXKZJ"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-PD6GYVXKZJ');
+            `,
+          }}
+        />
+        
         <Providers>
-            <Navbar />
-            <main>{children}</main>
-            {/* ── Floaters: WhatsApp on desktop, Register button on mobile ── */}
-            <FloatersWrapper />
+          <Navbar />
+          <main>{children}</main>
+          {/* ── Floaters: WhatsApp on desktop, Register button on mobile ── */}
+          <FloatersWrapper />
         </Providers>
       </body>
     </html>
