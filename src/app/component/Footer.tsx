@@ -43,7 +43,7 @@ export default function Footer() {
     { name: 'Delhi', href: '/pet-registration-in-delhi' },
     { name: 'Noida', href: '/pet-registration-in-noida' },
     { name: 'Ghaziabad', href: '/pet-registration-in-ghaziabad' },
-    { name: 'Gurugram', href: '/pet-registration-in-gurgaon' },
+    { name: 'Gurugram', href: '/pet-registration-in-gurugram' },
   ];
 
   const companyLinks = [

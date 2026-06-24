@@ -5,23 +5,12 @@ import Footer from "../component/Footer";
 export default function DelhiPage() {
   return (
     <main className="min-h-screen bg-[#FAF6EF]">
-      {/* Alert Bar
-      <div className="bg-[#2C1A0E] px-4 sm:px-12 py-2.5 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2 text-sm">
-          <div className="w-3.5 h-3.5 border-2 border-[#FF8C3A] rounded-sm" />
-          <span className="text-[#F4E4CF]/75 font-medium text-[13.5px]">
-            MCD enforcement drives are active across Delhi. · Fine for non-compliance with MCD:
-          </span>
-          <span className="text-[#FF8C3A] font-bold text-[13.5px]">₹500+</span>
-        </div>
-        <button className="bg-[#E8600A] hover:bg-[#d45408] px-4 py-2 rounded-lg text-white text-sm font-semibold shadow-[0_1.5px_0_#C04E06] border border-[#C04E06]">
-          Register Now →
-        </button>
-      </div> */}
-
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-20 pb-12 px-4">
         <div className="absolute inset-0 bg-gradient-to-b from-[#E8600A]/[0.07] to-transparent" />
+        <div className="absolute left-8 top-20 opacity-[0.06] text-[#E8600A] text-6xl rotate-[-16deg]">✦</div>
+        <div className="absolute right-8 top-40 opacity-[0.06] text-[#E8600A] text-4xl rotate-[14deg]">✦</div>
+
         <div className="relative max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-[#FFF0E4] rounded-full px-3 py-1.5 border border-[#FFCCA0] mb-6">
             <div className="w-1.5 h-1.5 bg-[#E8600A] rounded-full" />
@@ -34,7 +23,7 @@ export default function DelhiPage() {
           </h1>
 
           <p className="text-[#7A5C40] text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-            The MCD portal exists. But it takes 2–4 weeks, requires an office visit, and most applications go nowhere. Tailio files directly with MCD on your behalf done in 60 seconds from your phone.
+            The MCD portal exists. But it takes 2–4 weeks, requires an office visit, and most applications go nowhere. Tailio files directly with MCD on your behalf — done in 60 seconds from your phone.
           </p>
 
           <div className="flex flex-wrap justify-center gap-2 mb-8">
@@ -85,10 +74,14 @@ export default function DelhiPage() {
             <p className="text-[#7A5C40] text-base leading-relaxed mb-6">
               The Supreme Court of India's August 2025 order directed MCD to enforce mandatory registration for all pet animals across Delhi. Fines start at ₹500 and escalate with every enforcement drive.
             </p>
-            <div className="bg-white rounded-xl p-4 border-l-4 border-[#B85C00] shadow-sm">
+            <div className="bg-white rounded-xl p-4 border-l-4 border-[#2C1A0E]/10 shadow-sm">
               <div className="flex gap-3">
                 <div className="flex-shrink-0 w-5 h-5 bg-[#FFF4E4] rounded-full flex items-center justify-center mt-0.5">
-                  <div className="w-2 h-2 border border-[#B85C00] border-b-2 border-r-2" />
+                  <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="#B85C00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5" />
+                    <path d="M2 12l10 5 10-5" />
+                  </svg>
                 </div>
                 <div>
                   <div className="text-[#2C1A0E] text-sm font-semibold">Delhi — key fact</div>
@@ -99,208 +92,172 @@ export default function DelhiPage() {
           </div>
 
           <div className="bg-[#2C1A0E] rounded-2xl p-8 relative overflow-hidden">
-  <div className="absolute top-0 right-0 w-44 h-44 bg-[#E8600A]/20 rounded-full blur-3xl" />
-  <div className="relative">
-    <div className="text-[#F4E4CF]/30 text-xs font-mono uppercase tracking-wider mb-1">Non-compliance fine · MCD</div>
-    <div className="text-6xl md:text-7xl font-black text-[#FF8C3A]">₹500+</div>
-    <div className="text-[#F4E4CF]/40 text-sm mt-1">Fines escalating with each MCD enforcement drive</div>
-    <div className="mt-6 space-y-3">
-      {[
-        { icon: 'alert', text: 'Pet can be seized by municipal authorities' },
-        { icon: 'id', text: 'No legal proof of ownership without registration' },
-        { icon: 'clock', text: 'MCD portal fee ₹100–500 · 2–4 weeks wait' }
-      ].map((item, index) => (
-        <div key={index} className="flex items-center gap-3 py-2 border-b border-white/10 last:border-0">
-          <div className="w-7 h-7 bg-[#E8600A]/20 rounded flex items-center justify-center flex-shrink-0">
-            {item.icon === 'alert' && (
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-            )}
-            {item.icon === 'id' && (
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <circle cx="9" cy="9" r="2" />
-                <path d="M14 14h4M14 10h4M6 14h4" />
-              </svg>
-            )}
-            {item.icon === 'clock' && (
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-            )}
+            <div className="absolute top-0 right-0 w-44 h-44 bg-[#E8600A]/20 rounded-full blur-3xl" />
+            <div className="relative">
+              <div className="text-[#F4E4CF]/30 text-xs font-mono uppercase tracking-wider mb-1">Non-compliance fine · MCD</div>
+              <div className="text-6xl md:text-7xl font-black text-[#FF8C3A]">₹500+</div>
+              <div className="text-[#F4E4CF]/40 text-sm mt-1">Fines escalating with each MCD enforcement drive</div>
+              <div className="mt-6 space-y-3">
+                {[
+                  { icon: 'alert', text: 'Pet can be seized by municipal authorities' },
+                  { icon: 'id', text: 'No legal proof of ownership without registration' },
+                  { icon: 'clock', text: 'MCD portal fee ₹100–500 · 2–4 weeks wait' }
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-3 py-2 border-b border-white/10 last:border-0">
+                    <div className="w-7 h-7 bg-[#E8600A]/20 rounded flex items-center justify-center flex-shrink-0">
+                      {item.icon === 'alert' && (
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10" />
+                          <line x1="12" y1="8" x2="12" y2="12" />
+                          <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                      )}
+                      {item.icon === 'id' && (
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2" />
+                          <circle cx="9" cy="9" r="2" />
+                          <path d="M14 14h4M14 10h4M6 14h4" />
+                        </svg>
+                      )}
+                      {item.icon === 'clock' && (
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10" />
+                          <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-[#F4E4CF]/60 text-sm">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <span className="text-[#F4E4CF]/60 text-sm">{item.text}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
         </div>
       </section>
 
       {/* Why Register */}
-<section className="py-20 px-4 bg-[#F3EDE0]">
-  <div className="max-w-5xl mx-auto">
-    <div className="mb-12">
-      <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Why Register</div>
-      <h2 className="text-3xl md:text-4xl font-black text-[#2C1A0E] leading-tight mt-2">Four reasons every Delhi pet owner needs this.</h2>
-    </div>
-    <div className="grid md:grid-cols-2 gap-4">
-      {[
-        { 
-          title: 'Legal Identity & Protection', 
-          desc: 'Unique MCD ID — proof of ownership and full legal status. Legally protected at all times.',
-          icon: 'shield'
-        },
-        { 
-          title: 'Vaccination Tracking', 
-          desc: 'Digital vaccination records always up to date. WhatsApp & email reminders before every booster.',
-          icon: 'vaccine'
-        },
-        { 
-          title: 'Lost Pet Recovery', 
-          desc: '3× more likely to be returned if lost or stolen. QR tag links to your pet\'s verified profile.',
-          icon: 'search'
-        },
-        { 
-          title: 'Travel Certificate', 
-          desc: 'Registration certificate required for travelling with your pet on flights, trains and intercity transport.',
-          icon: 'travel'
-        },
-      ].map((reason, i) => (
-        <div key={i} className="bg-white rounded-xl p-5 border border-[#2C1A0E]/10">
-          <div className="w-9 h-9 bg-[#FFF0E4] rounded-lg flex items-center justify-center">
-            {reason.icon === 'shield' && (
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                <path d="M9 12l2 2 4-4" />
-              </svg>
-            )}
-            {reason.icon === 'vaccine' && (
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M19 3l-4 4M12 6l-3 3M18 9l-3 3M9 2l-3 3M4 7l3 3M7 4l3 3" />
-                <path d="M9 14l-3 3M13 10l-3 3M16 7l-3 3" />
-                <path d="M14 18l-2 2M10 14l-2 2M7 17l-2 2" />
-              </svg>
-            )}
-            {reason.icon === 'search' && (
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                <path d="M11 8v3M11 14h.01" />
-              </svg>
-            )}
-            {reason.icon === 'travel' && (
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M2 12h20" />
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-              </svg>
-            )}
+      <section className="py-20 px-4 bg-[#F3EDE0]">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-12">
+            <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Why Register</div>
+            <h2 className="text-3xl md:text-4xl font-black text-[#2C1A0E] leading-tight mt-2">Four reasons every Delhi pet owner needs this.</h2>
           </div>
-          <h3 className="text-[#2C1A0E] font-semibold mt-4 text-sm">{reason.title}</h3>
-          <p className="text-[#7A5C40] text-xs mt-1 leading-relaxed">{reason.desc}</p>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
-
-      {/* Documents Needed */}
-<section className="py-20 px-4 bg-[#2C1A0E]">
-  <div className="max-w-6xl mx-auto">
-    <div className="text-center mb-12">
-      <div className="text-[#E8600A]/75 text-xs font-medium uppercase tracking-widest">What You'll Need</div>
-      <h2 className="text-3xl md:text-4xl font-black text-[#F4E4CF] leading-tight mt-2">
-        Four documents.
-        <span className="text-[#E8600A] italic block">That's all.</span>
-      </h2>
-      <p className="text-[#F4E4CF]/40 text-sm max-w-lg mx-auto mt-3">Upload digitally on Tailio — no photocopies, no office visits. We handle the MCD filing for you.</p>
-    </div>
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {[
-        { 
-          title: 'Anti-Rabies Certificate', 
-          desc: 'Issued by a registered vet confirming your pet received their anti-rabies vaccine.', 
-          details: ["Pet's name, gender & age", 'Vaccination date & due date', "Vet's signature & hospital stamp"],
-          icon: 'certificate'
-        },
-        { 
-          title: 'Applicant ID Proof', 
-          desc: 'Any government-issued photo ID of the pet owner. Must be valid and clearly legible.', 
-          details: ['Aadhaar Card', 'PAN Card', 'Passport or Voter ID'],
-          icon: 'id'
-        },
-        { 
-          title: 'Address Proof', 
-          desc: 'Proof you reside in Delhi. Must show your current address clearly.', 
-          details: ['Aadhaar Card (serves as both)', 'Electricity or water bill', 'Rental agreement or bank statement'],
-          icon: 'address'
-        },
-        { 
-          title: 'Photo with Your Pet', 
-          desc: 'A clear, recent photo of you with your pet dog. Both faces must be clearly visible.', 
-          details: ['Good natural lighting', 'Both owner & pet clearly visible', 'Taken within last 3 months'],
-          icon: 'photo'
-        },
-      ].map((doc, i) => (
-        <div key={i} className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-colors">
-          <div className="flex justify-between items-start">
-            <div className="w-9 h-9 bg-[#E8600A]/20 rounded-lg flex items-center justify-center">
-              {doc.icon === 'certificate' && (
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4v16h16V4H4z" />
-                  <path d="M8 8h8M8 12h6M8 16h4" />
-                  <path d="M16 8v8" />
-                </svg>
-              )}
-              {doc.icon === 'id' && (
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <circle cx="9" cy="9" r="2" />
-                  <path d="M14 14h4M14 10h4M6 14h4" />
-                </svg>
-              )}
-              {doc.icon === 'address' && (
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                  <circle cx="12" cy="10" r="3" />
-                </svg>
-              )}
-              {doc.icon === 'photo' && (
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <path d="M21 15l-5-5L5 21" />
-                </svg>
-              )}
-            </div>
-            <div className="w-6 h-6 bg-[#E8600A] rounded-full flex items-center justify-center text-white text-xs font-bold">{i + 1}</div>
-          </div>
-          <h3 className="text-[#F4E4CF] text-lg font-medium mt-4">{doc.title}</h3>
-          <p className="text-[#F4E4CF]/40 text-sm mt-2 leading-relaxed">{doc.desc}</p>
-          <div className="mt-4 space-y-2">
-            {doc.details.map((detail, j) => (
-              <div key={j} className="flex items-center gap-2 text-[#F4E4CF]/50 text-xs">
-                <div className="w-1 h-1 bg-[#E8600A] rounded-full" />
-                <span>{detail}</span>
+          <div className="grid md:grid-cols-2 gap-4">
+            {[
+              { title: 'Legal Identity & Protection', desc: 'Unique MCD ID — proof of ownership and full legal status. Legally protected at all times.', icon: 'shield' },
+              { title: 'Vaccination Tracking', desc: 'Digital vaccination records always up to date. WhatsApp & email reminders before every booster.', icon: 'vaccine' },
+              { title: 'Lost Pet Recovery', desc: '3× more likely to be returned if lost or stolen. QR tag links to your pet\'s verified profile.', icon: 'search' },
+              { title: 'Travel Certificate', desc: 'Registration certificate required for travelling with your pet on flights, trains and intercity transport.', icon: 'travel' },
+            ].map((reason, i) => (
+              <div key={i} className="bg-white rounded-xl p-5 border border-[#2C1A0E]/10">
+                <div className="w-9 h-9 bg-[#FFF0E4] rounded-lg flex items-center justify-center">
+                  {reason.icon === 'shield' && (
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      <path d="M9 12l2 2 4-4" />
+                    </svg>
+                  )}
+                  {reason.icon === 'vaccine' && (
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M19 3l-4 4M12 6l-3 3M18 9l-3 3M9 2l-3 3M4 7l3 3M7 4l3 3" />
+                      <path d="M9 14l-3 3M13 10l-3 3M16 7l-3 3" />
+                      <path d="M14 18l-2 2M10 14l-2 2M7 17l-2 2" />
+                    </svg>
+                  )}
+                  {reason.icon === 'search' && (
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      <path d="M11 8v3M11 14h.01" />
+                    </svg>
+                  )}
+                  {reason.icon === 'travel' && (
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M2 12h20" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                  )}
+                </div>
+                <h3 className="text-[#2C1A0E] font-semibold mt-4 text-sm">{reason.title}</h3>
+                <p className="text-[#7A5C40] text-xs mt-1 leading-relaxed">{reason.desc}</p>
               </div>
             ))}
           </div>
-          <div className="flex gap-2 mt-4">
-            {['JPG', 'PNG', 'PDF'].map((type) => (
-              <span key={type} className="px-2 py-0.5 bg-white/5 rounded text-[#F4E4CF]/30 text-[10px] font-bold">{type}</span>
+        </div>
+      </section>
+
+      {/* Documents Needed */}
+      <section className="py-20 px-4 bg-[#2C1A0E]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="text-[#E8600A]/75 text-xs font-medium uppercase tracking-widest">What You'll Need</div>
+            <h2 className="text-3xl md:text-4xl font-black text-[#F4E4CF] leading-tight mt-2">
+              Four documents.
+              <span className="text-[#E8600A] italic block">That's all.</span>
+            </h2>
+            <p className="text-[#F4E4CF]/40 text-sm max-w-lg mx-auto mt-3">Upload digitally on Tailio — no photocopies, no office visits. We handle the MCD filing for you.</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { title: 'Anti-Rabies Certificate', desc: 'Issued by a registered vet confirming your pet received their anti-rabies vaccine.', details: ["Pet's name, gender & age", 'Vaccination date & due date', "Vet's signature & hospital stamp"], icon: 'certificate' },
+              { title: 'Applicant ID Proof', desc: 'Any government-issued photo ID of the pet owner. Must be valid and clearly legible.', details: ['Aadhaar Card', 'PAN Card', 'Passport or Voter ID'], icon: 'id' },
+              { title: 'Address Proof', desc: 'Proof you reside in Delhi. Must show your current address clearly.', details: ['Aadhaar Card (serves as both)', 'Electricity or water bill', 'Rental agreement or bank statement'], icon: 'address' },
+              { title: 'Photo with Your Pet', desc: 'A clear, recent photo of you with your pet dog. Both faces must be clearly visible.', details: ['Good natural lighting', 'Both owner & pet clearly visible', 'Taken within last 3 months'], icon: 'photo' },
+            ].map((doc, i) => (
+              <div key={i} className="bg-white/5 rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-colors">
+                <div className="flex justify-between items-start">
+                  <div className="w-9 h-9 bg-[#E8600A]/20 rounded-lg flex items-center justify-center">
+                    {doc.icon === 'certificate' && (
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 4v16h16V4H4z" />
+                        <path d="M8 8h8M8 12h6M8 16h4" />
+                        <path d="M16 8v8" />
+                      </svg>
+                    )}
+                    {doc.icon === 'id' && (
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="9" cy="9" r="2" />
+                        <path d="M14 14h4M14 10h4M6 14h4" />
+                      </svg>
+                    )}
+                    {doc.icon === 'address' && (
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    )}
+                    {doc.icon === 'photo' && (
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#FF8C3A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <path d="M21 15l-5-5L5 21" />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="w-6 h-6 bg-[#E8600A] rounded-full flex items-center justify-center text-white text-xs font-bold">{i + 1}</div>
+                </div>
+                <h3 className="text-[#F4E4CF] text-lg font-medium mt-4">{doc.title}</h3>
+                <p className="text-[#F4E4CF]/40 text-sm mt-2 leading-relaxed">{doc.desc}</p>
+                <div className="mt-4 space-y-2">
+                  {doc.details.map((detail, j) => (
+                    <div key={j} className="flex items-center gap-2 text-[#F4E4CF]/50 text-xs">
+                      <div className="w-1 h-1 bg-[#E8600A] rounded-full" />
+                      <span>{detail}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-2 mt-4">
+                  {['JPG', 'PNG', 'PDF'].map((type) => (
+                    <span key={type} className="px-2 py-0.5 bg-white/5 rounded text-[#F4E4CF]/30 text-[10px] font-bold">{type}</span>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Comparison Table */}
       <section className="py-20 px-4 bg-[#F3EDE0]">
@@ -335,14 +292,18 @@ export default function DelhiPage() {
                   {typeof row.tailio === 'string' ? (
                     <span className="text-[#2C1A0E] text-sm font-bold">{row.tailio}</span>
                   ) : (
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#2C1A0E" strokeWidth="2"><path d="M5 13l4 4L19 7" /></svg>
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#2C1A0E" strokeWidth="2">
+                      <path d="M5 13l4 4L19 7" />
+                    </svg>
                   )}
                 </div>
                 <div className="px-6 py-4 flex items-center justify-center">
                   {typeof row.portal === 'string' ? (
                     <span className={`text-sm ${row.portal === '₹500+' ? 'text-[#A0251E] font-bold' : 'text-[#2C1A0E]'}`}>{row.portal}</span>
                   ) : (
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#2C1A0E" strokeWidth="2"><path d="M6 18L18 6M6 6l12 12" /></svg>
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#2C1A0E" strokeWidth="2">
+                      <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   )}
                 </div>
               </div>
@@ -404,11 +365,13 @@ export default function DelhiPage() {
                           </div>
                         </div>
                         <div className="w-14 h-14 bg-[#FAF6EF] rounded-lg flex items-center justify-center">
-                          <div className="w-8 h-8 grid grid-cols-2 gap-1">
-                            {[...Array(4)].map((_, i) => (
-                              <div key={i} className="border border-[#2C1A0E] rounded-sm" />
-                            ))}
-                          </div>
+                          <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#2C1A0E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <rect x="7" y="7" width="3" height="3" rx="0.5" />
+                            <rect x="14" y="7" width="3" height="3" rx="0.5" />
+                            <rect x="7" y="14" width="3" height="3" rx="0.5" />
+                            <rect x="14" y="14" width="3" height="3" rx="0.5" />
+                          </svg>
                         </div>
                       </div>
                     )}
@@ -503,9 +466,9 @@ export default function DelhiPage() {
         </div>
         <div className="space-y-3">
           {[
-            { q: 'Is pet registration really mandatory in Delhi?', a: 'Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed MCD (Municipal Corporation of Delhi) to enforce mandatory pet registration across Delhi. The Supreme Court of India\'s August 2025 order directed MCD to enforce mandatory registration for all pet animals across Delhi. Fines start at ₹500 and escalate with every enforcement drive.' },
+            { q: 'Is pet registration really mandatory in Delhi?', a: "Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed MCD (Municipal Corporation of Delhi) to enforce mandatory pet registration across Delhi. The Supreme Court of India's August 2025 order directed MCD to enforce mandatory registration for all pet animals across Delhi. Fines start at ₹500 and escalate with every enforcement drive." },
             { q: "Is Tailio's registration legally valid in Delhi?", a: 'Yes, Tailio is an authorized platform that files directly with MCD. Your certificate is officially issued by the municipal corporation and is fully valid.' },
-            { q: 'What is the fine for not registering in Delhi?', a: 'Fines start at ₹500 and escalate with every enforcement drive. Pet owners can also face pet seizure by municipal authorities.' },
+            { q: 'What is the fine for not registering in Delhi?', a: 'The fine for non-compliance starts at ₹500 and escalates with every MCD enforcement drive. Pet owners can also face pet seizure by municipal authorities.' },
             { q: 'What documents do I need to register?', a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.' },
             { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the MCD filing fee and your official digital certificate.' },
             { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
