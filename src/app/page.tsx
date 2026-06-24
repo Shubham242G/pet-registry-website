@@ -362,7 +362,7 @@ export default function HomePage() {
         margin: 0,
         textAlign: isMobile ? 'center' : 'left'
       }}>
-        Register your pet in just 1 minute. Get a verified digital ID, vaccination records, and full legal compliance. Trusted by pet parents across Delhi NCR.
+        Register your pet in just 1 minute. Get a government certified registration certificate, vaccination records, and full legal compliance. Trusted by pet parents across Delhi NCR.
       </p>
 
       <div style={{
