@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { EditIcon, PawPrintIcon, TrashIcon } from "lucide-react";
 
 const F = {
@@ -73,7 +74,7 @@ function getFormattedAge(pet: PetCardProps['pet']) {
   return "Not specified";
 }
 
-export default function PetCard({ pet, onEdit, onContinue, onDelete }: PetCardProps) {
+function PetCard({ pet, onEdit, onContinue, onDelete }: PetCardProps) {
   const { label: stageLabel, step: stageStep, color: stageColor } = getDisplayStage(pet);
   const isIncomplete = pet.registrationStage < 2 && !pet.registrationTriggered;
   const docCount = pet.uploadedDocumentsCount || 0;
@@ -279,3 +280,6 @@ export default function PetCard({ pet, onEdit, onContinue, onDelete }: PetCardPr
     </div>
   );
 }
+
+// Memoize to prevent unnecessary re-renders
+export default React.memo(PetCard);

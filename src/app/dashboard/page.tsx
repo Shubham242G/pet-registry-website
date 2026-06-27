@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import AddPetModal from "../component/AddPetModal";
 import Sidebar from "../component/Sidebar";
-import PetCard from "../pets/[id]/page"; // ✅ Import PetCard
+import PetCard from "../pets/[id]/page";
 
 const F = {
   fraunces: "'Fraunces', Georgia, serif",
@@ -100,12 +100,13 @@ export default function Dashboard() {
     if (!authLoading && !isAuthenticated) router.push("/");
   }, [authLoading, isAuthenticated, router]);
 
+  // LOAD PETS - ONLY ONCE on initial load
   const loadPets = useCallback(async () => {
     if (!token) return;
     try {
       setLoading(true);
       setError("");
-      const data = await apiFetch("/pets?t=" + Date.now(), "GET", null, token);
+      const data = await apiFetch("/pets", "GET", null, token);
       const petsData: Pet[] = (Array.isArray(data) ? data : []).map((pet: any) => ({
         ...pet,
         uploadedDocumentsCount: pet.uploadedDocumentsCount ?? 0,
@@ -116,12 +117,8 @@ export default function Dashboard() {
         registrationStatus: pet.registrationStatus ?? "not_started",
       }));
       setPets(petsData);
-      const current = selectedPetRef.current;
-      if (petsData.length > 0 && !current) {
+      if (petsData.length > 0) {
         setSelectedPet(petsData[0]);
-      } else if (current && petsData.length > 0) {
-        const updated = petsData.find((p) => p._id === current._id);
-        if (updated) setSelectedPet(updated);
       }
     } catch (err) {
       setError("Failed to load pets. Please try again.");
@@ -138,14 +135,83 @@ export default function Dashboard() {
     if (token) loadPets();
   }, [token, loadPets]);
 
+  // ========== LOCAL STATE UPDATERS (no API calls) ==========
+  
+  const addPet = (newPet: Pet) => {
+    setPets(prev => [...prev, newPet]);
+    setSelectedPet(newPet);
+  };
+
+  const updatePet = (updatedPet: Pet) => {
+    setPets(prev => prev.map(p => p._id === updatedPet._id ? updatedPet : p));
+    if (selectedPet?._id === updatedPet._id) {
+      setSelectedPet(updatedPet);
+    }
+  };
+
+  const removePet = (petId: string) => {
+    setPets(prev => {
+      const updated = prev.filter(p => p._id !== petId);
+      if (updated.length === 0) {
+        setSelectedPet(null);
+      } else if (selectedPet?._id === petId) {
+        setSelectedPet(updated[0]);
+      }
+      return updated;
+    });
+  };
+
+  const updatePetDocCount = (petId: string, uploadedCount: number, hasAllDocs: boolean, registrationTriggered: boolean) => {
+  setPets(prev =>
+    prev.map(p =>
+      p._id === petId
+        ? { 
+            ...p, 
+            uploadedDocumentsCount: uploadedCount, 
+            hasAllDocuments: hasAllDocs, 
+            registrationTriggered: registrationTriggered 
+          }
+        : p
+    )
+  );
+  if (selectedPet?._id === petId) {
+    setSelectedPet(prev => prev ? { 
+      ...prev, 
+      uploadedDocumentsCount: uploadedCount, 
+      hasAllDocuments: hasAllDocs, 
+      registrationTriggered: registrationTriggered 
+    } : null);
+  }
+};
+
+  const updatePetRegistrationStatus = (petId: string, status: string, stage: number) => {
+    setPets(prev =>
+      prev.map(p =>
+        p._id === petId
+          ? { 
+              ...p, 
+              registrationStatus: status, 
+              registrationStage: stage, 
+              registrationTriggered: true 
+            }
+          : p
+      )
+    );
+    if (selectedPet?._id === petId) {
+      setSelectedPet(prev => prev ? { 
+        ...prev, 
+        registrationStatus: status, 
+        registrationStage: stage, 
+        registrationTriggered: true 
+      } : null);
+    }
+  };
+
   const handleDeletePet = async (petId: string) => {
     try {
       setLoading(true);
       await apiFetch(`/pets/${petId}`, "DELETE", null, token!);
-      const updated = pets.filter((p) => p._id !== petId);
-      setPets(updated);
-      if (updated.length === 0) setSelectedPet(null);
-      else if (selectedPet?._id === petId) setSelectedPet(updated[0]);
+      removePet(petId);
       setShowDeleteConfirm({ show: false, petId: "", petName: "" });
     } catch {
       setError("Failed to delete pet");
@@ -342,7 +408,7 @@ export default function Dashboard() {
                   </button>
                 </div>
 
-                {/* ✅ PET CARD - Using the PetCard component */}
+                {/* PET CARD */}
                 {currentPet && (
                   <PetCard
                     pet={currentPet}
@@ -455,20 +521,21 @@ export default function Dashboard() {
       </div>
 
       <AddPetModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditingPet(null);
-          setResumePetId(null);
-          loadPets();
-        }}
-        onPetAdded={() => {
-          loadPets();
-        }}
-        token={token}
-        petToEdit={editingPet}
-        resumePetId={resumePetId}
-      />
+  isOpen={isModalOpen}
+  onClose={() => {
+    setIsModalOpen(false);
+    setEditingPet(null);
+    setResumePetId(null);
+  }}
+  onPetCreated={addPet}
+  onPetUpdated={updatePet}
+  onDocumentUploaded={updatePetDocCount}
+  onDocumentDeleted={updatePetDocCount} // Same function now works for both
+  onRegistrationTriggered={updatePetRegistrationStatus}
+  token={token}
+  petToEdit={editingPet}
+  resumePetId={resumePetId}
+/>
 
       {showDeleteConfirm.show && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.60)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 16 }}>

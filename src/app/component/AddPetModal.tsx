@@ -23,7 +23,11 @@ import CitySelector from "./CitySelector";
 interface AddPetModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onPetAdded: () => void;
+  onPetCreated?: (pet: any) => void;
+  onPetUpdated?: (pet: any) => void;
+  onDocumentUploaded?: (petId: string, uploadedCount: number, hasAllDocs: boolean, registrationTriggered: boolean) => void;
+  onDocumentDeleted?: (petId: string, uploadedCount: number, hasAllDocs: boolean, registrationTriggered: boolean) => void;
+  onRegistrationTriggered?: (petId: string, status: string, stage: number) => void;
   token: string | null;
   petToEdit?: any;
   resumePetId?: string | null;
@@ -99,7 +103,18 @@ const inputGlobalStyles = `
   }
 `;
 
-export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToEdit, resumePetId }: AddPetModalProps) {
+export default function AddPetModal({ 
+  isOpen, 
+  onClose, 
+  onPetCreated, 
+  onPetUpdated,
+  onDocumentUploaded,
+  onDocumentDeleted,
+  onRegistrationTriggered,
+  token, 
+  petToEdit, 
+  resumePetId 
+}: AddPetModalProps) {
   const { user } = useAuth();
   
   // State for form data
@@ -133,24 +148,21 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  // ✅ Get required docs based on city and age - dynamically computed
+  // Get required docs based on city and age - dynamically computed
   const getRequiredDocs = (city: string, ageYears: number, ageMonths: number) => {
     const docs = [...BASE_REQUIRED_DOCS];
     const ageInYears = ageYears + (ageMonths / 12);
     
-    // Gurgaon: pets 4 years or older need sterilization certificate
     if (city === 'gurgaon' && ageInYears >= 4) {
-      // Check if sterilization doc is already in the list
       const hasSterilization = docs.some(d => d.name === 'sterilizationCertificate');
       if (!hasSterilization) {
         docs.push(STERILIZATION_DOC);
       }
     }
-    
     return docs;
   };
 
-  // ✅ Compute required docs based on current form values - this will update dynamically
+  // Compute required docs based on current form values
   const requiredDocs = getRequiredDocs(
     form.city, 
     parseInt(form.ageYears) || 0, 
@@ -174,11 +186,10 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     };
   }, []);
 
-  // Function to restore documents from pet object using the documents virtual
+  // Function to restore documents from pet object
   const restoreDocumentsFromPet = (pet: any) => {
     const docs: Record<string, any> = {};
     
-    // Use the documents virtual from the pet
     if (pet.documents && Array.isArray(pet.documents)) {
       for (const doc of pet.documents) {
         docs[doc.documentName] = {
@@ -189,7 +200,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
         };
       }
     }
-    
     return docs;
   };
 
@@ -203,7 +213,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     setUploading(null);
     setIsSubmitting(false);
     
-    // Case 1: Resuming a registration with resumePetId
     if (resumePetId) {
       console.log("📂 Resuming registration for pet:", resumePetId);
       setPetId(resumePetId);
@@ -212,7 +221,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       return;
     }
     
-    // Case 2: Editing an existing pet
     if (petToEdit && petToEdit._id) {
       console.log("✏️ EDITING PET:", petToEdit._id, petToEdit.name);
       setPetId(petToEdit._id);
@@ -240,7 +248,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       return;
     }
     
-    // Case 3: New pet
     console.log("✨ CREATING NEW PET");
     setPetId(null);
     setIsEditing(false);
@@ -288,7 +295,7 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     
   }, [isOpen, petToEdit]);
 
-  // Fetch existing documents when resuming (for resumePetId case)
+  // Fetch existing documents when resuming
   useEffect(() => {
     if (!isOpen || !resumePetId || !token) return;
 
@@ -389,16 +396,22 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
 
       if (petId) {
         console.log("🔄 UPDATING pet with ID:", petId);
-        await apiFetch(`/pets/${petId}`, "PUT", petData, token!);
+        const response = await apiFetch(`/pets/${petId}`, "PUT", petData, token!);
         console.log("✅ Pet updated successfully");
-        onPetAdded();
+        // Call the update callback with the full pet data
+        if (onPetUpdated) {
+          onPetUpdated(response);
+        }
         setStep(1);
       } else {
         console.log("✨ CREATING new pet");
         const response = await apiFetch("/pets", "POST", petData, token!);
         console.log("✅ Pet created with ID:", response._id);
         setPetId(response._id);
-        onPetAdded();
+        // Call the create callback with the full pet data
+        if (onPetCreated) {
+          onPetCreated(response);
+        }
         setStep(1);
       }
     } catch (error: any) {
@@ -430,7 +443,15 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
             ...prev,
             [docName]: { fileName: file.name, fileSize: file.size, fileData: reader.result as string, mimeType: file.type },
           }));
-          onPetAdded();
+          // Call the document uploaded callback with updated counts
+          if (onDocumentUploaded) {
+            onDocumentUploaded(
+              petId, 
+              data.uploadedDocumentsCount, 
+              data.hasAllDocuments, 
+              data.registrationTriggered
+            );
+          }
         } else {
           setError(data.message || "Upload failed");
         }
@@ -447,12 +468,25 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
     if (!petId) return;
     setError("");
     try {
-      await fetch(`${API_BASE}/registration/${petId}/documents/${docName}`, {
+      const response = await fetch(`${API_BASE}/registration/${petId}/documents/${docName}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUploadedDocs((prev) => { const next = { ...prev }; delete next[docName]; return next; });
-      onPetAdded();
+      const data = await response.json();
+      if (response.ok) {
+        setUploadedDocs((prev) => { const next = { ...prev }; delete next[docName]; return next; });
+        // Call the document deleted callback with updated counts
+        if (onDocumentDeleted) {
+          onDocumentDeleted(
+            petId, 
+            data.uploadedDocumentsCount, 
+            data.hasAllDocuments,
+            data.registrationTriggered || false
+          );
+        }
+      } else {
+        setError(data.message || "Failed to delete document");
+      }
     } catch {
       setError("Failed to delete document");
     }
@@ -487,7 +521,14 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
       const data = await response.json();
       if (response.ok) {
         setSuccess(true);
-        onPetAdded();
+        // Call the registration triggered callback with updated status
+        if (onRegistrationTriggered) {
+          onRegistrationTriggered(
+            petId, 
+            data.pet?.registrationStatus || 'form_submitted', 
+            data.pet?.registrationStage || 2
+          );
+        }
         setTimeout(() => onClose(), 2000);
       } else {
         setError(data.message || "Registration trigger failed. Please contact support.");
@@ -521,14 +562,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                 setStep(i);
                 setError("");
               }
-            }}
-            onMouseEnter={(e) => {
-              if (i < step) {
-                e.currentTarget.style.transform = "scale(1.1)";
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
             }}
           >
             {i < step ? <CheckCircle size={16} color="white" /> : <span style={{ color: i === step ? "white" : "#A68660", fontSize: 13, fontWeight: 700 }}>{i + 1}</span>}
@@ -746,7 +779,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                   />
                 </div>
 
-                {/* ✅ Show sterilization warning when condition is met */}
                 {form.city === 'gurgaon' && (parseInt(form.ageYears) || 0) + (parseInt(form.ageMonths) || 0) / 12 >= 4 && (
                   <div style={{
                     padding: "10px 14px",
@@ -847,7 +879,6 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
                       <div style={{ height: 6, borderRadius: 100, background: allDocsUploaded ? "#1A6B3A" : "#E8600A", width: `${(uploadedCount / requiredDocs.length) * 100}%`, transition: "width 0.4s ease" }} />
                     </div>
 
-                    {/* ✅ Show sterilization notice in docs step when condition is met */}
                     {form.city === 'gurgaon' && (parseInt(form.ageYears) || 0) + (parseInt(form.ageMonths) || 0) / 12 >= 4 && (
                       <div style={{
                         padding: "10px 14px",
@@ -974,10 +1005,207 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded, token, petToE
               </div>
             )}
 
-            {/* Step 2 - Payment - Keep as is */}
+            {/* Step 2 - Payment */}
             {!success && step === 2 && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                {/* ... payment content ... */}
+                <button 
+                  onClick={goToPreviousStep}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "#7A5C40",
+                    fontSize: 12,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: 500,
+                    padding: "4px 0",
+                    transition: "all 0.3s ease",
+                    alignSelf: "flex-start",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#E8600A";
+                    e.currentTarget.style.transform = "translateX(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#7A5C40";
+                    e.currentTarget.style.transform = "translateX(0)";
+                  }}
+                >
+                  <ChevronLeft size={16} />
+                  Back to Documents
+                </button>
+
+                {/* Tag Delivery Option - ONLY for supported cities */}
+                {form.city && ['gurgaon', 'ghaziabad', 'delhi', 'noida'].includes(form.city) && (
+                  <div style={{ 
+                    background: "#F3EDE0", 
+                    borderRadius: 11, 
+                    padding: "14px 16px",
+                    outline: "1px solid rgba(44,26,14,0.10)",
+                    outlineOffset: -1,
+                  }}>
+                    <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 8 }}>TAG DELIVERY</div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      <label style={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: 10,
+                        padding: "8px 12px",
+                        background: tagDeliveryOption === 'collect_from_municipal' ? "#FFFCF8" : "transparent",
+                        borderRadius: 8,
+                        cursor: "pointer",
+                        outline: tagDeliveryOption === 'collect_from_municipal' ? "1px solid #E8600A" : "1px solid transparent",
+                        transition: "all 0.3s ease",
+                      }}>
+                        <input 
+                          type="radio" 
+                          name="tagDelivery" 
+                          value="collect_from_municipal"
+                          checked={tagDeliveryOption === 'collect_from_municipal'}
+                          onChange={() => {
+                            setTagDeliveryOption('collect_from_municipal');
+                            setTagDeliveryCost(0);
+                          }}
+                          style={{ accentColor: "#E8600A" }}
+                        />
+                        <div>
+                          <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>Collect from Municipal Office</div>
+                          <div style={{ color: "#7A5C40", fontSize: 11 }}>Free · Pick up at your convenience</div>
+                          <div style={{ color: "#A68660", fontSize: 10, marginTop: 2 }}>
+                            Total: ₹{petPrice.total.toFixed(2)}
+                          </div>
+                        </div>
+                      </label>
+                      
+                      <label style={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: 10,
+                        padding: "8px 12px",
+                        background: tagDeliveryOption === 'deliver_to_home' ? "#FFFCF8" : "transparent",
+                        borderRadius: 8,
+                        cursor: "pointer",
+                        outline: tagDeliveryOption === 'deliver_to_home' ? "1px solid #E8600A" : "1px solid transparent",
+                        transition: "all 0.3s ease",
+                      }}>
+                        <input 
+                          type="radio" 
+                          name="tagDelivery" 
+                          value="deliver_to_home"
+                          checked={tagDeliveryOption === 'deliver_to_home'}
+                          onChange={() => {
+                            const isGhaziabad = form.city === 'ghaziabad';
+                            const targetTotal = isGhaziabad ? 1800 : 1200;
+                            const currentTotal = getPrice(form.city, 'collect_from_municipal').total;
+                            const extraCost = targetTotal - currentTotal;
+                            setTagDeliveryOption('deliver_to_home');
+                            setTagDeliveryCost(extraCost);
+                          }}
+                          style={{ accentColor: "#E8600A" }}
+                        />
+                        <div>
+                          <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>
+                            Deliver to Home 
+                            <span style={{ color: "#E8600A", fontWeight: 700, marginLeft: 6 }}>
+                              +₹{form.city === 'ghaziabad' ? '267.18' : '257.18'}
+                            </span>
+                          </div>
+                          <div style={{ color: "#7A5C40", fontSize: 11 }}>
+                            Get it delivered to your doorstep
+                          </div>
+                          <div style={{ color: "#E8600A", fontSize: 11, fontWeight: 600, marginTop: 2 }}>
+                            Total: ₹{form.city === 'ghaziabad' ? '1,800.00' : '1,200.00'}
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ background: "#F3EDE0", borderRadius: 11, padding: "14px 16px" }}>
+                  <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>SUMMARY</div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Registration City</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12, fontWeight: 600 }}>
+                      {form.city ? form.city.charAt(0).toUpperCase() + form.city.slice(1) : "Not selected"}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Documents</span>
+                    <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>{requiredDocs.length}/{requiredDocs.length} ✓</span>
+                  </div>
+                  {tagDeliveryOption === 'deliver_to_home' && (
+                    <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4, paddingTop: 4, borderTop: "1px solid rgba(44,26,14,0.08)" }}>
+                      <span style={{ color: "#7A5C40", fontSize: 12 }}>Tag Delivery</span>
+                      <span style={{ color: "#E8600A", fontSize: 12, fontWeight: 600 }}>+₹{tagDeliveryCost.toFixed(2)}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ background: "#FFFCF8", borderRadius: 11, padding: "14px 16px", outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
+                  <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>FEE BREAKDOWN</div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Municipal Fee</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.municipalFee}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Service Fee</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.serviceFee}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>CGST + SGST (16%)</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{(petPrice.cgst + petPrice.sgst).toFixed(2)}</span>
+                  </div>
+                  {tagDeliveryOption === 'deliver_to_home' && (
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, borderTop: "1px solid rgba(44,26,14,0.06)", paddingTop: 4 }}>
+                      <span style={{ color: "#7A5C40", fontSize: 12 }}>Tag Delivery</span>
+                      <span style={{ color: "#E8600A", fontSize: 12, fontWeight: 600 }}>+₹{tagDeliveryCost.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div style={{ borderTop: "1px solid rgba(44,26,14,0.10)", paddingTop: 8, marginTop: 4, display: "flex", justifyContent: "space-between" }}>
+                    <span style={{ color: "#2C1A0E", fontSize: 14, fontWeight: 700 }}>Total</span>
+                    <span style={{ color: "#E8600A", fontSize: 18, fontWeight: 700 }}>₹{petPrice.total.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div style={{ padding: "10px 12px", background: "#FFF4E4", borderRadius: 9 }}>
+                  <div style={{ color: "#B85C00", fontSize: 11, fontWeight: 600, marginBottom: 4 }}>📋 Important</div>
+                  <div style={{ color: "#7A5C40", fontSize: 11, lineHeight: "16px" }}>
+                    Municipal Corporation will send an OTP. <strong>Share it only on Tailio's WhatsApp</strong>.
+                  </div>
+                </div>
+
+                {petId && (
+                  <PaymentButton 
+                    petId={petId} 
+                    petName={form.name || "your pet"} 
+                    amount={petPrice.total}
+                    tagDeliveryOption={tagDeliveryOption}
+                    tagDeliveryCost={tagDeliveryCost}
+                    onSuccess={handlePaymentSuccess} 
+                    onFailure={(err) => setError(`Payment failed: ${err}`)} 
+                  />
+                )}
+
+                {isSubmitting && (
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "8px 0" }}>
+                    <Loader2 size={16} color="#E8600A" className="animate-spin" />
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Processing...</span>
+                  </div>
+                )}
+
+                <button onClick={() => setStep(1)} style={{ background: "none", border: "none", cursor: "pointer", color: "#7A5C40", fontSize: 12, textAlign: "center", padding: "4px 0", transition: "all 0.3s ease" }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#E8600A";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "#7A5C40";
+                  }}>
+                  ← Back to documents
+                </button>
               </div>
             )}
           </div>
