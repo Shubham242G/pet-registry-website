@@ -51,6 +51,11 @@ export default function RegistrationForm({
     petName: string;
     action: 'auto' | 'manual';
   } | null>(null);
+  
+  // ✅ NEW: State for tag delivery
+  const [tagDeliveryOption, setTagDeliveryOption] = useState<'collect_from_municipal' | 'deliver_to_home'>('collect_from_municipal');
+  const [tagDeliveryCost, setTagDeliveryCost] = useState(0);
+  const [petCity, setPetCity] = useState<string>('');
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -86,6 +91,32 @@ export default function RegistrationForm({
     }
   ];
 
+  // ✅ NEW: Check if sterilization is required for Gurgaon pets
+  const isSterilizationRequired = () => {
+    if (!registrationStatus?.pet) return false;
+    const pet = registrationStatus.pet;
+    if (pet.city !== 'gurgaon') return false;
+    const ageInYears = (pet.ageYears || 0) + (pet.ageMonths || 0) / 12;
+    return ageInYears >= 4;
+  };
+
+  // ✅ NEW: Get required documents including sterilization if needed
+  const getRequiredDocs = () => {
+    const docs = [...documents];
+    if (isSterilizationRequired()) {
+      docs.push({
+        name: 'sterilizationCertificate',
+        label: 'Sterilization Certificate',
+        icon: FileText,
+        accept: '.pdf,image/*',
+        description: 'Mandatory for Gurgaon pets aged 4+ years'
+      });
+    }
+    return docs;
+  };
+
+  const requiredDocs = getRequiredDocs();
+
   // Fetch registration status
   const fetchStatus = async () => {
     try {
@@ -99,6 +130,15 @@ export default function RegistrationForm({
       if (response.ok) {
         const data = await response.json();
         setRegistrationStatus(data);
+        // ✅ Store pet city for tag delivery
+        if (data.pet && data.pet.city) {
+          setPetCity(data.pet.city);
+          // Restore tag delivery option if exists
+          if (data.pet.tagDelivery) {
+            setTagDeliveryOption(data.pet.tagDelivery.option || 'collect_from_municipal');
+            setTagDeliveryCost(data.pet.tagDelivery.cost || 0);
+          }
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to fetch status');
@@ -114,6 +154,21 @@ export default function RegistrationForm({
       fetchStatus();
     }
   }, [petId, token]);
+
+  // ✅ NEW: Calculate total amount including tag delivery
+  const getTotalAmount = () => {
+    const baseAmount = 999; // Base registration fee
+    let total = baseAmount;
+    
+    // Add tag delivery cost if applicable
+    if (tagDeliveryOption === 'deliver_to_home') {
+      const isGhaziabad = petCity === 'ghaziabad';
+      const tagCost = isGhaziabad ? 1850 : 1200;
+      total += tagCost;
+    }
+    
+    return total;
+  };
 
   // Handle file upload with Base64
   const handleFileUpload = async (file: File, documentName: string) => {
@@ -223,12 +278,19 @@ export default function RegistrationForm({
     setError("");
     
     try {
+      const totalAmount = getTotalAmount();
       const response = await fetch(`${API_BASE}/registration/${petId}/trigger-registration`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({
+          paymentVerified: true,
+          paidAmount: totalAmount,
+          tagDeliveryOption: tagDeliveryOption,
+          tagDeliveryCost: tagDeliveryCost,
+        })
       });
       
       const data = await response.json();
@@ -277,8 +339,8 @@ export default function RegistrationForm({
   };
 
   const uploadedCount = registrationStatus?.uploadedDocumentsCount || 0;
-  const totalRequired = 4;
-  const hasAllDocuments = registrationStatus?.hasAllDocuments || false;
+  const totalRequired = requiredDocs.length;
+  const hasAllDocuments = uploadedCount === totalRequired;
   const registrationTriggered = registrationStatus?.registrationTriggered || false;
 
   // If form is submitted successfully, show success message
@@ -369,6 +431,56 @@ export default function RegistrationForm({
               />
             </div>
 
+            {/* ✅ NEW: Tag Delivery Option */}
+            {hasAllDocuments && !registrationTriggered && !viewOnly && petCity && ['gurgaon', 'ghaziabad', 'delhi', 'noida'].includes(petCity) && (
+              <div className="mt-4 bg-white rounded-lg p-4 border border-gray-200">
+                <p className="text-sm font-medium text-gray-700 mb-3">📦 Tag Delivery Option</p>
+                <div className="flex flex-col gap-2">
+                  <label className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="tagDelivery"
+                      value="collect_from_municipal"
+                      checked={tagDeliveryOption === 'collect_from_municipal'}
+                      onChange={() => {
+                        setTagDeliveryOption('collect_from_municipal');
+                        setTagDeliveryCost(0);
+                      }}
+                      className="w-4 h-4 text-orange-500"
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Collect from Municipal Office</p>
+                      <p className="text-xs text-gray-500">Free · Pick up at your convenience</p>
+                    </div>
+                  </label>
+                  <label className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="tagDelivery"
+                      value="deliver_to_home"
+                      checked={tagDeliveryOption === 'deliver_to_home'}
+                      onChange={() => {
+                        const isGhaziabad = petCity === 'ghaziabad';
+                        const cost = isGhaziabad ? 1850 : 1200;
+                        setTagDeliveryOption('deliver_to_home');
+                        setTagDeliveryCost(cost);
+                      }}
+                      className="w-4 h-4 text-orange-500"
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">
+                        Deliver to Home 
+                        <span className="text-orange-600 font-bold ml-2">
+                          ₹{petCity === 'ghaziabad' ? '1,850' : '1,200'}
+                        </span>
+                      </p>
+                      <p className="text-xs text-gray-500">Get it delivered to your doorstep</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            )}
+
             {/* Status Message */}
             {hasAllDocuments && !registrationTriggered && !viewOnly && (
               <div className="mt-4 bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
@@ -384,7 +496,7 @@ export default function RegistrationForm({
                   {triggeringRegistration ? (
                     <><Loader2 className="w-4 h-4 animate-spin" /><span>Processing...</span></>
                   ) : (
-                    <><Send className="w-4 h-4" /><span>Pay ₹999 & Submit</span></>
+                    <><Send className="w-4 h-4" /><span>Pay ₹{getTotalAmount()} & Submit</span></>
                   )}
                 </button>
               </div>
@@ -422,7 +534,7 @@ export default function RegistrationForm({
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {documents.map((doc) => {
+            {requiredDocs.map((doc) => {
               const uploaded = isDocumentUploaded(doc.name);
               const documentData = getDocument(doc.name);
               const DocIcon = doc.icon;
@@ -527,10 +639,13 @@ export default function RegistrationForm({
               <div className="text-sm text-blue-800">
                 <p className="font-medium mb-1">Important Information:</p>
                 <ul className="list-disc list-inside space-y-1 text-blue-700">
-                  <li>All 4 documents are required to complete the registration process</li>
+                  <li>All {totalRequired} documents are required to complete the registration process</li>
+                  {isSterilizationRequired() && (
+                    <li className="text-orange-700 font-medium">⚠️ Sterilization certificate is required for Gurgaon pets aged 4+ years</li>
+                  )}
                   <li>Documents can be uploaded in any order and can be replaced before submission</li>
                   <li>Once registration is submitted, documents cannot be modified</li>
-                  <li>Payment of ₹999 is required to complete registration</li>
+                  <li>Payment of ₹{getTotalAmount()} is required to complete registration</li>
                   <li>You can also manually submit after uploading all documents</li>
                 </ul>
               </div>
@@ -554,7 +669,7 @@ export default function RegistrationForm({
                 {triggeringRegistration ? (
                   <><Loader2 className="w-5 h-5 animate-spin" /><span>Processing...</span></>
                 ) : (
-                  <><Send className="w-5 h-5" /><span>Pay ₹999 & Submit Registration</span></>
+                  <><Send className="w-5 h-5" /><span>Pay ₹{getTotalAmount()} & Submit Registration</span></>
                 )}
               </button>
             )}
@@ -580,8 +695,13 @@ export default function RegistrationForm({
               <div className="text-5xl mb-3">💳</div>
               <h3 className="text-xl font-bold text-gray-900">Complete Registration</h3>
               <p className="text-gray-600 mt-2">
-                Pay ₹999 to complete registration for <strong>{pendingRegistration.petName}</strong>
+                Pay ₹{getTotalAmount()} to complete registration for <strong>{pendingRegistration.petName}</strong>
               </p>
+              {tagDeliveryOption === 'deliver_to_home' && (
+                <p className="text-xs text-orange-600 mt-1">
+                  + ₹{tagDeliveryCost} for tag delivery
+                </p>
+              )}
               <p className="text-xs text-gray-500 mt-2">
                 One-time payment for lifetime registration
               </p>
@@ -590,7 +710,9 @@ export default function RegistrationForm({
             <PaymentButton
               petId={pendingRegistration.petId}
               petName={pendingRegistration.petName}
-              amount={999}
+              amount={getTotalAmount()}
+              tagDeliveryOption={tagDeliveryOption}
+              tagDeliveryCost={tagDeliveryCost}
               onSuccess={() => {
                 setShowPaymentModal(false);
                 // After payment success, trigger the registration

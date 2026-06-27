@@ -4,7 +4,6 @@ import { useParams, useRouter } from "next/navigation";
 import { apiFetch } from "../../services/api";
 import { useAuth } from "../../component/context/AuthContext";
 import AddPetModal from "../../component/AddPetModal";
-import RegistrationForm from "../../component/RegistrationForm";
 import {
   PawPrint,
   Dog,
@@ -47,8 +46,7 @@ export default function PetDetailPage() {
   const [deleting, setDeleting] = useState(false);
   
   // Registration states
-  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
-  const [existingRegistration, setExistingRegistration] = useState<any>(null);
+  const [registrationData, setRegistrationData] = useState<any>(null);
   const [loadingRegistration, setLoadingRegistration] = useState(false);
 
   useEffect(() => {
@@ -72,11 +70,13 @@ export default function PetDetailPage() {
     }
   };
 
+  // ✅ UPDATED: Load registration data from pets endpoint
   const loadRegistration = async () => {
     try {
       setLoadingRegistration(true);
-      const data = await apiFetch(`/registration/${id}`, "GET", null, token!);
-      setExistingRegistration(data);
+      // ✅ Use the pets registration-status endpoint
+      const data = await apiFetch(`/pets/${id}/registration-status`, "GET", null, token!);
+      setRegistrationData(data);
     } catch (error) {
       console.error("Error loading registration:", error);
     } finally {
@@ -97,29 +97,9 @@ export default function PetDetailPage() {
     }
   };
 
-  const handleDeleteRegistration = async () => {
-    if (!confirm("Are you sure you want to delete this registration? This action cannot be undone.")) {
-      return;
-    }
-    
-    try {
-      setLoading(true);
-      await apiFetch(`/registration/${id}`, "DELETE", null, token!);
-      await apiFetch(`/pets/${id}`, "PUT", { isRegistered: false }, token!);
-      await loadPet();
-      await loadRegistration();
-    } catch (error) {
-      console.error("Error deleting registration:", error);
-      setError("Failed to delete registration");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleRegistrationSuccess = () => {
-    setShowRegistrationForm(false);
-    loadPet(); // Reload pet to update isRegistered status
-    loadRegistration(); // Reload registration data
+    loadPet();
+    loadRegistration();
   };
 
   const getSpeciesIcon = (species: string) => {
@@ -139,6 +119,39 @@ export default function PetDetailPage() {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  // ✅ Get document count from registration data or pet
+  const getDocumentCount = () => {
+    if (registrationData) {
+      return {
+        uploaded: registrationData.uploadedDocumentsCount || 0,
+        required: registrationData.requiredDocumentsCount || 4,
+        hasAll: registrationData.hasAllDocuments || false,
+      };
+    }
+    // Fallback to pet virtuals
+    return {
+      uploaded: pet?.uploadedDocumentsCount || 0,
+      required: pet?.requiredDocumentsCount || 4,
+      hasAll: pet?.hasAllDocuments || false,
+    };
+  };
+
+  // ✅ Get registration status
+  const getRegistrationStatus = () => {
+    if (registrationData) {
+      return {
+        triggered: registrationData.registrationTriggered || false,
+        triggeredAt: registrationData.registrationTriggeredAt,
+        status: registrationData.registrationStatus || 'not_started',
+      };
+    }
+    return {
+      triggered: pet?.registrationTriggered || false,
+      triggeredAt: pet?.registrationTriggeredAt,
+      status: pet?.registrationStatus || 'not_started',
+    };
   };
 
   if (loading) {
@@ -171,6 +184,9 @@ export default function PetDetailPage() {
     );
   }
 
+  const docCount = getDocumentCount();
+  const regStatus = getRegistrationStatus();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
@@ -194,11 +210,11 @@ export default function PetDetailPage() {
             </div>
             <div className="flex items-center space-x-3">
               <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                pet.isRegistered 
+                pet.registrationStage === 4
                   ? 'bg-green-100 text-green-700' 
                   : 'bg-orange-100 text-orange-700'
               }`}>
-                {pet.isRegistered ? 'Registered' : 'Not Registered'}
+                {pet.registrationStage === 4 ? 'Registered' : 'Not Registered'}
               </span>
             </div>
           </div>
@@ -216,19 +232,21 @@ export default function PetDetailPage() {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Age</p>
-                  <p className="font-medium text-gray-900">{pet.age ? `${pet.age} years` : 'Unknown'}</p>
+                  <p className="font-medium text-gray-900">
+                    {pet.ageYears !== undefined ? `${pet.ageYears}y ${pet.ageMonths || 0}m` : 'Unknown'}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Gender</p>
                   <p className="font-medium text-gray-900 capitalize">{pet.gender || 'Unknown'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 mb-1">Color</p>
-                  <p className="font-medium text-gray-900">{pet.color || 'Unknown'}</p>
+                  <p className="text-sm text-gray-500 mb-1">City</p>
+                  <p className="font-medium text-gray-900 capitalize">{pet.city || 'Not specified'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 mb-1">Microchip</p>
-                  <p className="font-medium text-gray-900">{pet.microchip || 'Not provided'}</p>
+                  <p className="text-sm text-gray-500 mb-1">Documents</p>
+                  <p className="font-medium text-gray-900">{docCount.uploaded}/{docCount.required} uploaded</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Member since</p>
@@ -265,9 +283,9 @@ export default function PetDetailPage() {
                 <>
                   <div className="flex items-start space-x-4">
                     <div className={`p-3 rounded-xl ${
-                      pet.isRegistered ? 'bg-green-100' : 'bg-orange-100'
+                      regStatus.triggered ? 'bg-green-100' : 'bg-orange-100'
                     }`}>
-                      {pet.isRegistered ? (
+                      {regStatus.triggered ? (
                         <CheckCircle className="w-6 h-6 text-green-600" />
                       ) : (
                         <XCircle className="w-6 h-6 text-orange-600" />
@@ -275,122 +293,42 @@ export default function PetDetailPage() {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900">
-                        {pet.isRegistered ? 'Fully Registered' : 'Not Registered'}
+                        {regStatus.triggered ? 'Registration Submitted' : 'Not Registered'}
                       </h3>
                       <p className="text-gray-500 text-sm mt-1">
-                        {pet.isRegistered 
-                          ? 'This pet is fully registered in our system.' 
+                        {regStatus.triggered 
+                          ? `Submitted on ${formatDate(regStatus.triggeredAt)}`
                           : 'Complete the registration process for this pet.'}
                       </p>
                       
-                      {!pet.isRegistered && (
+                      {!regStatus.triggered && (
                         <button
-                          onClick={() => setShowRegistrationForm(true)}
+                          onClick={() => setIsEditModalOpen(true)}
                           className="mt-3 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-2"
                         >
                           <FileText className="w-4 h-4" />
-                          <span>Register Now</span>
+                          <span>Continue Registration</span>
                         </button>
                       )}
                     </div>
                   </div>
 
-                  {/* Display Registration Details if exists */}
-                  {pet.isRegistered && existingRegistration && (
-                    <div className="mt-6 space-y-4">
-                      <div className="border-t border-gray-200 pt-4">
-                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                          <User className="w-4 h-4 mr-2 text-orange-500" />
-                          Applicant Details
-                        </h4>
-                        <div className="grid grid-cols-2 gap-3 text-sm">
-                          <div>
-                            <p className="text-gray-500">Name</p>
-                            <p className="font-medium text-gray-900">
-                              {existingRegistration.applicantDetails?.firstName} {existingRegistration.applicantDetails?.middleName} {existingRegistration.applicantDetails?.lastName}
-                            </p>
+                  {/* Display Documents if available */}
+                  {registrationData?.documents && registrationData.documents.length > 0 && (
+                    <div className="mt-6 border-t border-gray-200 pt-4">
+                      <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                        <FileText className="w-4 h-4 mr-2 text-orange-500" />
+                        Uploaded Documents
+                      </h4>
+                      <div className="space-y-2">
+                        {registrationData.documents.map((doc: any) => (
+                          <div key={doc.documentName} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                            <span className="text-sm text-gray-600 capitalize">
+                              {doc.documentName.replace(/([A-Z])/g, ' $1').trim()}
+                            </span>
+                            <CheckCircle className="w-4 h-4 text-green-500" />
                           </div>
-                          <div>
-                            <p className="text-gray-500">DOB</p>
-                            <p className="font-medium text-gray-900">
-                              {formatDate(existingRegistration.applicantDetails?.dob)}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="border-t border-gray-200 pt-4">
-                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                          <MapPin className="w-4 h-4 mr-2 text-orange-500" />
-                          Address & Contact
-                        </h4>
-                        <div className="grid grid-cols-2 gap-3 text-sm">
-                          <div className="col-span-2">
-                            <p className="text-gray-500">Address</p>
-                            <p className="font-medium text-gray-900">
-                              {existingRegistration.address?.plot}, {existingRegistration.address?.street}, {existingRegistration.address?.colony}
-                              {existingRegistration.address?.ward && `, Ward ${existingRegistration.address.ward}`}
-                              {existingRegistration.address?.zone && `, ${existingRegistration.address.zone} Zone`}
-                              <br />PIN: {existingRegistration.address?.pin}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-gray-500">Mobile</p>
-                            <p className="font-medium text-gray-900">{existingRegistration.address?.mobile}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-500">Email</p>
-                            <p className="font-medium text-gray-900">{existingRegistration.address?.email}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="border-t border-gray-200 pt-4">
-                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                          <Award className="w-4 h-4 mr-2 text-orange-500" />
-                          Vaccination Details
-                        </h4>
-                        <div className="grid grid-cols-2 gap-3 text-sm">
-                          <div>
-                            <p className="text-gray-500">Anti-Rabies Date</p>
-                            <p className="font-medium text-gray-900">
-                              {formatDate(existingRegistration.dogDetails?.antiRabiesDate)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-gray-500">Valid Till</p>
-                            <p className="font-medium text-gray-900">
-                              {formatDate(existingRegistration.dogDetails?.vaccinationValidTill)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-gray-500">Certificate No.</p>
-                            <p className="font-medium text-gray-900">{existingRegistration.dogDetails?.certificateNumber || 'N/A'}</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-500">Vet Name</p>
-                            <p className="font-medium text-gray-900">{existingRegistration.dogDetails?.vetName || 'N/A'}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="border-t border-gray-200 pt-4">
-                        <div className="flex space-x-3">
-                          <button
-                            onClick={() => setShowRegistrationForm(true)}
-                            className="flex-1 bg-orange-100 hover:bg-orange-200 text-orange-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2"
-                          >
-                            <Edit className="w-4 h-4" />
-                            <span>Edit Registration</span>
-                          </button>
-                          <button
-                            onClick={handleDeleteRegistration}
-                            className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                            <span>Delete Registration</span>
-                          </button>
-                        </div>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -434,7 +372,7 @@ export default function PetDetailPage() {
                 </li>
                 <li className="flex items-start space-x-2">
                   <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm">Add microchip number for identification</span>
+                  <span className="text-sm">Upload all required documents</span>
                 </li>
                 <li className="flex items-start space-x-2">
                   <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -447,41 +385,33 @@ export default function PetDetailPage() {
               </ul>
             </div>
 
-            {/* Documents Summary */}
-            {pet.isRegistered && existingRegistration?.documents && (
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                  <FileText className="w-5 h-5 mr-2 text-orange-500" />
-                  Documents
-                </h2>
-                <div className="space-y-2">
-                  {existingRegistration.documents.antiRabiesCertificate && (
-                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                      <span className="text-sm text-gray-600">Anti-Rabies Certificate</span>
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                    </div>
-                  )}
-                  {existingRegistration.documents.idProof && (
-                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                      <span className="text-sm text-gray-600">ID Proof</span>
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                    </div>
-                  )}
-                  {existingRegistration.documents.residenceProof && (
-                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                      <span className="text-sm text-gray-600">Residence Proof</span>
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                    </div>
-                  )}
-                  {existingRegistration.documents.ownerWithPetPhoto && (
-                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                      <span className="text-sm text-gray-600">Owner with Pet Photo</span>
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                    </div>
-                  )}
+            {/* Document Summary Card */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <FileText className="w-5 h-5 mr-2 text-orange-500" />
+                Documents
+              </h2>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span className="text-sm text-gray-600">Uploaded</span>
+                  <span className="font-medium text-gray-900">{docCount.uploaded}/{docCount.required}</span>
                 </div>
+                <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span className="text-sm text-gray-600">Status</span>
+                  <span className={`font-medium ${docCount.hasAll ? 'text-green-600' : 'text-orange-600'}`}>
+                    {docCount.hasAll ? '✅ All uploaded' : '⏳ Incomplete'}
+                  </span>
+                </div>
+                {pet.isSterilizationRequired && (
+                  <div className="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                    <span className="text-sm text-gray-600">Sterilization</span>
+                    <span className={`font-medium ${pet.sterilizationCertificate?.fileData ? 'text-green-600' : 'text-orange-600'}`}>
+                      {pet.sterilizationCertificate?.fileData ? '✅ Uploaded' : '⚠️ Required'}
+                    </span>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
@@ -532,26 +462,18 @@ export default function PetDetailPage() {
       {/* Edit Pet Modal */}
       <AddPetModal
         isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          loadPet();
+          loadRegistration();
+        }}
         onPetAdded={() => {
           loadPet();
-          setIsEditModalOpen(false);
+          loadRegistration();
         }}
         token={token}
         petToEdit={pet}
       />
-
-      {/* Registration Form Modal */}
-      {showRegistrationForm && (
-        <RegistrationForm
-          petId={pet._id}
-          token={token!}
-          petName={pet.name}
-          onSuccess={handleRegistrationSuccess}
-          onCancel={() => setShowRegistrationForm(false)}
-          existingRegistration={existingRegistration}
-        />
-      )}
     </div>
   );
 }

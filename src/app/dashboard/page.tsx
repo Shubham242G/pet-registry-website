@@ -24,11 +24,15 @@ interface Pet {
   isRegistered: boolean;
   registrationStage: number;
   registrationStatus: string;
-  uploadedDocumentsCount?: number;
-  hasAllDocuments?: boolean;
+  uploadedDocumentsCount: number; // ✅ Now comes from virtual
+  requiredDocumentsCount: number; // ✅ Now comes from virtual
+  hasAllDocuments: boolean; // ✅ Now comes from virtual
   registrationTriggered?: boolean;
   createdAt: string;
   updatedAt: string;
+  city?: string;
+  isSterilizationRequired?: boolean;
+  documents?: any[];
 }
 
 function getDisplayStage(pet: Pet): { label: string; step: number; color: string } {
@@ -136,7 +140,9 @@ export default function Dashboard() {
       const data = await apiFetch("/pets?t=" + Date.now(), "GET", null, token);
       const petsData: Pet[] = (Array.isArray(data) ? data : []).map((pet: any) => ({
         ...pet,
+        // ✅ Now using virtual fields from backend
         uploadedDocumentsCount: pet.uploadedDocumentsCount ?? 0,
+        requiredDocumentsCount: pet.requiredDocumentsCount ?? 4,
         hasAllDocuments: pet.hasAllDocuments ?? false,
         registrationTriggered: pet.registrationTriggered ?? false,
         registrationStage: pet.registrationStage ?? 0,
@@ -193,6 +199,7 @@ export default function Dashboard() {
     registered: pets.filter((p) => p.registrationStage === 4).length,
     inProgress: pets.filter((p) => p.registrationStage >= 2 && p.registrationStage < 4).length,
     notStarted: pets.filter((p) => p.registrationStage < 2).length,
+    // ✅ Now using virtual uploadedDocumentsCount
     documentsUploaded: pets.reduce((sum, p) => sum + (p.uploadedDocumentsCount || 0), 0),
   };
 
@@ -215,45 +222,44 @@ export default function Dashboard() {
       <div className="md:pl-64">
         <div style={{ paddingTop: 30, paddingLeft: isMobile ? 16 : 40, paddingRight: isMobile ? 16 : 40 }}>
 
-          {/* Header with Tailio Symbol */}
-<div style={{ marginLeft: isMobile ? 0 : 28, marginRight: isMobile ? 0 : 28, display: "flex", flexDirection: "column", gap: 5, marginBottom: 24 }}>
-  <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-    <span style={{ color: "#A68660", fontSize: 11.5 }}>›</span>
-    <span style={{ color: "#A68660", fontSize: 11.5, fontFamily: F.dmSans }}>Overview</span>
-  </div>
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-      <span style={{ color: "#2C1A0E", fontSize: 26, fontFamily: F.fraunces, fontWeight: 900 }}>My Dashboard</span>
-      {/* Tailio Symbol - Floating, no box */}
-      <img 
-        src="/images/tailio.png" 
-        alt="Tailio" 
-        style={{ 
-          width: 150, 
-          height: 150, 
-          objectFit: "contain",
-          opacity: 0.6,
-          filter: "drop-shadow(0 2px 4px rgba(232,96,10,0.1))",
-          transition: "all 0.3s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.opacity = "0.9";
-          e.currentTarget.style.transform = "scale(1.05) rotate(-3deg)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.opacity = "0.6";
-          e.currentTarget.style.transform = "scale(1) rotate(0deg)";
-        }}
-      />
-    </div>
-    <button
-      onClick={() => { setEditingPet(null); setResumePetId(null); setIsModalOpen(true); }}
-      style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 9, paddingBottom: 9, background: "#E8600A", boxShadow: "0px 2px 0px #C04E06", borderRadius: 9, outline: "2px solid #C04E06", outlineOffset: -2, border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 7 }}
-    >
-      <span style={{ color: "white", fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 600 }}>+ Add Pet</span>
-    </button>
-  </div>
-</div>
+          {/* Header */}
+          <div style={{ marginLeft: isMobile ? 0 : 28, marginRight: isMobile ? 0 : 28, display: "flex", flexDirection: "column", gap: 5, marginBottom: 24 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <span style={{ color: "#A68660", fontSize: 11.5 }}>›</span>
+              <span style={{ color: "#A68660", fontSize: 11.5, fontFamily: F.dmSans }}>Overview</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                <span style={{ color: "#2C1A0E", fontSize: 26, fontFamily: F.fraunces, fontWeight: 900 }}>My Dashboard</span>
+                <img 
+                  src="/images/tailio.png" 
+                  alt="Tailio" 
+                  style={{ 
+                    width: 150, 
+                    height: 150, 
+                    objectFit: "contain",
+                    opacity: 0.6,
+                    filter: "drop-shadow(0 2px 4px rgba(232,96,10,0.1))",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.opacity = "0.9";
+                    e.currentTarget.style.transform = "scale(1.05) rotate(-3deg)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.opacity = "0.6";
+                    e.currentTarget.style.transform = "scale(1) rotate(0deg)";
+                  }}
+                />
+              </div>
+              <button
+                onClick={() => { setEditingPet(null); setResumePetId(null); setIsModalOpen(true); }}
+                style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 9, paddingBottom: 9, background: "#E8600A", boxShadow: "0px 2px 0px #C04E06", borderRadius: 9, outline: "2px solid #C04E06", outlineOffset: -2, border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 7 }}
+              >
+                <span style={{ color: "white", fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 600 }}>+ Add Pet</span>
+              </button>
+            </div>
+          </div>
 
           {error && (
             <div style={{ margin: "0 28px 16px", padding: "10px 14px", background: "#FDECEA", borderRadius: 9, color: "#A0251E", fontSize: 13, fontFamily: F.dmSans }}>{error}</div>
@@ -283,10 +289,9 @@ export default function Dashboard() {
               {/* LEFT COLUMN */}
               <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 14 }}>
 
-                {/* WhatsApp banner with Tailio symbol */}
+                {/* WhatsApp banner */}
                 <div style={{ padding: "16px 20px", background: "linear-gradient(174deg, #162C18 0%, #0D1F0F 100%)", borderRadius: 13, outline: "1px solid rgba(37,211,102,0.12)", outlineOffset: -1, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    {/* Tailio symbol in WhatsApp banner */}
                     <div style={{
                       width: 44,
                       height: 44,
@@ -351,6 +356,8 @@ export default function Dashboard() {
                 {currentPet && (() => {
                   const { label: stageLabel, step: stageStep, color: stageColor } = getDisplayStage(currentPet);
                   const isIncomplete = currentPet.registrationStage < 2 && !currentPet.registrationTriggered;
+                  const docCount = currentPet.uploadedDocumentsCount || 0;
+                  const totalDocs = currentPet.requiredDocumentsCount || 4;
 
                   return (
                     <div style={{ background: "#FFFCF8", borderRadius: 13, borderTop: "3px solid #E8600A", border: "1px solid #E8600A", borderTopWidth: 3, padding: "20px 22px", display: "flex", flexDirection: "column", gap: 18 }}>
@@ -382,7 +389,7 @@ export default function Dashboard() {
                         {[
                           { label: "Member Since", value: currentPet.createdAt ? new Date(currentPet.createdAt).toLocaleDateString() : "N/A" },
                           { label: "Age", value: getFormattedAge(currentPet) },
-                          { label: "Documents", value: `${currentPet.uploadedDocumentsCount || 0}/4 uploaded` },
+                          { label: "Documents", value: `${docCount}/${totalDocs} uploaded` },
                           { label: "Stage", value: stageLabel },
                         ].map((row) => (
                           <div key={row.label}>
@@ -415,7 +422,7 @@ export default function Dashboard() {
                           >
                             <span style={{ color: "white", fontSize: 13, fontFamily: F.dmSans, fontWeight: 600 }}>
                               {(currentPet.uploadedDocumentsCount || 0) > 0
-                                ? `Continue — ${currentPet.uploadedDocumentsCount}/4 docs uploaded`
+                                ? `Continue — ${currentPet.uploadedDocumentsCount}/${totalDocs} docs uploaded`
                                 : "Continue Registration →"}
                             </span>
                           </button>

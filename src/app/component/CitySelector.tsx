@@ -8,12 +8,27 @@ interface CitySelectorProps {
   error?: string;
 }
 
+// Base prices (municipal fee + service fee + GST)
 const cities = [
-  { value: "ghaziabad", label: "Ghaziabad", price: 1532.82, displayPrice: "₹1,532.82" },
-  { value: "delhi", label: "Delhi", price: 942.82, displayPrice: "₹942.82" },
-  { value: "noida", label: "Noida", price: 942.82, displayPrice: "₹942.82" },
-  { value: "gurgaon", label: "Gurgaon", price: 942.82, displayPrice: "₹942.82" },
+  { value: "ghaziabad", label: "Ghaziabad", basePrice: 1532.82, displayPrice: "₹1,532.82" },
+  { value: "delhi", label: "Delhi", basePrice: 942.82, displayPrice: "₹942.82" },
+  { value: "noida", label: "Noida", basePrice: 942.82, displayPrice: "₹942.82" },
+  { value: "gurgaon", label: "Gurgaon", basePrice: 942.82, displayPrice: "₹942.82" },
 ];
+
+// Tag delivery costs
+const TAG_DELIVERY_COSTS = {
+  ghaziabad: 268, // Extra for delivery
+  delhi: 258,
+  noida: 258,
+  gurgaon: 258,
+};
+
+// Total with tag delivery
+const getTotalWithDelivery = (city: string, basePrice: number) => {
+  const deliveryCost = TAG_DELIVERY_COSTS[city as keyof typeof TAG_DELIVERY_COSTS] || 258;
+  return basePrice + deliveryCost;
+};
 
 export default function CitySelector({ selectedCity, onChange, error }: CitySelectorProps) {
   const [isMobile, setIsMobile] = useState(false);
@@ -26,7 +41,7 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
     const cityValue = e.target.value;
     const selectedCityData = cities.find(c => c.value === cityValue);
     if (selectedCityData && onChange) {
-      onChange(cityValue, selectedCityData.price);
+      onChange(cityValue, selectedCityData.basePrice);
     }
   };
 
@@ -75,11 +90,101 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
         <option value="">Select your city</option>
         {cities.map((city) => (
           <option key={city.value} value={city.value}>
-            {city.label}
+            {city.label} — {city.displayPrice}
           </option>
         ))}
       </select>
       
+      {selectedCityData && (
+        <div style={{
+          marginTop: "12px",
+          padding: "12px 16px",
+          background: "#FFF0E4",
+          borderRadius: "9px",
+          outline: "1px solid #FFCCA0",
+          outlineOffset: "-1px",
+        }}>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "8px"
+          }}>
+            <span style={{
+              color: "#2C1A0E",
+              fontSize: "13px",
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 500
+            }}>
+              Base Registration Fee
+            </span>
+            <span style={{
+              color: "#E8600A",
+              fontSize: "18px",
+              fontFamily: "'Fraunces', serif",
+              fontWeight: 900
+            }}>
+              {selectedCityData.displayPrice}
+            </span>
+          </div>
+          
+          {/* Show tag delivery info */}
+          <div style={{
+            marginTop: "8px",
+            paddingTop: "8px",
+            borderTop: "1px solid rgba(44, 26, 14, 0.10)"
+          }}>
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "4px"
+            }}>
+              <span style={{
+                color: "#7A5C40",
+                fontSize: "11px",
+                fontFamily: "'DM Sans', sans-serif"
+              }}>
+                📦 Tag Delivery (optional)
+              </span>
+              <span style={{
+                color: "#7A5C40",
+                fontSize: "11px",
+                fontFamily: "'DM Sans', sans-serif"
+              }}>
+                +₹{TAG_DELIVERY_COSTS[selectedCity as keyof typeof TAG_DELIVERY_COSTS] || 258}
+              </span>
+            </div>
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "4px",
+              marginTop: "4px"
+            }}>
+              <span style={{
+                color: "#2C1A0E",
+                fontSize: "12px",
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 600
+              }}>
+                Total with Home Delivery
+              </span>
+              <span style={{
+                color: "#E8600A",
+                fontSize: "16px",
+                fontFamily: "'Fraunces', serif",
+                fontWeight: 700
+              }}>
+                ₹{getTotalWithDelivery(selectedCity, selectedCityData.basePrice).toFixed(2)}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
       
       {error && (
         <p style={{
