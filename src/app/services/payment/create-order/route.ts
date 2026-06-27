@@ -2,8 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
+
+    console.log("========== PROXY START ==========");
+
+
     const token = req.headers.get('authorization');
+
+    console.log("TOKEN", token);
+
     const body = await req.json();
+
+    console.log("BODY", body);
+
+
     
     console.log("📦 Payment proxy received:", {
       petId: body.petId,
@@ -39,6 +50,7 @@ export async function POST(req: NextRequest) {
     console.log(`🔄 Forwarding to: ${BACKEND_URL}/api/payment/create-order`);
     console.log("📦 Payload:", JSON.stringify(payload, null, 2));
     
+    console.log("BACKEND URL", BACKEND_URL);
     const response = await fetch(`${BACKEND_URL}/api/payment/create-order`, {
       method: 'POST',
       headers: {
@@ -47,8 +59,18 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify(payload),
     });
+
+    console.log("STATUS", response.status);
+
+
+
     
-    const data = await response.json();
+    const text = await response.text();
+
+console.log("RAW BACKEND RESPONSE");
+console.log(text);
+
+const data = JSON.parse(text);
     
     if (!response.ok) {
       console.error("❌ Backend error:", {
