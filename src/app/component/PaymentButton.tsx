@@ -35,27 +35,48 @@ export default function PaymentButton({
 
     try {
       const token = localStorage.getItem("token");
+      
+      // ✅ FIX: Validate amount before sending
+      console.log("💰 Amount received in PaymentButton:", amount, typeof amount);
+      
+      // Ensure amount is a valid number
+      const validAmount = Number(amount);
+      if (isNaN(validAmount) || validAmount <= 0) {
+        console.error("❌ Invalid amount:", amount);
+        throw new Error(`Invalid payment amount: ${amount}. Please refresh and try again.`);
+      }
 
-      // Include tag delivery info in the order
+      // ✅ Send amount as a proper number
+      const payload = {
+        amount: validAmount,
+        petId,
+        petName,
+        tagDeliveryOption,
+        tagDeliveryCost: Number(tagDeliveryCost) || 0,
+      };
+
+      console.log("📦 Sending payment request:", payload);
+
       const orderResponse = await fetch("/api/payment/create-order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          amount: amount,
-          petId,
-          petName,
-          tagDeliveryOption,
-          tagDeliveryCost,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const orderData = await orderResponse.json();
+      console.log("📦 Order response:", orderData);
 
       if (!orderResponse.ok || !orderData.success) {
         throw new Error(orderData.error || "Failed to create order");
+      }
+
+      // Check if Razorpay is loaded
+      if (typeof window.Razorpay === "undefined") {
+        // Try loading Razorpay dynamically
+        await loadRazorpaySDK();
       }
 
       const options = {
@@ -75,6 +96,8 @@ export default function PaymentButton({
 
         handler: async (response: any) => {
           try {
+            console.log("✅ Payment successful, verifying...");
+            
             const verifyResponse = await fetch("/api/payment/verify-payment", {
               method: "POST",
               headers: {
@@ -86,9 +109,9 @@ export default function PaymentButton({
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
                 petId: petId,
-                amount: amount * 100,
+                amount: validAmount * 100,
                 tagDeliveryOption,
-                tagDeliveryCost,
+                tagDeliveryCost: Number(tagDeliveryCost) || 0,
               }),
             });
 
@@ -102,6 +125,7 @@ export default function PaymentButton({
               onFailure?.(verifyData.error || "Payment verification failed");
             }
           } catch (err: any) {
+            console.error("Verification error:", err);
             setIsLoading(false);
             onFailure?.(err.message || "Payment verification failed");
           }
@@ -132,6 +156,23 @@ export default function PaymentButton({
       onFailure?.(error.message || "Payment failed");
       setIsLoading(false);
     }
+  };
+
+  // Helper function to load Razorpay SDK dynamically
+  const loadRazorpaySDK = (): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      if (typeof window.Razorpay !== "undefined") {
+        resolve();
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error("Failed to load Razorpay SDK"));
+      document.body.appendChild(script);
+    });
   };
 
   return (
@@ -169,6 +210,8 @@ export default function PaymentButton({
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="lazyOnload"
+        onLoad={() => console.log("✅ Razorpay SDK loaded")}
+        onError={() => console.error("❌ Failed to load Razorpay SDK")}
       />
     </>
   );
