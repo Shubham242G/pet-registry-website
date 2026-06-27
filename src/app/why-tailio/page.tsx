@@ -1,10 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import Footer from "../component/Footer";
+import RegisterModal from "../component/RegisterModal";
+import LoginModal from "../component/LoginModal";
 import Head from "next/head";
 
 export default function WhyTailioSection() {
   const [isMobile, setIsMobile] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -14,6 +18,24 @@ export default function WhyTailioSection() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  const handleOpenRegisterModal = () => {
+    setShowRegisterModal(true);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setShowRegisterModal(false);
+  };
+
+  const handleSwitchToLogin = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
+  };
+
+  const handleSwitchToRegister = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
+  };
 
   return (
     <>
@@ -279,6 +301,7 @@ export default function WhyTailioSection() {
                 paddingTop: 15
               }}>
                 <button 
+                  onClick={handleOpenRegisterModal}
                   style={{
                     padding: '13px 26px',
                     background: '#E8600A',
@@ -288,7 +311,16 @@ export default function WhyTailioSection() {
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 7
+                    gap: 7,
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.03)';
+                    e.currentTarget.style.background = '#C06A18';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.background = '#E8600A';
                   }}
                   aria-label="Register your pet now for ₹299"
                 >
@@ -369,7 +401,7 @@ export default function WhyTailioSection() {
                   </div>
                 </div>
 
-                {/* Stat 3 */}
+                {/* Stat 3 - CHANGED: Certificate delivery → Certificate filing */}
                 <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.07)', paddingBottom: 14 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{ minWidth: 90 }}>
@@ -377,7 +409,7 @@ export default function WhyTailioSection() {
                     </div>
                     <div>
                       <span style={{ color: 'rgba(250, 246, 239, 0.60)', fontSize: 13, fontFamily: 'DM Sans', fontWeight: 400, lineHeight: '18.85px' }}>
-                        Certificate delivery after submission. No follow-ups needed — we handle everything
+                        Certificate filing after submission. No follow-ups needed — we handle everything
                       </span>
                     </div>
                   </div>
@@ -773,13 +805,23 @@ export default function WhyTailioSection() {
                   In disputes or complaints, municipal authorities may seize your pet. An unregistered pet has no legal standing and neither does its owner. Don't wait until it's too late.
                 </p>
                 <button 
+                  onClick={handleOpenRegisterModal}
                   style={{
                     padding: '13px 26px',
                     background: '#E8600A',
                     boxShadow: '0px 4px 16px rgba(232, 96, 10, 0.28), 0px 2px 0px #C04E06',
                     borderRadius: 9,
                     border: 'none',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.03)';
+                    e.currentTarget.style.background = '#C06A18';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.background = '#E8600A';
                   }}
                   aria-label="Register your pet now"
                 >
@@ -905,6 +947,7 @@ export default function WhyTailioSection() {
             
             <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
               <button 
+                onClick={handleOpenRegisterModal}
                 style={{
                   padding: '14px 32px',
                   background: 'white',
@@ -912,7 +955,16 @@ export default function WhyTailioSection() {
                   border: 'none',
                   cursor: 'pointer',
                   boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.15)',
-                  outline: '2px solid rgba(255, 255, 255, 0.30)'
+                  outline: '2px solid rgba(255, 255, 255, 0.30)',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.03)';
+                  e.currentTarget.style.background = '#F5E6D0';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.background = 'white';
                 }}
                 aria-label="Register your pet now for ₹299"
               >
@@ -935,7 +987,20 @@ export default function WhyTailioSection() {
         </div>
 
         <Footer />
+
+        {/* Modals */}
+        <RegisterModal
+          isOpen={showRegisterModal}
+          onClose={handleCloseRegisterModal}
+          onSwitchToLogin={handleSwitchToLogin}
+        />
+
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onSwitchToRegister={handleSwitchToRegister}
+        />
       </div>
     </>
   );
-}
+} 

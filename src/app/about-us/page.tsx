@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Footer from '../component/Footer';
+import RegisterModal from '../component/RegisterModal';
+import LoginModal from '../component/LoginModal';
 import Head from 'next/head';
 
 const F = {
@@ -103,6 +105,8 @@ function TimelineIcon({ variant }: { variant: number }) {
 export default function AboutPage() {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -131,6 +135,24 @@ export default function AboutPage() {
     if (isMobile) return mobile;
     if (isTablet) return tablet;
     return desktop;
+  };
+
+  const handleOpenRegisterModal = () => {
+    setShowRegisterModal(true);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setShowRegisterModal(false);
+  };
+
+  const handleSwitchToLogin = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
+  };
+
+  const handleSwitchToRegister = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
   };
 
   return (
@@ -775,7 +797,7 @@ export default function AboutPage() {
                 { 
                   badge: { text: 'Live now', bg: '#E6F6ED', outline: '#A8DDB8', color: '#1A6B3A' }, 
                   title: 'Pet Registration', 
-                  desc: 'Delhi, Noida, Ghaziabad & Gurugram — official municipal filing in under 1 minute. Legally valid certificate delivered in 24–72 hours.',
+                  desc: 'Delhi, Noida, Ghaziabad & Gurugram — official municipal filing in under 1 minute. Legally valid certificate filed in 24–72 hours.',
                   icon: '/images/certificate-1.png'
                 },
                 { 
@@ -919,9 +941,39 @@ export default function AboutPage() {
               Join thousands of responsible pet parents across Delhi, Noida, Ghaziabad & Gurugram who are already legally compliant. Register in under 1 minute.
             </p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', paddingTop: 8 }}>
-              <Link href="/register" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '13px 26px', background: 'white', boxShadow: '0px 2px 0px rgba(0,0,0,0.08)', borderRadius: 9, outline: '2px rgba(255,255,255,0.40) solid', outlineOffset: -2, color: '#C04E06', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '21px', textDecoration: 'none' }}>
+              <button 
+                onClick={handleOpenRegisterModal}
+                style={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  padding: '13px 26px', 
+                  background: 'white', 
+                  boxShadow: '0px 2px 0px rgba(0,0,0,0.08)', 
+                  borderRadius: 9, 
+                  outline: '2px rgba(255,255,255,0.40) solid', 
+                  outlineOffset: -2, 
+                  color: '#C04E06', 
+                  fontSize: getResponsiveFontSize(14, 13, 12), 
+                  fontFamily: F.dmSans, 
+                  fontWeight: 600, 
+                  lineHeight: '21px', 
+                  textDecoration: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.03)';
+                  e.currentTarget.style.background = '#F5E6D0';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.background = 'white';
+                }}
+              >
                 Register Your Pet — ₹299
-              </Link>
+              </button>
               <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', padding: '13px 24px', background: 'rgba(255,255,255,0.12)', borderRadius: 9, outline: '1px rgba(255,255,255,0.30) solid', outlineOffset: -1, color: 'white', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '21px', textDecoration: 'none' }}>
                 Learn More
               </Link>
@@ -931,6 +983,19 @@ export default function AboutPage() {
 
         {/* ── FOOTER ────────────────────────────────────────────────────────── */}
         <Footer/>
+
+        {/* Modals */}
+        <RegisterModal
+          isOpen={showRegisterModal}
+          onClose={handleCloseRegisterModal}
+          onSwitchToLogin={handleSwitchToLogin}
+        />
+
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onSwitchToRegister={handleSwitchToRegister}
+        />
 
       </div>
     </>

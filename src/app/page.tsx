@@ -794,7 +794,7 @@ export default function HomePage() {
               <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
                 {[
                   { icon: '/images/office-1.png', title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.' },
-                  { icon: '/images/certificate-1.png', title: 'Official Certificate', desc: 'Govt-issued, delivered within 24–72 hrs.' },
+                  { icon: '/images/certificate-1.png', title: 'Official Certificate', desc: 'Govt-issued, filed within 24–72 hrs' },
                   { icon: '/images/vaccine.png', title: 'Vaccination Tracker', desc: 'Digital records + auto-reminders so you never miss a booster.' },
                   { icon: '/images/reminder.png', title: 'Renewal Reminders', desc: 'WhatsApp & email alerts before your annual expiry date.' }
                 ].map((item, idx) => (
@@ -931,9 +931,9 @@ export default function HomePage() {
                 <div style={{ marginTop: 20, marginBottom: 28 }}>
                   {[
                     'Register in under 1 minute, from your phone',
-                    'Legally secured Govt issued certificate',
+                    'Legally secured Govt issued certificate (filed in 24-72 hrs)',
                     'Vaccination tracker — schedule, record, share with any vet',
-                    'Processed in 24–72 hours'
+                    'Filed in 24–72 hours'
                   ].map((text, idx) => (
                     <div 
                       key={idx} 
@@ -993,7 +993,7 @@ export default function HomePage() {
                 </button>
                 
                 <div style={{ display: 'flex', gap: 20, marginBottom: 18, flexWrap: 'wrap' }}>
-                  {['Secure payment', 'Legally valid', '24–72 hr approval'].map((badge) => (
+                  {['Secure payment', 'Legally valid', '24–72 hr filing'].map((badge) => (
                     <span 
                       key={badge} 
                       style={{ 

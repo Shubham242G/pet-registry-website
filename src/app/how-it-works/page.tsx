@@ -59,7 +59,7 @@ export default function LandingPage() {
         <title>How it works | India's #1 Digital Pet Registration Platform</title>
         <meta 
           name="description" 
-          content="Register your pet in under 60 seconds. Official municipal pet registration for Delhi, Noida, Ghaziabad & Gurugram. Get your pet's legal certificate in 24-72 hours. Starting at ₹299." 
+          content="Register your pet in under 60 seconds. Official municipal pet registration for Delhi, Noida, Ghaziabad & Gurugram. Get your pet's legal certificate filed in 24-72 hours. Starting at ₹299." 
         />
         <meta 
           name="keywords" 
@@ -74,7 +74,7 @@ export default function LandingPage() {
         <meta property="og:title" content="Tailio | India's #1 Digital Pet Registration Platform" />
         <meta 
           property="og:description" 
-          content="Register your pet in under 60 seconds. Official municipal pet registration for Delhi, Noida, Ghaziabad & Gurugram. Get your pet's legal certificate in 24-72 hours. Starting at ₹299." 
+          content="Register your pet in under 60 seconds. Official municipal pet registration for Delhi, Noida, Ghaziabad & Gurugram. Get your pet's legal certificate filed in 24-72 hours. Starting at ₹299." 
         />
         <meta property="og:image" content="https://tailio.com/images/og-home.jpg" />
         <meta property="og:image:width" content="1200" />
@@ -88,7 +88,7 @@ export default function LandingPage() {
         <meta name="twitter:title" content="Tailio | India's #1 Digital Pet Registration Platform" />
         <meta 
           name="twitter:description" 
-          content="Register your pet in under 60 seconds. Official municipal pet registration for Delhi, Noida, Ghaziabad & Gurugram. Get your pet's legal certificate in 24-72 hours." 
+          content="Register your pet in under 60 seconds. Official municipal pet registration for Delhi, Noida, Ghaziabad & Gurugram. Get your pet's legal certificate filed in 24-72 hours." 
         />
         <meta name="twitter:image" content="https://tailio.com/images/og-home.jpg" />
         
@@ -139,7 +139,7 @@ export default function LandingPage() {
           }}
         />
         
-        {/* FAQ Schema */}
+        {/* FAQ Schema - CHANGED: certificate delivery to filing */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -152,7 +152,7 @@ export default function LandingPage() {
                   "name": "How long does pet registration take on Tailio?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Pet registration on Tailio takes under 60 seconds to complete. You'll receive your official digital certificate within 24-72 hours after submission."
+                    "text": "Pet registration on Tailio takes under 60 seconds to complete. Your certificate is filed within 24-72 hours after submission."
                   }
                 },
                 {
@@ -168,7 +168,7 @@ export default function LandingPage() {
                   "name": "How much does Tailio pet registration cost?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Tailio pet registration costs ₹299 + municipal fees. This includes full filing and processing, with your certificate delivered digitally within 24-72 hours."
+                    "text": "Tailio pet registration costs ₹299 + municipal fees. This includes full filing and processing, with your certificate filed within 24-72 hours."
                   }
                 }
               ]
@@ -221,7 +221,7 @@ export default function LandingPage() {
 
               <div style={{ paddingTop: 24, paddingBottom: 24 }}>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-                  {['₹299 + municipal fees', 'MCD, Noida & GMC accepted', 'Certificate in 24–72 hrs', 'No office visit needed'].map((text) => (
+                  {['₹299 + municipal fees', 'MCD, Noida & GMC accepted', 'Filed in 24–72 hrs', 'No office visit needed'].map((text) => (
                     <div key={text} style={{
                       padding: '6px 14px',
                       background: '#FDFAF5',
@@ -247,8 +247,11 @@ export default function LandingPage() {
                   boxShadow: '0px 6px 0px #A83E10',
                   borderRadius: 100,
                   border: 'none',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#C06A18'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#D4521A'}
                 aria-label="Start pet registration process"
               >
                 <span style={{ color: 'white', fontSize: 17, fontFamily: 'DM Sans', fontWeight: 700 }}>Start walking →</span>
@@ -487,7 +490,7 @@ export default function LandingPage() {
                     We file. You get your certificate.
                   </h3>
                   <p style={{ color: '#7A6858', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 400, lineHeight: '25.50px', marginBottom: 20 }}>
-                    We submit directly to your municipality — MCD, Noida Authority, or GMC. Your official digital certificate arrives by email within 24–72 hours. No office visit. Ever.
+                    We submit directly to your municipality — MCD, Noida Authority, or GMC. Your certificate is filed within 24–72 hours. No office visit. Ever.
                   </p>
                   <div style={{
                     background: 'linear-gradient(178deg, #2B1F14 0%, #3D2B1A 100%)',
@@ -512,7 +515,7 @@ export default function LandingPage() {
                         marginBottom: 6
                       }}>
                         <div style={{ width: 6, height: 6, background: '#F4A56A', borderRadius: 3 }} />
-                        <span style={{ color: '#F4A56A', fontSize: 11, fontFamily: 'DM Sans', fontWeight: 700, textTransform: 'uppercase' }}>Certificate issued</span>
+                        <span style={{ color: '#F4A56A', fontSize: 11, fontFamily: 'DM Sans', fontWeight: 700, textTransform: 'uppercase' }}>Certificate filed</span>
                       </div>
                       <div style={{ marginTop: 6, marginBottom: 1 }}>
                         <span style={{ color: '#F5F0E8', fontSize: 26, fontFamily: 'Fraunces', fontWeight: 700 }}>Bruno</span>
@@ -819,7 +822,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Pricing Section */}
+          {/* Pricing Section - CHANGED: Processed → Filed */}
           <div style={{ width: '100%', background: '#2B1F14', padding: getResponsivePadding() }}>
             <div style={{ maxWidth: 740, margin: '0 auto', textAlign: 'center' }}>
               <div style={{ display: 'inline-flex', padding: '6px 16px', background: 'rgba(212, 82, 26, 0.22)', borderRadius: 100, marginBottom: 24 }}>
@@ -830,7 +833,7 @@ export default function LandingPage() {
                 <span style={{ color: '#D4521A', fontStyle: 'italic' }}>You're at the end of the path.</span>
               </h2>
               <p style={{ color: 'rgba(245, 240, 232, 0.42)', fontSize: 16, fontFamily: 'DM Sans', maxWidth: 460, margin: '0 auto 40px', lineHeight: '27.20px' }}>
-                Sixty seconds from here to legally issued. Your certificate lands in your inbox — valid PAN India.
+                Sixty seconds from here to legally issued. Your certificate is filed within 24–72 hours — valid PAN India.
               </p>
 
               {/* Centered Pricing Box */}
@@ -883,13 +886,13 @@ export default function LandingPage() {
                     </div>
                   </div>
                   
-                  {/* Checklist - left aligned for readability */}
+                  {/* Checklist - left aligned for readability - CHANGED: Processed → Filed */}
                   <div style={{ marginTop: 24, marginBottom: 32, textAlign: 'left' }}>
                     {[
                       'Register in under 1 minute, from your phone',
                       'Legally secured Govt issued certificate',
                       'Vaccination tracker — schedule, record, share with any vet',
-                      'Processed in 24–72 hours'
+                      'Filed in 24–72 hours'
                     ].map((text, idx) => (
                       <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
                         <img src="/images/correct.png" alt="check mark" style={{ width: 18, height: 18, marginTop: 2 }} />
@@ -923,9 +926,9 @@ export default function LandingPage() {
                     Register Your Pet — ₹299 →
                   </button>
                   
-                  {/* Footer badges */}
+                  {/* Footer badges - CHANGED: approval → filing */}
                   <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap' }}>
-                    {['Secure payment', 'Legally valid', '24–72 hr approval'].map((text) => (
+                    {['Secure payment', 'Legally valid', '24–72 hr filing'].map((text) => (
                       <span key={text} style={{ color: 'rgba(255,255,255,0.30)', fontSize: 12, fontFamily: 'DM Sans' }}>{text}</span>
                     ))}
                   </div>
@@ -969,8 +972,11 @@ export default function LandingPage() {
                     border: 'none',
                     cursor: 'pointer',
                     boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.15)',
-                    outline: '2px solid rgba(255, 255, 255, 0.30)'
+                    outline: '2px solid rgba(255, 255, 255, 0.30)',
+                    transition: 'all 0.2s ease'
                   }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#F5E6D0'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'white'}
                   aria-label="Register your pet now"
                 >
                   <span style={{ color: '#C04E06', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 700 }}>Register Your Pet — ₹299 →</span>
