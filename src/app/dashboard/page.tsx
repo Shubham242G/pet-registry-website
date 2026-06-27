@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import AddPetModal from "../component/AddPetModal";
 import Sidebar from "../component/Sidebar";
+import PetCard from "../pets/[id]/page"; // ✅ Import PetCard
 
 const F = {
   fraunces: "'Fraunces', Georgia, serif",
@@ -24,23 +25,15 @@ interface Pet {
   isRegistered: boolean;
   registrationStage: number;
   registrationStatus: string;
-  uploadedDocumentsCount: number; // ✅ Now comes from virtual
-  requiredDocumentsCount: number; // ✅ Now comes from virtual
-  hasAllDocuments: boolean; // ✅ Now comes from virtual
+  uploadedDocumentsCount: number;
+  requiredDocumentsCount: number;
+  hasAllDocuments: boolean;
   registrationTriggered?: boolean;
   createdAt: string;
   updatedAt: string;
   city?: string;
   isSterilizationRequired?: boolean;
   documents?: any[];
-}
-
-function getDisplayStage(pet: Pet): { label: string; step: number; color: string } {
-  if (pet.registrationStage === 4)
-    return { label: "License Received", step: 3, color: "#1A6B3A" };
-  if (pet.registrationStage >= 2)
-    return { label: "Registration Requested", step: 2, color: "#E8600A" };
-  return { label: "Filling Form", step: 1, color: "#E8600A" };
 }
 
 function PawIcon({ size = 28, color = "#A68660" }: { size?: number; color?: string }) {
@@ -72,31 +65,6 @@ function EditIcon({ size = 13, color = "#2C1A0E" }: { size?: number; color?: str
     <div style={{ width: size, height: size, position: "relative", overflow: "hidden" }}>
       <div style={{ width: 9.75 * s, height: 9.75 * s, left: 1.08 * s, top: 2.17 * s, position: "absolute", outline: `1.08px ${color} solid`, outlineOffset: -0.54 * s }} />
       <div style={{ width: 7.65 * s, height: 7.65 * s, left: 4.33 * s, top: 1.02 * s, position: "absolute", outline: `1.08px ${color} solid`, outlineOffset: -0.54 * s }} />
-    </div>
-  );
-}
-
-function RegistrationProgressBar({ pet }: { pet: Pet }) {
-  const { step } = getDisplayStage(pet);
-  const stages = ["Filling Form", "Registration Requested", "License Received"];
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <div style={{ display: "flex", alignItems: "flex-start" }}>
-        {stages.map((label, i) => {
-          const stageNum = i + 1;
-          const done = step > stageNum;
-          const active = step === stageNum;
-          return (
-            <div key={label} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: i === 0 ? "flex-start" : i === stages.length - 1 ? "flex-end" : "center" }}>
-              <div style={{ width: 10, height: 10, borderRadius: 5, background: done ? "#1A6B3A" : active ? "#E8600A" : "#EBE1CE", boxShadow: active ? "0 0 0 3px rgba(232,96,10,0.18)" : "none", marginBottom: 5 }} />
-              <span style={{ fontSize: 10, fontFamily: F.dmSans, fontWeight: 600, color: done ? "#1A6B3A" : active ? "#E8600A" : "#A68660", textAlign: i === 0 ? "left" : i === stages.length - 1 ? "right" : "center", lineHeight: "14px" }}>{label}</span>
-            </div>
-          );
-        })}
-      </div>
-      <div style={{ height: 6, background: "#EBE1CE", borderRadius: 100, overflow: "hidden" }}>
-        <div style={{ height: 6, borderRadius: 100, background: step === 3 ? "#1A6B3A" : "#E8600A", width: `${((step - 1) / 2) * 100}%`, transition: "width 0.5s" }} />
-      </div>
     </div>
   );
 }
@@ -140,7 +108,6 @@ export default function Dashboard() {
       const data = await apiFetch("/pets?t=" + Date.now(), "GET", null, token);
       const petsData: Pet[] = (Array.isArray(data) ? data : []).map((pet: any) => ({
         ...pet,
-        // ✅ Now using virtual fields from backend
         uploadedDocumentsCount: pet.uploadedDocumentsCount ?? 0,
         requiredDocumentsCount: pet.requiredDocumentsCount ?? 4,
         hasAllDocuments: pet.hasAllDocuments ?? false,
@@ -187,19 +154,11 @@ export default function Dashboard() {
     }
   };
 
-  const getFormattedAge = (pet: Pet) => {
-    if (pet.ageYears && pet.ageMonths) return `${pet.ageYears}y ${pet.ageMonths}m`;
-    if (pet.ageYears) return `${pet.ageYears} ${pet.ageYears === 1 ? "year" : "years"}`;
-    if (pet.ageMonths) return `${pet.ageMonths} ${pet.ageMonths === 1 ? "month" : "months"}`;
-    return "Not specified";
-  };
-
   const stats = {
     total: pets.length,
     registered: pets.filter((p) => p.registrationStage === 4).length,
     inProgress: pets.filter((p) => p.registrationStage >= 2 && p.registrationStage < 4).length,
     notStarted: pets.filter((p) => p.registrationStage < 2).length,
-    // ✅ Now using virtual uploadedDocumentsCount
     documentsUploaded: pets.reduce((sum, p) => sum + (p.uploadedDocumentsCount || 0), 0),
   };
 
@@ -338,121 +297,70 @@ export default function Dashboard() {
                     <button
                       key={pet._id}
                       onClick={() => setSelectedPet(pet)}
-                      style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 7, paddingBottom: 7, background: selectedPet?._id === pet._id ? "#E8600A" : "none", boxShadow: selectedPet?._id === pet._id ? "0px 2px 0px #C04E06" : "none", borderRadius: 100, outline: selectedPet?._id === pet._id ? "1px solid #C04E06" : "1px solid rgba(44,26,14,0.18)", outlineOffset: -1, display: "flex", alignItems: "center", gap: 7, border: "none", cursor: "pointer" }}
+                      style={{ 
+                        paddingLeft: 14, 
+                        paddingRight: 14, 
+                        paddingTop: 7, 
+                        paddingBottom: 7, 
+                        background: selectedPet?._id === pet._id ? "#E8600A" : "none", 
+                        boxShadow: selectedPet?._id === pet._id ? "0px 2px 0px #C04E06" : "none", 
+                        borderRadius: 100, 
+                        outline: selectedPet?._id === pet._id ? "1px solid #C04E06" : "1px solid rgba(44,26,14,0.18)", 
+                        outlineOffset: -1, 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: 7, 
+                        border: "none", 
+                        cursor: "pointer" 
+                      }}
                     >
                       <div style={{ width: 7, height: 7, background: selectedPet?._id === pet._id ? "rgba(255,255,255,0.50)" : "rgba(44,26,14,0.25)", borderRadius: 3.5 }} />
-                      <span style={{ color: selectedPet?._id === pet._id ? "white" : "#7A5C40", fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>{pet.name}</span>
+                      <span style={{ color: selectedPet?._id === pet._id ? "white" : "#7A5C40", fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>
+                        {pet.name}
+                      </span>
                     </button>
                   ))}
                   <button
                     onClick={() => { setEditingPet(null); setResumePetId(null); setIsModalOpen(true); }}
-                    style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 7, paddingBottom: 7, borderRadius: 100, outline: "1px solid rgba(44,26,14,0.18)", outlineOffset: -1, display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer" }}
+                    style={{ 
+                      paddingLeft: 14, 
+                      paddingRight: 14, 
+                      paddingTop: 7, 
+                      paddingBottom: 7, 
+                      borderRadius: 100, 
+                      outline: "1px solid rgba(44,26,14,0.18)", 
+                      outlineOffset: -1, 
+                      display: "flex", 
+                      alignItems: "center", 
+                      gap: 6, 
+                      background: "none", 
+                      border: "none", 
+                      cursor: "pointer" 
+                    }}
                   >
                     <span style={{ color: "#7A5C40", fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>+ Add Pet</span>
                   </button>
                 </div>
 
-                {/* PET CARD */}
-                {currentPet && (() => {
-                  const { label: stageLabel, step: stageStep, color: stageColor } = getDisplayStage(currentPet);
-                  const isIncomplete = currentPet.registrationStage < 2 && !currentPet.registrationTriggered;
-                  const docCount = currentPet.uploadedDocumentsCount || 0;
-                  const totalDocs = currentPet.requiredDocumentsCount || 4;
-
-                  return (
-                    <div style={{ background: "#FFFCF8", borderRadius: 13, borderTop: "3px solid #E8600A", border: "1px solid #E8600A", borderTopWidth: 3, padding: "20px 22px", display: "flex", flexDirection: "column", gap: 18 }}>
-                      {/* Header */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                        <div style={{ width: 60, height: 60, background: "#F3EDE0", borderRadius: 13, outline: "2px solid rgba(44,26,14,0.18)", outlineOffset: -2, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
-                          {currentPet.profilePicture
-                            ? <img src={currentPet.profilePicture} alt={currentPet.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                            : <PawIcon size={28} color="#A68660" />
-                          }
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <span style={{ color: "#2C1A0E", fontSize: 21, fontFamily: F.fraunces, fontWeight: 900, display: "block" }}>{currentPet.name}</span>
-                          <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 4 }}>
-                            <div style={{ paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: stageStep === 3 ? "#E6F6ED" : "#FFF4E4", borderRadius: 100, outline: `1px solid ${stageStep === 3 ? "#A8DDB8" : "#FFCCA0"}`, outlineOffset: -1 }}>
-                              <span style={{ color: stageColor, fontSize: 11, fontFamily: F.dmSans, fontWeight: 600 }}>{stageStep === 3 ? "✓ " : ""}{stageLabel}</span>
-                            </div>
-                            {currentPet.gender && currentPet.gender !== "unknown" && (
-                              <div style={{ paddingLeft: 9, paddingRight: 9, paddingTop: 3, paddingBottom: 3, background: "#F3EDE0", borderRadius: 100, outline: "1px solid rgba(44,26,14,0.18)", outlineOffset: -1 }}>
-                                <span style={{ color: "#7A5C40", fontSize: 11, fontFamily: F.dmSans, fontWeight: 600, textTransform: "capitalize" }}>{currentPet.gender}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Details grid */}
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 20px" }}>
-                        {[
-                          { label: "Member Since", value: currentPet.createdAt ? new Date(currentPet.createdAt).toLocaleDateString() : "N/A" },
-                          { label: "Age", value: getFormattedAge(currentPet) },
-                          { label: "Documents", value: `${docCount}/${totalDocs} uploaded` },
-                          { label: "Stage", value: stageLabel },
-                        ].map((row) => (
-                          <div key={row.label}>
-                            <span style={{ color: "#A68660", fontSize: 9.5, fontFamily: F.dmMono, fontWeight: 400, textTransform: "uppercase", letterSpacing: "1.14px", display: "block" }}>{row.label}</span>
-                            <span style={{ color: "#2C1A0E", fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>{row.value}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <RegistrationProgressBar pet={currentPet} />
-
-                      {/* Actions */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                        <button
-                          onClick={() => { setEditingPet(currentPet); setResumePetId(null); setIsModalOpen(true); }}
-                          style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 10, paddingBottom: 10, borderRadius: 9, outline: "1px solid rgba(44,26,14,0.18)", outlineOffset: -1, display: "flex", alignItems: "center", gap: 7, background: "none", border: "none", cursor: "pointer" }}
-                        >
-                          <EditIcon size={13} color="#2C1A0E" />
-                          <span style={{ color: "#2C1A0E", fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>Edit Pet Info</span>
-                        </button>
-
-                        {isIncomplete && (
-                          <button
-                            onClick={() => {
-                              setEditingPet(null);
-                              setResumePetId(currentPet._id);
-                              setIsModalOpen(true);
-                            }}
-                            style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 10, paddingBottom: 10, background: "#E8600A", boxShadow: "0px 2px 0px #C04E06", borderRadius: 9, outline: "2px solid #C04E06", outlineOffset: -2, display: "flex", alignItems: "center", gap: 7, border: "none", cursor: "pointer" }}
-                          >
-                            <span style={{ color: "white", fontSize: 13, fontFamily: F.dmSans, fontWeight: 600 }}>
-                              {(currentPet.uploadedDocumentsCount || 0) > 0
-                                ? `Continue — ${currentPet.uploadedDocumentsCount}/${totalDocs} docs uploaded`
-                                : "Continue Registration →"}
-                            </span>
-                          </button>
-                        )}
-
-                        {(currentPet.registrationStage === 2 || currentPet.registrationStage === 3) && (
-                          <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 10, paddingBottom: 10, background: "#F3EAF8", borderRadius: 9, outline: "1px solid #D4A0E8", outlineOffset: -1 }}>
-                            <span style={{ color: "#6B21A8", fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>
-                              {currentPet.registrationStage === 2 ? "📋 Under Review" : "🏅 License Being Prepared"}
-                            </span>
-                          </div>
-                        )}
-
-                        {currentPet.registrationStage === 4 && (
-                          <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 10, paddingBottom: 10, background: "#E6F6ED", borderRadius: 9, outline: "1px solid #A8DDB8", outlineOffset: -1 }}>
-                            <span style={{ color: "#1A6B3A", fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>✓ License Received</span>
-                          </div>
-                        )}
-
-                        <button
-                          onClick={() => setShowDeleteConfirm({ show: true, petId: currentPet._id, petName: currentPet.name })}
-                          style={{ paddingLeft: 12, paddingRight: 12, paddingTop: 10, paddingBottom: 10, background: "#FDECEA", borderRadius: 9, outline: "1px solid #F5B8B5", outlineOffset: -1, display: "flex", alignItems: "center", gap: 6, border: "none", cursor: "pointer" }}
-                        >
-                          <TrashIcon size={13} color="#A0251E" />
-                          <span style={{ color: "#A0251E", fontSize: 13, fontFamily: F.dmSans, fontWeight: 500 }}>Delete</span>
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })()}
+                {/* ✅ PET CARD - Using the PetCard component */}
+                {currentPet && (
+                  <PetCard
+                    pet={currentPet}
+                    onEdit={(pet) => {
+                      setEditingPet(pet);
+                      setResumePetId(null);
+                      setIsModalOpen(true);
+                    }}
+                    onContinue={(petId) => {
+                      setEditingPet(null);
+                      setResumePetId(petId);
+                      setIsModalOpen(true);
+                    }}
+                    onDelete={(petId, petName) => {
+                      setShowDeleteConfirm({ show: true, petId, petName });
+                    }}
+                  />
+                )}
               </div>
 
               {/* RIGHT COLUMN */}
