@@ -54,8 +54,6 @@ export default function PaymentButton({
         tagDeliveryCost: Number(tagDeliveryCost) || 0,
       };
 
-      console.log("📦 Sending payment request:", payload);
-      console.log("🌐 API URL:", API_URL);
 
       const orderResponse = await fetch(
         `${API_URL}/payment/create-order`,
@@ -74,7 +72,13 @@ export default function PaymentButton({
       console.log("📦 Order response:", orderData);
 
       if (!orderResponse.ok || !orderData.success) {
-        throw new Error(orderData.error || "Failed to create order");
+        console.log("FULL RESPONSE", orderData);
+
+throw new Error(
+  typeof orderData.error === "string"
+    ? orderData.error
+    : JSON.stringify(orderData.error)
+);
       }
 
       if (typeof window.Razorpay === "undefined") {
