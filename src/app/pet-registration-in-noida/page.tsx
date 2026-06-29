@@ -8,10 +8,10 @@ export default function NoidaPage() {
     <>
       <Head>
         {/* Primary Meta Tags */}
-        <title>Noida Pet Registration | Noida Authority Pet Registration Online | Tailio</title>
+        <title>Pet Registration in Noida, UP | Dog License Registration – Tailio</title>
         <meta 
           name="description" 
-          content="Register your pet with Noida Authority in under 60 seconds. Tailio files directly with Noida Authority. Get your official pet registration certificate in 24-72 hours. Starting at ₹999. Avoid ₹10,000 fine." 
+          content="Get your dog registered online in Noida with Tailio. Easy pet registration process, official filing support, and legally valid registration certificate." 
         />
         <meta 
           name="keywords" 

@@ -8,7 +8,7 @@ export default function GhaziabadPage() {
     <>
       <Head>
         {/* Primary Meta Tags */}
-        <title>Ghaziabad Pet Registration | GMC Pet Registration Online | Tailio</title>
+        <title>Pet Registration in Ghaziabad, UP | Dog Registration – Tailio</title>
         <meta 
           name="description" 
           content="Register your pet with GMC Ghaziabad in under 60 seconds. Tailio files directly with Ghaziabad Municipal Corporation. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
@@ -26,7 +26,7 @@ export default function GhaziabadPage() {
         <meta property="og:title" content="Ghaziabad Pet Registration | GMC Pet Registration Online | Tailio" />
         <meta 
           property="og:description" 
-          content="Register your pet with GMC Ghaziabad in under 60 seconds. Tailio files directly with Ghaziabad Municipal Corporation. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
+          content="Tailio offers hassle-free pet registration in Ghaziabad. Complete your dog registration online with official municipal filing and quick support." 
         />
         <meta property="og:image" content="https://tailio.com/images/og-ghaziabad.jpg" />
         <meta property="og:image:width" content="1200" />

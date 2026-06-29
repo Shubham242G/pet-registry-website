@@ -41,14 +41,14 @@ export default function WhyTailioSection() {
     <>
       <Head>
         {/* Primary Meta Tags */}
-        <title>Why Tailio | India's Best Pet Registration Platform | Tailio</title>
+        <title>Why Choose Tailio for Pet Registration in India | Fast & Secure</title>
         <meta 
           name="description" 
-          content="Why Tailio is India's most trusted pet registration platform. Register your pet in 60 seconds, get legally valid certificates, and avoid fines up to ₹10,000. Starting at ₹299." 
+          content="Register your pet online with Tailio. Simple, secure, and hassle-free pet registration process with digital records and easy access anytime across India." 
         />
         <meta 
           name="keywords" 
-          content="Why Tailio, Tailio pet registration, pet registration platform India, best pet registration, pet registration benefits, pet compliance platform, pet registration comparison, Tailio vs municipal portal, pet registration fines Delhi NCR" 
+          content="why Tailio, Tailio pet registration, pet registration India, online pet registration, pet registration platform, best pet registration, Tailio vs municipal portal, pet registration benefits, secure pet registration, pet registration process, digital pet records" 
         />
         <link rel="canonical" href="https://tailio.com/why-tailio" />
         <meta name="robots" content="index, follow" />
@@ -56,10 +56,10 @@ export default function WhyTailioSection() {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tailio.com/why-tailio" />
-        <meta property="og:title" content="Why Tailio | India's Best Pet Registration Platform | Tailio" />
+        <meta property="og:title" content="Why Choose Tailio for Pet Registration in India | Fast & Secure" />
         <meta 
           property="og:description" 
-          content="Why Tailio is India's most trusted pet registration platform. Register your pet in 60 seconds, get legally valid certificates, and avoid fines up to ₹10,000. Starting at ₹299." 
+          content="Register your pet online with Tailio. Simple, secure, and hassle-free pet registration process with digital records and easy access anytime across India." 
         />
         <meta property="og:image" content="https://tailio.com/images/og-why-tailio.jpg" />
         <meta property="og:image:width" content="1200" />
@@ -70,10 +70,10 @@ export default function WhyTailioSection() {
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://tailio.com/why-tailio" />
-        <meta name="twitter:title" content="Why Tailio | India's Best Pet Registration Platform | Tailio" />
+        <meta name="twitter:title" content="Why Choose Tailio for Pet Registration in India | Fast & Secure" />
         <meta 
           name="twitter:description" 
-          content="Why Tailio is India's most trusted pet registration platform. Register your pet in 60 seconds, get legally valid certificates, and avoid fines up to ₹10,000." 
+          content="Register your pet online with Tailio. Simple, secure, and hassle-free pet registration process with digital records and easy access anytime across India." 
         />
         <meta name="twitter:image" content="https://tailio.com/images/og-why-tailio.jpg" />
         
@@ -89,16 +89,17 @@ export default function WhyTailioSection() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebPage",
-              "name": "Why Tailio - India's Best Pet Registration Platform",
-              "description": "Discover why Tailio is India's most trusted pet registration platform. Compare Tailio vs municipal portals, see features, and understand the benefits.",
+              "name": "Why Choose Tailio for Pet Registration in India | Fast & Secure",
+              "description": "Register your pet online with Tailio. Simple, secure, and hassle-free pet registration process with digital records and easy access anytime across India.",
               "url": "https://tailio.com/why-tailio",
-              "mainEntity": {
-                "@type": "Product",
-                "name": "Tailio Pet Registration Service",
-                "description": "Digital pet registration platform serving Delhi NCR. Register your pet in 60 seconds with legally valid certificates.",
-                "brand": {
-                  "@type": "Brand",
-                  "name": "Tailio"
+              "about": {
+                "@type": "Service",
+                "name": "Pet Registration Service",
+                "description": "Online pet registration service for India. Simple, secure, and hassle-free process with digital records.",
+                "provider": {
+                  "@type": "Organization",
+                  "name": "Tailio",
+                  "legalName": "Truzo Infotech Private Limited"
                 },
                 "offers": {
                   "@type": "Offer",
@@ -107,6 +108,18 @@ export default function WhyTailioSection() {
                   "availability": "https://schema.org/InStock",
                   "priceValidUntil": "2026-12-31",
                   "description": "Launch offer - pet registration starting at ₹299"
+                },
+                "areaServed": {
+                  "@type": "Place",
+                  "name": "India"
+                }
+              },
+              "mainEntity": {
+                "@type": "Product",
+                "name": "Tailio Pet Registration Service",
+                "brand": {
+                  "@type": "Brand",
+                  "name": "Tailio"
                 },
                 "aggregateRating": {
                   "@type": "AggregateRating",
@@ -401,7 +414,7 @@ export default function WhyTailioSection() {
                   </div>
                 </div>
 
-                {/* Stat 3 - CHANGED: Certificate delivery → Certificate filing */}
+                {/* Stat 3 */}
                 <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.07)', paddingBottom: 14 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{ minWidth: 90 }}>
@@ -536,7 +549,7 @@ export default function WhyTailioSection() {
                       }}>
                         <img 
                           src="/images/tailio.png"
-                          alt="Tailio" 
+                          alt="Tailio logo" 
                           style={{ 
                             width: 130, 
                             height: 130,
@@ -744,7 +757,7 @@ export default function WhyTailioSection() {
                   <div style={{ marginBottom: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', height: 40 }}>
                     <img
                       src={fine.icon}
-                      alt={fine.city}
+                      alt={`${fine.city} municipal corporation`}
                       width={60}
                       height={60}
                       style={{ objectFit: 'contain' }}
@@ -793,7 +806,7 @@ export default function WhyTailioSection() {
               }}>
                 <img 
                   src='/images/warning.png' 
-                  alt="Warning icon" 
+                  alt="Warning - pet registration required" 
                   style={{ width: 35, height: 34, objectFit: 'contain' }}
                 />
               </div>
@@ -924,7 +937,7 @@ export default function WhyTailioSection() {
             }}>
               <img 
                 src='/images/paw-2.png' 
-                alt="Paw print icon" 
+                alt="Paw print - Tailio pet registration" 
                 style={{ width: 90, height: 90, objectFit: 'contain' }}
               />
             </div>
@@ -978,7 +991,7 @@ export default function WhyTailioSection() {
                   border: '1px solid rgba(255, 255, 255, 0.40)',
                   cursor: 'pointer'
                 }}
-                aria-label="See how it works"
+                aria-label="See how Tailio works"
               >
                 <span style={{ color: 'white', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 500 }}>See how it works</span>
               </button>
@@ -1003,4 +1016,4 @@ export default function WhyTailioSection() {
       </div>
     </>
   );
-} 
+}

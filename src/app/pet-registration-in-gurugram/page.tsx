@@ -8,10 +8,10 @@ export default function GurugramPage() {
     <>
       <Head>
         {/* Primary Meta Tags */}
-        <title>Gurugram Pet Registration | MCG Pet Registration Online | Tailio</title>
+        <title>Pet Registration in Gurgaon Online | Dog License – Tailio</title>
         <meta 
           name="description" 
-          content="Register your pet with MCG Gurugram in under 60 seconds. Tailio files directly with Municipal Corporation of Gurugram. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
+          content="Apply for pet registration online in Gurgaon with Tailio. Secure, fast, and legally compliant dog registration with end-to-end filing assistance." 
         />
         <meta 
           name="keywords" 

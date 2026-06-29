@@ -23,6 +23,7 @@ export default function ContactPage() {
     petRegistrationId: '',
     message: '',
     subject: '',
+    enquiryType: '',
   });
   const [selectedSubject, setSelectedSubject] = useState('Certificate issue');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -97,26 +98,26 @@ export default function ContactPage() {
   return (
     <>
       <Head>
-        {/* Primary Meta Tags */}
-        <title>Contact Tailio | Pet Registration Support | Get Help in 60 Minutes</title>
+        {/* Primary Meta Tags - Updated with your requested title/description */}
+        <title>Contact Tailio — India's Pet Registration Platform</title>
         <meta 
           name="description" 
-          content="Contact Tailio for pet registration support. Get help with certificates, document uploads, payments, and vaccination tracking. Our team responds within 60 minutes." 
+          content="Reach out to the Tailio team for support, bulk orders, or partnership enquiries. We're here to help keep Indian pets safe and identified." 
         />
         <meta 
           name="keywords" 
-          content="Tailio contact, pet registration support, Tailio help, pet registration certificate support, Tailio customer care, pet registration assistance, Tailio WhatsApp support, Tailio email support" 
+          content="Tailio contact, pet registration platform India, pet registration support, Tailio support, bulk pet registration, pet partnership India, Indian pet registration, pet safety India, pet identification India" 
         />
         <link rel="canonical" href="https://tailio.com/contact" />
         <meta name="robots" content="index, follow" />
         
-        {/* Open Graph / Facebook */}
+        {/* Open Graph / Facebook - Updated with new title/description */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tailio.com/contact" />
-        <meta property="og:title" content="Contact Tailio | Pet Registration Support | Get Help in 60 Minutes" />
+        <meta property="og:title" content="Contact Tailio — India's Pet Registration Platform" />
         <meta 
           property="og:description" 
-          content="Contact Tailio for pet registration support. Get help with certificates, document uploads, payments, and vaccination tracking. Our team responds within 60 minutes." 
+          content="Reach out to the Tailio team for support, bulk orders, or partnership enquiries. We're here to help keep Indian pets safe and identified." 
         />
         <meta property="og:image" content="https://tailio.com/images/og-contact.jpg" />
         <meta property="og:image:width" content="1200" />
@@ -124,13 +125,13 @@ export default function ContactPage() {
         <meta property="og:site_name" content="Tailio" />
         <meta property="og:locale" content="en_IN" />
         
-        {/* Twitter */}
+        {/* Twitter - Updated with new title/description */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://tailio.com/contact" />
-        <meta name="twitter:title" content="Contact Tailio | Pet Registration Support | Get Help in 60 Minutes" />
+        <meta name="twitter:title" content="Contact Tailio — India's Pet Registration Platform" />
         <meta 
           name="twitter:description" 
-          content="Contact Tailio for pet registration support. Our team responds within 60 minutes." 
+          content="Reach out to the Tailio team for support, bulk orders, or partnership enquiries. We're here to help keep Indian pets safe and identified." 
         />
         <meta name="twitter:image" content="https://tailio.com/images/og-contact.jpg" />
         
@@ -139,15 +140,15 @@ export default function ContactPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         
-        {/* Schema.org structured data for Contact page */}
+        {/* Schema.org structured data for Contact page - Updated */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "ContactPage",
-              "name": "Contact Tailio Support",
-              "description": "Get in touch with Tailio for pet registration support, certificate queries, and general assistance.",
+              "name": "Contact Tailio — India's Pet Registration Platform",
+              "description": "Reach out to the Tailio team for support, bulk orders, or partnership enquiries. We're here to help keep Indian pets safe and identified.",
               "url": "https://tailio.com/contact",
               "mainEntity": {
                 "@type": "Organization",
@@ -161,6 +162,13 @@ export default function ContactPage() {
                     "contactType": "Customer Support",
                     "email": "info@tailio.in",
                     "availableLanguage": ["English", "Hindi"]
+                  },
+                  {
+                    "@type": "ContactPoint",
+                    "contactType": "Sales and Partnership",
+                    "email": "info@tailio.in",
+                    "availableLanguage": ["English", "Hindi"],
+                    "description": "For bulk pet registration orders and partnership enquiries"
                   },
                   {
                     "@type": "ContactPoint",
@@ -290,7 +298,7 @@ export default function ContactPage() {
             </div>
             <div style={{ maxWidth: 460, marginBottom: 17.4 }}>
               <p style={{ color: "rgba(255, 252, 248, 0.55)", fontSize: 16, lineHeight: 1.7 }}>
-                Got a question about registration, your certificate, or anything pet-related? Our support team responds within 60 minutes.
+                Got a question about registration, bulk orders, partnerships, or anything pet-related? Our support team responds within 60 minutes.
               </p>
             </div>
             <div style={{
@@ -368,6 +376,39 @@ export default function ContactPage() {
                     </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Enquiry Type - New field for bulk/partnership */}
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ fontSize: 11.5, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.81, color: "#7A5C40", marginBottom: 6, display: "block" }}>
+                  Enquiry Type
+                </label>
+                <select
+                  name="enquiryType"
+                  value={formData.enquiryType}
+                  onChange={handleInputChange}
+                  style={{
+                    width: "100%",
+                    padding: "11px 14px",
+                    background: "#FAF6EF",
+                    borderRadius: 9,
+                    outline: "1px solid rgba(44, 26, 14, 0.18)",
+                    outlineOffset: -1,
+                    border: "none",
+                    fontSize: 14,
+                    fontFamily: F.dmSans,
+                    color: "#2C1A0E",
+                    appearance: "none",
+                    cursor: "pointer",
+                  }}
+                  aria-label="Enquiry Type"
+                >
+                  <option value="">Select enquiry type</option>
+                  <option value="support">General Support</option>
+                  <option value="bulk">Bulk Registration</option>
+                  <option value="partnership">Partnership Enquiry</option>
+                  <option value="feedback">Feedback</option>
+                </select>
               </div>
 
               {/* Name Fields */}
