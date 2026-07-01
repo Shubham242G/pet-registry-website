@@ -401,7 +401,7 @@ export default function WhyTailioSection() {
                 </div>
 
                 {/* Stat 2 */}
-                <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.07)', paddingBottom: 14 }}>
+                {/* <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.07)', paddingBottom: 14 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{ minWidth: 90 }}>
                       <span style={{ color: '#FF8C3A', fontSize: 32, fontFamily: 'Fraunces', fontWeight: 900 }}>₹299</span>
@@ -412,7 +412,7 @@ export default function WhyTailioSection() {
                       </span>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Stat 3 */}
                 <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.07)', paddingBottom: 14 }}>

@@ -825,7 +825,7 @@ export default function HomePage() {
         {/* ══════════════════════════════════════
             PRICING SECTION
         ══════════════════════════════════════ */}
-        <div style={{ background: '#F3EDE0', width: '100%' }}>
+        {/* <div style={{ background: '#F3EDE0', width: '100%' }}>
           <div style={{ maxWidth: 1080, margin: '0 auto', padding: getResponsivePadding() }}>
             
             <div style={{ 
@@ -1177,7 +1177,7 @@ export default function HomePage() {
               
             </div>
           </div>
-        </div>
+        </div> */}
 
         <style jsx>{`
           @keyframes pulse {
