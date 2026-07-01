@@ -52,33 +52,42 @@ const STERILIZATION_DOC = {
 
 const STEPS = ["Pet Details", "Upload Docs", "Pay & Register"];
 
-// Get price with tag delivery
+// Get price with tag delivery - NEW PRICING STRUCTURE
 function getPrice(city: string, tagOption: string) {
   const isGhaziabad = city?.toLowerCase() === "ghaziabad";
+  const isGurgaon = city?.toLowerCase() === "gurgaon";
+  const isDelhi = city?.toLowerCase() === "delhi";
+  const isNoida = city?.toLowerCase() === "noida";
   
-  const municipalFee = isGhaziabad ? 1000 : 500;
-  const serviceFee = 299;
-  const subtotal = municipalFee + serviceFee;
-  const cgst = subtotal * 0.08;
-  const sgst = subtotal * 0.08;
-  let total = subtotal + cgst + sgst;
-  let tagDeliveryCost = 0;
+  // Base prices (before GST)
+  let basePrice = 0;
   
-  if (tagOption === 'deliver_to_home') {
-    const targetTotal = isGhaziabad ? 1800 : 1200;
-    tagDeliveryCost = targetTotal - total;
-    total += tagDeliveryCost;
+  if (isGhaziabad || isGurgaon) {
+    basePrice = 1500; // ₹1500 base price for Ghaziabad and Gurgaon
+  } else if (isDelhi || isNoida) {
+    basePrice = 846.61; // ₹846.61 base price to reach ₹999 after 18% GST
+  } else {
+    basePrice = 500; // Default fallback
   }
   
+  // Calculate GST (18%)
+  const gstRate = 0.18;
+  const gstAmount = basePrice * gstRate;
+  const total = basePrice + gstAmount;
+  
+  // Tag delivery is now inclusive - no extra cost
+  const tagDeliveryCost = 0;
+  
   return { 
-    municipalFee, 
-    serviceFee, 
-    subtotal: +subtotal.toFixed(2), 
-    cgst: +cgst.toFixed(2), 
-    sgst: +sgst.toFixed(2), 
-    total: +total.toFixed(2), 
+    basePrice: +basePrice.toFixed(2),
+    gstAmount: +gstAmount.toFixed(2),
+    gstRate: 18,
+    total: +total.toFixed(2),
+    tagDeliveryCost: 0,
     isGhaziabad,
-    tagDeliveryCost: +tagDeliveryCost.toFixed(2)
+    isGurgaon,
+    isDelhi,
+    isNoida,
   };
 }
 
@@ -398,7 +407,6 @@ export default function AddPetModal({
         console.log("🔄 UPDATING pet with ID:", petId);
         const response = await apiFetch(`/pets/${petId}`, "PUT", petData, token!);
         console.log("✅ Pet updated successfully");
-        // Call the update callback with the full pet data
         if (onPetUpdated) {
           onPetUpdated(response);
         }
@@ -408,7 +416,6 @@ export default function AddPetModal({
         const response = await apiFetch("/pets", "POST", petData, token!);
         console.log("✅ Pet created with ID:", response._id);
         setPetId(response._id);
-        // Call the create callback with the full pet data
         if (onPetCreated) {
           onPetCreated(response);
         }
@@ -443,7 +450,6 @@ export default function AddPetModal({
             ...prev,
             [docName]: { fileName: file.name, fileSize: file.size, fileData: reader.result as string, mimeType: file.type },
           }));
-          // Call the document uploaded callback with updated counts
           if (onDocumentUploaded) {
             onDocumentUploaded(
               petId, 
@@ -475,7 +481,6 @@ export default function AddPetModal({
       const data = await response.json();
       if (response.ok) {
         setUploadedDocs((prev) => { const next = { ...prev }; delete next[docName]; return next; });
-        // Call the document deleted callback with updated counts
         if (onDocumentDeleted) {
           onDocumentDeleted(
             petId, 
@@ -521,7 +526,6 @@ export default function AddPetModal({
       const data = await response.json();
       if (response.ok) {
         setSuccess(true);
-        // Call the registration triggered callback with updated status
         if (onRegistrationTriggered) {
           onRegistrationTriggered(
             petId, 
@@ -1005,7 +1009,7 @@ export default function AddPetModal({
               </div>
             )}
 
-            {/* Step 2 - Payment */}
+            {/* Step 2 - Payment - UPDATED with new pricing */}
             {!success && step === 2 && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <button 
@@ -1038,92 +1042,22 @@ export default function AddPetModal({
                   Back to Documents
                 </button>
 
-                {/* Tag Delivery Option - ONLY for supported cities */}
-                {form.city && ['gurgaon', 'ghaziabad', 'delhi', 'noida'].includes(form.city) && (
-                  <div style={{ 
-                    background: "#F3EDE0", 
-                    borderRadius: 11, 
-                    padding: "14px 16px",
-                    outline: "1px solid rgba(44,26,14,0.10)",
-                    outlineOffset: -1,
-                  }}>
-                    <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 8 }}>TAG DELIVERY</div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                      <label style={{ 
-                        display: "flex", 
-                        alignItems: "center", 
-                        gap: 10,
-                        padding: "8px 12px",
-                        background: tagDeliveryOption === 'collect_from_municipal' ? "#FFFCF8" : "transparent",
-                        borderRadius: 8,
-                        cursor: "pointer",
-                        outline: tagDeliveryOption === 'collect_from_municipal' ? "1px solid #E8600A" : "1px solid transparent",
-                        transition: "all 0.3s ease",
-                      }}>
-                        <input 
-                          type="radio" 
-                          name="tagDelivery" 
-                          value="collect_from_municipal"
-                          checked={tagDeliveryOption === 'collect_from_municipal'}
-                          onChange={() => {
-                            setTagDeliveryOption('collect_from_municipal');
-                            setTagDeliveryCost(0);
-                          }}
-                          style={{ accentColor: "#E8600A" }}
-                        />
-                        <div>
-                          <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>Collect from Municipal Office</div>
-                          <div style={{ color: "#7A5C40", fontSize: 11 }}>Free · Pick up at your convenience</div>
-                          <div style={{ color: "#A68660", fontSize: 10, marginTop: 2 }}>
-                            Total: ₹{petPrice.total.toFixed(2)}
-                          </div>
-                        </div>
-                      </label>
-                      
-                      <label style={{ 
-                        display: "flex", 
-                        alignItems: "center", 
-                        gap: 10,
-                        padding: "8px 12px",
-                        background: tagDeliveryOption === 'deliver_to_home' ? "#FFFCF8" : "transparent",
-                        borderRadius: 8,
-                        cursor: "pointer",
-                        outline: tagDeliveryOption === 'deliver_to_home' ? "1px solid #E8600A" : "1px solid transparent",
-                        transition: "all 0.3s ease",
-                      }}>
-                        <input 
-                          type="radio" 
-                          name="tagDelivery" 
-                          value="deliver_to_home"
-                          checked={tagDeliveryOption === 'deliver_to_home'}
-                          onChange={() => {
-                            const isGhaziabad = form.city === 'ghaziabad';
-                            const targetTotal = isGhaziabad ? 1800 : 1200;
-                            const currentTotal = getPrice(form.city, 'collect_from_municipal').total;
-                            const extraCost = targetTotal - currentTotal;
-                            setTagDeliveryOption('deliver_to_home');
-                            setTagDeliveryCost(extraCost);
-                          }}
-                          style={{ accentColor: "#E8600A" }}
-                        />
-                        <div>
-                          <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>
-                            Deliver to Home 
-                            <span style={{ color: "#E8600A", fontWeight: 700, marginLeft: 6 }}>
-                              +₹{form.city === 'ghaziabad' ? '267.18' : '257.18'}
-                            </span>
-                          </div>
-                          <div style={{ color: "#7A5C40", fontSize: 11 }}>
-                            Get it delivered to your doorstep
-                          </div>
-                          <div style={{ color: "#E8600A", fontSize: 11, fontWeight: 600, marginTop: 2 }}>
-                            Total: ₹{form.city === 'ghaziabad' ? '1,800.00' : '1,200.00'}
-                          </div>
-                        </div>
-                      </label>
+                {/* Tag Delivery - Now shows as Included */}
+                <div style={{ 
+                  background: "#E6F6ED", 
+                  borderRadius: 11, 
+                  padding: "14px 16px",
+                  outline: "1px solid #A8DDB8",
+                  outlineOffset: -1,
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <CheckCircle size={16} color="#1A6B3A" />
+                    <div>
+                      <div style={{ color: "#1A6B3A", fontSize: 13, fontWeight: 600 }}>Tag Delivery Included</div>
+                      <div style={{ color: "#7A5C40", fontSize: 11 }}>The tag will be delivered to your registered address at no extra cost</div>
                     </div>
                   </div>
-                )}
+                </div>
 
                 <div style={{ background: "#F3EDE0", borderRadius: 11, padding: "14px 16px" }}>
                   <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>SUMMARY</div>
@@ -1137,34 +1071,22 @@ export default function AddPetModal({
                     <span style={{ color: "#7A5C40", fontSize: 12 }}>Documents</span>
                     <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>{requiredDocs.length}/{requiredDocs.length} ✓</span>
                   </div>
-                  {tagDeliveryOption === 'deliver_to_home' && (
-                    <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4, paddingTop: 4, borderTop: "1px solid rgba(44,26,14,0.08)" }}>
-                      <span style={{ color: "#7A5C40", fontSize: 12 }}>Tag Delivery</span>
-                      <span style={{ color: "#E8600A", fontSize: 12, fontWeight: 600 }}>+₹{tagDeliveryCost.toFixed(2)}</span>
-                    </div>
-                  )}
                 </div>
 
                 <div style={{ background: "#FFFCF8", borderRadius: 11, padding: "14px 16px", outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
                   <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>FEE BREAKDOWN</div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Municipal Fee</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.municipalFee}</span>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Registration Fee</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.basePrice.toFixed(2)}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Service Fee</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.serviceFee}</span>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>GST ({petPrice.gstRate}%)</span>
+                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.gstAmount.toFixed(2)}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12 }}>CGST + SGST (16%)</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{(petPrice.cgst + petPrice.sgst).toFixed(2)}</span>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Tag Delivery</span>
+                    <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>Included ✓</span>
                   </div>
-                  {tagDeliveryOption === 'deliver_to_home' && (
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, borderTop: "1px solid rgba(44,26,14,0.06)", paddingTop: 4 }}>
-                      <span style={{ color: "#7A5C40", fontSize: 12 }}>Tag Delivery</span>
-                      <span style={{ color: "#E8600A", fontSize: 12, fontWeight: 600 }}>+₹{tagDeliveryCost.toFixed(2)}</span>
-                    </div>
-                  )}
                   <div style={{ borderTop: "1px solid rgba(44,26,14,0.10)", paddingTop: 8, marginTop: 4, display: "flex", justifyContent: "space-between" }}>
                     <span style={{ color: "#2C1A0E", fontSize: 14, fontWeight: 700 }}>Total</span>
                     <span style={{ color: "#E8600A", fontSize: 18, fontWeight: 700 }}>₹{petPrice.total.toFixed(2)}</span>
@@ -1184,7 +1106,7 @@ export default function AddPetModal({
                     petName={form.name || "your pet"} 
                     amount={petPrice.total}
                     tagDeliveryOption={tagDeliveryOption}
-                    tagDeliveryCost={tagDeliveryCost}
+                    tagDeliveryCost={0}
                     onSuccess={handlePaymentSuccess} 
                     onFailure={(err) => setError(`Payment failed: ${err}`)} 
                   />

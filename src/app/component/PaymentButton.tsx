@@ -47,11 +47,11 @@ export default function PaymentButton({
       }
 
       const payload = {
-        amount: validAmount,
+        amount: Number(amount),
         petId,
         petName,
-        tagDeliveryOption,
-        tagDeliveryCost: Number(tagDeliveryCost) || 0,
+        tagDeliveryOption: 'collect_from_municipal', // Always set to this
+        tagDeliveryCost: 0, // Always 0 since it's inclusive
       };
 
 
