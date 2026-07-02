@@ -33,7 +33,7 @@ interface AddPetModalProps {
   resumePetId?: string | null;
 }
 
-// Base required docs - always needed for ALL cities
+// Base required docs - ALWAYS needed for ALL cities
 const BASE_REQUIRED_DOCS = [
   { name: "antiRabiesCertificate", label: "Anti-Rabies Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate" },
   { name: "idProof", label: "ID Proof", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or government ID" },
@@ -41,7 +41,14 @@ const BASE_REQUIRED_DOCS = [
   { name: "ownerWithPetPhoto", label: "Owner with Pet Photo", icon: ImageIcon, accept: "image/*", description: "Recent photo of you with your pet" },
 ];
 
-// Additional docs based on conditions - ONLY for Gurgaon pets 4+ years
+// ✅ NEW: Gurgaon-specific required docs
+const GURGAON_REQUIRED_DOCS = [
+  { name: "petPhoto", label: "Pet Photo (Alone)", icon: ImageIcon, accept: "image/*", description: "Clear photo of your pet only" },
+  { name: "vaccinationCard", label: "Vaccination Card", icon: FileText, accept: ".pdf,image/*", description: "Vaccination record card" },
+  { name: "vaccinationCertificate", label: "Vaccination Certificate", icon: FileText, accept: ".pdf,image/*", description: "Official vaccination certificate" },
+];
+
+// Sterilization doc - ONLY for Gurgaon pets 4+ years
 const STERILIZATION_DOC = { 
   name: "sterilizationCertificate", 
   label: "Sterilization Certificate", 
@@ -52,31 +59,26 @@ const STERILIZATION_DOC = {
 
 const STEPS = ["Pet Details", "Upload Docs", "Pay & Register"];
 
-// Get price with tag delivery - NEW PRICING STRUCTURE
+// Get price with tag delivery
 function getPrice(city: string, tagOption: string) {
   const isGhaziabad = city?.toLowerCase() === "ghaziabad";
   const isGurgaon = city?.toLowerCase() === "gurgaon";
   const isDelhi = city?.toLowerCase() === "delhi";
   const isNoida = city?.toLowerCase() === "noida";
   
-  // Base prices (before GST)
   let basePrice = 0;
   
   if (isGhaziabad || isGurgaon) {
-    basePrice = 1500; // ₹1500 base price for Ghaziabad and Gurgaon
+    basePrice = 1500;
   } else if (isDelhi || isNoida) {
-    basePrice = 846.61; // ₹846.61 base price to reach ₹999 after 18% GST
+    basePrice = 846.61;
   } else {
-    basePrice = 500; // Default fallback
+    basePrice = 500;
   }
   
-  // Calculate GST (18%)
   const gstRate = 0.18;
   const gstAmount = basePrice * gstRate;
   const total = basePrice + gstAmount;
-  
-  // Tag delivery is now inclusive - no extra cost
-  const tagDeliveryCost = 0;
   
   return { 
     basePrice: +basePrice.toFixed(2),
@@ -126,7 +128,6 @@ export default function AddPetModal({
 }: AddPetModalProps) {
   const { user } = useAuth();
   
-  // State for form data
   const [form, setForm] = useState({ 
     name: "", 
     ageYears: "", 
@@ -138,7 +139,6 @@ export default function AddPetModal({
   const [profilePreview, setProfilePreview] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Track the pet ID
   const [petId, setPetId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [uploadedDocs, setUploadedDocs] = useState<Record<string, any>>({});
@@ -151,23 +151,28 @@ export default function AddPetModal({
   const [step, setStep] = useState(0);
   const [petCityFee, setPetCityFee] = useState(0);
 
-  // Tag delivery state
   const [tagDeliveryOption, setTagDeliveryOption] = useState<'collect_from_municipal' | 'deliver_to_home'>('collect_from_municipal');
   const [tagDeliveryCost, setTagDeliveryCost] = useState(0);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  // Get required docs based on city and age - dynamically computed
+  // ✅ UPDATED: Get required docs based on city and age
   const getRequiredDocs = (city: string, ageYears: number, ageMonths: number) => {
     const docs = [...BASE_REQUIRED_DOCS];
     const ageInYears = ageYears + (ageMonths / 12);
+    const isGurgaon = city === 'gurgaon';
     
-    if (city === 'gurgaon' && ageInYears >= 4) {
-      const hasSterilization = docs.some(d => d.name === 'sterilizationCertificate');
-      if (!hasSterilization) {
-        docs.push(STERILIZATION_DOC);
+    // Add Gurgaon-specific docs
+    if (isGurgaon) {
+      docs.push(...GURGAON_REQUIRED_DOCS);
+      if (ageInYears >= 4) {
+        const hasSterilization = docs.some(d => d.name === 'sterilizationCertificate');
+        if (!hasSterilization) {
+          docs.push(STERILIZATION_DOC);
+        }
       }
     }
+    
     return docs;
   };
 
@@ -783,7 +788,8 @@ export default function AddPetModal({
                   />
                 </div>
 
-                {form.city === 'gurgaon' && (parseInt(form.ageYears) || 0) + (parseInt(form.ageMonths) || 0) / 12 >= 4 && (
+                {/* ✅ Updated warning message for Gurgaon */}
+                {form.city === 'gurgaon' && (
                   <div style={{
                     padding: "10px 14px",
                     background: "#FFF4E4",
@@ -792,7 +798,18 @@ export default function AddPetModal({
                     outlineOffset: -1,
                   }}>
                     <p style={{ color: "#B85C00", fontSize: 12, fontWeight: 500, margin: 0 }}>
-                      ⚠️ <strong>Sterilization Certificate Required:</strong> Gurgaon requires a sterilization certificate for pets aged 4 years or older. You'll need to upload this in the next step.
+                      ⚠️ <strong>Gurgaon Requirements:</strong> You'll need to upload:
+                      <br />
+                      • Pet Photo (alone)
+                      <br />
+                      • Vaccination Card
+                      <br />
+                      • Vaccination Certificate
+                      {(parseInt(form.ageYears) || 0) + (parseInt(form.ageMonths) || 0) / 12 >= 4 && (
+                        <>
+                          <br />• Sterilization Certificate <strong>(required for 4+ years)</strong>
+                        </>
+                      )}
                     </p>
                   </div>
                 )}
@@ -821,7 +838,7 @@ export default function AddPetModal({
               </form>
             )}
 
-            {/* Step 1 - Documents */}
+            {/* Step 1 - Documents - UPDATED with new docs */}
             {!success && step === 1 && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <button 
@@ -883,7 +900,8 @@ export default function AddPetModal({
                       <div style={{ height: 6, borderRadius: 100, background: allDocsUploaded ? "#1A6B3A" : "#E8600A", width: `${(uploadedCount / requiredDocs.length) * 100}%`, transition: "width 0.4s ease" }} />
                     </div>
 
-                    {form.city === 'gurgaon' && (parseInt(form.ageYears) || 0) + (parseInt(form.ageMonths) || 0) / 12 >= 4 && (
+                    {/* Show Gurgaon requirements summary */}
+                    {form.city === 'gurgaon' && (
                       <div style={{
                         padding: "10px 14px",
                         background: "#FFF4E4",
@@ -892,7 +910,10 @@ export default function AddPetModal({
                         outlineOffset: -1,
                       }}>
                         <p style={{ color: "#B85C00", fontSize: 12, fontWeight: 500, margin: 0 }}>
-                          ⚠️ <strong>Required:</strong> Sterilization Certificate for Gurgaon pets aged 4+ years. Please upload below.
+                          📋 <strong>Gurgaon Required Documents:</strong> Pet Photo, Vaccination Card, Vaccination Certificate
+                          {(parseInt(form.ageYears) || 0) + (parseInt(form.ageMonths) || 0) / 12 >= 4 && (
+                            <> + Sterilization Certificate</>
+                          )}
                         </p>
                       </div>
                     )}
@@ -920,6 +941,12 @@ export default function AddPetModal({
                               <div style={{ flex: 1 }}>
                                 <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>{doc.label}</div>
                                 <div style={{ color: "#A68660", fontSize: 10, marginTop: 2 }}>{doc.description}</div>
+                                {/* ✅ Show which docs are mandatory for Gurgaon */}
+                                {form.city === 'gurgaon' && (
+                                  <div style={{ color: "#E8600A", fontSize: 9, fontWeight: 600, marginTop: 2 }}>
+                                    • Required for Gurgaon
+                                  </div>
+                                )}
                               </div>
                               {uploaded && <CheckCircle size={16} color="#1A6B3A" />}
                             </div>
@@ -1009,7 +1036,7 @@ export default function AddPetModal({
               </div>
             )}
 
-            {/* Step 2 - Payment - UPDATED with new pricing */}
+            {/* Step 2 - Payment */}
             {!success && step === 2 && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <button 
@@ -1042,7 +1069,6 @@ export default function AddPetModal({
                   Back to Documents
                 </button>
 
-                {/* Tag Delivery - Now shows as Included */}
                 <div style={{ 
                   background: "#E6F6ED", 
                   borderRadius: 11, 
