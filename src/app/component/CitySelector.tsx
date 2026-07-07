@@ -14,14 +14,16 @@ const cities = [
   { value: "delhi", label: "Delhi", basePrice: 942.82, displayPrice: "₹942.82" },
   { value: "noida", label: "Noida", basePrice: 942.82, displayPrice: "₹942.82" },
   { value: "gurgaon", label: "Gurgaon", basePrice: 942.82, displayPrice: "₹942.82" },
+  { value: "faridabad", label: "Faridabad", basePrice: 1200, displayPrice: "₹1,200.00" },
 ];
 
 // Tag delivery costs
 const TAG_DELIVERY_COSTS = {
-  ghaziabad: 268, // Extra for delivery
+  ghaziabad: 268,
   delhi: 258,
   noida: 258,
   gurgaon: 258,
+  faridabad: 258,
 };
 
 // Total with tag delivery
@@ -94,8 +96,6 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
           </option>
         ))}
       </select>
-      
-      
       
       {error && (
         <p style={{
