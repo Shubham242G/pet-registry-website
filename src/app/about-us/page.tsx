@@ -140,7 +140,7 @@ export default function AboutPage() {
         <title>About Tailio | Responsible Pet Ownership Made Simple</title>
         <meta 
           name="description" 
-          content="Meet the founders behind Tailio — India's first digital pet registration platform. Learn how we're making pet compliance simple for Delhi NCR pet parents." 
+          content="Meet Kaavya Chhabra, the founder behind Tailio — India's first digital pet registration platform. Learn how we're making pet compliance simple for Delhi NCR pet parents." 
         />
         <meta 
           name="keywords" 
@@ -155,7 +155,7 @@ export default function AboutPage() {
         <meta property="og:title" content="About Tailio | Responsible Pet Ownership Made Simple" />
         <meta 
           property="og:description" 
-          content="Meet the founders behind Tailio — India's first digital pet registration platform. Learn how we're making pet compliance simple for Delhi NCR pet parents." 
+          content="Meet Kaavya Chhabra, the founder behind Tailio — India's first digital pet registration platform. Learn how we're making pet compliance simple for Delhi NCR pet parents." 
         />
         <meta property="og:image" content="https://tailio.com/images/og-about.jpg" />
         <meta property="og:image:width" content="1200" />
@@ -169,7 +169,7 @@ export default function AboutPage() {
         <meta name="twitter:title" content="About Tailio | Responsible Pet Ownership Made Simple" />
         <meta 
           name="twitter:description" 
-          content="Meet the founders behind Tailio — India's first digital pet registration platform. Learn how we're making pet compliance simple for Delhi NCR pet parents." 
+          content="Meet Kaavya Chhabra, the founder behind Tailio — India's first digital pet registration platform. Learn how we're making pet compliance simple for Delhi NCR pet parents." 
         />
         <meta name="twitter:image" content="https://tailio.com/images/og-about.jpg" />
         
@@ -258,11 +258,11 @@ export default function AboutPage() {
                 }}>made simple</span>
               </div>
               <p style={{ margin: 0, maxWidth: isMobile ? '100%' : 500, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '23.93px' }}>
-                The four co-founders got tired of watching pet owners struggle with confusing government portals, lost paperwork, and missed deadlines. So they built Tailio — the simplest way to register your pet and stay legally compliant, from your phone, in under a minute.
+                Kaavya Chhabra, a teacher and pet parent to Mylo and Felix, got tired of watching pet owners struggle with confusing government portals, lost paperwork, and missed deadlines. So she built Tailio — the simplest way to register your pet and stay legally compliant, from your phone, in under a minute.
               </p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', paddingTop: 8 }}>
                 <a href="#founders" style={{ display: 'inline-flex', alignItems: 'center', padding: '13px 26px', background: '#E8600A', boxShadow: '0px 2px 0px #C04E06', borderRadius: 9, outline: '2px #C04E06 solid', outlineOffset: -2, color: 'white', fontSize: getResponsiveFontSize(15, 14, 13), fontFamily: F.dmSans, fontWeight: 600, lineHeight: '22.5px', textDecoration: 'none' }}>
-                  Meet the Founders
+                  Meet the Founder
                 </a>
                 <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', padding: '13px 20px', borderRadius: 9, outline: '1px rgba(44,26,14,0.18) solid', outlineOffset: -1, color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '21px', textDecoration: 'none' }}>
                   Back to Home
@@ -274,7 +274,7 @@ export default function AboutPage() {
               <div style={{ flexShrink: 0, width: 460, height: 460, position: 'relative' }}>
                 <Image
                   src="/images/about-us-banner.jpeg"
-                  alt="Tailio founders illustration - responsible pet ownership made simple"
+                  alt="Tailio founder illustration - responsible pet ownership made simple"
                   fill
                   style={{ objectFit: 'cover', borderRadius: '20px' }}
                 />
@@ -304,9 +304,9 @@ export default function AboutPage() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {[
-                  "It started with two dogs named Mylo and Felix. Co-founder Kaavya got a notice from her RWA saying her pets weren't registered and she had 7 days to comply or face eviction complaints. She spent three days navigating the MCD portal - broken links, confusing forms, and two office visits later, she gave up.",
-                  "That frustration became Tailio. We asked one question: why should pet registration feel harder than filing taxes? It shouldn't. And with the Supreme Court of India now mandating registration across Delhi NCR, the urgency had never been greater.",
-                  "We built Tailio in 2025 with one goal — make legal compliance invisible for pet parents. No queues, no confusion, no follow-ups. Just upload, submit, and done.",
+                  "It started with two dogs named Mylo and Felix. Founder Kaavya got a notice from her RWA saying her pets weren't registered and she had 7 days to comply or face eviction complaints. She spent three days navigating the MCD portal - broken links, confusing forms, and two office visits later, she gave up.",
+                  "That frustration became Tailio. She asked one question: why should pet registration feel harder than filing taxes? It shouldn't. And with the Supreme Court of India now mandating registration across Delhi NCR, the urgency had never been greater.",
+                  "She built Tailio in 2025 with one goal — make legal compliance invisible for pet parents. No queues, no confusion, no follow-ups. Just upload, submit, and done.",
                 ].map((text, i) => (
                   <p key={i} style={{ margin: 0, color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 14, 13), fontFamily: F.dmSans, fontWeight: 400, lineHeight: '25.38px' }}>{text}</p>
                 ))}
@@ -321,8 +321,8 @@ export default function AboutPage() {
               </div>
               <div style={{ paddingTop: 8 }}>
                 {[
-                  { period: 'Early 2025', title: 'The problem identified', desc: "After the Supreme Court's ABC Rules 2023 directive, we saw thousands of pet parents scrambling with no clear path to compliance.", v: 1 },
-                  { period: 'Mid 2025', title: 'Team formed & built', desc: 'Four co-founders — combining expertise in technology, legal compliance, design, and operations — came together to build Tailio, under Truzo Infotech Private Limited.', v: 2 },
+                  { period: 'Early 2025', title: 'The problem identified', desc: "After the Supreme Court's ABC Rules 2023 directive, Kaavya saw thousands of pet parents scrambling with no clear path to compliance.", v: 1 },
+                  { period: 'Mid 2025', title: 'Tailio was built', desc: 'Kaavya — combining her experience as a teacher, pet parent, and problem-solver — built Tailio under Truzo Infotech Private Limited.', v: 2 },
                   { period: 'Early 2026', title: 'Launched across Delhi NCR', desc: 'Went live in Delhi, Noida, Ghaziabad, and Gurugram — filing directly with each municipal corporation on behalf of pet parents.', v: 3 },
                 ].map((item, i, arr) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 20, paddingBottom: i < arr.length - 1 ? 28 : 0 }}>

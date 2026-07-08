@@ -112,11 +112,12 @@ export default function Navbar() {
           height: 68,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: isMobile ? 'center' : 'space-between',
           boxSizing: 'border-box',
+          position: 'relative',
         }}>
 
-          {/* LOGO with subtle animation */}
+          {/* LOGO with subtle animation - centered on mobile */}
           <Link 
             href="/" 
             style={{ 
@@ -124,6 +125,7 @@ export default function Navbar() {
               alignItems: 'center', 
               textDecoration: 'none', 
               flexShrink: 0,
+              position: isMobile ? 'relative' : 'static',
             }}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
@@ -152,7 +154,7 @@ export default function Navbar() {
                 height={880}
                 style={{ 
                   width: 'auto', 
-                  height: 230, 
+                  height: isMobile ? 180 : 230, 
                   objectFit: 'contain',
                   position: 'relative',
                   transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -199,7 +201,13 @@ export default function Navbar() {
           )}
 
           {/* RIGHT SIDE - Auth Buttons + Hamburger */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 12,
+            position: isMobile ? 'absolute' : 'relative',
+            right: isMobile ? 20 : 'auto',
+          }}>
             {!isMobile && (
               <button
                 onClick={() => setShowRegister(true)}
