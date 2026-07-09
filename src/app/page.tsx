@@ -335,7 +335,7 @@ export default function HomePage() {
         />
       </Head>
 
-      <div style={{ fontFamily: F.dmSans, overflowX: 'hidden', width: '100%', margin: 0, padding: 0, background: '#FAF6EF' }}>
+      <div style={{ fontFamily: F.dmSans , width: '100%', margin: 0, padding: 0, background: '#FAF6EF' }}>
 
         {/* ══════════════════════════════════════
             HERO SECTION
@@ -515,10 +515,11 @@ export default function HomePage() {
                 </a>
               </div>
 
+              {/* Stats - Horizontal on mobile */}
               <div style={{
-                width: isMobile ? '100%' : 554,
-                display: 'flex',
-                flexWrap: isMobile ? 'wrap' : 'nowrap',
+                width: '100%',
+                display: 'grid',
+                gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
                 borderRadius: 13,
                 overflow: 'hidden',
                 background: 'transparent',
@@ -531,12 +532,10 @@ export default function HomePage() {
                   { num: '33M+', label: 'Pet dogs in India' },
                 ].map((s, i) => (
                   <div key={i} style={{
-                    flex: 1,
                     padding: isMobile ? '12px 8px' : '16px 12px',
                     textAlign: 'center',
                     background: isMobile ? 'rgba(243, 237, 224, 0.8)' : 'transparent',
                     borderRadius: isMobile ? 12 : 0,
-                    margin: isMobile ? '4px' : 0,
                     backdropFilter: isMobile ? 'blur(4px)' : 'none',
                     transition: 'all 0.3s ease',
                   }}
@@ -568,10 +567,10 @@ export default function HomePage() {
         </div>
 
         {/* ══════════════════════════════════════
-            WHY REGISTER SECTION
+            WHY REGISTER SECTION - Reduced padding on mobile
         ══════════════════════════════════════ */}
         <div id="why-register" style={{ background: '#FAF6EF', width: '100%' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '40px 20px' : '45px 40px' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '24px 20px 40px' : '45px 40px' }}>
             <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 20, marginBottom: 40 }}>
 
               <div style={{ width: isMobile ? '100%' : 548, display: 'flex', flexDirection: 'column' }}>
@@ -670,7 +669,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div style={{ background: '#F3EDE0', borderRadius: 18, padding: isMobile ? '20px' : '33px 41px', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), gap: isMobile ? 20 : 24 }}>
+            <div style={{ background: '#F3EDE0', borderRadius: 18, padding: isMobile ? '20px' : '33px 41px', display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), gap: isMobile ? 16 : 24 }}>
               {[
                 { num: '~913', label: 'Registered dogs in Delhi municipality', sub: 'vs. an estimated few lakhs of pet dogs' },
                 { num: '<10%', label: 'Pet owners who have registered', sub: 'Study, East Delhi urban colony' },
@@ -684,14 +683,17 @@ export default function HomePage() {
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'scale(1)';
                   }}>
-                  <div style={{ color: '#C04E06', fontSize: getResponsiveFontSize(36, 30, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '54px' }}>{s.num}</div>
-                  <div style={{ color: '#4A2C14', fontSize: getResponsiveFontSize(13, 12, 11) }}>{s.label}</div>
-                  <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(10.5, 9, 9), fontStyle: 'italic' }}>{s.sub}</div>
+                  <div style={{ color: '#C04E06', fontSize: getResponsiveFontSize(36, 30, 24), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '54px' }}>{s.num}</div>
+                  <div style={{ color: '#4A2C14', fontSize: getResponsiveFontSize(13, 12, 10) }}>{s.label}</div>
+                  <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(10.5, 9, 8), fontStyle: 'italic' }}>{s.sub}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
+
+        {/* Rest of the sections remain the same - KNOW THE FINES, PRICING, TESTIMONIALS, FAQ, FINAL CTA */}
+        {/* ... (keeping all other sections unchanged) */}
 
         {/* ══════════════════════════════════════
             KNOW THE FINES SECTION
@@ -717,7 +719,7 @@ export default function HomePage() {
               Municipal corporations are actively enforcing registration. These are the current fines across Delhi NCR.
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), gap: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), gap: 10 }}>
               {[
                 { city: 'Delhi', amount: '₹500+', desc: 'Fee enforcement underway. Fines escalating with each MCD drive.', icon: '/images/delhi.png' },
                 { city: 'Gurugram', amount: 'Pending', desc: 'Registration encouraged strongly. Fines to be announced — act now.', icon: '/images/gurugram.png' },
@@ -826,370 +828,370 @@ export default function HomePage() {
             PRICING SECTION
         ══════════════════════════════════════ */}
         <div style={{ background: '#F3EDE0', width: '100%' }}>
-  <div style={{ maxWidth: 1080, margin: '0 auto', padding: getResponsivePadding() }}>
-    
-    <div style={{ 
-      background: '#1F1108', 
-      borderRadius: 20, 
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: isMobile ? 'column' : 'row',
-      transition: 'box-shadow 0.3s ease',
-      boxShadow: '0px 8px 24px rgba(0,0,0,0.2)',
-    }}>
-      
-      <div style={{ 
-        flex: 1, 
-        padding: '48px 44px', 
-        borderRight: !isMobile ? '1px solid rgba(255,255,255,0.07)' : 'none',
-        display: 'flex', 
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        transition: 'transform 0.3s ease',
-      }}>
-        <div>
-          <div style={{ 
-            paddingLeft: 14, 
-            paddingRight: 14, 
-            paddingTop: 5, 
-            paddingBottom: 5, 
-            borderRadius: 999, 
-            outline: '1px solid rgba(255,255,255,0.25)', 
-            outlineOffset: -1, 
-            display: 'inline-flex',
-            transition: 'all 0.3s ease',
-            cursor: 'default',
-          }}>
-            <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>Simple, Transparent Pricing</span>
-          </div>
-          
-          <div style={{ marginTop: 19.2, flexDirection: 'column', display: 'flex' }}>
-            <span style={{ 
-              color: 'white', 
-              fontSize: getResponsiveFontSize(44, 36, 28), 
-              fontFamily: 'Fraunces', 
-              fontWeight: 900, 
-              lineHeight: '1.2',
-              transition: 'transform 0.3s ease',
-            }}>One price.</span>
-            <span style={{ 
-              color: '#E07B20', 
-              fontSize: getResponsiveFontSize(44, 36, 28), 
-              fontFamily: 'Fraunces', 
-              fontStyle: 'italic', 
-              fontWeight: 900, 
-              lineHeight: '1.2',
-              transition: 'transform 0.3s ease, color 0.3s ease',
-            }}>Everything<br/>included.</span>
-          </div>
-          
-          <div style={{ marginTop: 19.2 }}>
-            <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'Inter', fontWeight: 400, lineHeight: '20.80px' }}>No hidden charges, no surprise fees. ₹299 covers your complete pet registration filing, certificate, and everything in between. Municipal fees are collected directly by the authority.</span>
-          </div>
-        </div>
-        
-        <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
-          {[
-            { icon: '/images/office-1.png', title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.' },
-            { icon: '/images/certificate-1.png', title: 'Official Certificate', desc: 'Govt-issued, filed within 24–72 hrs' },
-            { icon: '/images/vaccine.png', title: 'Vaccination Tracker', desc: 'Digital records + auto-reminders so you never miss a booster.' },
-            { icon: '/images/reminder.png', title: 'Renewal Reminders', desc: 'WhatsApp & email alerts before your annual expiry date.' }
-          ].map((item, idx) => (
-            <div 
-              key={item.title} 
-              style={{ 
-                background: 'rgba(255,255,255,0.05)', 
-                borderRadius: 12, 
-                padding: '18px 16px', 
-                outline: '1px solid rgba(255,255,255,0.07)',
-                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                cursor: 'pointer',
-                transform: 'translateY(0)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(224,123,32,0.12)';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.outline = '1px solid rgba(224,123,32,0.3)';
-                e.currentTarget.style.boxShadow = '0px 8px 24px rgba(224,123,32,0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.outline = '1px solid rgba(255,255,255,0.07)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <div style={{ 
-                width: 48, 
-                height: 48, 
-                background: 'rgba(224,123,32,0.15)', 
-                borderRadius: 10, 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                marginBottom: 14,
-                transition: 'all 0.3s ease',
-              }}>
-                <img src={item.icon} alt={item.title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
-              </div>
-              <div style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600, marginBottom: 6 }}>{item.title}</div>
-              <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>{item.desc}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ 
-        flex: 1, 
-        padding: '48px 44px', 
-        display: 'flex', 
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28, flexWrap: 'wrap' }}>
+          <div style={{ maxWidth: 1080, margin: '0 auto', padding: getResponsivePadding() }}>
+            
             <div style={{ 
-              paddingLeft: 14, 
-              paddingRight: 14, 
-              paddingTop: 5, 
-              paddingBottom: 5, 
-              borderRadius: 999, 
-              outline: '1px solid rgba(255,255,255,0.25)', 
-              outlineOffset: -1,
-              transition: 'all 0.3s ease',
-            }}>
-              <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>All Inclusive</span>
-            </div>
-            <div style={{ 
-              paddingLeft: 12, 
-              paddingRight: 12, 
-              paddingTop: 5, 
-              paddingBottom: 5, 
-              background: '#E8C832', 
-              borderRadius: 999, 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 6,
-              transition: 'all 0.3s ease',
-              animation: 'pulse 2s infinite',
-            }}>
-              <div style={{ width: 6, height: 6, background: '#1A0A00', borderRadius: 3 }} />
-              <span style={{ color: '#1A0A00', fontSize: 10, fontFamily: 'Inter', fontWeight: 700, letterSpacing: '0.60px' }}>LAUNCH OFFER — SAVE ₹300</span>
-            </div>
-          </div>
-          
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ marginBottom: 4 }}>
-              <span style={{ 
-                color: 'rgba(255,255,255,0.50)', 
-                fontSize: 14, 
-                fontFamily: 'Inter', 
-                fontWeight: 500,
-                letterSpacing: '0.5px',
-              }}>Prices starting from</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, flexWrap: 'wrap' }}>
-              <span style={{ 
-                color: 'rgba(255,255,255,0.60)', 
-                fontSize: getResponsiveFontSize(28, 24, 20), 
-                fontFamily: 'Inter', 
-                fontWeight: 700, 
-                paddingBottom: 14,
-                transition: 'all 0.3s ease',
-              }}>₹</span>
-              <span style={{ 
-                color: 'white', 
-                fontSize: getResponsiveFontSize(88, 70, 50), 
-                fontFamily: "'Fraunces', serif", 
-                fontWeight: 900,
-                fontStyle: 'normal',
-                lineHeight: '1',
-                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                display: 'inline-block',
-                cursor: 'default',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.textShadow = '0 0 30px rgba(224,123,32,0.6)';
-                e.currentTarget.style.transform = 'scale(1.03)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.textShadow = 'none';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}>
-                299
-              </span>
-              <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: getResponsiveFontSize(60, 48, 36), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1', paddingBottom: 6 }}>/—</span>
-            </div>
-            <div style={{ marginTop: 8 }}>
-              <span style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600 }}>+ Municipal fees (as applicable)</span>
-            </div>
-            <div style={{ marginTop: 4 }}>
-              <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter', textDecoration: 'line-through' }}>Regular price ₹599</span>
-            </div>
-            <div>
-              <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter' }}>Applicable GST will be added as per government regulations</span>
-            </div>
-            <div style={{ marginTop: 4 }}>
-              <span style={{ color: '#E07B20', fontSize: 12, fontFamily: 'Inter', fontWeight: 600 }}>Per pet · Valid for 1 financial year</span>
-            </div>
-            <div style={{ marginTop: 8, padding: '8px 12px', background: 'rgba(224,123,32,0.08)', borderRadius: 6 }}>
-              <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11, fontFamily: 'Inter' }}>Final price depends on your city & municipality. We'll show exact amount before payment.</span>
-            </div>
-          </div>
-          
-          <div style={{ marginTop: 20, marginBottom: 28 }}>
-            {[
-              'Register in under 1 minute, from your phone',
-              'Legally secured Govt issued certificate (filed in 24-72 hrs)',
-              'Vaccination tracker — schedule, record, share with any vet',
-              'Filed in 24–72 hours'
-            ].map((text, idx) => (
-              <div 
-                key={idx} 
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'flex-start', 
-                  gap: 12, 
-                  marginBottom: 10,
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                  cursor: 'default',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateX(5px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateX(0)';
-                }}
-              >
-                <img src="/images/correct.png" alt="check" style={{ width: 18, height: 18, marginTop: 2 }} />
-                <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, fontFamily: 'Inter', lineHeight: '18.20px' }}>{text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        <div>
-          <button 
-            onClick={handleOpenRegisterModal}
-            style={{ 
-              width: '100%', 
-              background: '#E07B20', 
-              border: 'none', 
-              borderRadius: 10, 
-              padding: '17px 24px', 
-              color: 'white', 
-              fontSize: 15, 
-              fontFamily: 'Inter', 
-              fontWeight: 700, 
-              cursor: 'pointer',
-              marginBottom: 14,
-              transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-              position: 'relative',
+              background: '#1F1108', 
+              borderRadius: 20, 
               overflow: 'hidden',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#C06A18';
-              e.currentTarget.style.transform = 'scale(1.02)';
-              e.currentTarget.style.boxShadow = '0px 8px 24px rgba(224,123,32,0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#E07B20';
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            Register Your Pet — ₹299 →
-          </button>
-          
-          <div style={{ display: 'flex', gap: 20, marginBottom: 18, flexWrap: 'wrap' }}>
-            {['Secure payment', 'Legally valid', '24–72 hr filing'].map((badge) => (
-              <span 
-                key={badge} 
-                style={{ 
-                  color: 'rgba(255,255,255,0.35)', 
-                  fontSize: 11, 
-                  fontFamily: 'Inter',
-                  transition: 'color 0.3s ease',
-                  cursor: 'default',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'rgba(255,255,255,0.35)';
-                }}
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <div 
-              style={{ 
-                padding: '14px 16px', 
-                background: 'rgba(255,255,255,0.04)', 
-                borderRadius: 10, 
-                outline: '1px solid rgba(255,255,255,0.07)', 
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              transition: 'box-shadow 0.3s ease',
+              boxShadow: '0px 8px 24px rgba(0,0,0,0.2)',
+            }}>
+              
+              <div style={{ 
+                flex: 1, 
+                padding: '48px 44px', 
+                borderRight: !isMobile ? '1px solid rgba(255,255,255,0.07)' : 'none',
                 display: 'flex', 
-                alignItems: 'flex-start', 
-                gap: 12,
-                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(224,123,32,0.1)';
-                e.currentTarget.style.transform = 'translateX(5px)';
-                e.currentTarget.style.outline = '1px solid rgba(224,123,32,0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                e.currentTarget.style.transform = 'translateX(0)';
-                e.currentTarget.style.outline = '1px solid rgba(255,255,255,0.07)';
-              }}
-            >
-              <img src="/images/shield-2.png" alt="guarantee" style={{ width: 22, height: 22 }} />
-              <div>
-                <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12.5, fontFamily: 'Inter', fontWeight: 700 }}>100% Refund Guarantee</div>
-                <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>If we can't file your registration, you get every rupee back. No questions asked.</div>
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'transform 0.3s ease',
+              }}>
+                <div>
+                  <div style={{ 
+                    paddingLeft: 14, 
+                    paddingRight: 14, 
+                    paddingTop: 5, 
+                    paddingBottom: 5, 
+                    borderRadius: 999, 
+                    outline: '1px solid rgba(255,255,255,0.25)', 
+                    outlineOffset: -1, 
+                    display: 'inline-flex',
+                    transition: 'all 0.3s ease',
+                    cursor: 'default',
+                  }}>
+                    <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>Simple, Transparent Pricing</span>
+                  </div>
+                  
+                  <div style={{ marginTop: 19.2, flexDirection: 'column', display: 'flex' }}>
+                    <span style={{ 
+                      color: 'white', 
+                      fontSize: getResponsiveFontSize(44, 36, 28), 
+                      fontFamily: 'Fraunces', 
+                      fontWeight: 900, 
+                      lineHeight: '1.2',
+                      transition: 'transform 0.3s ease',
+                    }}>One price.</span>
+                    <span style={{ 
+                      color: '#E07B20', 
+                      fontSize: getResponsiveFontSize(44, 36, 28), 
+                      fontFamily: 'Fraunces', 
+                      fontStyle: 'italic', 
+                      fontWeight: 900, 
+                      lineHeight: '1.2',
+                      transition: 'transform 0.3s ease, color 0.3s ease',
+                    }}>Everything<br/>included.</span>
+                  </div>
+                  
+                  <div style={{ marginTop: 19.2 }}>
+                    <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'Inter', fontWeight: 400, lineHeight: '20.80px' }}>No hidden charges, no surprise fees. ₹299 covers your complete pet registration filing, certificate, and everything in between. Municipal fees are collected directly by the authority.</span>
+                  </div>
+                </div>
+                
+                <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
+                  {[
+                    { icon: '/images/office-1.png', title: 'Municipal Filing', desc: 'We handle MCD / Noida Authority / GMC paperwork end to end.' },
+                    { icon: '/images/certificate-1.png', title: 'Official Certificate', desc: 'Govt-issued, filed within 24–72 hrs' },
+                    { icon: '/images/vaccine.png', title: 'Vaccination Tracker', desc: 'Digital records + auto-reminders so you never miss a booster.' },
+                    { icon: '/images/reminder.png', title: 'Renewal Reminders', desc: 'WhatsApp & email alerts before your annual expiry date.' }
+                  ].map((item, idx) => (
+                    <div 
+                      key={item.title} 
+                      style={{ 
+                        background: 'rgba(255,255,255,0.05)', 
+                        borderRadius: 12, 
+                        padding: '18px 16px', 
+                        outline: '1px solid rgba(255,255,255,0.07)',
+                        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                        cursor: 'pointer',
+                        transform: 'translateY(0)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(224,123,32,0.12)';
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.outline = '1px solid rgba(224,123,32,0.3)';
+                        e.currentTarget.style.boxShadow = '0px 8px 24px rgba(224,123,32,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.outline = '1px solid rgba(255,255,255,0.07)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    >
+                      <div style={{ 
+                        width: 48, 
+                        height: 48, 
+                        background: 'rgba(224,123,32,0.15)', 
+                        borderRadius: 10, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        marginBottom: 14,
+                        transition: 'all 0.3s ease',
+                      }}>
+                        <img src={item.icon} alt={item.title} style={{ width: 28, height: 28, objectFit: 'contain' }} />
+                      </div>
+                      <div style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600, marginBottom: 6 }}>{item.title}</div>
+                      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>{item.desc}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div 
-              style={{ 
-                padding: '14px 16px', 
-                background: 'rgba(255,255,255,0.04)', 
-                borderRadius: 10, 
-                outline: '1px solid rgba(255,255,255,0.07)', 
+
+              <div style={{ 
+                flex: 1, 
+                padding: '48px 44px', 
                 display: 'flex', 
-                alignItems: 'flex-start', 
-                gap: 12,
-                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(224,123,32,0.1)';
-                e.currentTarget.style.transform = 'translateX(5px)';
-                e.currentTarget.style.outline = '1px solid rgba(224,123,32,0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                e.currentTarget.style.transform = 'translateX(0)';
-                e.currentTarget.style.outline = '1px solid rgba(255,255,255,0.07)';
-              }}
-            >
-              <img src="/images/location.png" alt="location" style={{ width: 22, height: 22 }} />
-              <div>
-                <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12.5, fontFamily: 'Inter', fontWeight: 700 }}>Available Across India</div>
-                <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>Delhi, Noida, Gurgaon, Mumbai, Bangalore & 50+ cities covered.</div>
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28, flexWrap: 'wrap' }}>
+                    <div style={{ 
+                      paddingLeft: 14, 
+                      paddingRight: 14, 
+                      paddingTop: 5, 
+                      paddingBottom: 5, 
+                      borderRadius: 999, 
+                      outline: '1px solid rgba(255,255,255,0.25)', 
+                      outlineOffset: -1,
+                      transition: 'all 0.3s ease',
+                    }}>
+                      <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>All Inclusive</span>
+                    </div>
+                    <div style={{ 
+                      paddingLeft: 12, 
+                      paddingRight: 12, 
+                      paddingTop: 5, 
+                      paddingBottom: 5, 
+                      background: '#E8C832', 
+                      borderRadius: 999, 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 6,
+                      transition: 'all 0.3s ease',
+                      animation: 'pulse 2s infinite',
+                    }}>
+                      <div style={{ width: 6, height: 6, background: '#1A0A00', borderRadius: 3 }} />
+                      <span style={{ color: '#1A0A00', fontSize: 10, fontFamily: 'Inter', fontWeight: 700, letterSpacing: '0.60px' }}>LAUNCH OFFER — SAVE ₹300</span>
+                    </div>
+                  </div>
+                  
+                  <div style={{ marginBottom: 16 }}>
+                    <div style={{ marginBottom: 4 }}>
+                      <span style={{ 
+                        color: 'rgba(255,255,255,0.50)', 
+                        fontSize: 14, 
+                        fontFamily: 'Inter', 
+                        fontWeight: 500,
+                        letterSpacing: '0.5px',
+                      }}>Prices starting from</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, flexWrap: 'wrap' }}>
+                      <span style={{ 
+                        color: 'rgba(255,255,255,0.60)', 
+                        fontSize: getResponsiveFontSize(28, 24, 20), 
+                        fontFamily: 'Inter', 
+                        fontWeight: 700, 
+                        paddingBottom: 14,
+                        transition: 'all 0.3s ease',
+                      }}>₹</span>
+                      <span style={{ 
+                        color: 'white', 
+                        fontSize: getResponsiveFontSize(88, 70, 50), 
+                        fontFamily: "'Fraunces', serif", 
+                        fontWeight: 900,
+                        fontStyle: 'normal',
+                        lineHeight: '1',
+                        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                        display: 'inline-block',
+                        cursor: 'default',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.textShadow = '0 0 30px rgba(224,123,32,0.6)';
+                        e.currentTarget.style.transform = 'scale(1.03)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.textShadow = 'none';
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}>
+                        299
+                      </span>
+                      <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: getResponsiveFontSize(60, 48, 36), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1', paddingBottom: 6 }}>/—</span>
+                    </div>
+                    <div style={{ marginTop: 8 }}>
+                      <span style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600 }}>+ Municipal fees (as applicable)</span>
+                    </div>
+                    <div style={{ marginTop: 4 }}>
+                      <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter', textDecoration: 'line-through' }}>Regular price ₹599</span>
+                    </div>
+                    <div>
+                      <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter' }}>Applicable GST will be added as per government regulations</span>
+                    </div>
+                    <div style={{ marginTop: 4 }}>
+                      <span style={{ color: '#E07B20', fontSize: 12, fontFamily: 'Inter', fontWeight: 600 }}>Per pet · Valid for 1 financial year</span>
+                    </div>
+                    <div style={{ marginTop: 8, padding: '8px 12px', background: 'rgba(224,123,32,0.08)', borderRadius: 6 }}>
+                      <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11, fontFamily: 'Inter' }}>Final price depends on your city & municipality. We'll show exact amount before payment.</span>
+                    </div>
+                  </div>
+                  
+                  <div style={{ marginTop: 20, marginBottom: 28 }}>
+                    {[
+                      'Register in under 1 minute, from your phone',
+                      'Legally secured Govt issued certificate (filed in 24-72 hrs)',
+                      'Vaccination tracker — schedule, record, share with any vet',
+                      'Filed in 24–72 hours'
+                    ].map((text, idx) => (
+                      <div 
+                        key={idx} 
+                        style={{ 
+                          display: 'flex', 
+                          alignItems: 'flex-start', 
+                          gap: 12, 
+                          marginBottom: 10,
+                          transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                          cursor: 'default',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateX(5px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateX(0)';
+                        }}
+                      >
+                        <img src="/images/correct.png" alt="check" style={{ width: 18, height: 18, marginTop: 2 }} />
+                        <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, fontFamily: 'Inter', lineHeight: '18.20px' }}>{text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <button 
+                    onClick={handleOpenRegisterModal}
+                    style={{ 
+                      width: '100%', 
+                      background: '#E07B20', 
+                      border: 'none', 
+                      borderRadius: 10, 
+                      padding: '17px 24px', 
+                      color: 'white', 
+                      fontSize: 15, 
+                      fontFamily: 'Inter', 
+                      fontWeight: 700, 
+                      cursor: 'pointer',
+                      marginBottom: 14,
+                      transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                      position: 'relative',
+                      overflow: 'hidden',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#C06A18';
+                      e.currentTarget.style.transform = 'scale(1.02)';
+                      e.currentTarget.style.boxShadow = '0px 8px 24px rgba(224,123,32,0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = '#E07B20';
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    Register Your Pet — ₹299 →
+                  </button>
+                  
+                  <div style={{ display: 'flex', gap: 20, marginBottom: 18, flexWrap: 'wrap' }}>
+                    {['Secure payment', 'Legally valid', '24–72 hr filing'].map((badge) => (
+                      <span 
+                        key={badge} 
+                        style={{ 
+                          color: 'rgba(255,255,255,0.35)', 
+                          fontSize: 11, 
+                          fontFamily: 'Inter',
+                          transition: 'color 0.3s ease',
+                          cursor: 'default',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = 'rgba(255,255,255,0.35)';
+                        }}
+                      >
+                        {badge}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    <div 
+                      style={{ 
+                        padding: '14px 16px', 
+                        background: 'rgba(255,255,255,0.04)', 
+                        borderRadius: 10, 
+                        outline: '1px solid rgba(255,255,255,0.07)', 
+                        display: 'flex', 
+                        alignItems: 'flex-start', 
+                        gap: 12,
+                        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                        cursor: 'pointer',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(224,123,32,0.1)';
+                        e.currentTarget.style.transform = 'translateX(5px)';
+                        e.currentTarget.style.outline = '1px solid rgba(224,123,32,0.3)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                        e.currentTarget.style.transform = 'translateX(0)';
+                        e.currentTarget.style.outline = '1px solid rgba(255,255,255,0.07)';
+                      }}
+                    >
+                      <img src="/images/shield-2.png" alt="guarantee" style={{ width: 22, height: 22 }} />
+                      <div>
+                        <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12.5, fontFamily: 'Inter', fontWeight: 700 }}>100% Refund Guarantee</div>
+                        <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>If we can't file your registration, you get every rupee back. No questions asked.</div>
+                      </div>
+                    </div>
+                    <div 
+                      style={{ 
+                        padding: '14px 16px', 
+                        background: 'rgba(255,255,255,0.04)', 
+                        borderRadius: 10, 
+                        outline: '1px solid rgba(255,255,255,0.07)', 
+                        display: 'flex', 
+                        alignItems: 'flex-start', 
+                        gap: 12,
+                        transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                        cursor: 'pointer',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(224,123,32,0.1)';
+                        e.currentTarget.style.transform = 'translateX(5px)';
+                        e.currentTarget.style.outline = '1px solid rgba(224,123,32,0.3)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                        e.currentTarget.style.transform = 'translateX(0)';
+                        e.currentTarget.style.outline = '1px solid rgba(255,255,255,0.07)';
+                      }}
+                    >
+                      <img src="/images/location.png" alt="location" style={{ width: 22, height: 22 }} />
+                      <div>
+                        <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12.5, fontFamily: 'Inter', fontWeight: 700 }}>Available Across India</div>
+                        <div style={{ color: 'rgba(255,255,255,0.40)', fontSize: 11.5, fontFamily: 'Inter', lineHeight: '17.25px' }}>Delhi, Noida, Gurgaon, Mumbai, Bangalore & 50+ cities covered.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+              
             </div>
           </div>
         </div>
-      </div>
-      
-    </div>
-  </div>
-</div>
 
         <style jsx>{`
           @keyframes pulse {
