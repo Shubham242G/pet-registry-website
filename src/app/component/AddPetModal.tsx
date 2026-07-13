@@ -33,43 +33,57 @@ interface AddPetModalProps {
   resumePetId?: string | null;
 }
 
-// Base required docs - ALWAYS needed for ALL cities
+// ✅ Base required docs - ALWAYS needed for ALL cities
 const BASE_REQUIRED_DOCS = [
-  { name: "antiRabiesCertificate", label: "Anti-Rabies Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate" },
-  { name: "idProof", label: "ID Proof", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or government ID" },
-  { name: "residenceProof", label: "Residence Proof", icon: FileText, accept: ".pdf,image/*", description: "Electricity bill, Rental agreement" },
-  { name: "ownerWithPetPhoto", label: "Owner with Pet Photo", icon: ImageIcon, accept: "image/*", description: "Recent photo of you with your pet" },
+  { name: "antiRabiesCertificate", label: "Anti-Rabies Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate", required: true },
+  { name: "idProof", label: "ID Proof", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or government ID", required: true },
+  { name: "residenceProof", label: "Residence Proof", icon: FileText, accept: ".pdf,image/*", description: "Electricity bill, Rental agreement", required: true },
+  { name: "ownerWithPetPhoto", label: "Owner with Pet Photo", icon: ImageIcon, accept: "image/*", description: "Recent photo of you with your pet", required: true },
 ];
 
-// Gurgaon-specific required docs
+// ✅ Gurgaon-specific required docs (ALL required)
 const GURGAON_REQUIRED_DOCS = [
-  { name: "petPhoto", label: "Pet Photo (Alone)", icon: ImageIcon, accept: "image/*", description: "Clear photo of your pet only" },
-  { name: "vaccinationCard", label: "Vaccination Card", icon: FileText, accept: ".pdf,image/*", description: "Vaccination record card" },
-  { name: "vaccinationCertificate", label: "Vaccination Certificate", icon: FileText, accept: ".pdf,image/*", description: "Official vaccination certificate" },
+  { name: "petPhoto", label: "Pet Photo (Alone)", icon: ImageIcon, accept: "image/*", description: "Clear photo of your pet only", required: true },
+  { name: "vaccinationCard", label: "Vaccination Card", icon: FileText, accept: ".pdf,image/*", description: "Vaccination record card", required: true },
+  { name: "vaccinationCertificate", label: "Vaccination Certificate", icon: FileText, accept: ".pdf,image/*", description: "Official vaccination certificate", required: true },
 ];
 
-// Faridabad-specific required docs
+// ✅ Ghaziabad & Noida specific docs - vaccinationCard is OPTIONAL
+const GHAZIABAD_NOIDA_REQUIRED_DOCS = [
+  { name: "antiRabiesCertificate", label: "Anti-Rabies Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate", required: true },
+  { name: "idProof", label: "Owner ID Card with Local Address", icon: FileText, accept: ".pdf,image/*", description: "ID proof showing local address (Aadhaar, Voter ID, etc.)", required: true },
+  { name: "residenceProof", label: "Residence Proof", icon: FileText, accept: ".pdf,image/*", description: "Electricity bill, Rental agreement, or other residence proof", required: true },
+  { name: "ownerWithPetPhoto", label: "Owner with Pet Photo", icon: ImageIcon, accept: "image/*", description: "Recent photo of you with your pet", required: true },
+  { name: "ownerPhoto", label: "Owner Photo", icon: ImageIcon, accept: "image/*", description: "Clear photo of the pet owner", required: true },
+  { name: "petPhoto", label: "Pet Photo", icon: ImageIcon, accept: "image/*", description: "Clear photo of your pet", required: true },
+  { name: "ownerSignature", label: "Owner Signature", icon: FileText, accept: "image/*,.pdf", description: "Digital or scanned signature of the owner", required: true },
+  // ✅ vaccinationCard is OPTIONAL for Ghaziabad/Noida
+  { name: "vaccinationCard", label: "Vaccination Card (Optional)", icon: FileText, accept: ".pdf,image/*", description: "Vaccination record card - Optional for Ghaziabad/Noida", required: false },
+];
+
+// ✅ Faridabad-specific required docs
 const FARIDABAD_REQUIRED_DOCS = [
-  { name: "proofOfIdentity", label: "Proof of Identity", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or government ID" },
-  { name: "proofOfAddress", label: "Proof of Address", icon: FileText, accept: ".pdf,image/*", description: "Electricity bill, Rental agreement" },
-  { name: "vaccinationRecord", label: "Vaccination Record", icon: FileText, accept: ".pdf,image/*", description: "Complete vaccination record" },
-  { name: "petPhotographs", label: "Pet Photographs", icon: ImageIcon, accept: "image/*", description: "Clear photos of your pet" },
-  { name: "sterilizationCertificate", label: "Sterilization Certificate", icon: FileText, accept: ".pdf,image/*", description: "Sterilization/spaying certificate" },
-  { name: "microchipDetails", label: "Microchip Details", icon: FileText, accept: ".pdf,image/*", description: "Microchip number and registration" },
+  { name: "proofOfIdentity", label: "Proof of Identity", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or government ID", required: true },
+  { name: "proofOfAddress", label: "Proof of Address", icon: FileText, accept: ".pdf,image/*", description: "Electricity bill, Rental agreement", required: true },
+  { name: "vaccinationRecord", label: "Vaccination Record", icon: FileText, accept: ".pdf,image/*", description: "Complete vaccination record", required: true },
+  { name: "petPhotographs", label: "Pet Photographs", icon: ImageIcon, accept: "image/*", description: "Clear photos of your pet", required: true },
+  { name: "sterilizationCertificate", label: "Sterilization Certificate", icon: FileText, accept: ".pdf,image/*", description: "Sterilization/spaying certificate", required: true },
+  { name: "microchipDetails", label: "Microchip Details", icon: FileText, accept: ".pdf,image/*", description: "Microchip number and registration", required: true },
 ];
 
-// Sterilization doc - ONLY for Gurgaon pets 4+ years
+// ✅ Sterilization doc - ONLY for Gurgaon pets 4+ years
 const STERILIZATION_DOC = { 
   name: "sterilizationCertificate", 
   label: "Sterilization Certificate", 
   icon: FileText, 
   accept: ".pdf,image/*", 
-  description: "Mandatory for Gurgaon pets aged 4+ years" 
+  description: "Mandatory for Gurgaon pets aged 4+ years",
+  required: true
 };
 
 const STEPS = ["Pet Details", "Upload Docs", "Pay & Register"];
 
-// Get price with tag delivery
+// ✅ UPDATED: Get price with tag delivery
 function getPrice(city: string, tagOption: string) {
   const isGhaziabad = city?.toLowerCase() === "ghaziabad";
   const isGurgaon = city?.toLowerCase() === "gurgaon";
@@ -105,6 +119,41 @@ function getPrice(city: string, tagOption: string) {
     isNoida,
     isFaridabad,
   };
+}
+
+// ✅ UPDATED: Get city display name
+function getCityDisplayName(city: string): string {
+  const names: Record<string, string> = {
+    ghaziabad: "Ghaziabad",
+    noida: "Noida",
+    gurgaon: "Gurgaon",
+    faridabad: "Faridabad",
+    delhi: "Delhi",
+  };
+  return names[city] || city.charAt(0).toUpperCase() + city.slice(1);
+}
+
+// ✅ UPDATED: Get document requirements message for each city
+function getCityRequirementsMessage(city: string, ageYears: number, ageMonths: number): string | null {
+  const ageInYears = ageYears + (ageMonths / 12);
+  
+  if (city === 'ghaziabad' || city === 'noida') {
+    return `${getCityDisplayName(city)} requires 7 documents: Anti-Rabies Certificate, Owner ID Card with Local Address, Residence Proof, Owner with Pet Photo, Owner Photo, Pet Photo, and Owner Signature. Vaccination Card is optional.`;
+  }
+  
+  if (city === 'gurgaon') {
+    let msg = 'Gurgaon requires: Pet Photo, Vaccination Card, Vaccination Certificate';
+    if (ageInYears >= 4) {
+      msg += ', and Sterilization Certificate (required for 4+ years)';
+    }
+    return msg;
+  }
+  
+  if (city === 'faridabad') {
+    return 'Faridabad requires 6 documents: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs, Sterilization Certificate, and Microchip Details.';
+  }
+  
+  return null;
 }
 
 // Global style to force black text in all inputs
@@ -171,32 +220,37 @@ export default function AddPetModal({
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-  // UPDATED: Get required docs based on city and age
+  // ✅ UPDATED: Get required docs based on city and age
   const getRequiredDocs = (city: string, ageYears: number, ageMonths: number) => {
-    const docs = [...BASE_REQUIRED_DOCS];
     const ageInYears = ageYears + (ageMonths / 12);
     const isGurgaon = city === 'gurgaon';
     const isFaridabad = city === 'faridabad';
+    const isGhaziabadNoida = ['ghaziabad', 'noida'].includes(city);
     
-    // Add Gurgaon-specific docs
+    // Ghaziabad & Noida
+    if (isGhaziabadNoida) {
+      return [...GHAZIABAD_NOIDA_REQUIRED_DOCS];
+    }
+    
+    // Faridabad
+    if (isFaridabad) {
+      return [...FARIDABAD_REQUIRED_DOCS];
+    }
+    
+    // Gurgaon
     if (isGurgaon) {
-      docs.push(...GURGAON_REQUIRED_DOCS);
+      const docs = [...BASE_REQUIRED_DOCS, ...GURGAON_REQUIRED_DOCS];
       if (ageInYears >= 4) {
         const hasSterilization = docs.some(d => d.name === 'sterilizationCertificate');
         if (!hasSterilization) {
           docs.push(STERILIZATION_DOC);
         }
       }
+      return docs;
     }
     
-    // Add Faridabad-specific docs (replace base docs with Faridabad's requirements)
-    if (isFaridabad) {
-      // Remove base docs and add Faridabad docs
-      docs.length = 0;
-      docs.push(...FARIDABAD_REQUIRED_DOCS);
-    }
-    
-    return docs;
+    // Default (Delhi/Other)
+    return [...BASE_REQUIRED_DOCS];
   };
 
   // Compute required docs based on current form values
@@ -206,8 +260,17 @@ export default function AddPetModal({
     parseInt(form.ageMonths) || 0
   );
 
+  // ✅ Get ONLY required docs (where required !== false)
+  const requiredDocsOnly = requiredDocs.filter(doc => doc.required !== false);
+  const totalRequired = requiredDocsOnly.length;
+  
+  // ✅ Count uploaded required docs
+  const uploadedRequiredCount = requiredDocsOnly.filter(doc => uploadedDocs[doc.name]).length;
+  const allRequiredUploaded = uploadedRequiredCount === totalRequired;
+  
+  // ✅ Total uploaded count (including optional)
   const uploadedCount = Object.keys(uploadedDocs).length;
-  const allDocsUploaded = uploadedCount === requiredDocs.length;
+  const allDocsUploaded = allRequiredUploaded; // Only required docs matter for completion
 
   // Inject global styles
   useEffect(() => {
@@ -475,45 +538,126 @@ export default function AddPetModal({
     }
   };
 
+  // ✅ FIXED: Updated handleDocUpload with proper fileData handling
   const handleDocUpload = async (file: File, docName: string) => {
     if (!petId) {
       setError("Pet not created yet. Please complete the pet details first.");
       return;
     }
+
+    console.log('🔍 DEBUG - Uploading:', {
+      docName,
+      petId,
+      city: form.city,
+      fileSize: file.size,
+      fileType: file.type
+    });
+
+    // Validate file
+    if (!file) {
+      setError("No file selected");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError("File size must be under 5MB");
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+    if (!allowedTypes.includes(file.type)) {
+      setError(`Please upload a ${allowedTypes.join(', ')} file`);
+      return;
+    }
+
     setUploading(docName);
     setError("");
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      try {
-        const response = await fetch(`${API_BASE}/registration/${petId}/documents`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ documentName: docName, fileData: reader.result as string, fileName: file.name, fileSize: file.size, mimeType: file.type }),
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setUploadedDocs((prev) => ({
-            ...prev,
-            [docName]: { fileName: file.name, fileSize: file.size, fileData: reader.result as string, mimeType: file.type },
-          }));
-          if (onDocumentUploaded) {
-            onDocumentUploaded(
-              petId, 
-              data.uploadedDocumentsCount, 
-              data.hasAllDocuments, 
-              data.registrationTriggered
-            );
+
+    try {
+      // Read the file as data URL using Promise
+      const fileData = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          if (!result) {
+            reject(new Error("Failed to read file"));
+            return;
           }
-        } else {
-          setError(data.message || "Upload failed");
-        }
-      } catch {
-        setError("Failed to upload document");
-      } finally {
-        setUploading(null);
+          resolve(result);
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+
+      // Verify fileData is valid
+      if (!fileData || !fileData.startsWith('data:')) {
+        throw new Error("Invalid file data format");
       }
-    };
-    reader.readAsDataURL(file);
+
+      console.log('📤 Uploading document:', {
+        docName,
+        fileName: file.name,
+        fileSize: file.size,
+        mimeType: file.type,
+        fileDataLength: fileData.length,
+        fileDataPreview: fileData.substring(0, 50)
+      });
+
+      const payload = {
+        documentName: docName,
+        fileData: fileData,
+        fileName: file.name,
+        fileSize: file.size,
+        mimeType: file.type
+      };
+
+      const response = await fetch(`${API_BASE}/registration/${petId}/documents`, {
+        method: "POST",
+        headers: { 
+          Authorization: `Bearer ${token}`, 
+          "Content-Type": "application/json" 
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      console.log('📥 Response:', response.status, data);
+
+      if (response.ok) {
+        // Update local state
+        setUploadedDocs((prev) => ({
+          ...prev,
+          [docName]: { 
+            fileName: file.name, 
+            fileSize: file.size, 
+            fileData: fileData, 
+            mimeType: file.type 
+          },
+        }));
+
+        // Callback
+        if (onDocumentUploaded) {
+          const uploadedCount = data.registration?.uploadedDocumentsCount || Object.keys(uploadedDocs).length + 1;
+          const hasAllDocs = data.registration?.hasAllDocuments || (uploadedCount === totalRequired);
+          const triggered = data.registration?.registrationTriggered || false;
+          
+          onDocumentUploaded(petId, uploadedCount, hasAllDocs, triggered);
+        }
+
+        // Show success message briefly
+        setError("");
+      } else {
+        setError(data.message || `Upload failed: ${response.status}`);
+        console.error('Upload failed:', data);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      setError(error instanceof Error ? error.message : "Failed to upload document. Please try again.");
+    } finally {
+      setUploading(null);
+    }
   };
 
   const handleDeleteDoc = async (docName: string) => {
@@ -656,6 +800,13 @@ export default function AddPetModal({
   };
 
   const petPrice = getPrice(form.city || "", tagDeliveryOption);
+
+  // ✅ Get city-specific requirements message
+  const cityRequirementsMessage = getCityRequirementsMessage(
+    form.city,
+    parseInt(form.ageYears) || 0,
+    parseInt(form.ageMonths) || 0
+  );
 
   return (
     <>
@@ -843,8 +994,8 @@ export default function AddPetModal({
                   />
                 </div>
 
-                {/* Gurgaon warning message */}
-                {form.city === 'gurgaon' && (
+                {/* ✅ UPDATED: City-specific requirements message */}
+                {cityRequirementsMessage && (
                   <div style={{
                     padding: "10px 14px",
                     background: "#FFF4E4",
@@ -852,46 +1003,59 @@ export default function AddPetModal({
                     outline: "1px solid #FFCCA0",
                     outlineOffset: -1,
                   }}>
-                    <p style={{ color: "#B85C00", fontSize: 12, fontWeight: 500, margin: 0 }}>
-                      ⚠️ <strong>Gurgaon Requirements:</strong> You'll need to upload:
-                      <br />
-                      • Pet Photo (alone)
-                      <br />
-                      • Vaccination Card
-                      <br />
-                      • Vaccination Certificate
-                      {(parseInt(form.ageYears) || 0) + (parseInt(form.ageMonths) || 0) / 12 >= 4 && (
+                    <p style={{ color: "#B85C00", fontSize: 12, fontWeight: 500, margin: 0, lineHeight: "1.5" }}>
+                      {form.city === 'ghaziabad' || form.city === 'noida' ? (
                         <>
-                          <br />• Sterilization Certificate <strong>(required for 4+ years)</strong>
+                          📋 <strong>{getCityDisplayName(form.city)} Requirements:</strong>
+                          <br />
+                          • Anti-Rabies Certificate
+                          <br />
+                          • Owner ID Card with Local Address
+                          <br />
+                          • Residence Proof
+                          <br />
+                          • Owner with Pet Photo
+                          <br />
+                          • Owner Photo
+                          <br />
+                          • Pet Photo
+                          <br />
+                          • Owner Signature
+                          <br />
+                          • <span style={{ color: "#A68660" }}>Vaccination Card (Optional)</span>
                         </>
-                      )}
-                    </p>
-                  </div>
-                )}
-
-                {/* Faridabad warning message */}
-                {form.city === 'faridabad' && (
-                  <div style={{
-                    padding: "10px 14px",
-                    background: "#FFF4E4",
-                    borderRadius: 9,
-                    outline: "1px solid #FFCCA0",
-                    outlineOffset: -1,
-                  }}>
-                    <p style={{ color: "#B85C00", fontSize: 12, fontWeight: 500, margin: 0 }}>
-                      📋 <strong>Faridabad Requirements:</strong> You'll need to upload:
-                      <br />
-                      • Proof of Identity
-                      <br />
-                      • Proof of Address
-                      <br />
-                      • Vaccination Record
-                      <br />
-                      • Pet Photographs
-                      <br />
-                      • Sterilization Certificate
-                      <br />
-                      • Microchip Details
+                      ) : form.city === 'gurgaon' ? (
+                        <>
+                          ⚠️ <strong>Gurgaon Requirements:</strong>
+                          <br />
+                          • Pet Photo (alone)
+                          <br />
+                          • Vaccination Card
+                          <br />
+                          • Vaccination Certificate
+                          {(parseInt(form.ageYears) || 0) + (parseInt(form.ageMonths) || 0) / 12 >= 4 && (
+                            <>
+                              <br />• Sterilization Certificate <strong>(required for 4+ years)</strong>
+                            </>
+                          )}
+                        </>
+                      ) : form.city === 'faridabad' ? (
+                        <>
+                          📋 <strong>Faridabad Requirements:</strong>
+                          <br />
+                          • Proof of Identity
+                          <br />
+                          • Proof of Address
+                          <br />
+                          • Vaccination Record
+                          <br />
+                          • Pet Photographs
+                          <br />
+                          • Sterilization Certificate
+                          <br />
+                          • Microchip Details
+                        </>
+                      ) : null}
                     </p>
                   </div>
                 )}
@@ -920,7 +1084,7 @@ export default function AddPetModal({
               </form>
             )}
 
-            {/* Step 1 - Documents - UPDATED with new docs */}
+            {/* Step 1 - Documents - ✅ UPDATED with Optional vaccinationCard for Ghaziabad/Noida */}
             {!success && step === 1 && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <button 
@@ -963,26 +1127,69 @@ export default function AddPetModal({
                 {!fetchingDocs && (
                   <>
                     <div style={{
-                      padding: "12px 16px", background: allDocsUploaded ? "#E6F6ED" : "#FFF4E4", borderRadius: 9,
-                      outline: `1px solid ${allDocsUploaded ? "#A8DDB8" : "#FFCCA0"}`, outlineOffset: -1,
-                      display: "flex", alignItems: "center", gap: 10
+                      padding: "12px 16px", 
+                      background: allRequiredUploaded ? "#E6F6ED" : "#FFF4E4", 
+                      borderRadius: 9,
+                      outline: `1px solid ${allRequiredUploaded ? "#A8DDB8" : "#FFCCA0"}`, 
+                      outlineOffset: -1,
+                      display: "flex", 
+                      alignItems: "center", 
+                      gap: 10
                     }}>
                       <div style={{
-                        width: 24, height: 24, background: allDocsUploaded ? "#1A6B3A" : "#E8600A", borderRadius: 12,
-                        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                        width: 24, height: 24, 
+                        background: allRequiredUploaded ? "#1A6B3A" : "#E8600A", 
+                        borderRadius: 12,
+                        display: "flex", 
+                        alignItems: "center", 
+                        justifyContent: "center", 
+                        flexShrink: 0
                       }}>
-                        {allDocsUploaded ? <CheckCircle size={12} color="white" /> : <span style={{ color: "white", fontSize: 11, fontWeight: 700 }}>{uploadedCount}</span>}
+                        {allRequiredUploaded ? 
+                          <CheckCircle size={12} color="white" /> : 
+                          <span style={{ color: "white", fontSize: 11, fontWeight: 700 }}>{uploadedRequiredCount}</span>
+                        }
                       </div>
-                      <span style={{ color: allDocsUploaded ? "#1A6B3A" : "#B85C00", fontSize: 12, fontWeight: 500 }}>
-                        {allDocsUploaded ? "All documents uploaded!" : `${uploadedCount}/${requiredDocs.length} documents uploaded`}
+                      <span style={{ color: allRequiredUploaded ? "#1A6B3A" : "#B85C00", fontSize: 12, fontWeight: 500 }}>
+                        {allRequiredUploaded ? 
+                          "All required documents uploaded!" : 
+                          `${uploadedRequiredCount}/${totalRequired} required documents uploaded`
+                        }
+                        {requiredDocs.some(doc => doc.required === false) && (
+                          <span style={{ fontSize: 10, fontWeight: 400, color: "#A68660", display: "block" }}>
+                            💡 Optional documents available (Vaccination Card)
+                          </span>
+                        )}
                       </span>
                     </div>
 
                     <div style={{ height: 6, background: "#EBE1CE", borderRadius: 100, overflow: "hidden" }}>
-                      <div style={{ height: 6, borderRadius: 100, background: allDocsUploaded ? "#1A6B3A" : "#E8600A", width: `${(uploadedCount / requiredDocs.length) * 100}%`, transition: "width 0.4s ease" }} />
+                      <div style={{ 
+                        height: 6, 
+                        borderRadius: 100, 
+                        background: allRequiredUploaded ? "#1A6B3A" : "#E8600A", 
+                        width: `${(uploadedRequiredCount / totalRequired) * 100}%`, 
+                        transition: "width 0.4s ease" 
+                      }} />
                     </div>
 
-                    {/* Show Gurgaon requirements summary */}
+                    {/* ✅ UPDATED: Show city-specific requirements summary */}
+                    {(form.city === 'ghaziabad' || form.city === 'noida') && (
+                      <div style={{
+                        padding: "10px 14px",
+                        background: "#FFF4E4",
+                        borderRadius: 9,
+                        outline: "1px solid #FFCCA0",
+                        outlineOffset: -1,
+                      }}>
+                        <p style={{ color: "#B85C00", fontSize: 12, fontWeight: 500, margin: 0 }}>
+                          📋 <strong>{getCityDisplayName(form.city)} Required Documents:</strong> Anti-Rabies Certificate, Owner ID Card with Local Address, Residence Proof, Owner with Pet Photo, Owner Photo, Pet Photo, Owner Signature
+                          <br />
+                          <span style={{ color: "#A68660", fontSize: 11 }}>💡 Vaccination Card is optional for {getCityDisplayName(form.city)}</span>
+                        </p>
+                      </div>
+                    )}
+
                     {form.city === 'gurgaon' && (
                       <div style={{
                         padding: "10px 14px",
@@ -1000,7 +1207,6 @@ export default function AddPetModal({
                       </div>
                     )}
 
-                    {/* Show Faridabad requirements summary */}
                     {form.city === 'faridabad' && (
                       <div style={{
                         padding: "10px 14px",
@@ -1020,28 +1226,68 @@ export default function AddPetModal({
                         const uploaded = uploadedDocs[doc.name];
                         const isUploading = uploading === doc.name;
                         const DocIcon = doc.icon;
+                        const isOptional = doc.required === false;
+                        
                         return (
                           <div key={doc.name} style={{
-                            background: uploaded ? "#F0FBF4" : "#FAF6EF", borderRadius: 11,
-                            outline: `1px solid ${uploaded ? "#A8DDB8" : "rgba(44,26,14,0.12)"}`, outlineOffset: -1,
+                            background: uploaded ? "#F0FBF4" : "#FAF6EF", 
+                            borderRadius: 11,
+                            outline: `1px solid ${uploaded ? "#A8DDB8" : "rgba(44,26,14,0.12)"}`, 
+                            outlineOffset: -1,
                             padding: 12,
                             transition: "all 0.3s ease",
+                            opacity: isOptional && !uploaded ? 0.85 : 1,
                           }}>
                             <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
                               <div style={{
-                                width: 32, height: 32, borderRadius: 8, background: uploaded ? "#C6ECDA" : "#F3EDE0",
-                                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                                width: 32, height: 32, borderRadius: 8, 
+                                background: uploaded ? "#C6ECDA" : "#F3EDE0",
+                                display: "flex", 
+                                alignItems: "center", 
+                                justifyContent: "center", 
+                                flexShrink: 0,
                                 transition: "all 0.3s ease",
                               }}>
                                 <DocIcon size={14} color={uploaded ? "#1A6B3A" : "#A68660"} />
                               </div>
                               <div style={{ flex: 1 }}>
-                                <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>{doc.label}</div>
+                                <div style={{ color: "#2C1A0E", fontSize: 13, fontWeight: 600 }}>
+                                  {doc.label}
+                                  {isOptional && (
+                                    <span style={{ 
+                                      fontSize: 10, 
+                                      fontWeight: 400, 
+                                      color: "#A68660", 
+                                      marginLeft: 6 
+                                    }}>
+                                      (Optional)
+                                    </span>
+                                  )}
+                                </div>
                                 <div style={{ color: "#A68660", fontSize: 10, marginTop: 2 }}>{doc.description}</div>
-                                {/* Show which docs are mandatory for each city */}
-                                {(form.city === 'gurgaon' || form.city === 'faridabad') && (
+                                {(form.city === 'ghaziabad' || form.city === 'noida') && (
+                                  <div style={{ 
+                                    color: isOptional ? "#A68660" : "#E8600A", 
+                                    fontSize: 9, 
+                                    fontWeight: 600, 
+                                    marginTop: 2 
+                                  }}>
+                                    • {isOptional ? 'Optional' : 'Required'} for {getCityDisplayName(form.city)}
+                                  </div>
+                                )}
+                                {form.city === 'gurgaon' && doc.name !== 'sterilizationCertificate' && (
                                   <div style={{ color: "#E8600A", fontSize: 9, fontWeight: 600, marginTop: 2 }}>
-                                    • Required for {form.city.charAt(0).toUpperCase() + form.city.slice(1)}
+                                    • Required for Gurgaon
+                                  </div>
+                                )}
+                                {doc.name === 'sterilizationCertificate' && form.city === 'gurgaon' && (
+                                  <div style={{ color: "#B85C00", fontSize: 9, fontWeight: 600, marginTop: 2 }}>
+                                    • Required for Gurgaon pets 4+ years
+                                  </div>
+                                )}
+                                {form.city === 'faridabad' && (
+                                  <div style={{ color: "#E8600A", fontSize: 9, fontWeight: 600, marginTop: 2 }}>
+                                    • Required for Faridabad
                                   </div>
                                 )}
                               </div>
@@ -1065,7 +1311,8 @@ export default function AddPetModal({
                               <label style={{
                                 display: "flex", flexDirection: "column", alignItems: "center",
                                 padding: "12px", borderRadius: 8, border: "2px dashed rgba(44,26,14,0.15)",
-                                cursor: isUploading ? "not-allowed" : "pointer", background: isUploading ? "#F3EDE0" : "transparent",
+                                cursor: isUploading ? "not-allowed" : "pointer", 
+                                background: isUploading ? "#F3EDE0" : "transparent",
                                 transition: "all 0.3s ease",
                               }}
                               onMouseEnter={(e) => {
@@ -1083,7 +1330,20 @@ export default function AddPetModal({
                                 {isUploading ? <Loader2 size={20} color="#E8600A" className="animate-spin" /> : <Upload size={20} color="#A68660" />}
                                 <span style={{ color: "#A68660", fontSize: 11, marginTop: 4 }}>{isUploading ? "Uploading..." : "Tap to upload"}</span>
                                 <span style={{ color: "#C0A882", fontSize: 9, marginTop: 2 }}>{doc.accept.includes("pdf") ? "PDF or Image" : "Image"} · Max 5MB</span>
-                                <input type="file" accept={doc.accept} style={{ display: "none" }} disabled={!!uploading} onChange={(e) => { const file = e.target.files?.[0]; if (file) handleDocUpload(file, doc.name); e.target.value = ""; }} />
+                                <input 
+                                  type="file" 
+                                  accept={doc.accept} 
+                                  style={{ display: "none" }} 
+                                  disabled={!!uploading} 
+                                  onChange={(e) => { 
+                                    const file = e.target.files?.[0]; 
+                                    if (file) {
+                                      console.log('📎 File selected:', file.name, file.size, file.type);
+                                      handleDocUpload(file, doc.name); 
+                                    }
+                                    e.target.value = ''; 
+                                  }} 
+                                />
                               </label>
                             )}
                           </div>
@@ -1093,39 +1353,39 @@ export default function AddPetModal({
 
                     <button 
                       onClick={() => setStep(2)} 
-                      disabled={!allDocsUploaded} 
+                      disabled={!allRequiredUploaded} 
                       style={{
                         width: "100%", 
                         padding: "12px 20px", 
                         marginTop: 4,
-                        background: allDocsUploaded ? "#E8600A" : "#EBE1CE",
-                        boxShadow: allDocsUploaded ? "0px 2px 0px #C04E06" : "none",
+                        background: allRequiredUploaded ? "#E8600A" : "#EBE1CE",
+                        boxShadow: allRequiredUploaded ? "0px 2px 0px #C04E06" : "none",
                         borderRadius: 9, 
-                        outline: allDocsUploaded ? "1px solid #C04E06" : "none", 
+                        outline: allRequiredUploaded ? "1px solid #C04E06" : "none", 
                         outlineOffset: -1,
                         border: "none", 
-                        cursor: allDocsUploaded ? "pointer" : "not-allowed",
-                        color: allDocsUploaded ? "white" : "#A68660", 
+                        cursor: allRequiredUploaded ? "pointer" : "not-allowed",
+                        color: allRequiredUploaded ? "white" : "#A68660", 
                         fontSize: 14, 
                         fontWeight: 600,
                         transition: "all 0.3s ease",
                       }}
                       onMouseEnter={(e) => {
-                        if (allDocsUploaded) {
+                        if (allRequiredUploaded) {
                           e.currentTarget.style.background = "#C06A18";
                           e.currentTarget.style.transform = "scale(1.02)";
                         }
                       }}
                       onMouseLeave={(e) => {
-                        if (allDocsUploaded) {
+                        if (allRequiredUploaded) {
                           e.currentTarget.style.background = "#E8600A";
                           e.currentTarget.style.transform = "scale(1)";
                         }
                       }}
                     >
-                      {allDocsUploaded 
+                      {allRequiredUploaded 
                         ? `Continue →` 
-                        : `Upload ${requiredDocs.length - uploadedCount} more document${requiredDocs.length - uploadedCount > 1 ? 's' : ''} (${uploadedCount}/${requiredDocs.length})`
+                        : `Upload ${totalRequired - uploadedRequiredCount} more required document${totalRequired - uploadedRequiredCount > 1 ? 's' : ''} (${uploadedRequiredCount}/${totalRequired})`
                       }
                     </button>
                   </>
@@ -1176,8 +1436,15 @@ export default function AddPetModal({
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <CheckCircle size={16} color="#1A6B3A" />
                     <div>
-                      <div style={{ color: "#1A6B3A", fontSize: 13, fontWeight: 600 }}>Tag Delivery Included</div>
-                      <div style={{ color: "#7A5C40", fontSize: 11 }}>The tag will be delivered to your registered address at no extra cost</div>
+                      <div style={{ color: "#1A6B3A", fontSize: 13, fontWeight: 600 }}>All Required Documents Uploaded ✓</div>
+                      <div style={{ color: "#7A5C40", fontSize: 11 }}>
+                        {totalRequired} required documents verified and ready
+                        {requiredDocs.some(doc => doc.required === false) && (
+                          <span style={{ display: "block", fontSize: 10, color: "#A68660" }}>
+                            💡 Optional documents can still be uploaded
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1187,12 +1454,12 @@ export default function AddPetModal({
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                     <span style={{ color: "#7A5C40", fontSize: 12 }}>Registration City</span>
                     <span style={{ color: "#2C1A0E", fontSize: 12, fontWeight: 600 }}>
-                      {form.city ? form.city.charAt(0).toUpperCase() + form.city.slice(1) : "Not selected"}
+                      {form.city ? getCityDisplayName(form.city) : "Not selected"}
                     </span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Documents</span>
-                    <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>{requiredDocs.length}/{requiredDocs.length} ✓</span>
+                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Required Documents</span>
+                    <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>{totalRequired}/{totalRequired} ✓</span>
                   </div>
                 </div>
 
