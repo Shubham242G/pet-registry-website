@@ -98,7 +98,7 @@ function getPrice(city: string, tagOption: string) {
   } else if (isDelhi || isNoida) {
     basePrice = 846.61;
   } else if (isFaridabad) {
-    basePrice = 1200;
+    basePrice = 1799;
   } else {
     basePrice = 500;
   }
