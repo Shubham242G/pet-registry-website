@@ -14,7 +14,7 @@ const cities = [
   { value: "delhi", label: "Delhi", basePrice: 942.82, displayPrice: "₹942.82" },
   { value: "noida", label: "Noida", basePrice: 942.82, displayPrice: "₹942.82" },
   { value: "gurgaon", label: "Gurgaon", basePrice: 942.82, displayPrice: "₹942.82" },
-  { value: "faridabad", label: "Faridabad", basePrice: 1200, displayPrice: "₹1,200.00" },
+  { value: "faridabad", label: "Faridabad", basePrice: 1799, displayPrice: "₹1,799.00" },
 ];
 
 // Tag delivery costs

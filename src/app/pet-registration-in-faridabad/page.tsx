@@ -40,7 +40,7 @@ export default function FaridabadPage() {
         <meta name="twitter:title" content="Faridabad Pet Registration | MCF Pet Registration Online | Tailio" />
         <meta 
           name="twitter:description" 
-          content="Register your pet with MCF Faridabad in under 60 seconds. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
+          content="Register your pet with MCF Faridabad in under 60 seconds. Get your official pet registration certificate in 24-72 hours. Starting at ₹1,799 + GST." 
         />
         <meta name="twitter:image" content="https://tailio.com/images/og-faridabad.jpg" />
         
@@ -73,7 +73,7 @@ export default function FaridabadPage() {
                   "@type": "City",
                   "name": "Faridabad"
                 },
-                "priceRange": "₹999",
+                "priceRange": "₹1,799 + GST",
                 "openingHours": "Mo-Su 09:00-21:00",
                 "serviceType": "Pet Registration",
                 "availableService": [
@@ -138,7 +138,7 @@ export default function FaridabadPage() {
                   "name": "How much does pet registration cost in Faridabad on Tailio?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Registration costs ₹999 one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate. Regular price is ₹1,999."
+                    "text": "Registration costs ₹1,799 + GST one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate."
                   }
                 },
                 {
@@ -203,7 +203,7 @@ export default function FaridabadPage() {
             </p>
 
             <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {['Certificate in 24–72 hrs', '₹999 one-time, all-inclusive', 'MCF accepted', 'No office visit needed'].map((text) => (
+              {['Certificate in 24–72 hrs', '₹1,799 + GST one-time', 'MCF accepted', 'No office visit needed'].map((text) => (
                 <div key={text} className="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-[#2C1A0E]/20">
                   <div className="w-1.5 h-1.5 bg-[#E8600A] rounded-full" />
                   <span className="text-[#2C1A0E] text-sm font-medium">{text}</span>
@@ -215,7 +215,7 @@ export default function FaridabadPage() {
               className="bg-[#E8600A] hover:bg-[#d45408] text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-[0_2px_0_#C04E06] border-2 border-[#C04E06] transition-colors inline-flex items-center gap-2"
               aria-label="Register your pet with MCF Faridabad now"
             >
-              Register Your Pet — ₹999
+              Register Your Pet — ₹1,799 + GST
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
@@ -474,7 +474,7 @@ export default function FaridabadPage() {
                 { label: 'Works on your phone', sub: 'No office visit needed', tailio: true, portal: false },
                 { label: 'Digital certificate', sub: 'Stored on your profile', tailio: true, portal: false },
                 { label: 'Vaccination reminders', sub: 'WhatsApp, SMS & email', tailio: true, portal: false },
-                { label: 'Registration cost', sub: 'One-time, all-inclusive', tailio: '₹999', portal: '₹100–500' },
+                { label: 'Registration cost', sub: 'One-time, all-inclusive', tailio: '₹1,799 + GST', portal: '₹100–500' },
                 { label: 'If you wait, the fine is…', sub: 'MCF enforcement active', tailio: 'None', portal: '₹500+' },
               ].map((row, i) => (
                 <div key={i} className="grid grid-cols-3 border-b border-[#2C1A0E]/10 last:border-0 bg-[#FFFCF8]">
@@ -608,14 +608,14 @@ export default function FaridabadPage() {
               <div className="absolute top-0 right-0 w-40 h-40 bg-[#E8600A]/20 rounded-full blur-3xl" />
               <div className="inline-flex items-center gap-2 bg-[#FFF4E4] rounded-full px-3 py-1 border border-[#FFCCA0] relative z-10">
                 <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="#B85C00" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="M2 17l10 5 10-5" /><path d="M2 12l10 5 10-5" /></svg>
-                <span className="text-[#B85C00] text-xs font-semibold">Launch Offer — Save ₹1,000</span>
+                <span className="text-[#B85C00] text-xs font-semibold">Includes GST</span>
               </div>
               <div className="relative z-10 mt-6">
                 <div className="flex items-end justify-center gap-1">
                   <span className="text-[#E8600A] text-4xl font-black">₹</span>
-                  <span className="text-[#E8600A] text-6xl font-black">999</span>
+                  <span className="text-[#E8600A] text-6xl font-black">1,799</span>
                 </div>
-                <div className="text-[#F4E4CF]/30 text-sm line-through">Regular price ₹1,999</div>
+                <div className="text-[#F4E4CF]/40 text-sm">+ GST · One-time payment</div>
                 <div className="text-[#F4E4CF]/40 text-xs mt-1">Per pet · Valid 1 year · All taxes inclusive · MCF accepted</div>
               </div>
               <div className="mt-8 space-y-3 text-left relative z-10">
@@ -636,9 +636,9 @@ export default function FaridabadPage() {
               </div>
               <button 
                 className="w-full mt-8 bg-[#E8600A] hover:bg-[#d45408] text-white py-4 rounded-full text-lg font-bold shadow-[0_4px_0_#C04E06] border-2 border-[#C04E06] transition-colors relative z-10"
-                aria-label="Register your pet with MCF Faridabad now for ₹999"
+                aria-label="Register your pet with MCF Faridabad now for ₹1,799 + GST"
               >
-                Register Your Pet — ₹999 →
+                Register Your Pet — ₹1,799 + GST →
               </button>
               <div className="flex flex-wrap justify-center gap-6 mt-4 relative z-10">
                 {['Secure payment', 'Legally valid', '24–72 hr approval'].map((item) => (
@@ -667,7 +667,7 @@ export default function FaridabadPage() {
               { q: "Is Tailio's registration legally valid in Faridabad?", a: 'Yes, Tailio is an authorized platform that files directly with MCF. Your certificate is officially issued by the municipal corporation and is fully valid.' },
               { q: 'What is the fine for not registering in Faridabad?', a: 'The fine for non-compliance can range from ₹500 to ₹5,000 under MCF regulations. Pet owners can also face legal action from municipal authorities.' },
               { q: 'What documents do I need to register my pet in Faridabad?', a: 'You need six documents: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs, Sterilization Certificate, and Microchip Details.' },
-              { q: 'How much does pet registration cost in Faridabad on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate.' },
+              { q: 'How much does pet registration cost in Faridabad on Tailio?', a: 'Registration costs ₹1,799 + GST one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate.' },
               { q: 'How long does it take to get the MCF certificate in Faridabad?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission through Tailio.' },
             ].map((faq, i) => (
               <div key={i} className="bg-white rounded-xl border border-[#2C1A0E]/20 overflow-hidden">
