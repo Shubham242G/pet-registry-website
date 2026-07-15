@@ -16,10 +16,19 @@ const NAV_LINKS = [
   { label: 'How it Works',  href: '/how-it-works' },
 ];
 
+const CITY_LINKS = [
+  { name: 'Delhi', href: '/pet-registration-in-delhi' },
+  { name: 'Noida', href: '/pet-registration-in-noida' },
+  { name: 'Ghaziabad', href: '/pet-registration-in-ghaziabad' },
+  { name: 'Faridabad', href: '/pet-registration-in-faridabad' },
+  { name: 'Gurugram', href: '/pet-registration-in-gurugram' },
+];
+
 export default function Navbar() {
   const router   = useRouter();
   const pathname = usePathname();
   const menuRef  = useRef<HTMLDivElement>(null);
+  const cityDropdownRef = useRef<HTMLDivElement>(null);
 
   const [menuOpen,     setMenuOpen]     = useState(false);
   const [showLogin,    setShowLogin]    = useState(false);
@@ -28,6 +37,7 @@ export default function Navbar() {
   const [displayName,  setDisplayName]  = useState('');
   const [isMobile,     setIsMobile]     = useState(false);
   const [isHovering,   setIsHovering]   = useState(false);
+  const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
 
   const { user, logout, isAuthenticated, loading } = useAuth();
 
@@ -47,10 +57,21 @@ export default function Navbar() {
 
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
+  // Close menu when clicking outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node))
         setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Close city dropdown when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (cityDropdownRef.current && !cityDropdownRef.current.contains(e.target as Node))
+        setCityDropdownOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -197,6 +218,107 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+
+              {/* Cities Dropdown - Desktop */}
+              <div 
+                ref={cityDropdownRef}
+                style={{ position: 'relative' }}
+                onMouseEnter={() => setCityDropdownOpen(true)}
+                onMouseLeave={() => setCityDropdownOpen(false)}
+              >
+                <button
+                  style={{
+                    color: '#7A5C40',
+                    fontSize: 14,
+                    fontFamily: DM_SANS,
+                    fontWeight: 500,
+                    lineHeight: '21px',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '8px 0',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#E8600A';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#7A5C40';
+                  }}
+                >
+                  Cities
+                  <svg 
+                    width="12" 
+                    height="12" 
+                    viewBox="0 0 12 12" 
+                    fill="none" 
+                    style={{
+                      transition: 'transform 0.3s ease',
+                      transform: cityDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    }}
+                  >
+                    <path 
+                      d="M2 4L6 8L10 4" 
+                      stroke="currentColor" 
+                      strokeWidth="1.5" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {cityDropdownOpen && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    marginTop: 8,
+                    background: '#FFFCF8',
+                    borderRadius: 12,
+                    boxShadow: '0px 8px 24px rgba(44,26,14,0.15)',
+                    border: '1px solid rgba(44,26,14,0.08)',
+                    minWidth: 200,
+                    padding: '8px 0',
+                    zIndex: 102,
+                    animation: 'slideDown 0.2s ease',
+                  }}>
+                    {CITY_LINKS.map((city) => (
+                      <Link
+                        key={city.name}
+                        href={city.href}
+                        style={{
+                          display: 'block',
+                          padding: '10px 20px',
+                          color: '#7A5C40',
+                          fontSize: 14,
+                          fontFamily: DM_SANS,
+                          fontWeight: 400,
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease',
+                          borderBottom: '1px solid rgba(44,26,14,0.04)',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(232,96,10,0.05)';
+                          e.currentTarget.style.color = '#E8600A';
+                          e.currentTarget.style.paddingLeft = '24px';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent';
+                          e.currentTarget.style.color = '#7A5C40';
+                          e.currentTarget.style.paddingLeft = '20px';
+                        }}
+                      >
+                        {city.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -345,6 +467,63 @@ export default function Navbar() {
                   </Link>
                 </li>
               ))}
+              
+              {/* Cities section in mobile menu */}
+              <li>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minHeight: 48,
+                  padding: '8px',
+                  borderRadius: 8,
+                  borderBottom: '1px solid rgba(44,26,14,0.07)',
+                }}>
+                  <div style={{
+                    color: '#7A5C40',
+                    fontSize: 15,
+                    fontFamily: DM_SANS,
+                    fontWeight: 500,
+                    padding: '4px 0 8px 0',
+                  }}>
+                    Cities
+                  </div>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '4px',
+                  }}>
+                    {CITY_LINKS.map((city) => (
+                      <Link
+                        key={city.name}
+                        href={city.href}
+                        onClick={() => setMenuOpen(false)}
+                        style={{
+                          padding: '8px 12px',
+                          borderRadius: 6,
+                          color: '#7A5C40',
+                          fontSize: 13,
+                          fontFamily: DM_SANS,
+                          fontWeight: 400,
+                          textDecoration: 'none',
+                          background: 'rgba(44,26,14,0.04)',
+                          transition: 'all 0.2s ease',
+                          textAlign: 'center',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(232,96,10,0.08)';
+                          e.currentTarget.style.color = '#E8600A';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'rgba(44,26,14,0.04)';
+                          e.currentTarget.style.color = '#7A5C40';
+                        }}
+                      >
+                        {city.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </li>
             </ul>
 
             <div style={{ padding: '12px 20px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -416,6 +595,16 @@ export default function Navbar() {
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
+        }
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
         }
       `}</style>
 
