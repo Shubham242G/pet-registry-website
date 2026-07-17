@@ -33,6 +33,9 @@ interface AddPetModalProps {
   resumePetId?: string | null;
 }
 
+// ✅ Define valid cities for validation
+const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad'];
+
 // ✅ Base required docs - ALWAYS needed for ALL cities
 const BASE_REQUIRED_DOCS = [
   { name: "antiRabiesCertificate", label: "Anti-Rabies Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate", required: true },
@@ -217,6 +220,7 @@ export default function AddPetModal({
 
   const [tagDeliveryOption, setTagDeliveryOption] = useState<'collect_from_municipal' | 'deliver_to_home'>('collect_from_municipal');
   const [tagDeliveryCost, setTagDeliveryCost] = useState(0);
+  const [initialCity, setInitialCity] = useState<string | null>(null);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -284,6 +288,19 @@ export default function AddPetModal({
       const style = document.getElementById("modal-input-styles");
       if (style) style.remove();
     };
+  }, []);
+
+  // ✅ FIXED: Add city pre-selection from URL params
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const city = params.get('city');
+      // Check if city exists in our valid cities list
+      if (city && VALID_CITIES.includes(city)) {
+        setInitialCity(city);
+        setForm(prev => ({ ...prev, city }));
+      }
+    }
   }, []);
 
   // Function to restore documents from pet object
