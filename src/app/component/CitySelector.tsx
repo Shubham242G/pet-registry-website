@@ -10,10 +10,10 @@ interface CitySelectorProps {
 
 // Base prices (municipal fee + service fee + GST)
 const cities = [
-  { value: "ghaziabad", label: "Ghaziabad", basePrice: 1532.82, displayPrice: "₹1,532.82" },
-  { value: "delhi", label: "Delhi", basePrice: 942.82, displayPrice: "₹942.82" },
-  { value: "noida", label: "Noida", basePrice: 942.82, displayPrice: "₹942.82" },
-  { value: "gurgaon", label: "Gurgaon", basePrice: 942.82, displayPrice: "₹942.82" },
+  { value: "ghaziabad", label: "Ghaziabad", basePrice: 1500, displayPrice: "₹1,500" },
+  { value: "delhi", label: "Delhi", basePrice: 799, displayPrice: "₹799" },
+  { value: "noida", label: "Noida", basePrice: 799, displayPrice: "₹799" },
+  { value: "gurgaon", label: "Gurgaon", basePrice: 1500, displayPrice: "₹1500" },
   { value: "faridabad", label: "Faridabad", basePrice: 1799, displayPrice: "₹1,799.00" },
 ];
 

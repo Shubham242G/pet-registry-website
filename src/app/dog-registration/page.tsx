@@ -14,7 +14,7 @@ const F = {
   dmMono: "'DM Mono', monospace",
 };
 
-// City data with all details
+// City data with all details - Updated pricing to match CitySelector
 interface CityData {
   id: string;
   name: string;
@@ -24,8 +24,7 @@ interface CityData {
   docs: number;
   basePrice: number;
   deliveryCost: number;
-  fine: string;
-  enforcement: string;
+  displayPrice: string;
   details: {
     fullName: string;
     policy: string;
@@ -37,6 +36,7 @@ interface CityData {
   };
 }
 
+// ✅ Updated pricing to match CitySelector
 const CITIES_DATA: CityData[] = [
   {
     id: 'delhi',
@@ -45,10 +45,9 @@ const CITIES_DATA: CityData[] = [
     slug: 'delhi',
     top: true,
     docs: 4,
-    basePrice: 846.61,
-    deliveryCost: 0,
-    fine: '₹500+',
-    enforcement: 'Active enforcement with ₹500+ fines',
+    basePrice: 799,
+    deliveryCost: 258,
+    displayPrice: '₹799',
     details: {
       fullName: 'Delhi (MCD)',
       policy: 'As per MCD Bye-laws, registration + microchipping is mandatory for pet dogs across Delhi. The Supreme Court of India\'s August 2025 order directed MCD to enforce mandatory registration for all pet animals across Delhi.',
@@ -64,7 +63,7 @@ const CITIES_DATA: CityData[] = [
         { q: 'Is Tailio\'s registration legally valid in Delhi?', a: 'Yes, Tailio is an authorized platform that files directly with MCD. Your certificate is officially issued by the municipal corporation and is fully valid.' },
         { q: 'What is the fine for not registering in Delhi?', a: 'The fine for non-compliance starts at ₹500 and escalates with every MCD enforcement drive. Pet owners can also face pet seizure by municipal authorities.' },
         { q: 'What documents do I need to register my pet in Delhi?', a: 'You need four documents: Anti-Rabies Vaccination Certificate, Applicant ID Proof (Aadhaar, PAN, Passport or Voter ID), Address Proof for Delhi, and a recent photo with your pet.' },
-        { q: 'How much does pet registration cost in Delhi on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the MCD filing fee and your official digital certificate. Regular price is ₹1,999.' },
+        { q: 'How much does pet registration cost in Delhi on Tailio?', a: 'Registration costs ₹799 one-time, all-inclusive. This includes the MCD filing fee and your official digital certificate.' },
         { q: 'How long does it take to get the MCD certificate in Delhi?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission through Tailio.' }
       ],
       stats: [
@@ -82,9 +81,8 @@ const CITIES_DATA: CityData[] = [
     slug: 'ghaziabad',
     docs: 7,
     basePrice: 1500,
-    deliveryCost: 0,
-    fine: '₹5,000',
-    enforcement: 'Active enforcement with ₹5,000 fines',
+    deliveryCost: 268,
+    displayPrice: '₹1,500',
     details: {
       fullName: 'Ghaziabad (Nagar Nigam)',
       policy: 'GMC raised its registration fee from ₹200 to ₹1,000 in April 2024 — the steepest fee hike in NCR, signalling serious enforcement intent. Fines of ₹5,000 are issued for non-compliance.',
@@ -103,7 +101,7 @@ const CITIES_DATA: CityData[] = [
         { q: 'Is Tailio\'s registration legally valid in Ghaziabad?', a: 'Yes, Tailio is an authorized platform that files directly with GMC. Your certificate is officially issued by the municipal corporation and is fully valid.' },
         { q: 'What is the fine for not registering in Ghaziabad?', a: 'The fine for non-compliance is ₹5,000 and escalates with each enforcement drive. Pet owners can also face pet seizure by municipal authorities.' },
         { q: 'What documents do I need to register my pet in Ghaziabad?', a: 'You need seven documents: Anti-Rabies Certificate, Owner ID Card with Local Address, Residence Proof, Owner with Pet Photo, Owner Photo, Pet Photo, and Owner Signature.' },
-        { q: 'How much does pet registration cost in Ghaziabad on Tailio?', a: 'Registration costs ₹1,500 + GST one-time, all-inclusive. This includes the GMC filing fee and your official digital certificate.' },
+        { q: 'How much does pet registration cost in Ghaziabad on Tailio?', a: 'Registration costs ₹1,500 one-time, all-inclusive. This includes the GMC filing fee and your official digital certificate.' },
         { q: 'How long does it take to get the GMC certificate in Ghaziabad?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission through Tailio.' }
       ],
       stats: [
@@ -121,9 +119,8 @@ const CITIES_DATA: CityData[] = [
     slug: 'gurugram',
     docs: 6,
     basePrice: 1500,
-    deliveryCost: 0,
-    fine: 'Pending',
-    enforcement: 'MCG preparing enforcement framework',
+    deliveryCost: 258,
+    displayPrice: '₹1,500',
     details: {
       fullName: 'Gurugram (MCG)',
       policy: 'MCG is preparing its enforcement framework. Register now while it\'s still straightforward — before fines are formally set and before your society RWA issues notices.',
@@ -141,7 +138,7 @@ const CITIES_DATA: CityData[] = [
         { q: 'Is Tailio\'s registration legally valid in Gurugram?', a: 'Yes, Tailio is an authorized platform that files directly with MCG. Your certificate is officially issued by the municipal corporation and is fully valid.' },
         { q: 'What is the fine for not registering in Gurugram?', a: 'Fines are pending announcement, but are expected to be among the highest in NCR once formally set. Register now to avoid penalties.' },
         { q: 'What documents do I need to register my pet in Gurugram?', a: 'You need six documents: Pet Photo, Vaccination Card, Vaccination Certificate, Sterilization Certificate (for 4+ years), Anti-Rabies Certificate, and Applicant ID Proof.' },
-        { q: 'How much does pet registration cost in Gurugram on Tailio?', a: 'Registration costs ₹1,500 + GST one-time, all-inclusive. This includes the MCG filing fee and your official digital certificate.' },
+        { q: 'How much does pet registration cost in Gurugram on Tailio?', a: 'Registration costs ₹1,500 one-time, all-inclusive. This includes the MCG filing fee and your official digital certificate.' },
         { q: 'How long does it take to get the MCG certificate in Gurugram?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission through Tailio.' }
       ],
       stats: [
@@ -158,10 +155,9 @@ const CITIES_DATA: CityData[] = [
     authority: 'Noida Authority',
     slug: 'noida',
     docs: 7,
-    basePrice: 846.61,
-    deliveryCost: 0,
-    fine: '₹10,000',
-    enforcement: 'Most aggressive enforcement in NCR',
+    basePrice: 799,
+    deliveryCost: 258,
+    displayPrice: '₹799',
     details: {
       fullName: 'Noida (Noida Authority)',
       policy: 'Noida Authority has the most aggressive enforcement in NCR. Active fines of ₹10,000 have been issued and pet seizures reported across sectors since the Supreme Court\'s August 2025 order.',
@@ -180,7 +176,7 @@ const CITIES_DATA: CityData[] = [
         { q: 'Is Tailio\'s registration legally valid in Noida?', a: 'Yes, Tailio is an authorized platform that files directly with Noida Authority. Your certificate is officially issued by the municipal corporation and is fully valid.' },
         { q: 'What is the fine for not registering in Noida?', a: 'The fine for non-compliance is ₹10,000 — the highest in all of NCR. Pet owners can also face pet seizure by municipal authorities.' },
         { q: 'What documents do I need to register my pet in Noida?', a: 'You need seven documents: Anti-Rabies Certificate, Owner ID Card with Local Address, Residence Proof, Owner with Pet Photo, Owner Photo, Pet Photo, and Owner Signature.' },
-        { q: 'How much does pet registration cost in Noida on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the Noida Authority filing fee and your official digital certificate.' },
+        { q: 'How much does pet registration cost in Noida on Tailio?', a: 'Registration costs ₹799 one-time, all-inclusive. This includes the Noida Authority filing fee and your official digital certificate.' },
         { q: 'How long does it take to get the Noida Authority certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission through Tailio.' }
       ],
       stats: [
@@ -198,9 +194,8 @@ const CITIES_DATA: CityData[] = [
     slug: 'faridabad',
     docs: 6,
     basePrice: 1799,
-    deliveryCost: 0,
-    fine: '₹500+',
-    enforcement: 'Active enforcement with ₹500+ fines',
+    deliveryCost: 258,
+    displayPrice: '₹1,799',
     details: {
       fullName: 'Faridabad (MCF)',
       policy: 'Under the Haryana Municipal Corporation Act and local bylaws, Municipal Corporation Faridabad (MCF) requires all pet dogs to be registered. Pet owners must comply or face penalties.',
@@ -218,7 +213,7 @@ const CITIES_DATA: CityData[] = [
         { q: 'Is Tailio\'s registration legally valid in Faridabad?', a: 'Yes, Tailio is an authorized platform that files directly with MCF. Your certificate is officially issued by the municipal corporation and is fully valid.' },
         { q: 'What is the fine for not registering in Faridabad?', a: 'The fine for non-compliance can range from ₹500 to ₹5,000 under MCF regulations. Pet owners can also face legal action from municipal authorities.' },
         { q: 'What documents do I need to register my pet in Faridabad?', a: 'You need six documents: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs, Sterilization Certificate, and Microchip Details.' },
-        { q: 'How much does pet registration cost in Faridabad on Tailio?', a: 'Registration costs ₹1,799 + GST one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate.' },
+        { q: 'How much does pet registration cost in Faridabad on Tailio?', a: 'Registration costs ₹1,799 one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate.' },
         { q: 'How long does it take to get the MCF certificate in Faridabad?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission through Tailio.' }
       ],
       stats: [
@@ -276,14 +271,6 @@ export default function DogRegistrationPage() {
     }
   };
 
-  const handleLoginSuccess = () => {
-    setShowLoginModal(false);
-    // After login, redirect to registration
-    if (selectedCity) {
-      router.push(`/add-pet?city=${selectedCity.id}`);
-    }
-  };
-
   if (authLoading) {
     return (
       <div className="min-h-screen bg-[#FAF6EF] flex items-center justify-center">
@@ -325,7 +312,7 @@ export default function DogRegistrationPage() {
           </p>
         </section>
 
-        {/* City Grid */}
+        {/* City Grid - Fines removed, only showing docs count and price */}
         <div className="flex items-center gap-3 mb-4">
           <MapPin className="w-5 h-5 text-[#E8600A]" />
           <h3 className="text-xl font-semibold text-[#2C1A0E]" style={{ fontFamily: F.fraunces }}>
@@ -365,11 +352,10 @@ export default function DogRegistrationPage() {
                   <FileText className="w-3 h-3 inline mr-1" />
                   {city.docs} docs
                 </span>
-                {city.fine !== 'Pending' && (
-                  <span className={`text-xs font-medium ${city.fine === '₹10,000' ? 'text-red-600' : 'text-amber-600'}`}>
-                    {city.fine}
-                  </span>
-                )}
+                {/* ✅ Show price instead of fine */}
+                <span className="inline-block bg-[#E8F5E9] text-[#1A6B3A] text-xs font-semibold px-3 py-0.5 rounded-full">
+                  {city.displayPrice}
+                </span>
               </div>
             </div>
           ))}
@@ -431,7 +417,7 @@ export default function DogRegistrationPage() {
                 </div>
                 <div>
                   <p className="font-semibold text-[#2C1A0E] text-sm">Legal Consequences</p>
-                  <p className="text-gray-600 text-sm">{selectedCity.fine}</p>
+                  <p className="text-gray-600 text-sm">{selectedCity.details.fine}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -445,7 +431,7 @@ export default function DogRegistrationPage() {
               </div>
             </div>
 
-            {/* Pricing */}
+            {/* Pricing - Updated to show base price + delivery */}
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
               <div className="flex justify-between items-center">
                 <div>
@@ -483,7 +469,7 @@ export default function DogRegistrationPage() {
               </div>
             </div>
 
-            {/* ✅ Updated Register Button with Login Modal */}
+            {/* ✅ Register Button with Login Modal */}
             <button
               onClick={handleRegisterClick}
               className="bg-[#E8600A] hover:bg-[#C04E06] text-white font-bold py-3 px-10 rounded-full shadow-lg shadow-[#E8600A]/30 inline-flex items-center gap-3 transition-all hover:transform hover:-translate-y-0.5"

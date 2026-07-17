@@ -99,11 +99,11 @@ function getPrice(city: string, tagOption: string) {
   if (isGhaziabad || isGurgaon) {
     basePrice = 1500;
   } else if (isDelhi || isNoida) {
-    basePrice = 846.61;
+    basePrice = 799;
   } else if (isFaridabad) {
     basePrice = 1799;
   } else {
-    basePrice = 500;
+    basePrice = 1000;
   }
   
   const gstRate = 0.18;
