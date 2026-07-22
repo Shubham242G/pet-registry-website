@@ -1,3 +1,4 @@
+// app/about/page.tsx
 'use client';
 
 import Link from 'next/link';
@@ -5,6 +6,10 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Footer from '../component/Footer';
 import Head from 'next/head';
+
+// ✅ Add this metadata export at the top (outside the component)
+// Note: Since this is a client component, we use Head for client-side SEO
+// For server-side SEO, consider converting to server component with generateMetadata
 
 const F = {
   fraunces: 'Fraunces, Georgia, serif',
@@ -136,8 +141,8 @@ export default function AboutPage() {
   return (
     <>
       <Head>
-        {/* Primary Meta Tags */}
-        <title>About Tailio | Responsible Pet Ownership Made Simple</title>
+        {/* ✅ Primary Meta Tags - This is what Google sees */}
+        <title>About Us | Tailio - India's Pet Registration Platform</title>
         <meta 
           name="description" 
           content="Meet Kaavya Chhabra, the founder behind Tailio — India's first digital pet registration platform. Learn how we're making pet compliance simple for Delhi NCR pet parents." 
@@ -152,7 +157,7 @@ export default function AboutPage() {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tailio.com/about" />
-        <meta property="og:title" content="About Tailio | Responsible Pet Ownership Made Simple" />
+        <meta property="og:title" content="About Us | Tailio - India's Pet Registration Platform" />
         <meta 
           property="og:description" 
           content="Meet Kaavya Chhabra, the founder behind Tailio — India's first digital pet registration platform. Learn how we're making pet compliance simple for Delhi NCR pet parents." 
@@ -166,7 +171,7 @@ export default function AboutPage() {
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://tailio.com/about" />
-        <meta name="twitter:title" content="About Tailio | Responsible Pet Ownership Made Simple" />
+        <meta name="twitter:title" content="About Us | Tailio - India's Pet Registration Platform" />
         <meta 
           name="twitter:description" 
           content="Meet Kaavya Chhabra, the founder behind Tailio — India's first digital pet registration platform. Learn how we're making pet compliance simple for Delhi NCR pet parents." 
@@ -185,7 +190,7 @@ export default function AboutPage() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "AboutPage",
-              "name": "About Tailio",
+              "name": "About Us | Tailio - India's Pet Registration Platform",
               "description": "India's first digital pet registration platform. Learn about our mission to make pet compliance simple for pet parents across Delhi NCR.",
               "url": "https://tailio.com/about",
               "mainEntity": {

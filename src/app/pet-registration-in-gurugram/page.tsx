@@ -1,14 +1,231 @@
+// app/gurugram/page.tsx
 'use client';
 
+import { useState, useEffect } from 'react';
 import Footer from "../component/Footer";
-import Head from "next/head";
+import LoginModal from "../component/LoginModal";
+import RegisterModal from "../component/RegisterModal";
+import Image from 'next/image';
+import Link from 'next/link';
+import Head from 'next/head';
+
+const F = {
+  fraunces: "'Fraunces', Georgia, serif",
+  dmSans: "'DM Sans', sans-serif",
+  dmMono: "'DM Mono', monospace",
+};
+
+// ─── Shared Badge Component ───────────────────────────────────────────────
+function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
+  const fontSize = 10;
+  const darkFontSize = 9.5;
+
+  if (dark) {
+    return (
+      <div style={{
+        display: 'inline-flex', alignItems: 'center',
+        padding: '5px 14px',
+        background: 'rgba(255,255,255,0.06)',
+        borderRadius: 100,
+        outline: '1px rgba(255,255,255,0.10) solid',
+        outlineOffset: -1
+      }}>
+        <span style={{
+          color: 'rgba(250,246,239,0.55)',
+          fontSize: darkFontSize,
+          fontFamily: F.dmMono,
+          fontWeight: 500,
+          textTransform: 'uppercase',
+          letterSpacing: '1.24px'
+        }}>{text}</span>
+      </div>
+    );
+  }
+  return (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center',
+      padding: '5px 14px',
+      background: '#FFF0E4',
+      borderRadius: 100,
+      outline: '1px #FFCCA0 solid',
+      outlineOffset: -1
+    }}>
+      <span style={{
+        color: '#C04E06',
+        fontSize: fontSize,
+        fontFamily: F.dmSans,
+        fontWeight: 500,
+        textTransform: 'uppercase',
+        lineHeight: '15px',
+        letterSpacing: '1.20px'
+      }}>{text}</span>
+    </div>
+  );
+}
+
+// ─── FAQ Item Component ───────────────────────────────────────────────────
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{
+      background: '#FFFCF8',
+      borderRadius: 13,
+      outline: '1px rgba(44,26,14,0.10) solid',
+      outlineOffset: -1,
+      overflow: 'hidden',
+      transition: 'box-shadow 0.3s ease',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.boxShadow = '0px 4px 16px rgba(44,26,14,0.08)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.boxShadow = 'none';
+    }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: '100%',
+          padding: 20,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
+          gap: 16,
+          transition: 'background 0.3s ease',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(44,26,14,0.02)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'none';
+        }}
+      >
+        <span style={{
+          color: '#2C1A0E',
+          fontSize: 14.5,
+          fontFamily: F.dmSans,
+          fontWeight: 600,
+          lineHeight: '20.30px'
+        }}>{question}</span>
+        <div style={{
+          width: 26,
+          height: 26,
+          background: '#FFF0E4',
+          borderRadius: 13,
+          outline: '1px #FFCCA0 solid',
+          outlineOffset: -1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+          transition: 'all 0.3s ease',
+        }}>
+          <span style={{ color: '#C04E06', fontSize: 16, fontFamily: F.dmSans, fontWeight: 700, transition: 'transform 0.3s ease' }}>{open ? '−' : '+'}</span>
+        </div>
+      </button>
+
+      {open && (
+        <div style={{
+          padding: '0 20px 20px 20px',
+          color: '#7A5C40',
+          fontSize: 14,
+          fontFamily: F.dmSans,
+          lineHeight: '1.6',
+          borderTop: '1px solid rgba(44,26,14,0.08)',
+          paddingTop: 16
+        }}>
+          {answer}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function GurugramPage() {
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsTablet(window.innerWidth <= 1024 && window.innerWidth > 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@500&display=swap';
+    document.head.appendChild(link);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const getResponsivePadding = () => {
+    if (isMobile) return '40px 20px';
+    if (isTablet) return '60px 30px';
+    return '80px 40px';
+  };
+
+  const getResponsiveFontSize = (desktop: number, tablet: number, mobile: number) => {
+    if (isMobile) return mobile;
+    if (isTablet) return tablet;
+    return desktop;
+  };
+
+  const handleOpenRegisterModal = () => {
+    setShowRegisterModal(true);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setShowRegisterModal(false);
+  };
+
+  const handleSwitchToLogin = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
+  };
+
+  const handleSwitchToRegister = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
+  };
+
+  // ─── Button hover styles ──────────────────────────────────────────────────
+  const handleHeroCtaEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.background = '#C06A18';
+    e.currentTarget.style.transform = 'scale(1.03)';
+    e.currentTarget.style.boxShadow = '0px 4px 20px rgba(232,96,10,0.4)';
+  };
+
+  const handleHeroCtaLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.background = '#E8600A';
+    e.currentTarget.style.transform = 'scale(1)';
+    e.currentTarget.style.boxShadow = '0px 2px 0px #C04E06';
+  };
+
+  if (!mounted) {
+    return (
+      <div style={{ fontFamily: F.dmSans, overflowX: 'hidden', width: '100%', margin: 0, padding: 0, background: '#FAF6EF' }}>
+        <div style={{ background: '#FAF6EF', width: '100%', position: 'relative', minHeight: 770, overflow: 'hidden' }}>
+          <div style={{ position: 'relative', zIndex: 3, maxWidth: 1200, margin: '0 auto', padding: '60px 40px 80px' }} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
+      {/* ✅ SEO Metadata - This is what Google crawlers will see */}
       <Head>
-        {/* Primary Meta Tags */}
-        <title>Pet Registration in Gurgaon Online | Dog License – Tailio</title>
+        <title>Dog Registration in Gurugram | MCG Pet Registration</title>
         <meta 
           name="description" 
           content="Apply for pet registration online in Gurgaon with Tailio. Secure, fast, and legally compliant dog registration with end-to-end filing assistance." 
@@ -23,7 +240,7 @@ export default function GurugramPage() {
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tailio.com/gurugram" />
-        <meta property="og:title" content="Gurugram Pet Registration | MCG Pet Registration Online | Tailio" />
+        <meta property="og:title" content="Dog Registration in Gurugram | MCG Pet Registration" />
         <meta 
           property="og:description" 
           content="Register your pet with MCG Gurugram in under 60 seconds. Tailio files directly with Municipal Corporation of Gurugram. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
@@ -37,26 +254,25 @@ export default function GurugramPage() {
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://tailio.com/gurugram" />
-        <meta name="twitter:title" content="Gurugram Pet Registration | MCG Pet Registration Online | Tailio" />
+        <meta name="twitter:title" content="Dog Registration in Gurugram | MCG Pet Registration" />
         <meta 
           name="twitter:description" 
           content="Register your pet with MCG Gurugram in under 60 seconds. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
         />
         <meta name="twitter:image" content="https://tailio.com/images/og-gurugram.jpg" />
         
-        {/* Additional SEO */}
         <meta name="author" content="Tailio" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         
-        {/* Schema.org structured data for Gurugram page */}
+        {/* Schema.org structured data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebPage",
-              "name": "Gurugram Pet Registration with MCG",
+              "name": "Dog Registration in Gurugram | MCG Pet Registration",
               "description": "Complete guide to pet registration in Gurugram. Register your pet with MCG through Tailio in under 60 seconds.",
               "url": "https://tailio.com/gurugram",
               "mainEntity": {
@@ -75,169 +291,207 @@ export default function GurugramPage() {
                 },
                 "priceRange": "₹999",
                 "openingHours": "Mo-Su 09:00-21:00",
-                "serviceType": "Pet Registration",
-                "availableService": [
-                  {
-                    "@type": "Service",
-                    "name": "MCG Pet Registration",
-                    "description": "File pet registration with Municipal Corporation of Gurugram",
-                    "serviceType": "Government Service Filing",
-                    "provider": {
-                      "@type": "Organization",
-                      "name": "Tailio"
-                    }
-                  }
-                ]
+                "serviceType": "Pet Registration"
               }
-            })
-          }}
-        />
-        
-        {/* FAQ Schema for Gurugram-specific FAQs */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Is pet registration really mandatory in Gurugram?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed MCG (Municipal Corporation of Gurugram) to enforce mandatory pet registration across Gurugram. MCG is preparing its enforcement framework. Registration is mandatory now — fines are expected to be among the highest in NCR once announced."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Is Tailio's registration legally valid in Gurugram?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, Tailio is an authorized platform that files directly with MCG. Your certificate is officially issued by the municipal corporation and is fully valid."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What is the fine for not registering in Gurugram?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Fines are pending announcement, but are expected to be among the highest in NCR once formally set. Register now to avoid penalties."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What documents do I need to register my pet in Gurugram?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "You need four documents: Anti-Rabies Vaccination Certificate, Applicant ID Proof (Aadhaar, PAN, Passport or Voter ID), Address Proof for Gurugram, and a recent photo with your pet."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How much does pet registration cost in Gurugram on Tailio?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Registration costs ₹999 one-time, all-inclusive. This includes the MCG filing fee and your official digital certificate. Regular price is ₹1,999."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How long does it take to get the MCG certificate in Gurugram?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Your official digital certificate arrives by email within 24–72 hours after submission through Tailio."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "When will MCG announce the fines for non-compliance?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "MCG is currently preparing its enforcement framework. Fines are expected to be announced soon and are anticipated to be among the highest in NCR. Register now while it's still straightforward."
-                  }
-                }
-              ]
-            })
-          }}
-        />
-        
-        {/* Breadcrumb Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "BreadcrumbList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "name": "Home",
-                  "item": "https://tailio.com"
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "name": "Gurugram Pet Registration",
-                  "item": "https://tailio.com/gurugram"
-                }
-              ]
             })
           }}
         />
       </Head>
 
-      <main className="min-h-screen bg-[#FAF6EF]">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden pt-20 pb-12 px-4">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#E8600A]/[0.07] to-transparent" />
-          <div className="absolute left-8 top-20 opacity-[0.06] text-[#E8600A] text-6xl rotate-[-12deg]">✦</div>
-          <div className="absolute right-8 top-40 opacity-[0.06] text-[#E8600A] text-4xl rotate-[5deg]">✦</div>
-          
-          <div className="relative max-w-5xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-[#FFF0E4] rounded-full px-3 py-1.5 border border-[#FFCCA0] mb-6">
-              <div className="w-1.5 h-1.5 bg-[#E8600A] rounded-full" />
-              <span className="text-[#C04E06] text-sm font-medium">MCG · Gurugram · Registration Live</span>
-            </div>
+      <div style={{ fontFamily: F.dmSans, width: '100%', margin: 0, padding: 0, background: '#FAF6EF' }}>
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-[#2C1A0E] leading-tight mb-4">
-              Pet registration
-              <span className="text-[#E8600A] italic block sm:inline"> in Gurugram.</span>
-            </h1>
-
-            <p className="text-[#7A5C40] text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-              MCG is preparing its enforcement framework. Register now while it's still straightforward — before fines are formally set and before your society RWA issues notices. Tailio files directly with MCG in 60 seconds.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {['₹999 one-time, all-inclusive', 'Certificate in 24–72 hrs', 'MCG accepted', 'No office visit needed'].map((text) => (
-                <div key={text} className="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-[#2C1A0E]/20">
-                  <div className="w-1.5 h-1.5 bg-[#E8600A] rounded-full" />
-                  <span className="text-[#2C1A0E] text-sm font-medium">{text}</span>
-                </div>
-              ))}
-            </div>
-
-            <button 
-              className="bg-[#E8600A] hover:bg-[#d45408] text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-[0_2px_0_#C04E06] border-2 border-[#C04E06] transition-colors inline-flex items-center gap-2"
-              aria-label="Register your pet with MCG Gurugram now"
-            >
-              Register Your Pet — ₹999
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
+        {/* ══════════════════════════════════════
+            HERO SECTION
+        ══════════════════════════════════════ */}
+        <div style={{
+          background: '#FAF6EF',
+          width: '100%',
+          position: 'relative',
+          minHeight: isMobile ? 500 : 600,
+          overflow: 'hidden'
+        }}>
+          {/* Background Image */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 0
+          }}>
+            <Image
+              src="/images/coffe-bean-print.png"
+              alt="Background pattern"
+              fill
+              style={{
+                objectFit: 'cover',
+                objectPosition: 'center',
+                imageRendering: 'auto',
+                opacity: 0.3,
+              }}
+              priority
+              quality={100}
+              sizes="100vw"
+            />
           </div>
-        </section>
 
-        {/* Stats Bar */}
+          {/* Overlay */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, rgba(250, 246, 239, 0.92) 0%, rgba(250, 246, 239, 0.88) 100%)',
+            zIndex: 1,
+          }} />
+
+          {/* Hero Content */}
+          <div style={{
+            position: 'relative',
+            zIndex: 3,
+            maxWidth: 1200,
+            margin: '0 auto',
+            padding: isMobile ? '40px 20px' : '60px 40px 80px',
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: isMobile ? 40 : 77
+          }}>
+            <div style={{
+              width: isMobile ? '100%' : 652,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14.9,
+              textAlign: isMobile ? 'center' : 'left',
+              alignItems: isMobile ? 'center' : 'flex-start'
+            }}>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '7px 16px',
+                background: '#2C1A0E',
+                borderRadius: 100,
+                gap: 8,
+                alignSelf: isMobile ? 'center' : 'flex-start',
+                flexWrap: 'wrap',
+                boxShadow: '0px 4px 12px rgba(0,0,0,0.15)'
+              }}>
+                <span style={{ color: 'rgba(255,243,224,0.85)', fontSize: getResponsiveFontSize(11.5, 10, 9), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '17.25px' }}>
+                  MCG · Gurugram · Registration Live
+                </span>
+              </div>
+
+              <div style={{ paddingTop: 5.1, textAlign: isMobile ? 'center' : 'left' }}>
+                <div style={{
+                  color: '#2C1A0E',
+                  fontSize: getResponsiveFontSize(64, 48, 32),
+                  fontFamily: F.fraunces,
+                  fontWeight: 900,
+                  lineHeight: 1.2,
+                }}>
+                  Pet registration
+                </div>
+                <div style={{
+                  fontSize: getResponsiveFontSize(64, 48, 32),
+                  fontFamily: F.fraunces,
+                  lineHeight: 1.2,
+                }}>
+                  <span style={{ color: '#E8600A', fontStyle: 'italic', fontWeight: 700 }}>in Gurugram.</span>
+                </div>
+              </div>
+
+              <p style={{
+                maxWidth: isMobile ? '100%' : 480,
+                color: '#7A5C40',
+                fontSize: getResponsiveFontSize(14.5, 13, 12),
+                fontFamily: F.dmSans,
+                lineHeight: '23.93px',
+                margin: 0,
+                textAlign: isMobile ? 'center' : 'left'
+              }}>
+                MCG is preparing its enforcement framework. Register now while it's still straightforward — before fines are formally set and before your society RWA issues notices. Tailio files directly with MCG in 60 seconds.
+              </p>
+
+              <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 8,
+                justifyContent: isMobile ? 'center' : 'flex-start',
+                marginTop: 8,
+                marginBottom: 16
+              }}>
+                {['₹999 one-time, all-inclusive', 'Certificate in 24–72 hrs', 'MCG accepted', 'No office visit needed'].map((text) => (
+                  <div key={text} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    background: 'white',
+                    borderRadius: 100,
+                    padding: '6px 14px',
+                    border: '1px solid rgba(44,26,14,0.12)',
+                    boxShadow: '0px 2px 4px rgba(0,0,0,0.04)'
+                  }}>
+                    <div style={{ width: 6, height: 6, background: '#E8600A', borderRadius: 3 }} />
+                    <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(11, 10, 9), fontWeight: 500 }}>{text}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{
+                display: 'flex',
+                gap: 12,
+                flexWrap: 'wrap',
+                paddingTop: 9.1,
+                justifyContent: isMobile ? 'center' : 'flex-start'
+              }}>
+                <button 
+                  onClick={handleOpenRegisterModal} 
+                  style={{
+                    padding: isMobile ? '11px 20px' : '13px 26px',
+                    background: '#E8600A',
+                    boxShadow: '0px 2px 0px #C04E06',
+                    borderRadius: 9,
+                    outline: '2px #C04E06 solid',
+                    outlineOffset: -2,
+                    color: '#FFFFFF',
+                    fontSize: getResponsiveFontSize(15, 14, 13),
+                    fontFamily: F.dmSans,
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    border: 'none',
+                    transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  }}
+                  onMouseEnter={handleHeroCtaEnter}
+                  onMouseLeave={handleHeroCtaLeave}
+                >
+                  Register Your Pet — ₹999 →
+                </button>
+              </div>
+            </div>
+
+            {!isMobile && (
+              <div style={{ position: 'relative', width: 580, height: 580, flexShrink: 0 }}>
+                <Image
+                  src="/images/homeBanner.png"
+                  alt="Happy pet owner with their dog - responsible pet registration made simple with Tailio"
+                  fill
+                  style={{ objectFit: 'contain' }}
+                  priority
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ══════════════════════════════════════
+            STATS BAR
+        ══════════════════════════════════════ */}
         <section className="bg-[#2C1A0E] py-8 px-4" aria-label="Gurugram pet registration statistics">
           <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { value: 'Pending', label: 'MCG fine — announcement expected soon', sub: 'MCG · Gurugram' },
               { value: 'Now', label: 'Best time to register before fines drop', sub: 'MCG · Gurugram' },
-              { value: 'Live', label: 'Tailio accepting Gurugram registrations', sub: 'India · WHO data' },
+              { value: 'Live', label: 'Tailio accepting Gurugram registrations', sub: 'Tailio · Gurugram' },
               { value: '60s', label: 'Time to register on Tailio', sub: 'From any phone' },
             ].map((stat, i) => (
               <div key={i} className={`text-center md:text-left px-4 py-4 ${i < 3 ? 'border-r border-white/10' : ''}`}>
@@ -250,7 +504,9 @@ export default function GurugramPage() {
           </div>
         </section>
 
-        {/* Law Section */}
+        {/* ══════════════════════════════════════
+            LAW SECTION
+        ══════════════════════════════════════ */}
         <section className="py-20 px-4 max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div>
@@ -322,11 +578,13 @@ export default function GurugramPage() {
           </div>
         </section>
 
-        {/* Why Register */}
+        {/* ══════════════════════════════════════
+            WHY REGISTER
+        ══════════════════════════════════════ */}
         <section className="py-20 px-4 bg-[#F3EDE0]">
           <div className="max-w-5xl mx-auto">
-            <div className="mb-12">
-              <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Why Register</div>
+            <div className="mb-12 text-center">
+              <Badge text="Why Register" />
               <h2 className="text-3xl md:text-4xl font-black text-[#2C1A0E] leading-tight mt-2">Four reasons every Gurugram pet owner needs this.</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
@@ -336,7 +594,7 @@ export default function GurugramPage() {
                 { title: 'Lost Pet Recovery', desc: '3× more likely to be returned if lost or stolen. QR tag links to your pet\'s verified profile.', icon: 'search' },
                 { title: 'Travel Certificate', desc: 'Registration certificate required for travelling with your pet on flights, trains and intercity transport.', icon: 'travel' },
               ].map((reason, i) => (
-                <div key={i} className="bg-white rounded-xl p-5 border border-[#2C1A0E]/10">
+                <div key={i} className="bg-white rounded-xl p-5 border border-[#2C1A0E]/10 transition-all hover:shadow-md hover:transform hover:-translate-y-1">
                   <div className="w-9 h-9 bg-[#FFF0E4] rounded-lg flex items-center justify-center">
                     {reason.icon === 'shield' && (
                       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -374,7 +632,9 @@ export default function GurugramPage() {
           </div>
         </section>
 
-        {/* Documents Needed */}
+        {/* ══════════════════════════════════════
+            DOCUMENTS NEEDED
+        ══════════════════════════════════════ */}
         <section className="py-20 px-4 bg-[#2C1A0E]">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
@@ -446,7 +706,9 @@ export default function GurugramPage() {
           </div>
         </section>
 
-        {/* Comparison Table */}
+        {/* ══════════════════════════════════════
+            COMPARISON TABLE
+        ══════════════════════════════════════ */}
         <section className="py-20 px-4 bg-[#F3EDE0]">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
@@ -499,7 +761,9 @@ export default function GurugramPage() {
           </div>
         </section>
 
-        {/* Process Steps */}
+        {/* ══════════════════════════════════════
+            PROCESS STEPS
+        ══════════════════════════════════════ */}
         <section className="py-20 px-4 max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">The Process</div>
@@ -570,7 +834,9 @@ export default function GurugramPage() {
           </div>
         </section>
 
-        {/* Testimonial */}
+        {/* ══════════════════════════════════════
+            TESTIMONIAL
+        ══════════════════════════════════════ */}
         <section className="py-20 px-4 max-w-2xl mx-auto text-center">
           <div className="text-[#E8600A] text-lg tracking-[3px] mb-4">★★★★★</div>
           <blockquote className="text-[#2C1A0E] text-2xl font-bold italic leading-relaxed">
@@ -588,7 +854,9 @@ export default function GurugramPage() {
           </div>
         </section>
 
-        {/* Pricing */}
+        {/* ══════════════════════════════════════
+            PRICING
+        ══════════════════════════════════════ */}
         <section className="py-20 px-4 bg-[#2C1A0E]">
           <div className="max-w-2xl mx-auto text-center">
             <div className="text-[#E8600A]/75 text-xs font-medium uppercase tracking-widest mb-2">One Price. Everything Included.</div>
@@ -628,6 +896,7 @@ export default function GurugramPage() {
                 ))}
               </div>
               <button 
+                onClick={handleOpenRegisterModal}
                 className="w-full mt-8 bg-[#E8600A] hover:bg-[#d45408] text-white py-4 rounded-full text-lg font-bold shadow-[0_4px_0_#C04E06] border-2 border-[#C04E06] transition-colors relative z-10"
                 aria-label="Register your pet with MCG Gurugram now for ₹999"
               >
@@ -645,7 +914,9 @@ export default function GurugramPage() {
           </div>
         </section>
 
-        {/* FAQ */}
+        {/* ══════════════════════════════════════
+            FAQ
+        ══════════════════════════════════════ */}
         <section className="py-20 px-4 max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Common Questions</div>
@@ -663,20 +934,26 @@ export default function GurugramPage() {
               { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the MCG filing fee and your official digital certificate.' },
               { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
             ].map((faq, i) => (
-              <div key={i} className="bg-white rounded-xl border border-[#2C1A0E]/20 overflow-hidden">
-                <div className="px-5 py-4 flex justify-between items-center">
-                  <span className="text-[#2C1A0E] font-semibold text-sm md:text-base">{faq.q}</span>
-                  <span className="flex-shrink-0 w-6 h-6 bg-[#F3EDE0] rounded-full flex items-center justify-center">
-                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="#2C1A0E" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>
-                  </span>
-                </div>
-              </div>
+              <FaqItem key={i} question={faq.q} answer={faq.a} />
             ))}
           </div>
         </section>
 
-        <Footer/>
-      </main>
+        <Footer />
+
+        {/* Modals */}
+        <RegisterModal
+          isOpen={showRegisterModal}
+          onClose={handleCloseRegisterModal}
+          onSwitchToLogin={handleSwitchToLogin}
+        />
+
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onSwitchToRegister={handleSwitchToRegister}
+        />
+      </div>
     </>
   );
 }

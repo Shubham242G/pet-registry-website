@@ -34,9 +34,9 @@ export default function Footer() {
 
   const platformLinks = [
     { name: 'Pet Registration', href: '/pet-registration' },
-    { name: 'Digital Pet ID', href: '/digital-pet-id' },
-    { name: 'Vaccination Tracker', href: '/vaccination-tracker' },
-    { name: 'Lost Pet QR', href: '/lost-pet-qr' },
+    // { name: 'Digital Pet ID', href: '/digital-pet-id' },
+    // { name: 'Vaccination Tracker', href: '/vaccination-tracker' },
+    // { name: 'Lost Pet QR', href: '/lost-pet-qr' },
   ];
 
   const cityLinks = [
@@ -49,8 +49,8 @@ export default function Footer() {
 
   const companyLinks = [
     { name: 'About Tailio', href: '/about-us' },
-    { name: 'Privacy Policy', href: '/privacy-policy' },
-    { name: 'Terms of Service', href: '/terms-of-service' },
+    // { name: 'Privacy Policy', href: '/privacy-policy' },
+    // { name: 'Terms of Service', href: '/terms-of-service' },
     { name: 'Contact Us', href: '/contact' },
     { name: 'Blogs', href: '/blog' },
   ];

@@ -493,8 +493,8 @@ export default function HomePage() {
                 >
                   Register Your Pet →
                 </button>
-                <a 
-                  href="#why-register" 
+                <Link 
+                  href="/why-register" 
                   style={{
                     padding: isMobile ? '11px 20px' : '14.25px 20px 15.25px',
                     borderRadius: 9,
@@ -512,7 +512,7 @@ export default function HomePage() {
                   onMouseLeave={handleHeroLinkLeave}
                 >
                   Why it matters
-                </a>
+                </Link>
               </div>
 
               {/* Stats - Horizontal on mobile */}
@@ -565,135 +565,6 @@ export default function HomePage() {
             )}
           </div>
         </div>
-
-        {/* ══════════════════════════════════════
-            WHY REGISTER SECTION - Reduced padding on mobile
-        ══════════════════════════════════════ */}
-        <div id="why-register" style={{ background: '#FAF6EF', width: '100%' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '24px 20px 40px' : '45px 40px' }}>
-            <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 20, marginBottom: 40 }}>
-
-              <div style={{ width: isMobile ? '100%' : 548, display: 'flex', flexDirection: 'column' }}>
-                <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '5px 14px',
-                  background: '#FFF0E4',
-                  borderRadius: 100,
-                  outline: '1px #FFCCA0 solid',
-                  outlineOffset: -1,
-                  width: 'fit-content'
-                }}>
-                  <span style={{
-                    color: '#C04E06',
-                    fontSize: getResponsiveFontSize(10, 9, 9),
-                    fontFamily: F.dmSans,
-                    fontWeight: 500,
-                    textTransform: 'uppercase',
-                    lineHeight: '15px',
-                    letterSpacing: '1.20px',
-                    whiteSpace: 'nowrap'
-                  }}>It's the law now</span>
-                </div>
-                <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '41.8px', marginTop: 15, marginBottom: 15 }}>
-                  Pet registration isn't optional anymore
-                </div>
-                <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), fontFamily: F.dmSans, lineHeight: '23.93px', marginBottom: 20 }}>
-                  The Supreme Court of India, through the Animal Birth Control (ABC) Rules 2023, has directed all municipal corporations in Delhi NCR to enforce mandatory pet registration.
-                </p>
-
-                {[
-                  { title: 'Mandated by the Supreme Court', desc: "The ABC Rules 2023 and the SC's landmark August 2025 order directed Delhi NCR authorities to enforce registration for all pet animals — not just dogs.", icon: '/images/supreme-court.png' },
-                  { title: 'India accounts for 36% of global rabies deaths', desc: 'Pet registration ensures vaccination compliance, directly reducing rabies risk in urban areas like Delhi NCR.', icon: '/images/bacteria.png' },
-                  { title: 'Unregistered pets contribute to stray population', desc: "Abandoned unregistered pets are a leading cause of Delhi's stray dog problem. Registration creates accountability.", icon: '/images/dog-icon.png' },
-                  { title: 'Legal ID = Full Protection', desc: 'A registered pet has a verified health and vaccination history, making it legally protected at all times.', icon: '/images/smartphone.png' },
-                ].map((item) => (
-                  <div key={item.title} style={{ display: 'flex', gap: 16, marginBottom: 20, transition: 'all 0.3s ease', cursor: 'default' }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateX(4px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateX(0)';
-                    }}>
-                    <div style={{ width: 40, height: 40, background: '#FFF0E4', borderRadius: 9, outline: '1px #FFCCA0 solid', outlineOffset: -1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Image src={item.icon} alt={item.title} width={24} height={24} style={{ objectFit: 'contain' }} />
-                    </div>
-                    <div>
-                      <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 600, marginBottom: 2 }}>{item.title}</div>
-                      <div style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(12.5, 11, 10), fontFamily: F.dmSans }}>{item.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div style={{ width: isMobile ? '100%' : 548, display: 'flex', flexDirection: 'column' }}>
-                <div style={{ background: '#2C1A0E', borderRadius: 13, padding: isMobile ? '20px' : '24px 32px', display: 'flex', alignItems: 'center', gap: 20, marginBottom: 16, flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
-                  <div style={{ color: '#FF8C3A', fontSize: getResponsiveFontSize(44, 36, 32), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '66px' }}>&gt;90%</div>
-                  <div style={{ width: isMobile ? 0 : 1.5, height: 40, background: 'rgba(255,255,255,0.10)' }} />
-                  <div>
-                    <div style={{ color: '#F4E4CF', fontSize: getResponsiveFontSize(14, 13, 12), fontFamily: F.dmSans, fontWeight: 500 }}>Pets Unregistered in Delhi NCR</div>
-                    <div style={{ color: 'rgba(244,228,207,0.38)', fontSize: getResponsiveFontSize(12, 11, 10), fontFamily: F.dmSans }}>Municipal enforcement now active</div>
-                  </div>
-                </div>
-
-                <div style={{ background: '#FFFCF8', borderRadius: 18, outline: '1px rgba(44,26,14,0.10) solid', boxShadow: '0px 4px 20px rgba(44,26,14,0.08)', overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ padding: isMobile ? '20px' : '24px 24px 20px', flex: 1 }}>
-                    <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(10, 9, 9), fontFamily: F.dmSans, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.2px', marginBottom: 16 }}>Why Registration Matters</div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12 }}>
-                      {[
-                        { title: 'Legal Identity & Protection', desc: 'Legal ID — proof of ownership and legal status.', icon: '/images/document.png' },
-                        { title: 'Vaccination Tracking', desc: 'Digital records — always up to date.', icon: '/images/user.png' },
-                        { title: 'Lost Pet Recovery', desc: '3× more likely to be returned if lost or stolen.', icon: '/images/search.png' },
-                        { title: 'Crucial for Travel', desc: 'Registration certificate is required for traveling with your pet.', icon: '/images/shield.png' },
-                      ].map((item) => (
-                        <div key={item.title} style={{ padding: 16, background: '#FAF6EF', borderRadius: 13, outline: '1px rgba(44,26,14,0.10) solid', display: 'flex', flexDirection: 'column', transition: 'all 0.3s ease', cursor: 'default' }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                            e.currentTarget.style.boxShadow = '0px 4px 12px rgba(44,26,14,0.08)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'none';
-                          }}>
-                          <div style={{ width: 32, height: 32, background: '#FFF0E4', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
-                            <Image src={item.icon} alt={item.title} width={20} height={20} style={{ objectFit: 'contain' }} />
-                          </div>
-                          <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(13, 12, 11), fontFamily: F.dmSans, fontWeight: 600, marginBottom: 4 }}>{item.title}</div>
-                          <div style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(11.5, 10, 10), fontFamily: F.dmSans }}>{item.desc}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div style={{ background: '#F3EDE0', borderRadius: 18, padding: isMobile ? '20px' : '33px 41px', display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : (isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'), gap: isMobile ? 16 : 24 }}>
-              {[
-                { num: '~913', label: 'Registered dogs in Delhi municipality', sub: 'vs. an estimated few lakhs of pet dogs' },
-                { num: '<10%', label: 'Pet owners who have registered', sub: 'Study, East Delhi urban colony' },
-                { num: '86%', label: 'Owners unaware of rabies risk', sub: 'PMC / UCMS study, Delhi' },
-                { num: '36%', label: 'Global rabies deaths happen in India', sub: 'WHO / Supreme Court records' },
-              ].map((s, i) => (
-                <div key={i} style={{ textAlign: 'center', transition: 'all 0.3s ease', cursor: 'default' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.02)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}>
-                  <div style={{ color: '#C04E06', fontSize: getResponsiveFontSize(36, 30, 24), fontFamily: F.fraunces, fontWeight: 900, lineHeight: '54px' }}>{s.num}</div>
-                  <div style={{ color: '#4A2C14', fontSize: getResponsiveFontSize(13, 12, 10) }}>{s.label}</div>
-                  <div style={{ color: '#A68660', fontSize: getResponsiveFontSize(10.5, 9, 8), fontStyle: 'italic' }}>{s.sub}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Rest of the sections remain the same - KNOW THE FINES, PRICING, TESTIMONIALS, FAQ, FINAL CTA */}
-        {/* ... (keeping all other sections unchanged) */}
 
         {/* ══════════════════════════════════════
             KNOW THE FINES SECTION
@@ -1345,8 +1216,8 @@ export default function HomePage() {
               >
                 Register Now
               </button>
-              <a 
-                href="#why-register" 
+              <Link 
+                href="/why-register" 
                 style={{
                   padding: isMobile ? '12px 24px' : '14px 32px',
                   borderRadius: 9,
@@ -1368,7 +1239,7 @@ export default function HomePage() {
                 }}
               >
                 Learn More
-              </a>
+              </Link>
             </div>
           </div>
         </div>

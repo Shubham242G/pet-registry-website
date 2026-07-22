@@ -1,9 +1,217 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Footer from "../component/Footer";
-import Head from "next/head";
+import RegisterModal from "../component/RegisterModal";
+import LoginModal from "../component/LoginModal";
+import Head from 'next/head';
+
+const F = {
+  fraunces: "'Fraunces', Georgia, serif",
+  dmSans: "'DM Sans', sans-serif",
+  dmMono: "'DM Mono', monospace",
+};
+
+// ─── Shared Badge Component ───────────────────────────────────────────────
+function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
+  const fontSize = 10;
+  const darkFontSize = 9.5;
+
+  if (dark) {
+    return (
+      <div style={{
+        display: 'inline-flex', alignItems: 'center',
+        padding: '5px 14px',
+        background: 'rgba(255,255,255,0.06)',
+        borderRadius: 100,
+        outline: '1px rgba(255,255,255,0.10) solid',
+        outlineOffset: -1
+      }}>
+        <span style={{
+          color: 'rgba(250,246,239,0.55)',
+          fontSize: darkFontSize,
+          fontFamily: F.dmMono,
+          fontWeight: 500,
+          textTransform: 'uppercase',
+          letterSpacing: '1.24px'
+        }}>{text}</span>
+      </div>
+    );
+  }
+  return (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center',
+      padding: '5px 14px',
+      background: '#FFF0E4',
+      borderRadius: 100,
+      outline: '1px #FFCCA0 solid',
+      outlineOffset: -1
+    }}>
+      <span style={{
+        color: '#C04E06',
+        fontSize: fontSize,
+        fontFamily: F.dmSans,
+        fontWeight: 500,
+        textTransform: 'uppercase',
+        lineHeight: '15px',
+        letterSpacing: '1.20px'
+      }}>{text}</span>
+    </div>
+  );
+}
+
+// ─── FAQ Item Component ───────────────────────────────────────────────────
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{
+      background: '#FFFCF8',
+      borderRadius: 13,
+      outline: '1px rgba(44,26,14,0.10) solid',
+      outlineOffset: -1,
+      overflow: 'hidden',
+      transition: 'box-shadow 0.3s ease',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.boxShadow = '0px 4px 16px rgba(44,26,14,0.08)';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.boxShadow = 'none';
+    }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: '100%',
+          padding: 20,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
+          gap: 16,
+          transition: 'background 0.3s ease',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(44,26,14,0.02)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'none';
+        }}
+      >
+        <span style={{
+          color: '#2C1A0E',
+          fontSize: 14.5,
+          fontFamily: F.dmSans,
+          fontWeight: 600,
+          lineHeight: '20.30px'
+        }}>{question}</span>
+        <div style={{
+          width: 26,
+          height: 26,
+          background: '#FFF0E4',
+          borderRadius: 13,
+          outline: '1px #FFCCA0 solid',
+          outlineOffset: -1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+          transition: 'all 0.3s ease',
+        }}>
+          <span style={{ color: '#C04E06', fontSize: 16, fontFamily: F.dmSans, fontWeight: 700, transition: 'transform 0.3s ease' }}>{open ? '−' : '+'}</span>
+        </div>
+      </button>
+
+      {open && (
+        <div style={{
+          padding: '0 20px 20px 20px',
+          color: '#7A5C40',
+          fontSize: 14,
+          fontFamily: F.dmSans,
+          lineHeight: '1.6',
+          borderTop: '1px solid rgba(44,26,14,0.08)',
+          paddingTop: 16
+        }}>
+          {answer}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function FaridabadPage() {
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      setIsTablet(window.innerWidth <= 1024 && window.innerWidth > 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@500&display=swap';
+    document.head.appendChild(link);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const getResponsiveFontSize = (desktop: number, tablet: number, mobile: number) => {
+    if (isMobile) return mobile;
+    if (isTablet) return tablet;
+    return desktop;
+  };
+
+  const handleOpenRegisterModal = () => {
+    setShowRegisterModal(true);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setShowRegisterModal(false);
+  };
+
+  const handleSwitchToLogin = () => {
+    setShowRegisterModal(false);
+    setShowLoginModal(true);
+  };
+
+  const handleSwitchToRegister = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(true);
+  };
+
+  // ─── Button hover styles ──────────────────────────────────────────────────
+  const handleHeroCtaEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.background = '#C06A18';
+    e.currentTarget.style.transform = 'scale(1.03)';
+    e.currentTarget.style.boxShadow = '0px 4px 20px rgba(232,96,10,0.4)';
+  };
+
+  const handleHeroCtaLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.background = '#E8600A';
+    e.currentTarget.style.transform = 'scale(1)';
+    e.currentTarget.style.boxShadow = '0px 2px 0px #C04E06';
+  };
+
+  if (!mounted) {
+    return (
+      <div style={{ fontFamily: F.dmSans, overflowX: 'hidden', width: '100%', margin: 0, padding: 0, background: '#FAF6EF' }}>
+        <div style={{ background: '#FAF6EF', width: '100%', position: 'relative', minHeight: 770, overflow: 'hidden' }}>
+          <div style={{ position: 'relative', zIndex: 3, maxWidth: 1200, margin: '0 auto', padding: '60px 40px 80px' }} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Head>
@@ -211,9 +419,13 @@ export default function FaridabadPage() {
               ))}
             </div>
 
+            {/* ✅ Updated Hero CTA with Modal */}
             <button 
+              onClick={handleOpenRegisterModal}
               className="bg-[#E8600A] hover:bg-[#d45408] text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-[0_2px_0_#C04E06] border-2 border-[#C04E06] transition-colors inline-flex items-center gap-2"
               aria-label="Register your pet with MCF Faridabad now"
+              onMouseEnter={handleHeroCtaEnter}
+              onMouseLeave={handleHeroCtaLeave}
             >
               Register Your Pet — ₹1,799 + GST
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -319,7 +531,7 @@ export default function FaridabadPage() {
         <section className="py-20 px-4 bg-[#F3EDE0]">
           <div className="max-w-5xl mx-auto">
             <div className="mb-12">
-              <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Why Register</div>
+              <Badge text="Why Register" />
               <h2 className="text-3xl md:text-4xl font-black text-[#2C1A0E] leading-tight mt-2">Four reasons every Faridabad pet owner needs this.</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
@@ -329,7 +541,7 @@ export default function FaridabadPage() {
                 { title: 'Lost Pet Recovery', desc: '3× more likely to be returned if lost or stolen. QR tag links to your pet\'s verified profile.', icon: 'search' },
                 { title: 'Travel Certificate', desc: 'Registration certificate required for travelling with your pet on flights, trains and intercity transport.', icon: 'travel' },
               ].map((reason, i) => (
-                <div key={i} className="bg-white rounded-xl p-5 border border-[#2C1A0E]/10">
+                <div key={i} className="bg-white rounded-xl p-5 border border-[#2C1A0E]/10 transition-all hover:shadow-md hover:transform hover:-translate-y-1">
                   <div className="w-9 h-9 bg-[#FFF0E4] rounded-lg flex items-center justify-center">
                     {reason.icon === 'shield' && (
                       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#E8600A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -634,7 +846,9 @@ export default function FaridabadPage() {
                   </div>
                 ))}
               </div>
+              {/* ✅ Updated Pricing CTA with Modal */}
               <button 
+                onClick={handleOpenRegisterModal}
                 className="w-full mt-8 bg-[#E8600A] hover:bg-[#d45408] text-white py-4 rounded-full text-lg font-bold shadow-[0_4px_0_#C04E06] border-2 border-[#C04E06] transition-colors relative z-10"
                 aria-label="Register your pet with MCF Faridabad now for ₹1,799 + GST"
               >
@@ -670,19 +884,25 @@ export default function FaridabadPage() {
               { q: 'How much does pet registration cost in Faridabad on Tailio?', a: 'Registration costs ₹1,799 + GST one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate.' },
               { q: 'How long does it take to get the MCF certificate in Faridabad?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission through Tailio.' },
             ].map((faq, i) => (
-              <div key={i} className="bg-white rounded-xl border border-[#2C1A0E]/20 overflow-hidden">
-                <div className="px-5 py-4 flex justify-between items-center">
-                  <span className="text-[#2C1A0E] font-semibold text-sm md:text-base">{faq.q}</span>
-                  <span className="flex-shrink-0 w-6 h-6 bg-[#F3EDE0] rounded-full flex items-center justify-center">
-                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="#2C1A0E" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>
-                  </span>
-                </div>
-              </div>
+              <FaqItem key={i} question={faq.q} answer={faq.a} />
             ))}
           </div>
         </section>
 
-        <Footer/>
+        <Footer />
+
+        {/* ✅ Modals */}
+        <RegisterModal
+          isOpen={showRegisterModal}
+          onClose={handleCloseRegisterModal}
+          onSwitchToLogin={handleSwitchToLogin}
+        />
+
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+          onSwitchToRegister={handleSwitchToRegister}
+        />
       </main>
     </>
   );
