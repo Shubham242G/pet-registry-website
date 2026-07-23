@@ -33,7 +33,7 @@ interface AddPetModalProps {
   resumePetId?: string | null;
 }
 
-// ✅ Define valid cities for validation
+// ✅ Define valid cities for validation - REMOVED 'other'
 const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad'];
 
 // ✅ Base required docs - ALWAYS needed for ALL cities
@@ -86,24 +86,34 @@ const STERILIZATION_DOC = {
 
 const STEPS = ["Pet Details", "Upload Docs", "Pay & Register"];
 
-// ✅ UPDATED: Get price with tag delivery
+// ✅ STRICT PRICE FUNCTION - NO FALLBACK PRICE
 function getPrice(city: string, tagOption: string) {
-  const isGhaziabad = city?.toLowerCase() === "ghaziabad";
-  const isGurgaon = city?.toLowerCase() === "gurgaon";
-  const isDelhi = city?.toLowerCase() === "delhi";
-  const isNoida = city?.toLowerCase() === "noida";
-  const isFaridabad = city?.toLowerCase() === "faridabad";
+  // ✅ WHITELIST APPROACH - Only allow these cities
+  const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad'];
+  
+  // Force city to lowercase for comparison
+  const cityLower = city?.toLowerCase() || '';
+  
+  // ✅ STRICT - Only allow valid cities
+  if (!VALID_CITIES.includes(cityLower)) {
+    console.error(`❌ Invalid city: ${city}. Payment blocked.`);
+    throw new Error(`Invalid city: "${city}". Please select a valid city from the list.`);
+  }
   
   let basePrice = 0;
   
-  if (isGhaziabad || isGurgaon) {
+  if (['ghaziabad', 'gurgaon'].includes(cityLower)) {
     basePrice = 1500;
-  } else if (isDelhi || isNoida) {
+  } else if (['delhi', 'noida'].includes(cityLower)) {
     basePrice = 799;
-  } else if (isFaridabad) {
+  } else if (cityLower === 'faridabad') {
     basePrice = 1799;
-  } else {
-    basePrice = 1000;
+  }
+  
+  // ✅ If basePrice is still 0, something went wrong
+  if (basePrice === 0) {
+    console.error(`❌ No price found for city: ${city}`);
+    throw new Error(`No price configured for city: ${city}. Please contact support.`);
   }
   
   const gstRate = 0.18;
@@ -116,11 +126,11 @@ function getPrice(city: string, tagOption: string) {
     gstRate: 18,
     total: +total.toFixed(2),
     tagDeliveryCost: 0,
-    isGhaziabad,
-    isGurgaon,
-    isDelhi,
-    isNoida,
-    isFaridabad,
+    isGhaziabad: cityLower === 'ghaziabad',
+    isGurgaon: cityLower === 'gurgaon',
+    isDelhi: cityLower === 'delhi',
+    isNoida: cityLower === 'noida',
+    isFaridabad: cityLower === 'faridabad',
   };
 }
 
@@ -253,7 +263,7 @@ export default function AddPetModal({
       return docs;
     }
     
-    // Default (Delhi/Other)
+    // Default - Should never happen now but keep as safety
     return [...BASE_REQUIRED_DOCS];
   };
 
@@ -504,14 +514,24 @@ export default function AddPetModal({
   const handlePetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // ✅ STRICT CITY VALIDATION - MUST BE A VALID CITY
+    const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad'];
+    
     // Validate photo is uploaded
     if (!form.profilePicture) {
       setPhotoError("Pet photo is required");
       return;
     }
     
+    // ✅ STRICT - City must be selected and valid
     if (!form.city) {
-      setError("Please select your pet's registration city");
+      setError("Please select your pet's registration city from the list");
+      return;
+    }
+    
+    // ✅ STRICT - Block invalid cities
+    if (!VALID_CITIES.includes(form.city.toLowerCase())) {
+      setError(`Invalid city: "${form.city}". Please select a valid city from the list.`);
       return;
     }
     
@@ -526,7 +546,7 @@ export default function AddPetModal({
         ageMonths: form.ageMonths ? parseInt(form.ageMonths) : 0,
         gender: form.gender,
         profilePicture: form.profilePicture,
-        city: form.city,
+        city: form.city.toLowerCase(), // ✅ Force lowercase
       };
 
       if (petId) {
@@ -718,7 +738,9 @@ export default function AddPetModal({
     setIsSubmitting(true);
     setError("");
     try {
+      // ✅ This will throw error if city is invalid
       const petPrice = getPrice(form.city || "", tagDeliveryOption);
+      
       const response = await fetch(`${API_BASE}/registration/${petId}/trigger-registration`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
@@ -744,8 +766,9 @@ export default function AddPetModal({
       } else {
         setError(data.message || "Registration trigger failed. Please contact support.");
       }
-    } catch {
-      setError("Failed to complete registration. Please contact support.");
+    } catch (error: any) {
+      console.error("Payment success error:", error);
+      setError(error.message || "Failed to complete registration. Please contact support.");
     } finally {
       setIsSubmitting(false);
     }
@@ -816,7 +839,15 @@ export default function AddPetModal({
     cursor: "pointer",
   };
 
-  const petPrice = getPrice(form.city || "", tagDeliveryOption);
+  // ✅ This will throw error if city is invalid - wrap in try/catch
+  let petPrice;
+  let priceError = null;
+  try {
+    petPrice = getPrice(form.city || "", tagDeliveryOption);
+  } catch (error: any) {
+    petPrice = { basePrice: 0, gstAmount: 0, gstRate: 18, total: 0, tagDeliveryCost: 0 };
+    priceError = error.message;
+  }
 
   // ✅ Get city-specific requirements message
   const cityRequirementsMessage = getCityRequirementsMessage(
@@ -1480,25 +1511,40 @@ export default function AddPetModal({
                   </div>
                 </div>
 
-                <div style={{ background: "#FFFCF8", borderRadius: 11, padding: "14px 16px", outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
-                  <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>FEE BREAKDOWN</div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Registration Fee</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.basePrice.toFixed(2)}</span>
+                {priceError ? (
+                  <div style={{ 
+                    background: "#FDECEA", 
+                    borderRadius: 11, 
+                    padding: "14px 16px",
+                    outline: "1px solid #DC2626",
+                    outlineOffset: -1,
+                  }}>
+                    <div style={{ color: "#DC2626", fontSize: 13, fontWeight: 600 }}>⚠️ {priceError}</div>
+                    <div style={{ color: "#7A5C40", fontSize: 11, marginTop: 4 }}>
+                      Please go back and select a valid city from the list.
+                    </div>
                   </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12 }}>GST ({petPrice.gstRate}%)</span>
-                    <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.gstAmount.toFixed(2)}</span>
+                ) : (
+                  <div style={{ background: "#FFFCF8", borderRadius: 11, padding: "14px 16px", outline: "1px solid rgba(44,26,14,0.10)", outlineOffset: -1 }}>
+                    <div style={{ color: "#A68660", fontSize: 10, letterSpacing: "1px", marginBottom: 6 }}>FEE BREAKDOWN</div>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                      <span style={{ color: "#7A5C40", fontSize: 12 }}>Registration Fee</span>
+                      <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.basePrice.toFixed(2)}</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                      <span style={{ color: "#7A5C40", fontSize: 12 }}>GST ({petPrice.gstRate}%)</span>
+                      <span style={{ color: "#2C1A0E", fontSize: 12 }}>₹{petPrice.gstAmount.toFixed(2)}</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                      <span style={{ color: "#7A5C40", fontSize: 12 }}>Tag Delivery</span>
+                      <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>Included ✓</span>
+                    </div>
+                    <div style={{ borderTop: "1px solid rgba(44,26,14,0.10)", paddingTop: 8, marginTop: 4, display: "flex", justifyContent: "space-between" }}>
+                      <span style={{ color: "#2C1A0E", fontSize: 14, fontWeight: 700 }}>Total</span>
+                      <span style={{ color: "#E8600A", fontSize: 18, fontWeight: 700 }}>₹{petPrice.total.toFixed(2)}</span>
+                    </div>
                   </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ color: "#7A5C40", fontSize: 12 }}>Tag Delivery</span>
-                    <span style={{ color: "#1A6B3A", fontSize: 12, fontWeight: 600 }}>Included ✓</span>
-                  </div>
-                  <div style={{ borderTop: "1px solid rgba(44,26,14,0.10)", paddingTop: 8, marginTop: 4, display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: "#2C1A0E", fontSize: 14, fontWeight: 700 }}>Total</span>
-                    <span style={{ color: "#E8600A", fontSize: 18, fontWeight: 700 }}>₹{petPrice.total.toFixed(2)}</span>
-                  </div>
-                </div>
+                )}
 
                 <div style={{ padding: "10px 12px", background: "#FFF4E4", borderRadius: 9 }}>
                   <div style={{ color: "#B85C00", fontSize: 11, fontWeight: 600, marginBottom: 4 }}>📋 Important</div>
@@ -1507,7 +1553,7 @@ export default function AddPetModal({
                   </div>
                 </div>
 
-                {petId && (
+                {petId && !priceError && (
                   <PaymentButton 
                     petId={petId} 
                     petName={form.name || "your pet"} 
