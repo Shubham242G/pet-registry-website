@@ -34,6 +34,42 @@ interface Pet {
   city?: string;
   isSterilizationRequired?: boolean;
   documents?: any[];
+  antiRabiesCertificate?: any;
+  idProof?: any;
+  residenceProof?: any;
+  ownerWithPetPhoto?: any;
+  petPhoto?: any;
+  vaccinationCard?: any;
+  vaccinationCertificate?: any;
+  sterilizationCertificate?: any;
+  ownerPhoto?: any;
+  ownerSignature?: any;
+  proofOfIdentity?: any;
+  proofOfAddress?: any;
+  vaccinationRecord?: any;
+  petPhotographs?: any;
+  microchipDetails?: any;
+}
+
+// ✅ Persistent modal data interface
+interface ModalData {
+  formData: {
+    name: string;
+    ageYears: string;
+    ageMonths: string;
+    gender: string;
+    profilePicture: string;
+    city: string;
+  };
+  profilePreview: string;
+  documents: Record<string, any>;
+  currentStep: number;
+  tagDeliveryOption: 'collect_from_municipal' | 'deliver_to_home';
+  tagDeliveryCost: number;
+  petId: string | null;
+  isEditing: boolean;
+  editingPet: any | null;
+  resumePetId: string | null;
 }
 
 function PawIcon({ size = 28, color = "#A68660" }: { size?: number; color?: string }) {
@@ -77,10 +113,22 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [editingPet, setEditingPet] = useState<any>(null);
-  const [resumePetId, setResumePetId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ show: boolean; petId: string; petName: string }>({ show: false, petId: "", petName: "" });
   const [isMobile, setIsMobile] = useState(false);
+
+  // ✅ Persistent modal data - survives close/refresh
+  const [modalData, setModalData] = useState<ModalData>({
+    formData: { name: "", ageYears: "", ageMonths: "", gender: "", profilePicture: "", city: "" },
+    profilePreview: "",
+    documents: {},
+    currentStep: 0,
+    tagDeliveryOption: 'collect_from_municipal',
+    tagDeliveryCost: 0,
+    petId: null,
+    isEditing: false,
+    editingPet: null,
+    resumePetId: null,
+  });
 
   const selectedPetRef = useRef<Pet | null>(null);
   selectedPetRef.current = selectedPet;
@@ -90,7 +138,6 @@ export default function Dashboard() {
     handleResize();
     window.addEventListener("resize", handleResize);
     const link = document.createElement("link");
-    link.rel = "stylesheet";
     link.href = "https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap";
     document.head.appendChild(link);
     return () => window.removeEventListener("resize", handleResize);
@@ -100,7 +147,7 @@ export default function Dashboard() {
     if (!authLoading && !isAuthenticated) router.push("/");
   }, [authLoading, isAuthenticated, router]);
 
-  // LOAD PETS - ONLY ONCE on initial load
+  // LOAD PETS
   const loadPets = useCallback(async () => {
     if (!token) return;
     try {
@@ -117,9 +164,7 @@ export default function Dashboard() {
         registrationStatus: pet.registrationStatus ?? "not_started",
       }));
       setPets(petsData);
-      if (petsData.length > 0) {
-        setSelectedPet(petsData[0]);
-      }
+      if (petsData.length > 0) setSelectedPet(petsData[0]);
     } catch (err) {
       setError("Failed to load pets. Please try again.");
       if (err instanceof Error && err.message === "Session expired") {
@@ -135,8 +180,7 @@ export default function Dashboard() {
     if (token) loadPets();
   }, [token, loadPets]);
 
-  // ========== LOCAL STATE UPDATERS (no API calls) ==========
-  
+  // ========== PET CRUD OPERATIONS ==========
   const addPet = (newPet: Pet) => {
     setPets(prev => [...prev, newPet]);
     setSelectedPet(newPet);
@@ -144,66 +188,50 @@ export default function Dashboard() {
 
   const updatePet = (updatedPet: Pet) => {
     setPets(prev => prev.map(p => p._id === updatedPet._id ? updatedPet : p));
-    if (selectedPet?._id === updatedPet._id) {
-      setSelectedPet(updatedPet);
-    }
+    if (selectedPet?._id === updatedPet._id) setSelectedPet(updatedPet);
   };
 
   const removePet = (petId: string) => {
     setPets(prev => {
       const updated = prev.filter(p => p._id !== petId);
-      if (updated.length === 0) {
-        setSelectedPet(null);
-      } else if (selectedPet?._id === petId) {
-        setSelectedPet(updated[0]);
-      }
+      if (updated.length === 0) setSelectedPet(null);
+      else if (selectedPet?._id === petId) setSelectedPet(updated[0]);
       return updated;
     });
+    // Reset modal data when pet is deleted
+    setModalData(prev => ({
+      ...prev,
+      documents: {},
+      petId: null,
+      isEditing: false,
+      editingPet: null,
+      resumePetId: null,
+    }));
   };
 
   const updatePetDocCount = (petId: string, uploadedCount: number, hasAllDocs: boolean, registrationTriggered: boolean) => {
-  setPets(prev =>
-    prev.map(p =>
-      p._id === petId
-        ? { 
-            ...p, 
-            uploadedDocumentsCount: uploadedCount, 
-            hasAllDocuments: hasAllDocs, 
-            registrationTriggered: registrationTriggered 
-          }
-        : p
-    )
-  );
-  if (selectedPet?._id === petId) {
-    setSelectedPet(prev => prev ? { 
-      ...prev, 
-      uploadedDocumentsCount: uploadedCount, 
-      hasAllDocuments: hasAllDocs, 
-      registrationTriggered: registrationTriggered 
-    } : null);
-  }
-};
+    setPets(prev =>
+      prev.map(p =>
+        p._id === petId
+          ? { ...p, uploadedDocumentsCount: uploadedCount, hasAllDocuments: hasAllDocs, registrationTriggered }
+          : p
+      )
+    );
+    if (selectedPet?._id === petId) {
+      setSelectedPet(prev => prev ? { ...prev, uploadedDocumentsCount: uploadedCount, hasAllDocuments: hasAllDocs, registrationTriggered } : null);
+    }
+  };
 
   const updatePetRegistrationStatus = (petId: string, status: string, stage: number) => {
     setPets(prev =>
       prev.map(p =>
         p._id === petId
-          ? { 
-              ...p, 
-              registrationStatus: status, 
-              registrationStage: stage, 
-              registrationTriggered: true 
-            }
+          ? { ...p, registrationStatus: status, registrationStage: stage, registrationTriggered: true }
           : p
       )
     );
     if (selectedPet?._id === petId) {
-      setSelectedPet(prev => prev ? { 
-        ...prev, 
-        registrationStatus: status, 
-        registrationStage: stage, 
-        registrationTriggered: true 
-      } : null);
+      setSelectedPet(prev => prev ? { ...prev, registrationStatus: status, registrationStage: stage, registrationTriggered: true } : null);
     }
   };
 
@@ -220,11 +248,77 @@ export default function Dashboard() {
     }
   };
 
+  // ========== MODAL DATA MANAGEMENT ==========
+  const openModal = (petToEdit?: any, resumeId?: string | null) => {
+    if (petToEdit) {
+      // Editing existing pet
+      setModalData({
+        formData: {
+          name: petToEdit.name || "",
+          ageYears: petToEdit.ageYears?.toString() || "",
+          ageMonths: petToEdit.ageMonths?.toString() || "",
+          gender: petToEdit.gender || "",
+          profilePicture: petToEdit.profilePicture || "",
+          city: petToEdit.city || "",
+        },
+        profilePreview: petToEdit.profilePicture || "",
+        documents: {},
+        currentStep: 0,
+        tagDeliveryOption: petToEdit.tagDelivery?.option || 'collect_from_municipal',
+        tagDeliveryCost: petToEdit.tagDelivery?.cost || 0,
+        petId: petToEdit._id,
+        isEditing: true,
+        editingPet: petToEdit,
+        resumePetId: null,
+      });
+    } else if (resumeId) {
+      // Resuming registration
+      setModalData(prev => ({
+        ...prev,
+        resumePetId: resumeId,
+        isEditing: false,
+        petId: resumeId,
+        currentStep: 1,
+      }));
+    } else {
+      // New pet - keep existing data if any
+      setModalData(prev => ({
+        ...prev,
+        isEditing: false,
+        editingPet: null,
+        resumePetId: null,
+        currentStep: 0,
+      }));
+    }
+    setIsModalOpen(true);
+  };
+
+  // ✅ Update modal data from child
+  const updateModalData = (data: Partial<ModalData>) => {
+    setModalData(prev => ({ ...prev, ...data }));
+  };
+
+  // ✅ Reset modal data for new pet
+  const resetModalData = () => {
+    setModalData({
+      formData: { name: "", ageYears: "", ageMonths: "", gender: "", profilePicture: "", city: "" },
+      profilePreview: "",
+      documents: {},
+      currentStep: 0,
+      tagDeliveryOption: 'collect_from_municipal',
+      tagDeliveryCost: 0,
+      petId: null,
+      isEditing: false,
+      editingPet: null,
+      resumePetId: null,
+    });
+  };
+
   const stats = {
     total: pets.length,
-    registered: pets.filter((p) => p.registrationStage === 4).length,
-    inProgress: pets.filter((p) => p.registrationStage >= 2 && p.registrationStage < 4).length,
-    notStarted: pets.filter((p) => p.registrationStage < 2).length,
+    registered: pets.filter(p => p.registrationStage === 4).length,
+    inProgress: pets.filter(p => p.registrationStage >= 2 && p.registrationStage < 4).length,
+    notStarted: pets.filter(p => p.registrationStage < 2).length,
     documentsUploaded: pets.reduce((sum, p) => sum + (p.uploadedDocumentsCount || 0), 0),
   };
 
@@ -278,7 +372,7 @@ export default function Dashboard() {
                 />
               </div>
               <button
-                onClick={() => { setEditingPet(null); setResumePetId(null); setIsModalOpen(true); }}
+                onClick={() => { resetModalData(); openModal(); }}
                 style={{ paddingLeft: 16, paddingRight: 16, paddingTop: 9, paddingBottom: 9, background: "#E8600A", boxShadow: "0px 2px 0px #C04E06", borderRadius: 9, outline: "2px solid #C04E06", outlineOffset: -2, border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 7 }}
               >
                 <span style={{ color: "white", fontSize: 13.5, fontFamily: F.dmSans, fontWeight: 600 }}>+ Add Pet</span>
@@ -302,7 +396,7 @@ export default function Dashboard() {
               <span style={{ color: "#2C1A0E", fontSize: 20, fontFamily: F.fraunces, fontWeight: 900 }}>No pets yet</span>
               <span style={{ color: "#7A5C40", fontSize: 14, fontFamily: F.dmSans }}>Add your first pet to start registration</span>
               <button
-                onClick={() => { setEditingPet(null); setResumePetId(null); setIsModalOpen(true); }}
+                onClick={() => { resetModalData(); openModal(); }}
                 style={{ paddingLeft: 22, paddingRight: 22, paddingTop: 12, paddingBottom: 12, background: "#E8600A", boxShadow: "0px 2px 0px #C04E06", borderRadius: 9, outline: "2px solid #C04E06", outlineOffset: -2, border: "none", cursor: "pointer", color: "white", fontSize: 15, fontFamily: F.dmSans, fontWeight: 600 }}
               >
                 Add Your First Pet
@@ -387,7 +481,7 @@ export default function Dashboard() {
                     </button>
                   ))}
                   <button
-                    onClick={() => { setEditingPet(null); setResumePetId(null); setIsModalOpen(true); }}
+                    onClick={() => { resetModalData(); openModal(); }}
                     style={{ 
                       paddingLeft: 14, 
                       paddingRight: 14, 
@@ -412,19 +506,9 @@ export default function Dashboard() {
                 {currentPet && (
                   <PetCard
                     pet={currentPet}
-                    onEdit={(pet) => {
-                      setEditingPet(pet);
-                      setResumePetId(null);
-                      setIsModalOpen(true);
-                    }}
-                    onContinue={(petId) => {
-                      setEditingPet(null);
-                      setResumePetId(petId);
-                      setIsModalOpen(true);
-                    }}
-                    onDelete={(petId, petName) => {
-                      setShowDeleteConfirm({ show: true, petId, petName });
-                    }}
+                    onEdit={(pet: any) => openModal(pet)}
+                    onContinue={(petId: string) => openModal(null, petId)}
+                    onDelete={(petId: string, petName: string) => setShowDeleteConfirm({ show: true, petId, petName })}
                   />
                 )}
               </div>
@@ -476,7 +560,6 @@ export default function Dashboard() {
                   <span style={{ color: "#7A5C40", fontSize: 12, fontFamily: F.dmSans }}>{stats.registered} of {stats.total} pets fully registered</span>
                 </div>
 
-                {/* Tailio Symbol - Bottom right card */}
                 <div style={{
                   padding: "14px 16px",
                   background: "linear-gradient(135deg, #FFFCF8 0%, #FFF8F0 100%)",
@@ -520,22 +603,25 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* ✅ MODAL - WITH PERSISTENT DATA */}
       <AddPetModal
   isOpen={isModalOpen}
   onClose={() => {
     setIsModalOpen(false);
-    setEditingPet(null);
-    setResumePetId(null);
+    // Data stays in modalData - no reset!
   }}
   onPetCreated={addPet}
   onPetUpdated={updatePet}
   onDocumentUploaded={updatePetDocCount}
-  onDocumentDeleted={updatePetDocCount} // Same function now works for both
+  onDocumentDeleted={updatePetDocCount}
   onRegistrationTriggered={updatePetRegistrationStatus}
   token={token}
-  petToEdit={editingPet}
-  resumePetId={resumePetId}
+  petToEdit={modalData.editingPet}
+  resumePetId={modalData.resumePetId}
+  persistentData={modalData}
+  onUpdatePersistentData={updateModalData}
 />
+
 
       {showDeleteConfirm.show && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.60)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 16 }}>

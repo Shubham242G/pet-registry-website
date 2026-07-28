@@ -1,6 +1,5 @@
 "use client";
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { EditIcon, PawPrintIcon, TrashIcon } from "lucide-react";
 
 const F = {
@@ -74,10 +73,53 @@ function getFormattedAge(pet: PetCardProps['pet']) {
   return "Not specified";
 }
 
+// ✅ Calculate document count from pet object
+function getDocumentCount(pet: PetCardProps['pet']): number {
+  // Document fields to check
+  const docFields = [
+    'antiRabiesCertificate',
+    'idProof',
+    'residenceProof',
+    'ownerWithPetPhoto',
+    'petPhoto',
+    'vaccinationCard',
+    'vaccinationCertificate',
+    'sterilizationCertificate',
+    'ownerPhoto',
+    'ownerSignature',
+    'proofOfIdentity',
+    'proofOfAddress',
+    'vaccinationRecord',
+    'petPhotographs',
+    'microchipDetails'
+  ];
+  
+  // Count documents that have fileData
+  let count = 0;
+  for (const field of docFields) {
+    // Check if the field exists on the pet and has fileData
+    if (pet[field as keyof typeof pet] && 
+        typeof pet[field as keyof typeof pet] === 'object' &&
+        pet[field as keyof typeof pet] !== null &&
+        (pet[field as keyof typeof pet] as any)?.fileData) {
+      count++;
+    }
+  }
+  
+  // If uploadedDocumentsCount is provided and larger, use it (for registration documents)
+  if (pet.uploadedDocumentsCount && pet.uploadedDocumentsCount > count) {
+    return pet.uploadedDocumentsCount;
+  }
+  
+  return count;
+}
+
 function PetCard({ pet, onEdit, onContinue, onDelete }: PetCardProps) {
   const { label: stageLabel, step: stageStep, color: stageColor } = getDisplayStage(pet);
   const isIncomplete = pet.registrationStage < 2 && !pet.registrationTriggered;
-  const docCount = pet.uploadedDocumentsCount || 0;
+  
+  // ✅ Calculate document count from all sources
+  const docCount = getDocumentCount(pet);
   const totalDocs = pet.requiredDocumentsCount || 4;
 
   return (
@@ -92,7 +134,7 @@ function PetCard({ pet, onEdit, onContinue, onDelete }: PetCardProps) {
       flexDirection: "column", 
       gap: 18 
     }}>
-      {/* Header */}
+      {/* Header - same as before */}
       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
         <div style={{ 
           width: 60, 
@@ -150,7 +192,7 @@ function PetCard({ pet, onEdit, onContinue, onDelete }: PetCardProps) {
         </div>
       </div>
 
-      {/* Details grid */}
+      {/* Details grid - Updated to show correct document count */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 20px" }}>
         {[
           { label: "Member Since", value: pet.createdAt ? new Date(pet.createdAt).toLocaleDateString() : "N/A" },
@@ -171,7 +213,7 @@ function PetCard({ pet, onEdit, onContinue, onDelete }: PetCardProps) {
 
       <RegistrationProgressBar pet={pet} />
 
-      {/* Actions */}
+      {/* Actions - same as before */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
         <button
           onClick={() => onEdit(pet)}

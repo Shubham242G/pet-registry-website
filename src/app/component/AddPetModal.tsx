@@ -31,12 +31,26 @@ interface AddPetModalProps {
   token: string | null;
   petToEdit?: any;
   resumePetId?: string | null;
+  // ✅ Persistent data from parent
+  persistentData?: {
+    formData: { name: string; ageYears: string; ageMonths: string; gender: string; profilePicture: string; city: string; };
+    profilePreview: string;
+    documents: Record<string, any>;
+    currentStep: number;
+    tagDeliveryOption: 'collect_from_municipal' | 'deliver_to_home';
+    tagDeliveryCost: number;
+    petId: string | null;
+    isEditing: boolean;
+    editingPet: any | null;
+    resumePetId: string | null;
+  };
+  onUpdatePersistentData?: (data: any) => void;
 }
 
-// ✅ Define valid cities for validation - REMOVED 'other'
+// ✅ Define valid cities
 const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad'];
 
-// ✅ Base required docs - ALWAYS needed for ALL cities
+// ✅ Base required docs
 const BASE_REQUIRED_DOCS = [
   { name: "antiRabiesCertificate", label: "Anti-Rabies Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate", required: true },
   { name: "idProof", label: "ID Proof", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or government ID", required: true },
@@ -44,7 +58,7 @@ const BASE_REQUIRED_DOCS = [
   { name: "ownerWithPetPhoto", label: "Owner with Pet Photo", icon: ImageIcon, accept: "image/*", description: "Recent photo of you with your pet", required: true },
 ];
 
-// ✅ Gurgaon-specific required docs (ALL required)
+// ✅ Gurgaon-specific required docs
 const GURGAON_REQUIRED_DOCS = [
   { name: "petPhoto", label: "Pet Photo (Alone)", icon: ImageIcon, accept: "image/*", description: "Clear photo of your pet only", required: true },
   { name: "vaccinationCard", label: "Vaccination Card", icon: FileText, accept: ".pdf,image/*", description: "Vaccination record card", required: true },
@@ -60,7 +74,6 @@ const GHAZIABAD_NOIDA_REQUIRED_DOCS = [
   { name: "ownerPhoto", label: "Owner Photo", icon: ImageIcon, accept: "image/*", description: "Clear photo of the pet owner", required: true },
   { name: "petPhoto", label: "Pet Photo", icon: ImageIcon, accept: "image/*", description: "Clear photo of your pet", required: true },
   { name: "ownerSignature", label: "Owner Signature", icon: FileText, accept: "image/*,.pdf", description: "Digital or scanned signature of the owner", required: true },
-  // ✅ vaccinationCard is OPTIONAL for Ghaziabad/Noida
   { name: "vaccinationCard", label: "Vaccination Card (Optional)", icon: FileText, accept: ".pdf,image/*", description: "Vaccination record card - Optional for Ghaziabad/Noida", required: false },
 ];
 
@@ -86,15 +99,10 @@ const STERILIZATION_DOC = {
 
 const STEPS = ["Pet Details", "Upload Docs", "Pay & Register"];
 
-// ✅ STRICT PRICE FUNCTION - NO FALLBACK PRICE
+// ✅ STRICT PRICE FUNCTION
 function getPrice(city: string, tagOption: string) {
-  // ✅ WHITELIST APPROACH - Only allow these cities
-  const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad'];
-  
-  // Force city to lowercase for comparison
   const cityLower = city?.toLowerCase() || '';
   
-  // ✅ STRICT - Only allow valid cities
   if (!VALID_CITIES.includes(cityLower)) {
     console.error(`❌ Invalid city: ${city}. Payment blocked.`);
     throw new Error(`Invalid city: "${city}". Please select a valid city from the list.`);
@@ -110,7 +118,6 @@ function getPrice(city: string, tagOption: string) {
     basePrice = 1799;
   }
   
-  // ✅ If basePrice is still 0, something went wrong
   if (basePrice === 0) {
     console.error(`❌ No price found for city: ${city}`);
     throw new Error(`No price configured for city: ${city}. Please contact support.`);
@@ -126,15 +133,9 @@ function getPrice(city: string, tagOption: string) {
     gstRate: 18,
     total: +total.toFixed(2),
     tagDeliveryCost: 0,
-    isGhaziabad: cityLower === 'ghaziabad',
-    isGurgaon: cityLower === 'gurgaon',
-    isDelhi: cityLower === 'delhi',
-    isNoida: cityLower === 'noida',
-    isFaridabad: cityLower === 'faridabad',
   };
 }
 
-// ✅ UPDATED: Get city display name
 function getCityDisplayName(city: string): string {
   const names: Record<string, string> = {
     ghaziabad: "Ghaziabad",
@@ -146,7 +147,6 @@ function getCityDisplayName(city: string): string {
   return names[city] || city.charAt(0).toUpperCase() + city.slice(1);
 }
 
-// ✅ UPDATED: Get document requirements message for each city
 function getCityRequirementsMessage(city: string, ageYears: number, ageMonths: number): string | null {
   const ageInYears = ageYears + (ageMonths / 12);
   
@@ -169,7 +169,6 @@ function getCityRequirementsMessage(city: string, ageYears: number, ageMonths: n
   return null;
 }
 
-// Global style to force black text in all inputs
 const inputGlobalStyles = `
   .modal-input, .modal-input:focus, .modal-input:active, .modal-input:focus-visible {
     color: #2C1A0E !important;
@@ -200,11 +199,16 @@ export default function AddPetModal({
   onRegistrationTriggered,
   token, 
   petToEdit, 
-  resumePetId 
+  resumePetId,
+  persistentData,
+  onUpdatePersistentData
 }: AddPetModalProps) {
   const { user } = useAuth();
-  
-  const [form, setForm] = useState({ 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+  // Local state (fallback when parent doesn't provide persistentData)
+  const [localForm, setLocalForm] = useState({ 
     name: "", 
     ageYears: "", 
     ageMonths: "", 
@@ -212,81 +216,215 @@ export default function AddPetModal({
     profilePicture: "",
     city: ""
   });
-  const [profilePreview, setProfilePreview] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  const [petId, setPetId] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [uploadedDocs, setUploadedDocs] = useState<Record<string, any>>({});
+  const [localProfilePreview, setLocalProfilePreview] = useState("");
+  const [localUploadedDocs, setLocalUploadedDocs] = useState<Record<string, any>>({});
+  const [localStep, setLocalStep] = useState(0);
+  const [localTagDeliveryOption, setLocalTagDeliveryOption] = useState<'collect_from_municipal' | 'deliver_to_home'>('collect_from_municipal');
+  const [localTagDeliveryCost, setLocalTagDeliveryCost] = useState(0);
+  const [localPetId, setLocalPetId] = useState<string | null>(null);
+  const [localIsEditing, setLocalIsEditing] = useState(false);
+
+  // Use persistent data or fallback to local
+  const form = persistentData?.formData || localForm;
+  const profilePreview = persistentData?.profilePreview || localProfilePreview;
+  const uploadedDocs = persistentData?.documents || localUploadedDocs;
+  const step = persistentData?.currentStep !== undefined ? persistentData.currentStep : localStep;
+  const tagDeliveryOption = persistentData?.tagDeliveryOption || localTagDeliveryOption;
+  const tagDeliveryCost = persistentData?.tagDeliveryCost || localTagDeliveryCost;
+  const petId = persistentData?.petId !== null ? persistentData?.petId : localPetId;
+  const isEditing = persistentData?.isEditing || localIsEditing;
+
   const [uploading, setUploading] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [fetchingDocs, setFetchingDocs] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [step, setStep] = useState(0);
   const [petCityFee, setPetCityFee] = useState(0);
   const [photoError, setPhotoError] = useState("");
 
-  const [tagDeliveryOption, setTagDeliveryOption] = useState<'collect_from_municipal' | 'deliver_to_home'>('collect_from_municipal');
-  const [tagDeliveryCost, setTagDeliveryCost] = useState(0);
-  const [initialCity, setInitialCity] = useState<string | null>(null);
+  // Update parent state
+  const updateData = (data: any) => {
+    if (onUpdatePersistentData) {
+      onUpdatePersistentData(data);
+    } else {
+      // Fallback to local state
+      if (data.formData) setLocalForm(data.formData);
+      if (data.profilePreview !== undefined) setLocalProfilePreview(data.profilePreview);
+      if (data.documents) setLocalUploadedDocs(data.documents);
+      if (data.currentStep !== undefined) setLocalStep(data.currentStep);
+      if (data.tagDeliveryOption) setLocalTagDeliveryOption(data.tagDeliveryOption);
+      if (data.tagDeliveryCost !== undefined) setLocalTagDeliveryCost(data.tagDeliveryCost);
+      if (data.petId !== undefined) setLocalPetId(data.petId);
+      if (data.isEditing !== undefined) setLocalIsEditing(data.isEditing);
+    }
+  };
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  // Fetch documents from pet model (admin-added docs)
+  const fetchPetDocuments = async (petId: string) => {
+    if (!token || !petId) return;
+    try {
+      const response = await fetch(`${API_BASE}/pets/${petId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!response.ok) return;
+      const petData = await response.json();
+      const docFields = [
+        'antiRabiesCertificate', 'idProof', 'residenceProof', 'ownerWithPetPhoto',
+        'petPhoto', 'vaccinationCard', 'vaccinationCertificate', 'sterilizationCertificate',
+        'ownerPhoto', 'ownerSignature', 'proofOfIdentity', 'proofOfAddress',
+        'vaccinationRecord', 'petPhotographs', 'microchipDetails'
+      ];
+      const docs: Record<string, any> = {};
+      for (const field of docFields) {
+        const docData = petData[field];
+        if (docData?.fileData) {
+          docs[field] = {
+            fileName: docData.fileName || `${field}.pdf`,
+            fileSize: docData.fileSize || 0,
+            fileData: docData.fileData,
+            mimeType: docData.mimeType || 'application/pdf',
+          };
+        }
+      }
+      const currentDocs = persistentData?.documents || localUploadedDocs;
+      const merged = { ...currentDocs, ...docs };
+      if (onUpdatePersistentData) {
+        onUpdatePersistentData({ documents: merged });
+      } else {
+        setLocalUploadedDocs(merged);
+      }
+      console.log("📄 Documents fetched from pet model:", Object.keys(docs));
+    } catch (error) {
+      console.error('Failed to fetch pet documents:', error);
+    }
+  };
 
-  // ✅ UPDATED: Get required docs based on city and age
+  // Fetch existing documents and pet data when resuming
+  const fetchExistingData = async (petId: string) => {
+    if (!petId || !token) return;
+    setFetchingDocs(true);
+    try {
+      // 1. Fetch pet details (for form data)
+      const petResponse = await fetch(`${API_BASE}/pets/${petId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!petResponse.ok) {
+        throw new Error('Failed to fetch pet details');
+      }
+      const petData = await petResponse.json();
+
+      // Update form data from pet
+      const newFormData = {
+        name: petData.name || "",
+        ageYears: petData.ageYears?.toString() || "",
+        ageMonths: petData.ageMonths?.toString() || "",
+        gender: petData.gender || "",
+        profilePicture: petData.profilePicture || "",
+        city: petData.city || "",
+      };
+      const newProfilePreview = petData.profilePicture || "";
+      const newTagDeliveryOption = petData.tagDelivery?.option || 'collect_from_municipal';
+      const newTagDeliveryCost = petData.tagDelivery?.cost || 0;
+
+      // Update parent state with form data
+      if (onUpdatePersistentData) {
+        onUpdatePersistentData({
+          formData: newFormData,
+          profilePreview: newProfilePreview,
+          tagDeliveryOption: newTagDeliveryOption,
+          tagDeliveryCost: newTagDeliveryCost,
+          petId: petData._id,
+          isEditing: false,
+          editingPet: null,
+        });
+      } else {
+        setLocalForm(newFormData);
+        setLocalProfilePreview(newProfilePreview);
+        setLocalTagDeliveryOption(newTagDeliveryOption);
+        setLocalTagDeliveryCost(newTagDeliveryCost);
+        setLocalPetId(petData._id);
+        setLocalIsEditing(false);
+      }
+
+      // 2. Fetch registration status for documents
+      const regResponse = await fetch(
+        `${API_BASE}/registration/${petId}/status`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (regResponse.ok) {
+        const data = await regResponse.json();
+        if (Array.isArray(data.documents) && data.documents.length > 0) {
+          const docsMap: Record<string, any> = {};
+          for (const doc of data.documents) {
+            docsMap[doc.documentName] = {
+              fileName: doc.fileName,
+              fileSize: doc.fileSize,
+              fileData: doc.fileData,
+              mimeType: doc.mimeType,
+            };
+          }
+          const currentDocs = persistentData?.documents || localUploadedDocs;
+          const merged = { ...currentDocs, ...docsMap };
+          if (onUpdatePersistentData) {
+            onUpdatePersistentData({ documents: merged });
+          } else {
+            setLocalUploadedDocs(merged);
+          }
+          console.log("📄 Documents fetched from resume:", Object.keys(docsMap));
+        }
+        if (data.pet && data.pet.tagDelivery) {
+          if (onUpdatePersistentData) {
+            onUpdatePersistentData({
+              tagDeliveryOption: data.pet.tagDelivery.option || 'collect_from_municipal',
+              tagDeliveryCost: data.pet.tagDelivery.cost || 0,
+            });
+          }
+        }
+      }
+
+      // 3. Fetch admin-added documents
+      await fetchPetDocuments(petId);
+
+    } catch (error) {
+      console.error("Failed to load existing data:", error);
+      setError("Failed to load pet data. Please try again.");
+    } finally {
+      setFetchingDocs(false);
+    }
+  };
+
   const getRequiredDocs = (city: string, ageYears: number, ageMonths: number) => {
     const ageInYears = ageYears + (ageMonths / 12);
     const isGurgaon = city === 'gurgaon';
     const isFaridabad = city === 'faridabad';
     const isGhaziabadNoida = ['ghaziabad', 'noida'].includes(city);
-    
-    // Ghaziabad & Noida
-    if (isGhaziabadNoida) {
-      return [...GHAZIABAD_NOIDA_REQUIRED_DOCS];
-    }
-    
-    // Faridabad
-    if (isFaridabad) {
-      return [...FARIDABAD_REQUIRED_DOCS];
-    }
-    
-    // Gurgaon
+    if (isGhaziabadNoida) return [...GHAZIABAD_NOIDA_REQUIRED_DOCS];
+    if (isFaridabad) return [...FARIDABAD_REQUIRED_DOCS];
     if (isGurgaon) {
       const docs = [...BASE_REQUIRED_DOCS, ...GURGAON_REQUIRED_DOCS];
       if (ageInYears >= 4) {
         const hasSterilization = docs.some(d => d.name === 'sterilizationCertificate');
-        if (!hasSterilization) {
-          docs.push(STERILIZATION_DOC);
-        }
+        if (!hasSterilization) docs.push(STERILIZATION_DOC);
       }
       return docs;
     }
-    
-    // Default - Should never happen now but keep as safety
     return [...BASE_REQUIRED_DOCS];
   };
 
-  // Compute required docs based on current form values
   const requiredDocs = getRequiredDocs(
     form.city, 
     parseInt(form.ageYears) || 0, 
     parseInt(form.ageMonths) || 0
   );
 
-  // ✅ Get ONLY required docs (where required !== false)
   const requiredDocsOnly = requiredDocs.filter(doc => doc.required !== false);
   const totalRequired = requiredDocsOnly.length;
-  
-  // ✅ Count uploaded required docs
   const uploadedRequiredCount = requiredDocsOnly.filter(doc => uploadedDocs[doc.name]).length;
   const allRequiredUploaded = uploadedRequiredCount === totalRequired;
-  
-  // ✅ Total uploaded count (including optional)
   const uploadedCount = Object.keys(uploadedDocs).length;
-  const allDocsUploaded = allRequiredUploaded; // Only required docs matter for completion
 
-  // Inject global styles
+  // Inject styles
   useEffect(() => {
     if (!document.getElementById("modal-input-styles")) {
       const style = document.createElement("style");
@@ -300,182 +438,127 @@ export default function AddPetModal({
     };
   }, []);
 
-  // ✅ FIXED: Add city pre-selection from URL params
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const city = params.get('city');
-      // Check if city exists in our valid cities list
-      if (city && VALID_CITIES.includes(city)) {
-        setInitialCity(city);
-        setForm(prev => ({ ...prev, city }));
-      }
-    }
-  }, []);
-
-  // Function to restore documents from pet object
-  const restoreDocumentsFromPet = (pet: any) => {
-    const docs: Record<string, any> = {};
-    
-    if (pet.documents && Array.isArray(pet.documents)) {
-      for (const doc of pet.documents) {
-        docs[doc.documentName] = {
-          fileName: doc.fileName,
-          fileSize: doc.fileSize,
-          fileData: doc.fileData,
-          mimeType: doc.mimeType,
-        };
-      }
-    }
-    return docs;
-  };
-
-  // Initialize modal when it opens
+  // ✅ Initialize modal - handles resume, edit, and new pet
   useEffect(() => {
     if (!isOpen) return;
     
-    console.log("🔄 Modal opened, initializing...");
+    console.log("🔄 Modal opened");
     setError("");
     setPhotoError("");
     setSuccess(false);
     setUploading(null);
     setIsSubmitting(false);
     
-    if (resumePetId) {
-      console.log("📂 Resuming registration for pet:", resumePetId);
-      setPetId(resumePetId);
-      setIsEditing(false);
-      setStep(1);
-      return;
-    }
-    
+    // 1. Edit existing pet (petToEdit provided)
     if (petToEdit && petToEdit._id) {
       console.log("✏️ EDITING PET:", petToEdit._id, petToEdit.name);
-      setPetId(petToEdit._id);
-      setIsEditing(true);
-      setStep(0);
-      
-      setForm({
+      const newFormData = {
         name: petToEdit.name || "",
         ageYears: petToEdit.ageYears?.toString() || "",
         ageMonths: petToEdit.ageMonths?.toString() || "",
         gender: petToEdit.gender || "",
         profilePicture: petToEdit.profilePicture || "",
         city: petToEdit.city || "",
-      });
-      setProfilePreview(petToEdit.profilePicture || "");
+      };
+      const newProfilePreview = petToEdit.profilePicture || "";
+      const newTagDeliveryOption = petToEdit.tagDelivery?.option || 'collect_from_municipal';
+      const newTagDeliveryCost = petToEdit.tagDelivery?.cost || 0;
       
-      if (petToEdit.tagDelivery) {
-        setTagDeliveryOption(petToEdit.tagDelivery.option || 'collect_from_municipal');
-        setTagDeliveryCost(petToEdit.tagDelivery.cost || 0);
+      if (onUpdatePersistentData) {
+        onUpdatePersistentData({
+          formData: newFormData,
+          profilePreview: newProfilePreview,
+          currentStep: 0,
+          tagDeliveryOption: newTagDeliveryOption,
+          tagDeliveryCost: newTagDeliveryCost,
+          petId: petToEdit._id,
+          isEditing: true,
+          editingPet: petToEdit,
+          resumePetId: null,
+        });
+      } else {
+        setLocalForm(newFormData);
+        setLocalProfilePreview(newProfilePreview);
+        setLocalStep(0);
+        setLocalTagDeliveryOption(newTagDeliveryOption);
+        setLocalTagDeliveryCost(newTagDeliveryCost);
+        setLocalPetId(petToEdit._id);
+        setLocalIsEditing(true);
       }
       
-      const restoredDocs = restoreDocumentsFromPet(petToEdit);
-      setUploadedDocs(restoredDocs);
-      console.log("📄 Documents restored:", Object.keys(restoredDocs));
+      // Restore documents from pet object
+      const restoredDocs: Record<string, any> = {};
+      if (petToEdit.documents && Array.isArray(petToEdit.documents)) {
+        for (const doc of petToEdit.documents) {
+          restoredDocs[doc.documentName] = {
+            fileName: doc.fileName,
+            fileSize: doc.fileSize,
+            fileData: doc.fileData,
+            mimeType: doc.mimeType,
+          };
+        }
+      }
+      if (onUpdatePersistentData) {
+        onUpdatePersistentData({ documents: restoredDocs });
+      } else {
+        setLocalUploadedDocs(restoredDocs);
+      }
+      fetchPetDocuments(petToEdit._id);
       return;
     }
     
-    console.log("✨ CREATING NEW PET");
-    setPetId(null);
-    setIsEditing(false);
-    setStep(0);
-    setForm({ name: "", ageYears: "", ageMonths: "", gender: "", profilePicture: "", city: "" });
-    setProfilePreview("");
-    setUploadedDocs({});
-    setTagDeliveryOption('collect_from_municipal');
-    setTagDeliveryCost(0);
-
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    // 2. Resume registration (resumePetId provided)
+    if (resumePetId) {
+      console.log("📂 Resuming registration for pet:", resumePetId);
+      if (onUpdatePersistentData) {
+        onUpdatePersistentData({
+          petId: resumePetId,
+          resumePetId: resumePetId,
+          isEditing: false,
+          editingPet: null,
+          currentStep: 1,
+        });
+      } else {
+        setLocalPetId(resumePetId);
+        setLocalIsEditing(false);
+        setLocalStep(1);
+      }
+      // ✅ Fetch existing data including form fields
+      fetchExistingData(resumePetId);
+      return;
+    }
+    
+    // 3. New pet - only reset if no persistent data
+    if (!persistentData?.formData?.name) {
+      console.log("✨ CREATING NEW PET");
+      const newFormData = { name: "", ageYears: "", ageMonths: "", gender: "", profilePicture: "", city: "" };
+      if (onUpdatePersistentData) {
+        onUpdatePersistentData({
+          formData: newFormData,
+          profilePreview: "",
+          documents: {},
+          currentStep: 0,
+          tagDeliveryOption: 'collect_from_municipal',
+          tagDeliveryCost: 0,
+          petId: null,
+          isEditing: false,
+          editingPet: null,
+          resumePetId: null,
+        });
+      } else {
+        setLocalForm(newFormData);
+        setLocalProfilePreview("");
+        setLocalUploadedDocs({});
+        setLocalStep(0);
+        setLocalTagDeliveryOption('collect_from_municipal');
+        setLocalTagDeliveryCost(0);
+        setLocalPetId(null);
+        setLocalIsEditing(false);
+      }
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+    
   }, [isOpen]);
-
-  // When petToEdit changes, update form and restore documents
-  useEffect(() => {
-    if (!isOpen || !petToEdit || !petToEdit._id) return;
-    
-    if (petId === petToEdit._id && isEditing) {
-      return;
-    }
-    
-    console.log("📝 Updating form for pet from petToEdit:", petToEdit._id);
-    setPetId(petToEdit._id);
-    setIsEditing(true);
-    setStep(0);
-    
-    setForm({
-      name: petToEdit.name || "",
-      ageYears: petToEdit.ageYears?.toString() || "",
-      ageMonths: petToEdit.ageMonths?.toString() || "",
-      gender: petToEdit.gender || "",
-      profilePicture: petToEdit.profilePicture || "",
-      city: petToEdit.city || "",
-    });
-    setProfilePreview(petToEdit.profilePicture || "");
-    
-    if (petToEdit.tagDelivery) {
-      setTagDeliveryOption(petToEdit.tagDelivery.option || 'collect_from_municipal');
-      setTagDeliveryCost(petToEdit.tagDelivery.cost || 0);
-    }
-    
-    const restoredDocs = restoreDocumentsFromPet(petToEdit);
-    setUploadedDocs(restoredDocs);
-    console.log("📄 Documents restored from petToEdit:", Object.keys(restoredDocs));
-    
-  }, [isOpen, petToEdit]);
-
-  // Fetch existing documents when resuming
-  useEffect(() => {
-    if (!isOpen || !resumePetId || !token) return;
-
-    const fetchExistingDocs = async () => {
-      setFetchingDocs(true);
-      try {
-        const response = await fetch(
-          `${API_BASE}/registration/${resumePetId}/status`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (!response.ok) return;
-        const data = await response.json();
-
-        if (Array.isArray(data.documents) && data.documents.length > 0) {
-          const docsMap: Record<string, any> = {};
-          for (const doc of data.documents) {
-            docsMap[doc.documentName] = {
-              fileName: doc.fileName,
-              fileSize: doc.fileSize,
-              fileData: doc.fileData,
-              mimeType: doc.mimeType,
-            };
-          }
-          setUploadedDocs(docsMap);
-          console.log("📄 Documents fetched from resume:", Object.keys(docsMap));
-        }
-        
-        if (data.pet && data.pet.tagDelivery) {
-          setTagDeliveryOption(data.pet.tagDelivery.option || 'collect_from_municipal');
-          setTagDeliveryCost(data.pet.tagDelivery.cost || 0);
-        }
-        
-        if (data.pet) {
-          setForm({
-            name: data.pet.name || "",
-            ageYears: data.pet.ageYears?.toString() || "",
-            ageMonths: data.pet.ageMonths?.toString() || "",
-            gender: data.pet.gender || "",
-            profilePicture: data.pet.profilePicture || "",
-            city: data.pet.city || "",
-          });
-          setProfilePreview(data.pet.profilePicture || "");
-        }
-      } catch {
-        console.error("Failed to load existing documents");
-      } finally {
-        setFetchingDocs(false);
-      }
-    };
-
-    fetchExistingDocs();
-  }, [isOpen, resumePetId, token, API_BASE]);
 
   if (!isOpen) return null;
 
@@ -498,43 +581,43 @@ export default function AddPetModal({
     const reader = new FileReader();
     reader.onloadend = () => {
       const b64 = reader.result as string;
-      setProfilePreview(b64);
-      setForm((f) => ({ ...f, profilePicture: b64 }));
+      if (onUpdatePersistentData) {
+        onUpdatePersistentData({ 
+          profilePreview: b64,
+          formData: { ...form, profilePicture: b64 }
+        });
+      } else {
+        setLocalProfilePreview(b64);
+        setLocalForm((f) => ({ ...f, profilePicture: b64 }));
+      }
     };
     reader.readAsDataURL(file);
   };
 
   const goToPreviousStep = () => {
-    if (step > 0) {
-      setStep(step - 1);
-      setError("");
+    const newStep = step > 0 ? step - 1 : 0;
+    if (onUpdatePersistentData) {
+      onUpdatePersistentData({ currentStep: newStep });
+    } else {
+      setLocalStep(newStep);
     }
+    setError("");
   };
 
   const handlePetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // ✅ STRICT CITY VALIDATION - MUST BE A VALID CITY
-    const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad'];
-    
-    // Validate photo is uploaded
     if (!form.profilePicture) {
       setPhotoError("Pet photo is required");
       return;
     }
-    
-    // ✅ STRICT - City must be selected and valid
     if (!form.city) {
       setError("Please select your pet's registration city from the list");
       return;
     }
-    
-    // ✅ STRICT - Block invalid cities
     if (!VALID_CITIES.includes(form.city.toLowerCase())) {
       setError(`Invalid city: "${form.city}". Please select a valid city from the list.`);
       return;
     }
-    
     setLoading(true);
     setError("");
     setPhotoError("");
@@ -546,26 +629,30 @@ export default function AddPetModal({
         ageMonths: form.ageMonths ? parseInt(form.ageMonths) : 0,
         gender: form.gender,
         profilePicture: form.profilePicture,
-        city: form.city.toLowerCase(), // ✅ Force lowercase
+        city: form.city.toLowerCase(),
       };
 
+      let response;
       if (petId) {
         console.log("🔄 UPDATING pet with ID:", petId);
-        const response = await apiFetch(`/pets/${petId}`, "PUT", petData, token!);
+        response = await apiFetch(`/pets/${petId}`, "PUT", petData, token!);
         console.log("✅ Pet updated successfully");
-        if (onPetUpdated) {
-          onPetUpdated(response);
-        }
-        setStep(1);
+        if (onPetUpdated) onPetUpdated(response);
       } else {
         console.log("✨ CREATING new pet");
-        const response = await apiFetch("/pets", "POST", petData, token!);
+        response = await apiFetch("/pets", "POST", petData, token!);
         console.log("✅ Pet created with ID:", response._id);
-        setPetId(response._id);
-        if (onPetCreated) {
-          onPetCreated(response);
+        if (onPetCreated) onPetCreated(response);
+        if (onUpdatePersistentData) {
+          onUpdatePersistentData({ petId: response._id });
+        } else {
+          setLocalPetId(response._id);
         }
-        setStep(1);
+      }
+      if (onUpdatePersistentData) {
+        onUpdatePersistentData({ currentStep: 1 });
+      } else {
+        setLocalStep(1);
       }
     } catch (error: any) {
       console.error("❌ Pet submit error:", error);
@@ -575,73 +662,42 @@ export default function AddPetModal({
     }
   };
 
-  // ✅ FIXED: Updated handleDocUpload with proper fileData handling
   const handleDocUpload = async (file: File, docName: string) => {
-    if (!petId) {
+    const currentPetId = petId;
+    if (!currentPetId) {
       setError("Pet not created yet. Please complete the pet details first.");
       return;
     }
-
-    console.log('🔍 DEBUG - Uploading:', {
-      docName,
-      petId,
-      city: form.city,
-      fileSize: file.size,
-      fileType: file.type
-    });
-
-    // Validate file
+    console.log('🔍 Uploading:', { docName, petId: currentPetId });
     if (!file) {
       setError("No file selected");
       return;
     }
-
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       setError("File size must be under 5MB");
       return;
     }
-
-    // Validate file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
     if (!allowedTypes.includes(file.type)) {
       setError(`Please upload a ${allowedTypes.join(', ')} file`);
       return;
     }
-
     setUploading(docName);
     setError("");
-
     try {
-      // Read the file as data URL using Promise
       const fileData = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => {
           const result = reader.result as string;
-          if (!result) {
-            reject(new Error("Failed to read file"));
-            return;
-          }
+          if (!result) { reject(new Error("Failed to read file")); return; }
           resolve(result);
         };
         reader.onerror = () => reject(reader.error);
         reader.readAsDataURL(file);
       });
-
-      // Verify fileData is valid
       if (!fileData || !fileData.startsWith('data:')) {
         throw new Error("Invalid file data format");
       }
-
-      console.log('📤 Uploading document:', {
-        docName,
-        fileName: file.name,
-        fileSize: file.size,
-        mimeType: file.type,
-        fileDataLength: fileData.length,
-        fileDataPreview: fileData.substring(0, 50)
-      });
-
       const payload = {
         documentName: docName,
         fileData: fileData,
@@ -649,8 +705,7 @@ export default function AddPetModal({
         fileSize: file.size,
         mimeType: file.type
       };
-
-      const response = await fetch(`${API_BASE}/registration/${petId}/documents`, {
+      const response = await fetch(`${API_BASE}/registration/${currentPetId}/documents`, {
         method: "POST",
         headers: { 
           Authorization: `Bearer ${token}`, 
@@ -658,32 +713,28 @@ export default function AddPetModal({
         },
         body: JSON.stringify(payload),
       });
-
       const data = await response.json();
-      console.log('📥 Response:', response.status, data);
-
       if (response.ok) {
-        // Update local state
-        setUploadedDocs((prev) => ({
-          ...prev,
+        const updatedDocs = {
+          ...uploadedDocs,
           [docName]: { 
             fileName: file.name, 
             fileSize: file.size, 
             fileData: fileData, 
             mimeType: file.type 
           },
-        }));
-
-        // Callback
+        };
+        if (onUpdatePersistentData) {
+          onUpdatePersistentData({ documents: updatedDocs });
+        } else {
+          setLocalUploadedDocs(updatedDocs);
+        }
         if (onDocumentUploaded) {
           const uploadedCount = data.registration?.uploadedDocumentsCount || Object.keys(uploadedDocs).length + 1;
           const hasAllDocs = data.registration?.hasAllDocuments || (uploadedCount === totalRequired);
           const triggered = data.registration?.registrationTriggered || false;
-          
-          onDocumentUploaded(petId, uploadedCount, hasAllDocs, triggered);
+          onDocumentUploaded(currentPetId, uploadedCount, hasAllDocs, triggered);
         }
-
-        // Show success message briefly
         setError("");
       } else {
         setError(data.message || `Upload failed: ${response.status}`);
@@ -698,19 +749,26 @@ export default function AddPetModal({
   };
 
   const handleDeleteDoc = async (docName: string) => {
-    if (!petId) return;
+    const currentPetId = petId;
+    if (!currentPetId) return;
     setError("");
     try {
-      const response = await fetch(`${API_BASE}/registration/${petId}/documents/${docName}`, {
+      const response = await fetch(`${API_BASE}/registration/${currentPetId}/documents/${docName}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
       if (response.ok) {
-        setUploadedDocs((prev) => { const next = { ...prev }; delete next[docName]; return next; });
+        const updatedDocs = { ...uploadedDocs };
+        delete updatedDocs[docName];
+        if (onUpdatePersistentData) {
+          onUpdatePersistentData({ documents: updatedDocs });
+        } else {
+          setLocalUploadedDocs(updatedDocs);
+        }
         if (onDocumentDeleted) {
           onDocumentDeleted(
-            petId, 
+            currentPetId, 
             data.uploadedDocumentsCount, 
             data.hasAllDocuments,
             data.registrationTriggered || false
@@ -734,14 +792,13 @@ export default function AddPetModal({
   };
 
   const handlePaymentSuccess = async () => {
-    if (!petId) return;
+    const currentPetId = petId;
+    if (!currentPetId) return;
     setIsSubmitting(true);
     setError("");
     try {
-      // ✅ This will throw error if city is invalid
       const petPrice = getPrice(form.city || "", tagDeliveryOption);
-      
-      const response = await fetch(`${API_BASE}/registration/${petId}/trigger-registration`, {
+      const response = await fetch(`${API_BASE}/registration/${currentPetId}/trigger-registration`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -757,7 +814,7 @@ export default function AddPetModal({
         setSuccess(true);
         if (onRegistrationTriggered) {
           onRegistrationTriggered(
-            petId, 
+            currentPetId, 
             data.pet?.registrationStatus || 'form_submitted', 
             data.pet?.registrationStage || 2
           );
@@ -774,6 +831,7 @@ export default function AddPetModal({
     }
   };
 
+  // ✅ handleClose - does NOT reset data
   const handleClose = () => {
     setSuccess(false);
     onClose();
@@ -793,7 +851,8 @@ export default function AddPetModal({
             }}
             onClick={() => {
               if (i < step) {
-                setStep(i);
+                if (onUpdatePersistentData) onUpdatePersistentData({ currentStep: i });
+                else setLocalStep(i);
                 setError("");
               }
             }}
@@ -808,7 +867,8 @@ export default function AddPetModal({
           }}
           onClick={() => {
             if (i < step) {
-              setStep(i);
+              if (onUpdatePersistentData) onUpdatePersistentData({ currentStep: i });
+              else setLocalStep(i);
               setError("");
             }
           }}>
@@ -839,7 +899,6 @@ export default function AddPetModal({
     cursor: "pointer",
   };
 
-  // ✅ This will throw error if city is invalid - wrap in try/catch
   let petPrice;
   let priceError = null;
   try {
@@ -849,7 +908,6 @@ export default function AddPetModal({
     priceError = error.message;
   }
 
-  // ✅ Get city-specific requirements message
   const cityRequirementsMessage = getCityRequirementsMessage(
     form.city,
     parseInt(form.ageYears) || 0,
@@ -980,7 +1038,14 @@ export default function AddPetModal({
                     required 
                     placeholder="Enter pet's name" 
                     value={form.name} 
-                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} 
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (onUpdatePersistentData) {
+                        onUpdatePersistentData({ formData: { ...form, name: value } });
+                      } else {
+                        setLocalForm((f) => ({ ...f, name: value }));
+                      }
+                    }}
                   />
                 </div>
 
@@ -997,7 +1062,14 @@ export default function AddPetModal({
                         required
                         placeholder="Years" 
                         value={form.ageYears} 
-                        onChange={(e) => setForm((f) => ({ ...f, ageYears: e.target.value }))} 
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (onUpdatePersistentData) {
+                            onUpdatePersistentData({ formData: { ...form, ageYears: value } });
+                          } else {
+                            setLocalForm((f) => ({ ...f, ageYears: value }));
+                          }
+                        }}
                       />
                     </div>
                     <div style={{ flex: 1 }}>
@@ -1010,7 +1082,14 @@ export default function AddPetModal({
                         required
                         placeholder="Months" 
                         value={form.ageMonths} 
-                        onChange={(e) => setForm((f) => ({ ...f, ageMonths: e.target.value }))} 
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (onUpdatePersistentData) {
+                            onUpdatePersistentData({ formData: { ...form, ageMonths: value } });
+                          } else {
+                            setLocalForm((f) => ({ ...f, ageMonths: value }));
+                          }
+                        }}
                       />
                     </div>
                   </div>
@@ -1023,7 +1102,14 @@ export default function AddPetModal({
                     style={selectStyle} 
                     required
                     value={form.gender} 
-                    onChange={(e) => setForm((f) => ({ ...f, gender: e.target.value }))}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (onUpdatePersistentData) {
+                        onUpdatePersistentData({ formData: { ...form, gender: value } });
+                      } else {
+                        setLocalForm((f) => ({ ...f, gender: value }));
+                      }
+                    }}
                   >
                     <option value="">Select gender</option>
                     <option value="male">Male</option>
@@ -1031,18 +1117,25 @@ export default function AddPetModal({
                   </select>
                 </div>
 
+                {/* ✅ CitySelector WITH error clearing - FIXED */}
                 <div>
                   <CitySelector 
                     selectedCity={form.city}
                     onChange={(city, fee) => {
-                      setForm((f) => ({ ...f, city }));
+                      if (onUpdatePersistentData) {
+                        onUpdatePersistentData({ formData: { ...form, city } });
+                      } else {
+                        setLocalForm((f) => ({ ...f, city }));
+                      }
                       setPetCityFee(fee);
+                      // ✅ Clear the error when city is selected
+                      setError("");
                     }}
-                    error={!form.city && step === 0 ? "Please select your pet's registration city" : ""}
+                    // ✅ Only show error if city is not selected AND we have an error
+                    error={error && !form.city ? "Please select your pet's registration city" : undefined}
                   />
                 </div>
 
-                {/* ✅ UPDATED: City-specific requirements message */}
                 {cityRequirementsMessage && (
                   <div style={{
                     padding: "10px 14px",
@@ -1132,7 +1225,7 @@ export default function AddPetModal({
               </form>
             )}
 
-            {/* Step 1 - Documents - ✅ UPDATED with Optional vaccinationCard for Ghaziabad/Noida */}
+            {/* Step 1 - Documents */}
             {!success && step === 1 && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <button 
@@ -1221,7 +1314,6 @@ export default function AddPetModal({
                       }} />
                     </div>
 
-                    {/* ✅ UPDATED: Show city-specific requirements summary */}
                     {(form.city === 'ghaziabad' || form.city === 'noida') && (
                       <div style={{
                         padding: "10px 14px",
@@ -1400,7 +1492,13 @@ export default function AddPetModal({
                     </div>
 
                     <button 
-                      onClick={() => setStep(2)} 
+                      onClick={() => {
+                        if (onUpdatePersistentData) {
+                          onUpdatePersistentData({ currentStep: 2 });
+                        } else {
+                          setLocalStep(2);
+                        }
+                      }}
                       disabled={!allRequiredUploaded} 
                       style={{
                         width: "100%", 
@@ -1572,7 +1670,13 @@ export default function AddPetModal({
                   </div>
                 )}
 
-                <button onClick={() => setStep(1)} style={{ background: "none", border: "none", cursor: "pointer", color: "#7A5C40", fontSize: 12, textAlign: "center", padding: "4px 0", transition: "all 0.3s ease" }}
+                <button onClick={() => {
+                  if (onUpdatePersistentData) {
+                    onUpdatePersistentData({ currentStep: 1 });
+                  } else {
+                    setLocalStep(1);
+                  }
+                }} style={{ background: "none", border: "none", cursor: "pointer", color: "#7A5C40", fontSize: 12, textAlign: "center", padding: "4px 0", transition: "all 0.3s ease" }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = "#E8600A";
                   }}
