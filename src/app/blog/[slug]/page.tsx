@@ -115,20 +115,56 @@ export default function BlogDetailPage() {
   };
 
   const renderContent = (content: string) => {
-    if (!content) return '';
-    if (!blog?.images?.gallery || blog.images.gallery.length === 0) {
-      return content;
-    }
+  if (!content) return '';
+  
+  // Ensure content is a string
+  if (typeof content !== 'string') {
+    console.warn('Content is not a string, converting...');
+    return String(content);
+  }
+  
+  // If no gallery, return content as-is
+  if (!blog?.images?.gallery || blog.images.gallery.length === 0) {
+    return content;
+  }
 
-    let rendered = content;
-    blog.images.gallery.forEach((img, index) => {
-      const placeholder = `[image:${index}]`;
-      const imageHtml = `<img src="${img}" alt="Gallery image ${index + 1}" style="max-width:100%; border-radius:12px; margin: 16px 0;" />`;
-      rendered = rendered.replace(new RegExp(placeholder, 'g'), imageHtml);
-    });
+  // Safety: If content is too large, don't process replacements
+  // This prevents the "Invalid string length" error
+  if (content.length > 500000) { // 500KB limit
+    console.warn('Content too large for replacement, skipping gallery image processing');
+    return content;
+  }
+
+  let rendered = content;
+  
+  // Use a safer approach - process replacements one at a time
+  // and add a safety counter to prevent infinite loops
+  let safetyCounter = 0;
+  const maxIterations = 1000;
+  
+  // Process each gallery image
+  for (let index = 0; index < blog.images.gallery.length; index++) {
+    const img = blog.images.gallery[index];
+    const placeholder = `[image:${index}]`;
+    const imageHtml = `<img src="${img}" alt="Gallery image ${index + 1}" style="max-width:100%; border-radius:12px; margin: 16px 0;" />`;
     
-    return rendered;
-  };
+    // Only replace if placeholder exists
+    if (rendered.includes(placeholder)) {
+      // Use a while loop with a counter to prevent infinite loops
+      while (rendered.includes(placeholder) && safetyCounter < maxIterations) {
+        rendered = rendered.replace(placeholder, imageHtml);
+        safetyCounter++;
+      }
+      
+      if (safetyCounter >= maxIterations) {
+        console.warn('Maximum replacements reached, stopping to prevent infinite loop');
+        break;
+      }
+    }
+  }
+  
+  return rendered;
+};
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
