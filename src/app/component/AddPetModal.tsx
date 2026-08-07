@@ -48,7 +48,7 @@ interface AddPetModalProps {
 }
 
 // ✅ Define valid cities
-const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad'];
+const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad', 'jaipur'];
 
 // ✅ Base required docs
 const BASE_REQUIRED_DOCS = [
@@ -87,6 +87,15 @@ const FARIDABAD_REQUIRED_DOCS = [
   { name: "microchipDetails", label: "Microchip Details", icon: FileText, accept: ".pdf,image/*", description: "Microchip number and registration", required: true },
 ];
 
+// Add Jaipur-specific required docs
+const JAIPUR_REQUIRED_DOCS = [
+  { name: "idProof", label: "ID Proof", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or government ID", required: true },
+  { name: "vaccinationCard", label: "Vaccination Card", icon: FileText, accept: ".pdf,image/*", description: "Vaccination record card", required: true },
+  { name: "antiRabiesCertificate", label: "Rabies Vaccination Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate", required: true },
+  { name: "petPhoto", label: "Pet Photo", icon: ImageIcon, accept: "image/*", description: "Clear photo of your pet", required: true },
+];
+
+
 // ✅ Sterilization doc - ONLY for Gurgaon pets 4+ years
 const STERILIZATION_DOC = { 
   name: "sterilizationCertificate", 
@@ -114,7 +123,7 @@ function getPrice(city: string, tagOption: string) {
     basePrice = 1500;
   } else if (['delhi', 'noida'].includes(cityLower)) {
     basePrice = 799;
-  } else if (cityLower === 'faridabad') {
+  } else if (['faridabad', 'jaipur'].includes(cityLower)) { // ✅ ADD JAIPUR
     basePrice = 1799;
   }
   
@@ -149,6 +158,11 @@ function getCityDisplayName(city: string): string {
 
 function getCityRequirementsMessage(city: string, ageYears: number, ageMonths: number): string | null {
   const ageInYears = ageYears + (ageMonths / 12);
+  
+  if (city === 'jaipur') {
+    return `Jaipur requires 4 documents: ID Proof, Vaccination Card, Rabies Vaccination Certificate, and Pet Photo.`;
+  }
+
   
   if (city === 'ghaziabad' || city === 'noida') {
     return `${getCityDisplayName(city)} requires 7 documents: Anti-Rabies Certificate, Owner ID Card with Local Address, Residence Proof, Owner with Pet Photo, Owner Photo, Pet Photo, and Owner Signature. Vaccination Card is optional.`;
@@ -395,22 +409,26 @@ export default function AddPetModal({
   };
 
   const getRequiredDocs = (city: string, ageYears: number, ageMonths: number) => {
-    const ageInYears = ageYears + (ageMonths / 12);
-    const isGurgaon = city === 'gurgaon';
-    const isFaridabad = city === 'faridabad';
-    const isGhaziabadNoida = ['ghaziabad', 'noida'].includes(city);
-    if (isGhaziabadNoida) return [...GHAZIABAD_NOIDA_REQUIRED_DOCS];
-    if (isFaridabad) return [...FARIDABAD_REQUIRED_DOCS];
-    if (isGurgaon) {
-      const docs = [...BASE_REQUIRED_DOCS, ...GURGAON_REQUIRED_DOCS];
-      if (ageInYears >= 4) {
-        const hasSterilization = docs.some(d => d.name === 'sterilizationCertificate');
-        if (!hasSterilization) docs.push(STERILIZATION_DOC);
-      }
-      return docs;
+  const ageInYears = ageYears + (ageMonths / 12);
+  const isGurgaon = city === 'gurgaon';
+  const isFaridabad = city === 'faridabad';
+  const isGhaziabadNoida = ['ghaziabad', 'noida'].includes(city);
+  const isJaipur = city === 'jaipur';
+  
+  // ✅ JAIPUR
+  if (isJaipur) return [...JAIPUR_REQUIRED_DOCS];
+  if (isGhaziabadNoida) return [...GHAZIABAD_NOIDA_REQUIRED_DOCS];
+  if (isFaridabad) return [...FARIDABAD_REQUIRED_DOCS];
+  if (isGurgaon) {
+    const docs = [...BASE_REQUIRED_DOCS, ...GURGAON_REQUIRED_DOCS];
+    if (ageInYears >= 4) {
+      const hasSterilization = docs.some(d => d.name === 'sterilizationCertificate');
+      if (!hasSterilization) docs.push(STERILIZATION_DOC);
     }
-    return [...BASE_REQUIRED_DOCS];
-  };
+    return docs;
+  }
+  return [...BASE_REQUIRED_DOCS];
+};
 
   const requiredDocs = getRequiredDocs(
     form.city, 

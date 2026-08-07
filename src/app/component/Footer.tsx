@@ -50,7 +50,7 @@ export default function Footer() {
   const companyLinks = [
     { name: 'About Tailio', href: '/about-us' },
     // { name: 'Privacy Policy', href: '/privacy-policy' },
-    // { name: 'Terms of Service', href: '/terms-of-service' },
+    { name: 'Terms of Service', href: '/terms-and-condition' },
     { name: 'Contact Us', href: '/contact' },
     { name: 'Blogs', href: '/blog' },
   ];

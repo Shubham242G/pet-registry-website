@@ -15,6 +15,7 @@ const cities = [
   { value: "noida", label: "Noida", basePrice: 799, displayPrice: "₹799" },
   { value: "gurgaon", label: "Gurgaon", basePrice: 1500, displayPrice: "₹1,500" },
   { value: "faridabad", label: "Faridabad", basePrice: 1799, displayPrice: "₹1,799.00" },
+  { value: "jaipur", label: "Jaipur", basePrice: 1799, displayPrice: "₹1,799" }, 
 ];
 
 // Tag delivery costs
@@ -24,6 +25,7 @@ const TAG_DELIVERY_COSTS = {
   noida: 258,
   gurgaon: 258,
   faridabad: 258,
+  jaipur: 258, 
 };
 
 // Total with tag delivery
