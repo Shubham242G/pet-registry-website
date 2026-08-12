@@ -176,7 +176,7 @@ function getCityRequirementsMessage(city: string, ageYears: number, ageMonths: n
   }
   
   if (city === 'faridabad') {
-    return 'Faridabad requires 6 documents: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs, Sterilization Certificate, and Microchip Details.';
+    return 'Faridabad requires 6 documents: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs and Sterilization Certificate';
   }
   
   return null;
@@ -1210,8 +1210,6 @@ export default function AddPetModal({
                           • Pet Photographs
                           <br />
                           • Sterilization Certificate
-                          <br />
-                          • Microchip Details
                         </>
                       ) : null}
                     </p>
@@ -1373,7 +1371,7 @@ export default function AddPetModal({
                         outlineOffset: -1,
                       }}>
                         <p style={{ color: "#B85C00", fontSize: 12, fontWeight: 500, margin: 0 }}>
-                          📋 <strong>Faridabad Required Documents:</strong> Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs, Sterilization Certificate, Microchip Details
+                          📋 <strong>Faridabad Required Documents:</strong> Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs, Sterilization Certificate
                         </p>
                       </div>
                     )}
