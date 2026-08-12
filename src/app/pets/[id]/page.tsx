@@ -91,7 +91,6 @@ function getDocumentCount(pet: PetCardProps['pet']): number {
     'proofOfAddress',
     'vaccinationRecord',
     'petPhotographs',
-    'microchipDetails'
   ];
   
   // Count documents that have fileData

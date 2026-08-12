@@ -84,7 +84,6 @@ const FARIDABAD_REQUIRED_DOCS = [
   { name: "vaccinationRecord", label: "Vaccination Record", icon: FileText, accept: ".pdf,image/*", description: "Complete vaccination record", required: true },
   { name: "petPhotographs", label: "Pet Photographs", icon: ImageIcon, accept: "image/*", description: "Clear photos of your pet", required: true },
   { name: "sterilizationCertificate", label: "Sterilization Certificate", icon: FileText, accept: ".pdf,image/*", description: "Sterilization/spaying certificate", required: true },
-  { name: "microchipDetails", label: "Microchip Details", icon: FileText, accept: ".pdf,image/*", description: "Microchip number and registration", required: true },
 ];
 
 // Add Jaipur-specific required docs
@@ -287,7 +286,7 @@ export default function AddPetModal({
         'antiRabiesCertificate', 'idProof', 'residenceProof', 'ownerWithPetPhoto',
         'petPhoto', 'vaccinationCard', 'vaccinationCertificate', 'sterilizationCertificate',
         'ownerPhoto', 'ownerSignature', 'proofOfIdentity', 'proofOfAddress',
-        'vaccinationRecord', 'petPhotographs', 'microchipDetails'
+        'vaccinationRecord', 'petPhotographs'
       ];
       const docs: Record<string, any> = {};
       for (const field of docFields) {
