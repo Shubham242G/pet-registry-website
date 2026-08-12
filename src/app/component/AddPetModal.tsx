@@ -120,9 +120,9 @@ function getPrice(city: string, tagOption: string) {
   
   if (['ghaziabad', 'gurgaon'].includes(cityLower)) {
     basePrice = 1500;
-  } else if (['delhi', 'noida'].includes(cityLower)) {
+  } else if (['delhi', 'noida','faridabad'].includes(cityLower)) {
     basePrice = 799;
-  } else if (['faridabad', 'jaipur'].includes(cityLower)) { // ✅ ADD JAIPUR
+  } else if (['jaipur'].includes(cityLower)) { // ✅ ADD JAIPUR
     basePrice = 1799;
   }
   

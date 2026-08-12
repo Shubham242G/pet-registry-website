@@ -14,7 +14,7 @@ const cities = [
   { value: "delhi", label: "Delhi", basePrice: 799, displayPrice: "₹799" },
   { value: "noida", label: "Noida", basePrice: 799, displayPrice: "₹799" },
   { value: "gurgaon", label: "Gurgaon", basePrice: 1500, displayPrice: "₹1,500" },
-  { value: "faridabad", label: "Faridabad", basePrice: 1799, displayPrice: "₹1,799.00" },
+  { value: "faridabad", label: "Faridabad", basePrice: 799, displayPrice: "₹799.00" },
   { value: "jaipur", label: "Jaipur", basePrice: 1799, displayPrice: "₹1,799" }, 
 ];
 
