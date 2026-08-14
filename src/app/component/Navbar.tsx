@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { label: 'About Us',      href: '/about-us'    },
   { label: 'Why Tailio?',   href: '/why-tailio' },
   { label: 'How it Works',  href: '/how-it-works' },
+  { label: 'Shop', href: '/products' },
 ];
 
 const CITY_LINKS = [
