@@ -78,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="google-site-verification" content="D8i1leGlpnjS5AigMfVS9SveUXmAxlEehoiBRtevFUE" />
         
-        {/* ✅ META PIXEL - CORRECT ID */}
+        {/* ✅ META PIXEL - CORRECT ID: 1820186002696414 */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -90,18 +90,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '3260552794191537');
+              fbq('init', '1820186002696414');
               fbq('track', 'PageView');
             `
           }}
         />
         
+        {/* Noscript fallback */}
         <noscript>
           <img 
             height="1" 
             width="1" 
             style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=3260552794191537&ev=PageView&noscript=1"
+            src="https://www.facebook.com/tr?id=1820186002696414&ev=PageView&noscript=1"
           />
         </noscript>
       </head>
