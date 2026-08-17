@@ -78,11 +78,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        {/* Google Site Verification - Added as meta tag for GSC */}
         <meta name="google-site-verification" content="D8i1leGlpnjS5AigMfVS9SveUXmAxlEehoiBRtevFUE" />
       </head>
       <body className={`${archive.variable} font-sans`}>
-        {/* Google Analytics - Using Next.js Script component for optimal loading */}
+        {/* Google Analytics */}
         <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-PD6GYVXKZJ"
@@ -100,10 +99,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         
+        {/* ✅ ADD META PIXEL HERE - BEFORE Providers */}
+        <MetaPixel />
+        
         <Providers>
           <Navbar />
           <main>{children}</main>
-          {/* ── Floaters: WhatsApp on desktop, Register button on mobile ── */}
           <FloatersWrapper />
         </Providers>
       </body>
