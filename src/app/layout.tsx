@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Archivo_Black } from 'next/font/google';
 import './globals.css';
 import Navbar from './component/Navbar';
+import MetaPixel from './component/MetaPixel';
 import Providers from './providers';
 import RouteGuard from './component/RouteGuard';
 import FloatersWrapper from './component/FloatersWrapper';
