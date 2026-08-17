@@ -14,7 +14,6 @@ const archive = Archivo_Black({
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  
   metadataBase: new URL('https://www.tailio.in'),
   title: {
     default: 'Tailio - Pet Registration in Delhi NCR | Supreme Court Mandated',
@@ -73,14 +72,13 @@ export const metadata: Metadata = {
   category: 'pet-services',
 };
 
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <meta name="google-site-verification" content="D8i1leGlpnjS5AigMfVS9SveUXmAxlEehoiBRtevFUE" />
         
-        {/* ✅ META PIXEL - Direct script in head */}
+        {/* ✅ META PIXEL - CORRECT ID */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -92,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '1718086156187230');
+              fbq('init', '3260552794191537');
               fbq('track', 'PageView');
             `
           }}
@@ -103,7 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             height="1" 
             width="1" 
             style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=1718086156187230&ev=PageView&noscript=1"
+            src="https://www.facebook.com/tr?id=3260552794191537&ev=PageView&noscript=1"
           />
         </noscript>
       </head>
