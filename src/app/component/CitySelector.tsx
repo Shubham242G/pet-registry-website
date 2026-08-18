@@ -90,7 +90,7 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
         <option value="">Select your city</option>
         {cities.map((city) => (
           <option key={city.value} value={city.value}>
-            {city.label} — {city.displayPrice} (incl. GST)
+            {city.label}
           </option>
         ))}
       </select>
