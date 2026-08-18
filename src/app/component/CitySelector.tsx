@@ -8,14 +8,14 @@ interface CitySelectorProps {
   error?: string;
 }
 
-// ✅ ALL VALID CITIES - Display final prices including GST
+// ✅ ALL VALID CITIES WITH FINAL PRICES
 const cities = [
   { value: "ghaziabad", label: "Ghaziabad", finalPrice: 1599, displayPrice: "₹1,599" },
-  { value: "gurgaon", label: "Gurgaon", finalPrice: 1499, displayPrice: "₹1,499" },
+  { value: "gurgaon", label: "Gurgaon", finalPrice: 1699, displayPrice: "₹1,699" },
+  { value: "jaipur", label: "Jaipur", finalPrice: 1699, displayPrice: "₹1,699" },
   { value: "delhi", label: "Delhi", finalPrice: 999, displayPrice: "₹999" },
   { value: "noida", label: "Noida", finalPrice: 999, displayPrice: "₹999" },
   { value: "faridabad", label: "Faridabad", finalPrice: 999, displayPrice: "₹999" },
-  { value: "jaipur", label: "Jaipur", finalPrice: 999, displayPrice: "₹999" },
   { value: "mumbai", label: "Mumbai", finalPrice: 999, displayPrice: "₹999" },
   { value: "thane", label: "Thane", finalPrice: 999, displayPrice: "₹999" },
 ];
@@ -43,7 +43,6 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
     const cityValue = e.target.value;
     const selectedCityData = cities.find(c => c.value === cityValue);
     if (selectedCityData && onChange) {
-      // ✅ Pass the final price including GST
       onChange(cityValue, selectedCityData.finalPrice);
     }
   };

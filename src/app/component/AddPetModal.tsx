@@ -185,8 +185,10 @@ function getPrice(city: string, tagOption: string) {
   if (cityLower === 'ghaziabad') {
     finalPrice = 1599;
   } else if (cityLower === 'gurgaon') {
-    finalPrice = 1499;
-  } else if (['delhi', 'noida', 'faridabad', 'jaipur', 'mumbai', 'thane'].includes(cityLower)) {
+    finalPrice = 1699;
+  } else if (cityLower === 'jaipur') {
+    finalPrice = 1699;
+  } else if (['delhi', 'noida', 'faridabad', 'mumbai', 'thane'].includes(cityLower)) {
     finalPrice = 999;
   }
   
