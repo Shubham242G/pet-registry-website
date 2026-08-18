@@ -8,14 +8,16 @@ interface CitySelectorProps {
   error?: string;
 }
 
-// ✅ ONLY VALID CITIES - NO 'other' OPTION
+// ✅ ALL VALID CITIES - Display final prices including GST
 const cities = [
-  { value: "ghaziabad", label: "Ghaziabad", basePrice: 1500, displayPrice: "₹1,500" },
-  { value: "delhi", label: "Delhi", basePrice: 799, displayPrice: "₹799" },
-  { value: "noida", label: "Noida", basePrice: 799, displayPrice: "₹799" },
-  { value: "gurgaon", label: "Gurgaon", basePrice: 1500, displayPrice: "₹1,500" },
-  { value: "faridabad", label: "Faridabad", basePrice: 799, displayPrice: "₹799.00" },
-  { value: "jaipur", label: "Jaipur", basePrice: 1799, displayPrice: "₹1,799" }, 
+  { value: "ghaziabad", label: "Ghaziabad", finalPrice: 1599, displayPrice: "₹1,599" },
+  { value: "gurgaon", label: "Gurgaon", finalPrice: 1499, displayPrice: "₹1,499" },
+  { value: "delhi", label: "Delhi", finalPrice: 999, displayPrice: "₹999" },
+  { value: "noida", label: "Noida", finalPrice: 999, displayPrice: "₹999" },
+  { value: "faridabad", label: "Faridabad", finalPrice: 999, displayPrice: "₹999" },
+  { value: "jaipur", label: "Jaipur", finalPrice: 999, displayPrice: "₹999" },
+  { value: "mumbai", label: "Mumbai", finalPrice: 999, displayPrice: "₹999" },
+  { value: "thane", label: "Thane", finalPrice: 999, displayPrice: "₹999" },
 ];
 
 // Tag delivery costs
@@ -25,13 +27,9 @@ const TAG_DELIVERY_COSTS = {
   noida: 258,
   gurgaon: 258,
   faridabad: 258,
-  jaipur: 258, 
-};
-
-// Total with tag delivery
-const getTotalWithDelivery = (city: string, basePrice: number) => {
-  const deliveryCost = TAG_DELIVERY_COSTS[city as keyof typeof TAG_DELIVERY_COSTS] || 258;
-  return basePrice + deliveryCost;
+  jaipur: 258,
+  mumbai: 258,
+  thane: 258,
 };
 
 export default function CitySelector({ selectedCity, onChange, error }: CitySelectorProps) {
@@ -45,11 +43,10 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
     const cityValue = e.target.value;
     const selectedCityData = cities.find(c => c.value === cityValue);
     if (selectedCityData && onChange) {
-      onChange(cityValue, selectedCityData.basePrice);
+      // ✅ Pass the final price including GST
+      onChange(cityValue, selectedCityData.finalPrice);
     }
   };
-
-  const selectedCityData = cities.find(c => c.value === selectedCity);
 
   return (
     <div className="space-y-2" style={{ marginBottom: "20px" }}>
@@ -94,7 +91,7 @@ export default function CitySelector({ selectedCity, onChange, error }: CitySele
         <option value="">Select your city</option>
         {cities.map((city) => (
           <option key={city.value} value={city.value}>
-            {city.label} — {city.displayPrice} + GST
+            {city.label} — {city.displayPrice} (incl. GST)
           </option>
         ))}
       </select>

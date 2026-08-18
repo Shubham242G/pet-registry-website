@@ -48,7 +48,7 @@ interface AddPetModalProps {
 }
 
 // ✅ Define valid cities
-const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad', 'jaipur'];
+const VALID_CITIES = ['ghaziabad', 'delhi', 'noida', 'gurgaon', 'faridabad', 'jaipur', 'mumbai', 'thane'];
 
 // ✅ Base required docs
 const BASE_REQUIRED_DOCS = [
@@ -63,6 +63,58 @@ const GURGAON_REQUIRED_DOCS = [
   { name: "petPhoto", label: "Pet Photo (Alone)", icon: ImageIcon, accept: "image/*", description: "Clear photo of your pet only", required: true },
   { name: "vaccinationCard", label: "Vaccination Card", icon: FileText, accept: ".pdf,image/*", description: "Vaccination record card", required: true },
   { name: "vaccinationCertificate", label: "Vaccination Certificate", icon: FileText, accept: ".pdf,image/*", description: "Official vaccination certificate", required: true },
+];
+
+// ✅ Mumbai & Thane specific required docs
+const MUMBAI_THANE_REQUIRED_DOCS = [
+  { 
+    name: "proofOfIdentity", 
+    label: "Aadhar Card", 
+    icon: FileText, 
+    accept: ".pdf,image/*", 
+    description: "Aadhar card of the pet owner", 
+    required: true 
+  },
+  { 
+    name: "proofOfAddress", 
+    label: "Residential Proof", 
+    icon: FileText, 
+    accept: ".pdf,image/*", 
+    description: "Electricity bill, Rental agreement, or other residence proof", 
+    required: true 
+  },
+  { 
+    name: "vaccinationCertificate", 
+    label: "Vaccination Certificate", 
+    icon: FileText, 
+    accept: ".pdf,image/*", 
+    description: "Official vaccination certificate", 
+    required: true 
+  },
+  { 
+    name: "petPhotographs", 
+    label: "Pet Photograph", 
+    icon: ImageIcon, 
+    accept: "image/*", 
+    description: "Clear photo of your pet", 
+    required: true 
+  },
+  { 
+    name: "ownerPhoto", 
+    label: "Owner Photo", 
+    icon: ImageIcon, 
+    accept: "image/*", 
+    description: "Clear photo of the pet owner", 
+    required: true 
+  },
+  { 
+    name: "antiRabiesCertificate", 
+    label: "Anti-Rabies & Leptospirosis Certificate", 
+    icon: FileText, 
+    accept: ".pdf,image/*", 
+    description: "Anti-Rabies and Leptospirosis vaccination certificate", 
+    required: true 
+  },
 ];
 
 // ✅ Ghaziabad & Noida specific docs - vaccinationCard is OPTIONAL
@@ -86,14 +138,13 @@ const FARIDABAD_REQUIRED_DOCS = [
   { name: "sterilizationCertificate", label: "Sterilization Certificate", icon: FileText, accept: ".pdf,image/*", description: "Sterilization/spaying certificate", required: true },
 ];
 
-// Add Jaipur-specific required docs
+// ✅ Jaipur-specific required docs
 const JAIPUR_REQUIRED_DOCS = [
   { name: "idProof", label: "ID Proof", icon: FileText, accept: ".pdf,image/*", description: "Aadhaar card, Passport, or government ID", required: true },
   { name: "vaccinationCard", label: "Vaccination Card", icon: FileText, accept: ".pdf,image/*", description: "Vaccination record card", required: true },
   { name: "antiRabiesCertificate", label: "Rabies Vaccination Certificate", icon: FileText, accept: ".pdf,image/*", description: "Anti-rabies vaccination certificate", required: true },
   { name: "petPhoto", label: "Pet Photo", icon: ImageIcon, accept: "image/*", description: "Clear photo of your pet", required: true },
 ];
-
 
 // ✅ Sterilization doc - ONLY for Gurgaon pets 4+ years
 const STERILIZATION_DOC = { 
@@ -107,40 +158,54 @@ const STERILIZATION_DOC = {
 
 const STEPS = ["Pet Details", "Upload Docs", "Pay & Register"];
 
-// ✅ STRICT PRICE FUNCTION
+// ✅ STRICT PRICE FUNCTION - Final prices including GST
 function getPrice(city: string, tagOption: string) {
   const cityLower = city?.toLowerCase() || '';
+  
+  // ✅ If no city selected, return default
+  if (!cityLower) {
+    return { 
+      basePrice: 0,
+      gstAmount: 0,
+      gstRate: 18,
+      total: 0,
+      tagDeliveryCost: 0,
+      isValid: false
+    };
+  }
   
   if (!VALID_CITIES.includes(cityLower)) {
     console.error(`❌ Invalid city: ${city}. Payment blocked.`);
     throw new Error(`Invalid city: "${city}". Please select a valid city from the list.`);
   }
   
-  let basePrice = 0;
+  // ✅ These are the FINAL prices including GST
+  let finalPrice = 0;
   
-  if (['ghaziabad', 'gurgaon'].includes(cityLower)) {
-    basePrice = 1500;
-  } else if (['delhi', 'noida','faridabad'].includes(cityLower)) {
-    basePrice = 799;
-  } else if (['jaipur'].includes(cityLower)) { // ✅ ADD JAIPUR
-    basePrice = 1799;
+  if (cityLower === 'ghaziabad') {
+    finalPrice = 1599;
+  } else if (cityLower === 'gurgaon') {
+    finalPrice = 1499;
+  } else if (['delhi', 'noida', 'faridabad', 'jaipur', 'mumbai', 'thane'].includes(cityLower)) {
+    finalPrice = 999;
   }
   
-  if (basePrice === 0) {
+  if (finalPrice === 0) {
     console.error(`❌ No price found for city: ${city}`);
     throw new Error(`No price configured for city: ${city}. Please contact support.`);
   }
   
-  const gstRate = 0.18;
-  const gstAmount = basePrice * gstRate;
-  const total = basePrice + gstAmount;
+  // Calculate base price (excl. GST) for display
+  const basePrice = finalPrice / 1.18;
+  const gstAmount = finalPrice - basePrice;
   
   return { 
     basePrice: +basePrice.toFixed(2),
     gstAmount: +gstAmount.toFixed(2),
     gstRate: 18,
-    total: +total.toFixed(2),
+    total: +finalPrice.toFixed(2),
     tagDeliveryCost: 0,
+    isValid: true
   };
 }
 
@@ -151,17 +216,24 @@ function getCityDisplayName(city: string): string {
     gurgaon: "Gurgaon",
     faridabad: "Faridabad",
     delhi: "Delhi",
+    jaipur: "Jaipur",
+    mumbai: "Mumbai",
+    thane: "Thane",
   };
+  if (!city) return "Not selected";
   return names[city] || city.charAt(0).toUpperCase() + city.slice(1);
 }
 
 function getCityRequirementsMessage(city: string, ageYears: number, ageMonths: number): string | null {
   const ageInYears = ageYears + (ageMonths / 12);
   
+  if (city === 'mumbai' || city === 'thane') {
+    return `${getCityDisplayName(city)} requires 6 documents: Aadhar Card (Proof of Identity), Residential Proof (Proof of Address), Vaccination Certificate, Pet Photograph, Owner Photo, and Anti-Rabies & Leptospirosis Certificate.`;
+  }
+  
   if (city === 'jaipur') {
     return `Jaipur requires 4 documents: ID Proof, Vaccination Card, Rabies Vaccination Certificate, and Pet Photo.`;
   }
-
   
   if (city === 'ghaziabad' || city === 'noida') {
     return `${getCityDisplayName(city)} requires 7 documents: Anti-Rabies Certificate, Owner ID Card with Local Address, Residence Proof, Owner with Pet Photo, Owner Photo, Pet Photo, and Owner Signature. Vaccination Card is optional.`;
@@ -176,7 +248,7 @@ function getCityRequirementsMessage(city: string, ageYears: number, ageMonths: n
   }
   
   if (city === 'faridabad') {
-    return 'Faridabad requires 6 documents: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs and Sterilization Certificate';
+    return 'Faridabad requires: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs and Sterilization Certificate';
   }
   
   return null;
@@ -408,26 +480,28 @@ export default function AddPetModal({
   };
 
   const getRequiredDocs = (city: string, ageYears: number, ageMonths: number) => {
-  const ageInYears = ageYears + (ageMonths / 12);
-  const isGurgaon = city === 'gurgaon';
-  const isFaridabad = city === 'faridabad';
-  const isGhaziabadNoida = ['ghaziabad', 'noida'].includes(city);
-  const isJaipur = city === 'jaipur';
-  
-  // ✅ JAIPUR
-  if (isJaipur) return [...JAIPUR_REQUIRED_DOCS];
-  if (isGhaziabadNoida) return [...GHAZIABAD_NOIDA_REQUIRED_DOCS];
-  if (isFaridabad) return [...FARIDABAD_REQUIRED_DOCS];
-  if (isGurgaon) {
-    const docs = [...BASE_REQUIRED_DOCS, ...GURGAON_REQUIRED_DOCS];
-    if (ageInYears >= 4) {
-      const hasSterilization = docs.some(d => d.name === 'sterilizationCertificate');
-      if (!hasSterilization) docs.push(STERILIZATION_DOC);
+    const ageInYears = ageYears + (ageMonths / 12);
+    const isGurgaon = city === 'gurgaon';
+    const isFaridabad = city === 'faridabad';
+    const isGhaziabadNoida = ['ghaziabad', 'noida'].includes(city);
+    const isJaipur = city === 'jaipur';
+    const isMumbaiThane = ['mumbai', 'thane'].includes(city);
+    
+    // ✅ Mumbai & Thane
+    if (isMumbaiThane) return [...MUMBAI_THANE_REQUIRED_DOCS];
+    if (isJaipur) return [...JAIPUR_REQUIRED_DOCS];
+    if (isGhaziabadNoida) return [...GHAZIABAD_NOIDA_REQUIRED_DOCS];
+    if (isFaridabad) return [...FARIDABAD_REQUIRED_DOCS];
+    if (isGurgaon) {
+      const docs = [...BASE_REQUIRED_DOCS, ...GURGAON_REQUIRED_DOCS];
+      if (ageInYears >= 4) {
+        const hasSterilization = docs.some(d => d.name === 'sterilizationCertificate');
+        if (!hasSterilization) docs.push(STERILIZATION_DOC);
+      }
+      return docs;
     }
-    return docs;
-  }
-  return [...BASE_REQUIRED_DOCS];
-};
+    return [...BASE_REQUIRED_DOCS];
+  };
 
   const requiredDocs = getRequiredDocs(
     form.city, 
@@ -920,8 +994,12 @@ export default function AddPetModal({
   let priceError = null;
   try {
     petPrice = getPrice(form.city || "", tagDeliveryOption);
+    if (!petPrice.isValid) {
+      priceError = "Please select a city to see the price";
+      petPrice = { basePrice: 0, gstAmount: 0, gstRate: 18, total: 0, tagDeliveryCost: 0 };
+    }
   } catch (error: any) {
-    petPrice = { basePrice: 0, gstAmount: 0, gstRate: 18, total: 0, tagDeliveryCost: 0 };
+    petPrice = { basePrice: 0, gstAmount: 0, gstRate: 18, total: 0, tagDeliveryCost: 0, isValid: false };
     priceError = error.message;
   }
 
@@ -998,10 +1076,13 @@ export default function AddPetModal({
               </div>
             )}
 
-            {!success && error && (
+            {/* ✅ FIXED: Error display - only shows when error has actual content */}
+            {!success && error && String(error).trim() !== "" && (
               <div style={{ background: "#FDECEA", borderRadius: 9, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
                 <AlertCircle size={14} color="#A0251E" />
-                <span style={{ color: "#A0251E", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>{error}</span>
+                <span style={{ color: "#A0251E", fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
+                  {typeof error === 'string' ? error : String(error)}
+                </span>
               </div>
             )}
 
@@ -1134,7 +1215,7 @@ export default function AddPetModal({
                   </select>
                 </div>
 
-                {/* ✅ CitySelector WITH error clearing - FIXED */}
+                {/* ✅ CitySelector WITH error clearing */}
                 <div>
                   <CitySelector 
                     selectedCity={form.city}
@@ -1148,7 +1229,6 @@ export default function AddPetModal({
                       // ✅ Clear the error when city is selected
                       setError("");
                     }}
-                    // ✅ Only show error if city is not selected AND we have an error
                     error={error && !form.city ? "Please select your pet's registration city" : undefined}
                   />
                 </div>
@@ -1210,6 +1290,34 @@ export default function AddPetModal({
                           • Pet Photographs
                           <br />
                           • Sterilization Certificate
+                        </>
+                      ) : form.city === 'mumbai' || form.city === 'thane' ? (
+                        <>
+                          📋 <strong>{getCityDisplayName(form.city)} Requirements:</strong>
+                          <br />
+                          • Aadhar Card (Proof of Identity)
+                          <br />
+                          • Residential Proof (Proof of Address)
+                          <br />
+                          • Vaccination Certificate
+                          <br />
+                          • Pet Photograph
+                          <br />
+                          • Owner Photo
+                          <br />
+                          • Anti-Rabies & Leptospirosis Certificate
+                        </>
+                      ) : form.city === 'jaipur' ? (
+                        <>
+                          📋 <strong>Jaipur Requirements:</strong>
+                          <br />
+                          • ID Proof
+                          <br />
+                          • Vaccination Card
+                          <br />
+                          • Rabies Vaccination Certificate
+                          <br />
+                          • Pet Photo
                         </>
                       ) : null}
                     </p>
@@ -1376,6 +1484,34 @@ export default function AddPetModal({
                       </div>
                     )}
 
+                    {form.city === 'mumbai' || form.city === 'thane' && (
+                      <div style={{
+                        padding: "10px 14px",
+                        background: "#FFF4E4",
+                        borderRadius: 9,
+                        outline: "1px solid #FFCCA0",
+                        outlineOffset: -1,
+                      }}>
+                        <p style={{ color: "#B85C00", fontSize: 12, fontWeight: 500, margin: 0 }}>
+                          📋 <strong>{getCityDisplayName(form.city)} Required Documents:</strong> Aadhar Card, Residential Proof, Vaccination Certificate, Pet Photograph, Owner Photo, Anti-Rabies & Leptospirosis Certificate
+                        </p>
+                      </div>
+                    )}
+
+                    {form.city === 'jaipur' && (
+                      <div style={{
+                        padding: "10px 14px",
+                        background: "#FFF4E4",
+                        borderRadius: 9,
+                        outline: "1px solid #FFCCA0",
+                        outlineOffset: -1,
+                      }}>
+                        <p style={{ color: "#B85C00", fontSize: 12, fontWeight: 500, margin: 0 }}>
+                          📋 <strong>Jaipur Required Documents:</strong> ID Proof, Vaccination Card, Rabies Vaccination Certificate, Pet Photo
+                        </p>
+                      </div>
+                    )}
+
                     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                       {requiredDocs.map((doc) => {
                         const uploaded = uploadedDocs[doc.name];
@@ -1443,6 +1579,16 @@ export default function AddPetModal({
                                 {form.city === 'faridabad' && (
                                   <div style={{ color: "#E8600A", fontSize: 9, fontWeight: 600, marginTop: 2 }}>
                                     • Required for Faridabad
+                                  </div>
+                                )}
+                                {(form.city === 'mumbai' || form.city === 'thane') && (
+                                  <div style={{ color: "#E8600A", fontSize: 9, fontWeight: 600, marginTop: 2 }}>
+                                    • Required for {getCityDisplayName(form.city)}
+                                  </div>
+                                )}
+                                {form.city === 'jaipur' && (
+                                  <div style={{ color: "#E8600A", fontSize: 9, fontWeight: 600, marginTop: 2 }}>
+                                    • Required for Jaipur
                                   </div>
                                 )}
                               </div>
@@ -1666,7 +1812,7 @@ export default function AddPetModal({
                   </div>
                 </div>
 
-                {petId && !priceError && (
+                {petId && !priceError && petPrice.total > 0 && (
                   <PaymentButton 
                     petId={petId} 
                     petName={form.name || "your pet"} 

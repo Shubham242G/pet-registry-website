@@ -10,6 +10,22 @@ interface RegisterModalProps {
   onSwitchToLogin: () => void;
 }
 
+// ✅ Helper function to get city display name
+function getCityDisplayName(city: string): string {
+  const names: Record<string, string> = {
+    ghaziabad: "Ghaziabad",
+    delhi: "Delhi",
+    noida: "Noida",
+    gurgaon: "Gurgaon",
+    faridabad: "Faridabad",
+    jaipur: "Jaipur",
+    mumbai: "Mumbai",
+    thane: "Thane",
+  };
+  if (!city) return "Not selected";
+  return names[city] || city.charAt(0).toUpperCase() + city.slice(1);
+}
+
 export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
   const { sendWhatsAppOTP, verifyWhatsAppOTP, completeWhatsAppRegistration } = useAuth();
   const router = useRouter();
@@ -32,6 +48,10 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   const handleCityChange = (selectedCity: string, fee: number) => {
     setCity(selectedCity);
     setRegistrationFee(fee);
+    // ✅ Clear error when city is selected
+    if (errorMessage && errorMessage.includes("city")) {
+      setErrorMessage("");
+    }
   };
 
   const handleSendOTP = async (e: React.FormEvent) => {
@@ -422,11 +442,11 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
             />
           </div>
 
-          {/* City Selector Component - Fixed with proper onChange handler */}
+          {/* City Selector Component - Updated with all cities */}
           <CitySelector 
             selectedCity={city}
             onChange={handleCityChange}
-            error={errorMessage}
+            error={errorMessage && errorMessage.includes("city") ? errorMessage : undefined}
           />
 
           <button
