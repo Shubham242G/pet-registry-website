@@ -103,11 +103,11 @@ export default function WhyTailioSection() {
                 },
                 "offers": {
                   "@type": "Offer",
-                  "price": "299",
+                  "price": "999",
                   "priceCurrency": "INR",
                   "availability": "https://schema.org/InStock",
                   "priceValidUntil": "2026-12-31",
-                  "description": "Launch offer - pet registration starting at ₹299"
+                  "description": "Launch offer - pet registration starting at ₹999"
                 },
                 "areaServed": {
                   "@type": "Place",
@@ -152,7 +152,7 @@ export default function WhyTailioSection() {
                   "name": "How is Tailio different from municipal portals?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Tailio is 60 seconds vs 2-4 weeks on municipal portals, works on your phone, provides digital certificates, automatic renewal reminders, and vaccination tracking — all for just ₹299."
+                    "text": "Tailio is 60 seconds vs 2-4 weeks on municipal portals, works on your phone, provides digital certificates, automatic renewal reminders, and vaccination tracking — all for just ₹999."
                   }
                 },
                 {
@@ -160,7 +160,7 @@ export default function WhyTailioSection() {
                   "name": "How much does pet registration cost on Tailio?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Tailio's launch offer is ₹299 one-time, all-inclusive. This covers the municipal filing fee and your official digital certificate."
+                    "text": "Tailio's launch offer is ₹999 one-time, all-inclusive. This covers the municipal filing fee and your official digital certificate."
                   }
                 },
                 {
@@ -335,9 +335,9 @@ export default function WhyTailioSection() {
                     e.currentTarget.style.transform = 'scale(1)';
                     e.currentTarget.style.background = '#E8600A';
                   }}
-                  aria-label="Register your pet now for ₹299"
+                  aria-label="Register your pet now for ₹999"
                 >
-                  <span style={{ color: 'white', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 600 }}>Register Your Pet — ₹299</span>
+                  <span style={{ color: 'white', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 600 }}>Register Your Pet — ₹999</span>
                   <span style={{ color: 'white', fontSize: 17.3, fontFamily: 'Fraunces', fontStyle: 'italic', fontWeight: 700 }}>→</span>
                 </button>
                 <button 
@@ -570,7 +570,7 @@ export default function WhyTailioSection() {
                     { label: "Renewal reminders", sub: "WhatsApp, SMS & email", tailio: "✓", portal: "✗" },
                     { label: "Vaccination tracker", sub: "Schedule, record, share with vets", tailio: "✓", portal: "✗" },
                     { label: "Legal pet profile", sub: "Proof of ownership on record", tailio: "✓", portal: "✗" },
-                    { label: "Registration cost", sub: "No surprises", tailio: "₹299", portal: "₹100–500 + effort" },
+                    { label: "Registration cost", sub: "No surprises", tailio: "₹999", portal: "₹100–500 + effort" },
                     { label: "If you wait, the fine is…", sub: "Municipal enforcement active now", tailio: "None", portal: "₹10,000+" }
                   ].map((row, idx) => (
                     <tr key={idx} style={{ borderBottom: idx < 7 ? '1px solid rgba(44, 26, 14, 0.10)' : 'none' }}>
@@ -979,9 +979,9 @@ export default function WhyTailioSection() {
                   e.currentTarget.style.transform = 'scale(1)';
                   e.currentTarget.style.background = 'white';
                 }}
-                aria-label="Register your pet now for ₹299"
+                aria-label="Register your pet now for ₹999"
               >
-                <span style={{ color: '#C04E06', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 700 }}>Register Your Pet — ₹299 →</span>
+                <span style={{ color: '#C04E06', fontSize: 15, fontFamily: 'DM Sans', fontWeight: 700 }}>Register Your Pet — ₹999 →</span>
               </button>
               <button 
                 style={{

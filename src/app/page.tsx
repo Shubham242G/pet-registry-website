@@ -302,7 +302,7 @@ export default function HomePage() {
                 },
                 "offers": {
                   "@type": "Offer",
-                  "price": "299",
+                  "price": "999",
                   "priceCurrency": "INR",
                   "priceValidUntil": "2027-12-31",
                   "availability": "https://schema.org/InStock"
@@ -758,7 +758,7 @@ export default function HomePage() {
                   </div>
                   
                   <div style={{ marginTop: 19.2 }}>
-                    <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'Inter', fontWeight: 400, lineHeight: '20.80px' }}>No hidden charges, no surprise fees. ₹299 covers your complete pet registration filing, certificate, and everything in between. Municipal fees are collected directly by the authority.</span>
+                    <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontFamily: 'Inter', fontWeight: 400, lineHeight: '20.80px' }}>No hidden charges, no surprise fees. ₹999 covers your complete pet registration filing, certificate, and everything in between. Municipal fees are collected directly by the authority.</span>
                   </div>
                 </div>
                 
@@ -890,7 +890,7 @@ export default function HomePage() {
                         e.currentTarget.style.textShadow = 'none';
                         e.currentTarget.style.transform = 'scale(1)';
                       }}>
-                        299
+                        999
                       </span>
                       <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: getResponsiveFontSize(60, 48, 36), fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1', paddingBottom: 6 }}>/—</span>
                     </div>
@@ -972,7 +972,7 @@ export default function HomePage() {
                       e.currentTarget.style.boxShadow = 'none';
                     }}
                   >
-                    Register Your Pet — ₹299 →
+                    Register Your Pet — ₹999 →
                   </button>
                   
                   <div style={{ display: 'flex', gap: 20, marginBottom: 18, flexWrap: 'wrap' }}>
