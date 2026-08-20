@@ -469,7 +469,7 @@ export default function FaridabadPage() {
               <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest mb-2">The Law · Faridabad</div>
               <h2 className="text-3xl md:text-4xl font-black text-[#2C1A0E] leading-tight mb-4">
                 Pet registration is mandatory
-                <br/>in <span className="text-[#E8600A] italic">Faridabad.</span>
+                <br/>in <span className="text-[#E8600A] italic">Faridabad</span>
               </h2>
               <p className="text-[#7A5C40] text-base leading-relaxed mb-6">
                 Under the Haryana Municipal Corporation Act and local bylaws, Municipal Corporation Faridabad (MCF) requires all pet dogs to be registered. Pet owners must comply or face penalties.

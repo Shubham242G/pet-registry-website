@@ -469,7 +469,7 @@ export default function DelhiPage() {
             <div>
               <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest mb-2">The Law · Delhi</div>
               <h2 className="text-3xl md:text-4xl font-black text-[#2C1A0E] leading-tight mb-4">
-                Pet registration isn't optional<br/>in <span className="text-[#E8600A] italic">Delhi.</span>
+                Pet registration isn't optional<br/>in <span className="text-[#E8600A] italic">Delhi</span>
               </h2>
               <p className="text-[#7A5C40] text-base leading-relaxed mb-6">
                 The Supreme Court of India's August 2025 order directed MCD to enforce mandatory registration for all pet animals across Delhi. Fines start at ₹500 and escalate with every enforcement drive.

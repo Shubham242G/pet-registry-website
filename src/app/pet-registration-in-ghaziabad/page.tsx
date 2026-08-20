@@ -476,7 +476,7 @@ export default function GhaziabadPage() {
             <div>
               <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest mb-2">The Law · Ghaziabad</div>
               <h2 className="text-3xl md:text-4xl font-black text-[#2C1A0E] leading-tight mb-4">
-                Pet registration isn't optional<br/>in <span className="text-[#E8600A] italic">Ghaziabad.</span>
+                Pet registration isn't optional<br/>in <span className="text-[#E8600A] italic">Ghaziabad</span>
               </h2>
               <p className="text-[#7A5C40] text-base leading-relaxed mb-6">
                 GMC has actively raised its registration fee and is enforcing compliance under the Supreme Court's August 2025 order. Fines of ₹5,000 are issued for non-compliance and escalate with each drive.

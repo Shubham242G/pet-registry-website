@@ -457,7 +457,7 @@ export default function NoidaPage() {
                 marginTop: '0.5rem'
               }}>
                 Pet registration
-                <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Noida.</span>
+                <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Noida</span>
               </h1>
 
               {/* Description */}

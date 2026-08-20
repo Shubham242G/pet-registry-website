@@ -359,7 +359,7 @@ export default function GurugramPage() {
         marginTop: '0.5rem'
       }}>
         Pet registration
-        <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Gurugram.</span>
+        <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Gurugram</span>
       </h1>
 
       {/* Description */}
