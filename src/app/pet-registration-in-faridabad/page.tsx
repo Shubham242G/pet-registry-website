@@ -314,7 +314,7 @@ export default function FaridabadPage() {
                   "name": "Is pet registration mandatory in Faridabad?",
                   "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes. Municipal Corporation Faridabad (MCF) requires all pet dogs to be registered. Pet owners must comply with the Haryana Municipal Corporation Act and local bylaws."
+                    "text": "Yes. Municipal Corporation Faridabad (MCF) requires all pet dogs to be registered under the Haryana Municipal Corporation Act and local bylaws. Pet owners must comply or face penalties."
                   }
                 },
                 {
@@ -402,17 +402,17 @@ export default function FaridabadPage() {
             </div>
 
             <h1 style={{
-  color: '#2C1A0E',
-  fontSize: getResponsiveFontSize(64, 48, 32),
-  fontFamily: F.fraunces,
-  fontWeight: 900,
-  lineHeight: 1.2,
-  whiteSpace: isMobile ? 'normal' : 'nowrap',
-  marginBottom: '1rem'
-}}>
-  Pet registration
-  <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Faridabad</span>
-</h1>
+              color: '#2C1A0E',
+              fontSize: getResponsiveFontSize(64, 48, 32),
+              fontFamily: F.fraunces,
+              fontWeight: 900,
+              lineHeight: 1.2,
+              whiteSpace: isMobile ? 'normal' : 'nowrap',
+              marginBottom: '1rem'
+            }}>
+              Pet registration
+              <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Faridabad</span>
+            </h1>
 
             <p className="text-[#7A5C40] text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
               Municipal Corporation Faridabad (MCF) requires pet registration. Tailio files directly with MCF on your behalf — done in 60 seconds from your phone.

@@ -248,18 +248,18 @@ export default function HomePage() {
           name="keywords" 
           content="pet registration india, online pet registration, dog registration, cat registration, pet certificate india, tailio, pet registration delhi ncr, pet compliance, municipal pet registration" 
         />
-        <link rel="canonical" href="https://tailio.com" />
+        <link rel="canonical" href="https://tailio.in" />
         <meta name="robots" content="index, follow" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://tailio.com" />
+        <meta property="og:url" content="https://tailio.in" />
         <meta property="og:title" content="Register Your Pet Online in India | Tailio Pet Registration" />
         <meta 
           property="og:description" 
           content="Register your pet online with Tailio quickly and securely. Easy online pet registration for dogs, cats, and other pets across India with simple documentation support." 
         />
-        <meta property="og:image" content="https://tailio.com/images/og-home.jpg" />
+        <meta property="og:image" content="https://tailio.in/images/og-home.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="Tailio" />
@@ -267,13 +267,13 @@ export default function HomePage() {
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://tailio.com" />
+        <meta name="twitter:url" content="https://tailio.in" />
         <meta name="twitter:title" content="Register Your Pet Online in India | Tailio Pet Registration" />
         <meta 
           name="twitter:description" 
           content="Register your pet online with Tailio quickly and securely. Easy online pet registration for dogs, cats, and other pets across India with simple documentation support." 
         />
-        <meta name="twitter:image" content="https://tailio.com/images/og-home.jpg" />
+        <meta name="twitter:image" content="https://tailio.in/images/og-home.jpg" />
         
         {/* Additional SEO */}
         <meta name="author" content="Tailio" />
@@ -287,9 +287,9 @@ export default function HomePage() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebPage",
-              "name": "Register Your Pet Online in India | Tailio Pet Registration",
+              "name": "Dog Registration in Delhi Ncr| By Tailio ",
               "description": "Register your pet online with Tailio quickly and securely. Easy online pet registration for dogs, cats, and other pets across India with simple documentation support.",
-              "url": "https://tailio.com",
+              "url": "https://tailio.in",
               "about": {
                 "@type": "Service",
                 "name": "Pet Registration Service",
@@ -328,7 +328,7 @@ export default function HomePage() {
                   "@type": "ListItem",
                   "position": 1,
                   "name": "Home",
-                  "item": "https://tailio.com"
+                  "item": "https://tailio.in"
                 }
               ]
             })
