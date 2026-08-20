@@ -61,7 +61,35 @@ function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
   );
 }
 
-// ─── FAQ Item Component ───────────────────────────────────────────────────
+// ─── FAQ Data ─────────────────────────────────────────────────────────────
+const faqData = [
+  {
+    q: 'Is pet registration really mandatory in Delhi?',
+    a: "Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed MCD (Municipal Corporation of Delhi) to enforce mandatory pet registration across Delhi. The Supreme Court of India's August 2025 order directed MCD to enforce mandatory registration for all pet animals across Delhi. Fines start at ₹500 and escalate with every enforcement drive."
+  },
+  {
+    q: "Is Tailio's registration legally valid in Delhi?",
+    a: 'Yes, Tailio is an authorized platform that files directly with MCD. Your certificate is officially issued by the municipal corporation and is fully valid.'
+  },
+  {
+    q: 'What is the fine for not registering in Delhi?',
+    a: 'The fine for non-compliance starts at ₹500 and escalates with every MCD enforcement drive. Pet owners can also face pet seizure by municipal authorities.'
+  },
+  {
+    q: 'What documents do I need to register?',
+    a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.'
+  },
+  {
+    q: 'How much does registration cost on Tailio?',
+    a: 'Registration costs ₹999 one-time, all-inclusive. This includes the MCD filing fee and your official digital certificate.'
+  },
+  {
+    q: 'How long does it take to get the certificate?',
+    a: 'Your official digital certificate arrives by email within 24–72 hours after submission.'
+  },
+];
+
+// ─── FAQ Item Component (Interactive) ──────────────────────────────────
 function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
@@ -139,6 +167,29 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
         </div>
       )}
     </div>
+  );
+}
+
+// ─── Static FAQ Section (For SEO - always visible) ─────────────────────
+function StaticFAQSection() {
+  return (
+    <section className="py-20 px-4 max-w-3xl mx-auto">
+      <div className="text-center mb-12">
+        <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Common Questions</div>
+        <h2 className="text-3xl md:text-4xl font-black text-[#2C1A0E] leading-tight mt-2">
+          Everything about Delhi
+          <span className="text-[#E8600A] italic block">registration.</span>
+        </h2>
+      </div>
+      <div className="space-y-3">
+        {faqData.map((faq, i) => (
+          <div key={i} className="bg-white rounded-xl border border-[#2C1A0E]/10 p-5 shadow-sm">
+            <div className="text-[#2C1A0E] font-semibold text-sm md:text-base">{faq.q}</div>
+            <div className="text-[#7A5C40] text-sm mt-2 leading-relaxed">{faq.a}</div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -309,56 +360,14 @@ export default function DelhiPage() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Is pet registration really mandatory in Delhi?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed MCD to enforce mandatory pet registration across Delhi. Fines start at ₹500 and escalate with every enforcement drive."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Is Tailio's registration legally valid in Delhi?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, Tailio is an authorized platform that files directly with MCD. Your certificate is officially issued by the municipal corporation and is fully valid."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What is the fine for not registering in Delhi?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "The fine for non-compliance starts at ₹500 and escalates with every MCD enforcement drive. Pet owners can also face pet seizure by municipal authorities."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What documents do I need to register my pet in Delhi?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "You need four documents: Anti-Rabies Vaccination Certificate, Applicant ID Proof (Aadhaar, PAN, Passport or Voter ID), Address Proof for Delhi, and a recent photo with your pet."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How much does pet registration cost in Delhi on Tailio?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Registration costs ₹999 one-time, all-inclusive. This includes the MCD filing fee and your official digital certificate. Regular price is ₹1,999."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How long does it take to get the MCD certificate in Delhi?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Your official digital certificate arrives by email within 24–72 hours after submission through Tailio."
-                  }
+              "mainEntity": faqData.map(faq => ({
+                "@type": "Question",
+                "name": faq.q,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": faq.a
                 }
-              ]
+              }))
             })
           }}
         />
@@ -860,7 +869,10 @@ export default function DelhiPage() {
           </div>
         </section>
 
-        {/* FAQ */}
+        {/* ✅ Static FAQ Section (For SEO - always visible) */}
+        <StaticFAQSection />
+
+        {/* ✅ Interactive FAQ Section (For UX - toggle) */}
         <section className="py-20 px-4 max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Common Questions</div>
@@ -870,14 +882,7 @@ export default function DelhiPage() {
             </h2>
           </div>
           <div className="space-y-3">
-            {[
-              { q: 'Is pet registration really mandatory in Delhi?', a: "Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed MCD (Municipal Corporation of Delhi) to enforce mandatory pet registration across Delhi. The Supreme Court of India's August 2025 order directed MCD to enforce mandatory registration for all pet animals across Delhi. Fines start at ₹500 and escalate with every enforcement drive." },
-              { q: "Is Tailio's registration legally valid in Delhi?", a: 'Yes, Tailio is an authorized platform that files directly with MCD. Your certificate is officially issued by the municipal corporation and is fully valid.' },
-              { q: 'What is the fine for not registering in Delhi?', a: 'The fine for non-compliance starts at ₹500 and escalates with every MCD enforcement drive. Pet owners can also face pet seizure by municipal authorities.' },
-              { q: 'What documents do I need to register?', a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.' },
-              { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the MCD filing fee and your official digital certificate.' },
-              { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
-            ].map((faq, i) => (
+            {faqData.map((faq, i) => (
               <FaqItem key={i} question={faq.q} answer={faq.a} />
             ))}
           </div>
