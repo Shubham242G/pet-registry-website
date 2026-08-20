@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Footer from "../component/Footer";
 import RegisterModal from "../component/RegisterModal";
 import LoginModal from "../component/LoginModal";
-import Image from 'next/image';
 import Head from 'next/head';
+import FAQSchema from '../component/FAQSchema';
 
 const F = {
   fraunces: "'Fraunces', Georgia, serif",
@@ -89,7 +89,7 @@ const faqData = [
   },
 ];
 
-// ─── FAQ Item Component (Interactive) ──────────────────────────────────
+// ─── FAQ Item Component ───────────────────────────────────────────────────
 function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
@@ -167,29 +167,6 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
         </div>
       )}
     </div>
-  );
-}
-
-// ─── Static FAQ Section (For SEO - always visible) ─────────────────────
-function StaticFAQSection() {
-  return (
-    <section className="py-20 px-4 max-w-3xl mx-auto">
-      <div className="text-center mb-12">
-        <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Common Questions</div>
-        <h2 className="text-3xl md:text-4xl font-black text-[#2C1A0E] leading-tight mt-2">
-          Everything about Delhi
-          <span className="text-[#E8600A] italic block">registration.</span>
-        </h2>
-      </div>
-      <div className="space-y-3">
-        {faqData.map((faq, i) => (
-          <div key={i} className="bg-white rounded-xl border border-[#2C1A0E]/10 p-5 shadow-sm">
-            <div className="text-[#2C1A0E] font-semibold text-sm md:text-base">{faq.q}</div>
-            <div className="text-[#7A5C40] text-sm mt-2 leading-relaxed">{faq.a}</div>
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -353,25 +330,6 @@ export default function DelhiPage() {
           }}
         />
         
-        {/* FAQ Schema for Delhi-specific FAQs */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": faqData.map(faq => ({
-                "@type": "Question",
-                "name": faq.q,
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": faq.a
-                }
-              }))
-            })
-          }}
-        />
-        
         {/* Breadcrumb Schema */}
         <script
           type="application/ld+json"
@@ -399,6 +357,9 @@ export default function DelhiPage() {
       </Head>
 
       <main className="min-h-screen bg-[#FAF6EF]">
+        {/* ✅ FAQ Schema - Pass the FAQ data as prop */}
+        <FAQSchema faqs={faqData} />
+
         {/* Hero Section */}
         <section className="relative overflow-hidden pt-20 pb-12 px-4">
           <div className="absolute inset-0 bg-gradient-to-b from-[#E8600A]/[0.07] to-transparent" />
@@ -869,10 +830,7 @@ export default function DelhiPage() {
           </div>
         </section>
 
-        {/* ✅ Static FAQ Section (For SEO - always visible) */}
-        <StaticFAQSection />
-
-        {/* ✅ Interactive FAQ Section (For UX - toggle) */}
+        {/* FAQ Section */}
         <section className="py-20 px-4 max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Common Questions</div>
