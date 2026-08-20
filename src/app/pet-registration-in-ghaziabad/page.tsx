@@ -409,10 +409,18 @@ export default function GhaziabadPage() {
               <span className="text-[#C04E06] text-sm font-medium">GMC · Ghaziabad · Registration Live</span>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-[#2C1A0E] leading-tight mb-4">
-              Pet registration
-              <span className="text-[#E8600A] italic block sm:inline"> in Ghaziabad.</span>
-            </h1>
+            <h1 style={{
+  color: '#2C1A0E',
+  fontSize: getResponsiveFontSize(64, 48, 32),
+  fontFamily: F.fraunces,
+  fontWeight: 900,
+  lineHeight: 1.2,
+  whiteSpace: isMobile ? 'normal' : 'nowrap',
+  marginBottom: '1rem'
+}}>
+  Pet registration
+  <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Ghaziabad</span>
+</h1>
 
             <p className="text-[#7A5C40] text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
               GMC raised its registration fee from ₹200 to ₹1,000 in April 2024 — enforcement is ramping up. Fines reach ₹5,000 for non-compliance. Tailio handles the GMC filing for ₹999 all-inclusive.

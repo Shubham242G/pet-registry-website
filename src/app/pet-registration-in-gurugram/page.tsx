@@ -304,184 +304,138 @@ export default function GurugramPage() {
             HERO SECTION
         ══════════════════════════════════════ */}
         <div style={{
-          background: '#FAF6EF',
-          width: '100%',
-          position: 'relative',
-          minHeight: isMobile ? 500 : 600,
-          overflow: 'hidden'
-        }}>
-          {/* Background Image */}
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 0
-          }}>
-            <Image
-              src="/images/coffe-bean-print.png"
-              alt="Background pattern"
-              fill
-              style={{
-                objectFit: 'cover',
-                objectPosition: 'center',
-                imageRendering: 'auto',
-                opacity: 0.3,
-              }}
-              priority
-              quality={100}
-              sizes="100vw"
-            />
-          </div>
+  background: '#FAF6EF',
+  width: '100%',
+  position: 'relative',
+  minHeight: isMobile ? 500 : 600,
+  overflow: 'hidden'
+}}>
+  {/* Hero Content */}
+  <div style={{
+    position: 'relative',
+    zIndex: 3,
+    maxWidth: 1200,
+    margin: '0 auto',
+    padding: isMobile ? '40px 20px' : '60px 40px 80px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center'
+  }}>
+    <div style={{
+      maxWidth: 820,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 14.9,
+      alignItems: 'center'
+    }}>
+      {/* Badge */}
+      <div style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '7px 16px',
+        background: '#2C1A0E',
+        borderRadius: 100,
+        gap: 8,
+        flexWrap: 'wrap',
+        boxShadow: '0px 4px 12px rgba(0,0,0,0.15)'
+      }}>
+        <span style={{ color: 'rgba(255,243,224,0.85)', fontSize: getResponsiveFontSize(11.5, 10, 9), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '17.25px' }}>
+          MCG · Gurugram · Registration Live
+        </span>
+      </div>
 
-          {/* Overlay */}
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(135deg, rgba(250, 246, 239, 0.92) 0%, rgba(250, 246, 239, 0.88) 100%)',
-            zIndex: 1,
-          }} />
+      {/* Heading - Matches Ghaziabad/Home page */}
+      <h1 style={{
+        color: '#2C1A0E',
+        fontSize: getResponsiveFontSize(64, 48, 32),
+        fontFamily: F.fraunces,
+        fontWeight: 900,
+        lineHeight: 1.2,
+        whiteSpace: isMobile ? 'normal' : 'nowrap',
+        marginBottom: '0.5rem',
+        marginTop: '0.5rem'
+      }}>
+        Pet registration
+        <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Gurugram.</span>
+      </h1>
 
-          {/* Hero Content */}
-          <div style={{
-            position: 'relative',
-            zIndex: 3,
-            maxWidth: 1200,
-            margin: '0 auto',
-            padding: isMobile ? '40px 20px' : '60px 40px 80px',
+      {/* Description */}
+      <p style={{
+        maxWidth: 580,
+        color: '#7A5C40',
+        fontSize: getResponsiveFontSize(14.5, 13, 12),
+        fontFamily: F.dmSans,
+        lineHeight: '23.93px',
+        margin: '0 auto',
+        textAlign: 'center'
+      }}>
+        MCG is preparing its enforcement framework. Register now while it's still straightforward — before fines are formally set and before your society RWA issues notices. Tailio files directly with MCG in 60 seconds.
+      </p>
+
+      {/* Feature Tags */}
+      <div style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 8,
+        justifyContent: 'center',
+        marginTop: 8,
+        marginBottom: 8
+      }}>
+        {['₹999 one-time, all-inclusive', 'Certificate in 24–72 hrs', 'MCG accepted', 'No office visit needed'].map((text) => (
+          <div key={text} style={{
             display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
             alignItems: 'center',
-            justifyContent: 'center',
-            gap: isMobile ? 40 : 77
+            gap: 6,
+            background: 'white',
+            borderRadius: 100,
+            padding: '6px 14px',
+            border: '1px solid rgba(44,26,14,0.12)',
+            boxShadow: '0px 2px 4px rgba(0,0,0,0.04)'
           }}>
-            <div style={{
-              width: isMobile ? '100%' : 652,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 14.9,
-              textAlign: isMobile ? 'center' : 'left',
-              alignItems: isMobile ? 'center' : 'flex-start'
-            }}>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '7px 16px',
-                background: '#2C1A0E',
-                borderRadius: 100,
-                gap: 8,
-                alignSelf: isMobile ? 'center' : 'flex-start',
-                flexWrap: 'wrap',
-                boxShadow: '0px 4px 12px rgba(0,0,0,0.15)'
-              }}>
-                <span style={{ color: 'rgba(255,243,224,0.85)', fontSize: getResponsiveFontSize(11.5, 10, 9), fontFamily: F.dmSans, fontWeight: 500, lineHeight: '17.25px' }}>
-                  MCG · Gurugram · Registration Live
-                </span>
-              </div>
-
-              <div style={{ paddingTop: 5.1, textAlign: isMobile ? 'center' : 'left' }}>
-                <div style={{
-                  color: '#2C1A0E',
-                  fontSize: getResponsiveFontSize(64, 48, 32),
-                  fontFamily: F.fraunces,
-                  fontWeight: 900,
-                  lineHeight: 1.2,
-                }}>
-                  Pet registration
-                </div>
-                <div style={{
-                  fontSize: getResponsiveFontSize(64, 48, 32),
-                  fontFamily: F.fraunces,
-                  lineHeight: 1.2,
-                }}>
-                  <span style={{ color: '#E8600A', fontStyle: 'italic', fontWeight: 700 }}>in Gurugram.</span>
-                </div>
-              </div>
-
-              <p style={{
-                maxWidth: isMobile ? '100%' : 480,
-                color: '#7A5C40',
-                fontSize: getResponsiveFontSize(14.5, 13, 12),
-                fontFamily: F.dmSans,
-                lineHeight: '23.93px',
-                margin: 0,
-                textAlign: isMobile ? 'center' : 'left'
-              }}>
-                MCG is preparing its enforcement framework. Register now while it's still straightforward — before fines are formally set and before your society RWA issues notices. Tailio files directly with MCG in 60 seconds.
-              </p>
-
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 8,
-                justifyContent: isMobile ? 'center' : 'flex-start',
-                marginTop: 8,
-                marginBottom: 16
-              }}>
-                {['₹999 one-time, all-inclusive', 'Certificate in 24–72 hrs', 'MCG accepted', 'No office visit needed'].map((text) => (
-                  <div key={text} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    background: 'white',
-                    borderRadius: 100,
-                    padding: '6px 14px',
-                    border: '1px solid rgba(44,26,14,0.12)',
-                    boxShadow: '0px 2px 4px rgba(0,0,0,0.04)'
-                  }}>
-                    <div style={{ width: 6, height: 6, background: '#E8600A', borderRadius: 3 }} />
-                    <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(11, 10, 9), fontWeight: 500 }}>{text}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div style={{
-                display: 'flex',
-                gap: 12,
-                flexWrap: 'wrap',
-                paddingTop: 9.1,
-                justifyContent: isMobile ? 'center' : 'flex-start'
-              }}>
-                <button 
-                  onClick={handleOpenRegisterModal} 
-                  style={{
-                    padding: isMobile ? '11px 20px' : '13px 26px',
-                    background: '#E8600A',
-                    boxShadow: '0px 2px 0px #C04E06',
-                    borderRadius: 9,
-                    outline: '2px #C04E06 solid',
-                    outlineOffset: -2,
-                    color: '#FFFFFF',
-                    fontSize: getResponsiveFontSize(15, 14, 13),
-                    fontFamily: F.dmSans,
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    cursor: 'pointer',
-                    border: 'none',
-                    transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                  }}
-                  onMouseEnter={handleHeroCtaEnter}
-                  onMouseLeave={handleHeroCtaLeave}
-                >
-                  Register Your Pet — ₹999 →
-                </button>
-              </div>
-            </div>
-
-            {!isMobile && (
-              <div style={{ position: 'relative', width: 580, height: 580, flexShrink: 0 }}>
-                <Image
-                  src="/images/homeBanner.png"
-                  alt="Happy pet owner with their dog - responsible pet registration made simple with Tailio"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                  priority
-                />
-              </div>
-            )}
+            <div style={{ width: 6, height: 6, background: '#E8600A', borderRadius: 3 }} />
+            <span style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(11, 10, 9), fontWeight: 500 }}>{text}</span>
           </div>
-        </div>
+        ))}
+      </div>
+
+      {/* CTA Button */}
+      <div style={{
+        display: 'flex',
+        gap: 12,
+        flexWrap: 'wrap',
+        paddingTop: 9.1,
+        justifyContent: 'center'
+      }}>
+        <button 
+          onClick={handleOpenRegisterModal} 
+          style={{
+            padding: isMobile ? '11px 20px' : '13px 26px',
+            background: '#E8600A',
+            boxShadow: '0px 2px 0px #C04E06',
+            borderRadius: 9,
+            outline: '2px #C04E06 solid',
+            outlineOffset: -2,
+            color: '#FFFFFF',
+            fontSize: getResponsiveFontSize(15, 14, 13),
+            fontFamily: F.dmSans,
+            fontWeight: 600,
+            textDecoration: 'none',
+            cursor: 'pointer',
+            border: 'none',
+            transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          }}
+          onMouseEnter={handleHeroCtaEnter}
+          onMouseLeave={handleHeroCtaLeave}
+        >
+          Register Your Pet — ₹999 →
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
         {/* ══════════════════════════════════════
             STATS BAR
