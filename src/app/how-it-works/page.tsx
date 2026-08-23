@@ -881,9 +881,6 @@ export default function LandingPage() {
                       <span style={{ color: 'white', fontSize: 88, fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1' }}>299</span>
                       <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 60, fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1', paddingBottom: 6 }}>/—</span>
                     </div>
-                    <div style={{ marginTop: 8 }}>
-                      <span style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600 }}>+ Municipal fees (as applicable)</span>
-                    </div>
                     <div style={{ marginTop: 4 }}>
                       <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter', textDecoration: 'line-through' }}>Regular price ₹1999</span>
                     </div>
