@@ -255,18 +255,18 @@ export default function DelhiPage() {
           name="keywords" 
           content="Delhi pet registration, MCD pet registration, MCD dog registration, pet registration Delhi, dog registration Delhi, municipal corporation Delhi pet registration, pet registration MCD online, pet certificate Delhi, pet compliance Delhi, pet registration law Delhi, ABC rules Delhi, Supreme Court pet registration Delhi" 
         />
-        <link rel="canonical" href="https://tailio.com/delhi" />
+        <link rel="canonical" href="https://tailio.in/pet-registration-in-delhi" />
         <meta name="robots" content="index, follow" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://tailio.com/delhi" />
+        <meta property="og:url" content="https://tailio.in/pet-registration-in-delhi" />
         <meta property="og:title" content="Delhi Pet Registration | MCD Pet Registration Online | Tailio" />
         <meta 
           property="og:description" 
           content="Register your pet with MCD Delhi in under 60 seconds. Tailio files directly with Municipal Corporation of Delhi. Get your official pet registration certificate in 24-72 hours." 
         />
-        <meta property="og:image" content="https://tailio.com/images/og-delhi.jpg" />
+        <meta property="og:image" content="https://tailio.in/images/og-delhi.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="Tailio" />
@@ -274,13 +274,13 @@ export default function DelhiPage() {
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://tailio.com/delhi" />
+        <meta name="twitter:url" content="https://tailio.in/pet-registration-in-delhi" />
         <meta name="twitter:title" content="Delhi Pet Registration | MCD Pet Registration Online | Tailio" />
         <meta 
           name="twitter:description" 
           content="Register your pet with MCD Delhi in under 60 seconds. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
         />
-        <meta name="twitter:image" content="https://tailio.com/images/og-delhi.jpg" />
+        <meta name="twitter:image" content="https://tailio.in/images/og-delhi.jpg" />
         
         {/* Additional SEO */}
         <meta name="author" content="Tailio" />
@@ -296,12 +296,12 @@ export default function DelhiPage() {
               "@type": "WebPage",
               "name": "Delhi Pet Registration with MCD",
               "description": "Complete guide to pet registration in Delhi. Register your pet with MCD through Tailio in under 60 seconds.",
-              "url": "https://tailio.com/delhi",
+              "url": "https://tailio.in/pet-registration-in-delhi",
               "mainEntity": {
                 "@type": "LocalBusiness",
                 "name": "Tailio - Delhi Pet Registration",
                 "description": "Digital pet registration service for Delhi residents. File directly with MCD.",
-                "url": "https://tailio.com/delhi",
+                "url": "https://tailio.in/pet-registration-in-delhi",
                 "address": {
                   "@type": "PostalAddress",
                   "addressLocality": "Delhi",
@@ -343,13 +343,13 @@ export default function DelhiPage() {
                   "@type": "ListItem",
                   "position": 1,
                   "name": "Home",
-                  "item": "https://tailio.com"
+                  "item": "https://tailio.in"
                 },
                 {
                   "@type": "ListItem",
                   "position": 2,
                   "name": "Delhi Pet Registration",
-                  "item": "https://tailio.com/delhi"
+                  "item": "https://tailio.in/pet-registration-in-delhi"
                 }
               ]
             })
