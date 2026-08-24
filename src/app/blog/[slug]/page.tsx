@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Footer from '../../component/Footer';
 import { Calendar, Clock, ArrowLeft, Share2, MessageSquare } from 'lucide-react';
+import FAQComponent from '../../component/FAQ';
 
 const F = {
   fraunces: 'Fraunces, Georgia, serif',
@@ -115,56 +116,56 @@ export default function BlogDetailPage() {
   };
 
   const renderContent = (content: string) => {
-  if (!content) return '';
-  
-  // Ensure content is a string
-  if (typeof content !== 'string') {
-    console.warn('Content is not a string, converting...');
-    return String(content);
-  }
-  
-  // If no gallery, return content as-is
-  if (!blog?.images?.gallery || blog.images.gallery.length === 0) {
-    return content;
-  }
-
-  // Safety: If content is too large, don't process replacements
-  // This prevents the "Invalid string length" error
-  if (content.length > 500000) { // 500KB limit
-    console.warn('Content too large for replacement, skipping gallery image processing');
-    return content;
-  }
-
-  let rendered = content;
-  
-  // Use a safer approach - process replacements one at a time
-  // and add a safety counter to prevent infinite loops
-  let safetyCounter = 0;
-  const maxIterations = 1000;
-  
-  // Process each gallery image
-  for (let index = 0; index < blog.images.gallery.length; index++) {
-    const img = blog.images.gallery[index];
-    const placeholder = `[image:${index}]`;
-    const imageHtml = `<img src="${img}" alt="Gallery image ${index + 1}" style="max-width:100%; border-radius:12px; margin: 16px 0;" />`;
+    if (!content) return '';
     
-    // Only replace if placeholder exists
-    if (rendered.includes(placeholder)) {
-      // Use a while loop with a counter to prevent infinite loops
-      while (rendered.includes(placeholder) && safetyCounter < maxIterations) {
-        rendered = rendered.replace(placeholder, imageHtml);
-        safetyCounter++;
-      }
+    // Ensure content is a string
+    if (typeof content !== 'string') {
+      console.warn('Content is not a string, converting...');
+      return String(content);
+    }
+    
+    // If no gallery, return content as-is
+    if (!blog?.images?.gallery || blog.images.gallery.length === 0) {
+      return content;
+    }
+
+    // Safety: If content is too large, don't process replacements
+    // This prevents the "Invalid string length" error
+    if (content.length > 500000) { // 500KB limit
+      console.warn('Content too large for replacement, skipping gallery image processing');
+      return content;
+    }
+
+    let rendered = content;
+    
+    // Use a safer approach - process replacements one at a time
+    // and add a safety counter to prevent infinite loops
+    let safetyCounter = 0;
+    const maxIterations = 1000;
+    
+    // Process each gallery image
+    for (let index = 0; index < blog.images.gallery.length; index++) {
+      const img = blog.images.gallery[index];
+      const placeholder = `[image:${index}]`;
+      const imageHtml = `<img src="${img}" alt="Gallery image ${index + 1}" style="max-width:100%; border-radius:12px; margin: 16px 0;" />`;
       
-      if (safetyCounter >= maxIterations) {
-        console.warn('Maximum replacements reached, stopping to prevent infinite loop');
-        break;
+      // Only replace if placeholder exists
+      if (rendered.includes(placeholder)) {
+        // Use a while loop with a counter to prevent infinite loops
+        while (rendered.includes(placeholder) && safetyCounter < maxIterations) {
+          rendered = rendered.replace(placeholder, imageHtml);
+          safetyCounter++;
+        }
+        
+        if (safetyCounter >= maxIterations) {
+          console.warn('Maximum replacements reached, stopping to prevent infinite loop');
+          break;
+        }
       }
     }
-  }
-  
-  return rendered;
-};
+    
+    return rendered;
+  };
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
@@ -378,7 +379,7 @@ export default function BlogDetailPage() {
           dangerouslySetInnerHTML={{ __html: renderContent(blog.content) }}
         />
 
-        {/* FAQs Section */}
+        {/* Blog FAQs Section */}
         {blog.faqs && blog.faqs.length > 0 && (
           <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid rgba(44,26,14,0.08)' }}>
             <h2 style={{
@@ -425,6 +426,64 @@ export default function BlogDetailPage() {
             </div>
           </div>
         )}
+
+        {/* ── DYNAMIC FAQ SECTION ───────────────────────────────────────────── */}
+        <div style={{ 
+          marginTop: 48, 
+          paddingTop: 32, 
+          borderTop: '1px solid rgba(44,26,14,0.08)',
+          textAlign: 'center'
+        }}>
+          <div style={{ marginBottom: 24 }}>
+            <div style={{
+              display: 'inline-flex',
+              padding: '4px 14px',
+              background: '#FFF0E4',
+              borderRadius: 100,
+              marginBottom: 12
+            }}>
+              <span style={{
+                color: '#C04E06',
+                fontSize: 10,
+                fontFamily: F.dmMono,
+                fontWeight: 500,
+                textTransform: 'uppercase',
+                letterSpacing: '1.14px'
+              }}>
+                Related Questions
+              </span>
+            </div>
+            <h2 style={{
+              color: '#2C1A0E',
+              fontSize: isMobile ? 22 : 28,
+              fontFamily: F.fraunces,
+              fontWeight: 900,
+            }}>
+              More FAQs About Pet Registration
+            </h2>
+            <p style={{
+              color: '#7A5C40',
+              fontSize: isMobile ? 13 : 14,
+              fontFamily: F.dmSans,
+              marginTop: 8
+            }}>
+              Find answers to common questions about pet registration in India
+            </p>
+          </div>
+
+          {/* Dynamic FAQ Component - fetches from backend with pageId="blog" */}
+          <FAQComponent
+            pageId="blog"
+            title=""
+            subtitle=""
+            showSearch={true}
+            showCategories={true}
+            limit={10}
+            backgroundColor="transparent"
+            textColor="text-gray-900"
+            className="faq-blog-page"
+          />
+        </div>
 
         {/* Back to Blog Button */}
         <div style={{ marginTop: 48, paddingTop: 32, borderTop: '1px solid rgba(44,26,14,0.08)', textAlign: 'center' }}>

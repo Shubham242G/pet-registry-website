@@ -5,6 +5,7 @@ import Footer from "../component/Footer";
 import RegisterModal from "../component/RegisterModal";
 import LoginModal from "../component/LoginModal";
 import Head from 'next/head';
+import FAQComponent from '../component/FAQ';
 
 const F = {
   fraunces: "'Fraunces', Georgia, serif",
@@ -140,6 +141,16 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
     </div>
   );
 }
+
+// ─── Static FAQ Data ──────────────────────────────────────────────────────
+const noidaFAQs = [
+  { q: 'Is pet registration really mandatory in Noida?', a: 'Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed Noida Authority to enforce mandatory pet registration across Noida. Noida Authority has the most aggressive enforcement in NCR. Active fines of ₹10,000 have been issued and pet seizures reported across sectors since the Supreme Court\'s August 2025 order.' },
+  { q: "Is Tailio's registration legally valid in Noida?", a: 'Yes, Tailio is an authorized platform that files directly with Noida Authority. Your certificate is officially issued by the municipal corporation and is fully valid.' },
+  { q: 'What is the fine for not registering in Noida?', a: 'The fine for non-compliance is ₹10,000 — the highest in all of NCR. Pet owners can also face pet seizure by municipal authorities.' },
+  { q: 'What documents do I need to register?', a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.' },
+  { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the Noida Authority filing fee and your official digital certificate.' },
+  { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
+];
 
 export default function NoidaPage() {
   const [mounted, setMounted] = useState(false);
@@ -308,64 +319,14 @@ export default function NoidaPage() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Is pet registration really mandatory in Noida?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed Noida Authority to enforce mandatory pet registration across Noida. Noida Authority has the most aggressive enforcement in NCR with fines of ₹10,000."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Is Tailio's registration legally valid in Noida?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, Tailio is an authorized platform that files directly with Noida Authority. Your certificate is officially issued by the municipal corporation and is fully valid."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What is the fine for not registering in Noida?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "The fine for non-compliance is ₹10,000 — the highest in all of NCR. Pet owners can also face pet seizure by municipal authorities."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What documents do I need to register my pet in Noida?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "You need four documents: Anti-Rabies Vaccination Certificate, Applicant ID Proof (Aadhaar, PAN, Passport or Voter ID), Address Proof for Noida, and a recent photo with your pet."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How much does pet registration cost in Noida on Tailio?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Registration costs ₹999 one-time, all-inclusive. This includes the Noida Authority filing fee and your official digital certificate. Regular price is ₹1,999."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How long does it take to get the Noida Authority certificate?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Your official digital certificate arrives by email within 24–72 hours after submission through Tailio."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Is Noida Authority enforcing pet registration actively?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes. Noida Authority is the most active enforcer in NCR. Fines of ₹10,000 have been issued at society gates, parks and RWA drives — with pet seizures on record."
-                  }
+              "mainEntity": noidaFAQs.map(faq => ({
+                "@type": "Question",
+                "name": faq.q,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": faq.a
                 }
-              ]
+              }))
             })
           }}
         />
@@ -946,7 +907,7 @@ export default function NoidaPage() {
           </div>
         </section>
 
-        {/* FAQ */}
+        {/* ── DYNAMIC FAQ SECTION ───────────────────────────────────────────── */}
         <section className="py-20 px-4 max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Common Questions</div>
@@ -954,17 +915,28 @@ export default function NoidaPage() {
               Everything about Noida
               <span className="text-[#E8600A] italic block">registration.</span>
             </h2>
+            <p className="text-[#7A5C40] text-sm max-w-lg mx-auto mt-3">
+              Find answers to the most common questions about pet registration in Noida with Noida Authority.
+            </p>
           </div>
-          <div className="space-y-3">
-            {[
-              { q: 'Is pet registration really mandatory in Noida?', a: 'Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed Noida Authority to enforce mandatory pet registration across Noida. Noida Authority has the most aggressive enforcement in NCR. Active fines of ₹10,000 have been issued and pet seizures reported across sectors since the Supreme Court\'s August 2025 order.' },
-              { q: "Is Tailio's registration legally valid in Noida?", a: 'Yes, Tailio is an authorized platform that files directly with Noida Authority. Your certificate is officially issued by the municipal corporation and is fully valid.' },
-              { q: 'What is the fine for not registering in Noida?', a: 'The fine for non-compliance is ₹10,000 — the highest in all of NCR. Pet owners can also face pet seizure by municipal authorities.' },
-              { q: 'What documents do I need to register?', a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.' },
-              { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the Noida Authority filing fee and your official digital certificate.' },
-              { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
-            ].map((faq, i) => (
-              <FaqItem key={i} question={faq.q} answer={faq.a} />
+
+          {/* Dynamic FAQ Component - fetches from backend with pageId="noida" */}
+          <FAQComponent
+            pageId="noida"
+            title=""
+            subtitle=""
+            showSearch={true}
+            showCategories={true}
+            limit={20}
+            backgroundColor="transparent"
+            textColor="text-gray-900"
+            className="faq-noida-page"
+          />
+
+          {/* Static fallback FAQs (hidden - kept for Schema and fallback) */}
+          <div style={{ display: 'none' }}>
+            {noidaFAQs.map((faq, i) => (
+              <div key={i} dangerouslySetInnerHTML={{ __html: `Q: ${faq.q} A: ${faq.a}` }} />
             ))}
           </div>
         </section>

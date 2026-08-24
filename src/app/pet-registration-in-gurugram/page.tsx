@@ -8,6 +8,7 @@ import RegisterModal from "../component/RegisterModal";
 import Image from 'next/image';
 import Link from 'next/link';
 import Head from 'next/head';
+import FAQComponent from '../component/FAQ';
 
 const F = {
   fraunces: "'Fraunces', Georgia, serif",
@@ -143,6 +144,16 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
     </div>
   );
 }
+
+// ─── Static FAQ Data ──────────────────────────────────────────────────────
+const gurugramFAQs = [
+  { q: 'Is pet registration really mandatory in Gurugram?', a: 'Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed MCG (Municipal Corporation of Gurugram) to enforce mandatory pet registration across Gurugram. The Supreme Court\'s August 2025 order applies to Gurugram. MCG is preparing its enforcement framework. Registration is mandatory now — fines are expected to be among the highest in NCR once announced.' },
+  { q: "Is Tailio's registration legally valid in Gurugram?", a: 'Yes, Tailio is an authorized platform that files directly with MCG. Your certificate is officially issued by the municipal corporation and is fully valid.' },
+  { q: 'What is the fine for not registering in Gurugram?', a: 'Fines are pending announcement, but are expected to be among the highest in NCR once formally set. Register now to avoid penalties.' },
+  { q: 'What documents do I need to register?', a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.' },
+  { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the MCG filing fee and your official digital certificate.' },
+  { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
+];
 
 export default function GurugramPage() {
   const [mounted, setMounted] = useState(false);
@@ -293,6 +304,25 @@ export default function GurugramPage() {
                 "openingHours": "Mo-Su 09:00-21:00",
                 "serviceType": "Pet Registration"
               }
+            })
+          }}
+        />
+        
+        {/* FAQ Schema for Gurugram-specific FAQs */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": gurugramFAQs.map(faq => ({
+                "@type": "Question",
+                "name": faq.q,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": faq.a
+                }
+              }))
             })
           }}
         />
@@ -869,7 +899,7 @@ export default function GurugramPage() {
         </section>
 
         {/* ══════════════════════════════════════
-            FAQ
+            DYNAMIC FAQ SECTION
         ══════════════════════════════════════ */}
         <section className="py-20 px-4 max-w-3xl mx-auto">
           <div className="text-center mb-12">
@@ -878,17 +908,28 @@ export default function GurugramPage() {
               Everything about Gurugram
               <span className="text-[#E8600A] italic block">registration.</span>
             </h2>
+            <p className="text-[#7A5C40] text-sm max-w-lg mx-auto mt-3">
+              Find answers to the most common questions about pet registration in Gurugram with MCG.
+            </p>
           </div>
-          <div className="space-y-3">
-            {[
-              { q: 'Is pet registration really mandatory in Gurugram?', a: 'Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed MCG (Municipal Corporation of Gurugram) to enforce mandatory pet registration across Gurugram. The Supreme Court\'s August 2025 order applies to Gurugram. MCG is preparing its enforcement framework. Registration is mandatory now — fines are expected to be among the highest in NCR once announced.' },
-              { q: "Is Tailio's registration legally valid in Gurugram?", a: 'Yes, Tailio is an authorized platform that files directly with MCG. Your certificate is officially issued by the municipal corporation and is fully valid.' },
-              { q: 'What is the fine for not registering in Gurugram?', a: 'Fines are pending announcement, but are expected to be among the highest in NCR once formally set. Register now to avoid penalties.' },
-              { q: 'What documents do I need to register?', a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.' },
-              { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the MCG filing fee and your official digital certificate.' },
-              { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
-            ].map((faq, i) => (
-              <FaqItem key={i} question={faq.q} answer={faq.a} />
+
+          {/* Dynamic FAQ Component - fetches from backend with pageId="gurugram" */}
+          <FAQComponent
+            pageId="gurugram"
+            title=""
+            subtitle=""
+            showSearch={true}
+            showCategories={true}
+            limit={20}
+            backgroundColor="transparent"
+            textColor="text-gray-900"
+            className="faq-gurugram-page"
+          />
+
+          {/* Static fallback FAQs (hidden - kept for Schema and fallback) */}
+          <div style={{ display: 'none' }}>
+            {gurugramFAQs.map((faq, i) => (
+              <div key={i} dangerouslySetInnerHTML={{ __html: `Q: ${faq.q} A: ${faq.a}` }} />
             ))}
           </div>
         </section>

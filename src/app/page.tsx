@@ -7,6 +7,7 @@ import RegisterModal from './component/RegisterModal';
 import LoginModal from './component/LoginModal';
 import Footer from './component/Footer';
 import Head from 'next/head';
+import FAQComponent from './component/FAQ';
 
 const F = {
   fraunces: 'Fraunces, Georgia, serif',
@@ -62,7 +63,7 @@ function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
   );
 }
 
-/* ─── FAQ Item Component ─────────────────────────────────────────────────── */
+/* ─── FAQ Item Component (Static Fallback) ─────────────────────────────────── */
 function FaqItem({ question, answer }: { question: string; answer: string }) {
   const [open, setOpen] = useState(false);
   return (
@@ -143,6 +144,34 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   );
 }
 
+// Static fallback FAQs
+const staticFAQs = [
+  {
+    q: 'Is pet registration really mandatory in Delhi NCR?',
+    a: 'Yes, the Supreme Court of India has mandated pet registration across Delhi NCR through the Animal Birth Control (ABC) Rules 2023. All pet owners in Delhi, Noida, Ghaziabad, and Gurugram are required to register their pets with the respective municipal corporations.'
+  },
+  {
+    q: 'Is Tailio\'s registration legally valid?',
+    a: 'Absolutely. We file directly with MCD, Noida Authority, and GMC. The certificate you receive is the official government-issued document — not a Tailio proxy. Your registration is legally valid across India.'
+  },
+  {
+    q: 'What documents do I need to register?',
+    a: 'You need 4 documents: (1) Anti-Rabies Vaccination Certificate, (2) Applicant ID Proof (Aadhaar, PAN, Passport, or Voter ID), (3) Address Proof (Aadhaar, electricity/water bill, rental agreement, or bank statement), and (4) A clear photo with your pet.'
+  },
+  {
+    q: 'How much does registration cost on Tailio?',
+    a: 'Registration costs ₹999 all-inclusive (launch offer, regular price ₹1,999). This covers municipal filing, digital certificate, vaccination tracker, and renewal reminders. No hidden charges.'
+  },
+  {
+    q: 'Can I register cats and other pets — not just dogs?',
+    a: 'Currently, we support dog registration across Delhi NCR. Support for cats and other pets is coming soon. Stay tuned!'
+  },
+  {
+    q: 'What happens if I don\'t register?',
+    a: 'Municipal authorities can seize unregistered pets during disputes or complaints. You may also face fines up to ₹10,000. Unregistered pets have no legal standing, leaving both you and your pet unprotected.'
+  },
+];
+
 /* ─── Main Page Component ────────────────────────────────────────────────── */
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
@@ -197,7 +226,6 @@ export default function HomePage() {
     setShowLoginModal(false);
     setShowRegisterModal(true);
   };
-  
 
   // ─── Button hover styles ──────────────────────────────────────────────────
   const handleHeroCtaEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -1123,43 +1151,34 @@ export default function HomePage() {
         </div>
 
         {/* ══════════════════════════════════════
-            FAQ SECTION
+            FAQ SECTION - DYNAMIC
         ══════════════════════════════════════ */}
         <div style={{ background: '#FAF6EF', width: '100%' }}>
           <div style={{ maxWidth: 800, margin: '0 auto', padding: getResponsivePadding(), textAlign: 'center' }}>
             <Badge text="Common questions" />
-            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, marginTop: 16, marginBottom: 16 }}>Everything you want to know</div>
-            <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), marginBottom: 40 }}>If it's not here, our support team responds within 60 minutes.</p>
+            <div style={{ color: '#2C1A0E', fontSize: getResponsiveFontSize(38, 32, 28), fontFamily: F.fraunces, fontWeight: 900, marginTop: 16, marginBottom: 16 }}>
+              Everything you want to know
+            </div>
+            <p style={{ color: '#7A5C40', fontSize: getResponsiveFontSize(14.5, 13, 12), marginBottom: 40 }}>
+              If it's not here, our support team responds within 60 minutes.
+            </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {[
-                {
-                  q: 'Is pet registration really mandatory in Delhi NCR?',
-                  a: 'Yes, the Supreme Court of India has mandated pet registration across Delhi NCR through the Animal Birth Control (ABC) Rules 2023. All pet owners in Delhi, Noida, Ghaziabad, and Gurugram are required to register their pets with the respective municipal corporations.'
-                },
-                {
-                  q: 'Is Tailio\'s registration legally valid?',
-                  a: 'Absolutely. We file directly with MCD, Noida Authority, and GMC. The certificate you receive is the official government-issued document — not a Tailio proxy. Your registration is legally valid across India.'
-                },
-                {
-                  q: 'What documents do I need to register?',
-                  a: 'You need 4 documents: (1) Anti-Rabies Vaccination Certificate, (2) Applicant ID Proof (Aadhaar, PAN, Passport, or Voter ID), (3) Address Proof (Aadhaar, electricity/water bill, rental agreement, or bank statement), and (4) A clear photo with your pet.'
-                },
-                {
-                  q: 'How much does registration cost on Tailio?',
-                  a: 'Registration costs ₹999 all-inclusive (launch offer, regular price ₹1,999). This covers municipal filing, digital certificate, vaccination tracker, and renewal reminders. No hidden charges.'
-                },
-                {
-                  q: 'Can I register cats and other pets — not just dogs?',
-                  a: 'Currently, we support dog registration across Delhi NCR. Support for cats and other pets is coming soon. Stay tuned!'
-                },
-                {
-                  q: 'What happens if I don\'t register?',
-                  a: 'Municipal authorities can seize unregistered pets during disputes or complaints. You may also face fines up to ₹10,000. Unregistered pets have no legal standing, leaving both you and your pet unprotected.'
-                },
-              ].map((item) => (
-                <FaqItem key={item.q} question={item.q} answer={item.a} />
-              ))}
+            {/* Dynamic FAQ Component - fetches from backend */}
+            <FAQComponent
+              pageId="home"
+              title=""
+              subtitle=""
+              showSearch={true}
+              showCategories={true}
+              limit={20}
+              backgroundColor="transparent"
+              textColor="text-gray-900"
+              className="faq-home-page"
+            />
+
+            {/* Static fallback FAQs (in case API fails) - you can remove this if you want */}
+            <div style={{ marginTop: 24, display: 'none' }}>
+              {/* This is hidden but kept as fallback reference */}
             </div>
           </div>
         </div>

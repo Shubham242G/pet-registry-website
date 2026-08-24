@@ -5,6 +5,7 @@ import Footer from "../component/Footer";
 import RegisterModal from "../component/RegisterModal";
 import LoginModal from "../component/LoginModal";
 import Head from 'next/head';
+import FAQComponent from '../component/FAQ';
 
 const F = {
   fraunces: "'Fraunces', Georgia, serif",
@@ -140,6 +141,16 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
     </div>
   );
 }
+
+// ─── Static FAQ Data ──────────────────────────────────────────────────────
+const ghaziabadFAQs = [
+  { q: 'Is pet registration really mandatory in Ghaziabad?', a: 'Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed GMC (Ghaziabad Municipal Corporation) to enforce mandatory pet registration across Ghaziabad. GMC has actively raised its registration fee and is enforcing compliance under the Supreme Court\'s August 2025 order. Fines of ₹5,000 are issued for non-compliance and escalate with each drive.' },
+  { q: "Is Tailio's registration legally valid in Ghaziabad?", a: 'Yes, Tailio is an authorized platform that files directly with GMC. Your certificate is officially issued by the municipal corporation and is fully valid.' },
+  { q: 'What is the fine for not registering in Ghaziabad?', a: 'The fine for non-compliance is ₹5,000 and escalates with each enforcement drive. Pet owners can also face pet seizure by municipal authorities.' },
+  { q: 'What documents do I need to register?', a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.' },
+  { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the GMC filing fee and your official digital certificate.' },
+  { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
+];
 
 export default function GhaziabadPage() {
   const [mounted, setMounted] = useState(false);
@@ -308,64 +319,14 @@ export default function GhaziabadPage() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Is pet registration really mandatory in Ghaziabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed GMC (Ghaziabad Municipal Corporation) to enforce mandatory pet registration across Ghaziabad. GMC has actively raised its registration fee and is enforcing compliance. Fines of ₹5,000 are issued for non-compliance and escalate with each drive."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Is Tailio's registration legally valid in Ghaziabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, Tailio is an authorized platform that files directly with GMC. Your certificate is officially issued by the municipal corporation and is fully valid."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What is the fine for not registering in Ghaziabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "The fine for non-compliance is ₹5,000 and escalates with each enforcement drive. Pet owners can also face pet seizure by municipal authorities."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What documents do I need to register my pet in Ghaziabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "You need four documents: Anti-Rabies Vaccination Certificate, Applicant ID Proof (Aadhaar, PAN, Passport or Voter ID), Address Proof for Ghaziabad, and a recent photo with your pet."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How much does pet registration cost in Ghaziabad on Tailio?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Registration costs ₹999 one-time, all-inclusive. This includes the GMC filing fee and your official digital certificate. Regular price is ₹1,999."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How long does it take to get the GMC certificate in Ghaziabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Your official digital certificate arrives by email within 24–72 hours after submission through Tailio."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Why did GMC raise its registration fee?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "GMC raised its municipal registration fee from ₹200 to ₹1,000 in April 2024 — the steepest fee hike in NCR, signalling serious enforcement intent and compliance requirements."
-                  }
+              "mainEntity": ghaziabadFAQs.map(faq => ({
+                "@type": "Question",
+                "name": faq.q,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": faq.a
                 }
-              ]
+              }))
             })
           }}
         />
@@ -410,17 +371,17 @@ export default function GhaziabadPage() {
             </div>
 
             <h1 style={{
-  color: '#2C1A0E',
-  fontSize: getResponsiveFontSize(64, 48, 32),
-  fontFamily: F.fraunces,
-  fontWeight: 900,
-  lineHeight: 1.2,
-  whiteSpace: isMobile ? 'normal' : 'nowrap',
-  marginBottom: '1rem'
-}}>
-  Pet registration
-  <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Ghaziabad</span>
-</h1>
+              color: '#2C1A0E',
+              fontSize: getResponsiveFontSize(64, 48, 32),
+              fontFamily: F.fraunces,
+              fontWeight: 900,
+              lineHeight: 1.2,
+              whiteSpace: isMobile ? 'normal' : 'nowrap',
+              marginBottom: '1rem'
+            }}>
+              Pet registration
+              <span style={{ color: '#E8600A', fontStyle: 'italic' }}> in Ghaziabad</span>
+            </h1>
 
             <p className="text-[#7A5C40] text-base sm:text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
               GMC raised its registration fee from ₹200 to ₹1,000 in April 2024 — enforcement is ramping up. Fines reach ₹5,000 for non-compliance. Tailio handles the GMC filing for ₹999 all-inclusive.
@@ -867,7 +828,7 @@ export default function GhaziabadPage() {
           </div>
         </section>
 
-        {/* FAQ */}
+        {/* ── DYNAMIC FAQ SECTION ───────────────────────────────────────────── */}
         <section className="py-20 px-4 max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Common Questions</div>
@@ -875,17 +836,28 @@ export default function GhaziabadPage() {
               Everything about Ghaziabad
               <span className="text-[#E8600A] italic block">registration.</span>
             </h2>
+            <p className="text-[#7A5C40] text-sm max-w-lg mx-auto mt-3">
+              Find answers to the most common questions about pet registration in Ghaziabad with GMC.
+            </p>
           </div>
-          <div className="space-y-3">
-            {[
-              { q: 'Is pet registration really mandatory in Ghaziabad?', a: 'Yes. The Supreme Court of India through the Animal Birth Control (ABC) Rules 2023 and its August 2025 order directed GMC (Ghaziabad Municipal Corporation) to enforce mandatory pet registration across Ghaziabad. GMC has actively raised its registration fee and is enforcing compliance under the Supreme Court\'s August 2025 order. Fines of ₹5,000 are issued for non-compliance and escalate with each drive.' },
-              { q: "Is Tailio's registration legally valid in Ghaziabad?", a: 'Yes, Tailio is an authorized platform that files directly with GMC. Your certificate is officially issued by the municipal corporation and is fully valid.' },
-              { q: 'What is the fine for not registering in Ghaziabad?', a: 'The fine for non-compliance is ₹5,000 and escalates with each enforcement drive. Pet owners can also face pet seizure by municipal authorities.' },
-              { q: 'What documents do I need to register?', a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.' },
-              { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the GMC filing fee and your official digital certificate.' },
-              { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
-            ].map((faq, i) => (
-              <FaqItem key={i} question={faq.q} answer={faq.a} />
+
+          {/* Dynamic FAQ Component - fetches from backend with pageId="ghaziabad" */}
+          <FAQComponent
+            pageId="ghaziabad"
+            title=""
+            subtitle=""
+            showSearch={true}
+            showCategories={true}
+            limit={20}
+            backgroundColor="transparent"
+            textColor="text-gray-900"
+            className="faq-ghaziabad-page"
+          />
+
+          {/* Static fallback FAQs (hidden - kept for Schema and fallback) */}
+          <div style={{ display: 'none' }}>
+            {ghaziabadFAQs.map((faq, i) => (
+              <div key={i} dangerouslySetInnerHTML={{ __html: `Q: ${faq.q} A: ${faq.a}` }} />
             ))}
           </div>
         </section>

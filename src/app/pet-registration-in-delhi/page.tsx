@@ -6,6 +6,7 @@ import RegisterModal from "../component/RegisterModal";
 import LoginModal from "../component/LoginModal";
 import Head from 'next/head';
 import FAQSchema from '../component/FAQSchema';
+import FAQComponent from '../component/FAQ';
 
 const F = {
   fraunces: "'Fraunces', Georgia, serif",
@@ -61,7 +62,7 @@ function Badge({ text, dark = false }: { text: string; dark?: boolean }) {
   );
 }
 
-// ─── FAQ Data ─────────────────────────────────────────────────────────────
+// ─── Static FAQ Data (for Schema and fallback) ─────────────────────────────
 const faqData = [
   {
     q: 'Is pet registration really mandatory in Delhi?',
@@ -830,7 +831,7 @@ export default function DelhiPage() {
           </div>
         </section>
 
-        {/* FAQ Section */}
+        {/* ── FAQ SECTION ───────────────────────────────────────────────────── */}
         <section className="py-20 px-4 max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Common Questions</div>
@@ -838,10 +839,28 @@ export default function DelhiPage() {
               Everything about Delhi
               <span className="text-[#E8600A] italic block">registration.</span>
             </h2>
+            <p className="text-[#7A5C40] text-sm max-w-lg mx-auto mt-3">
+              Find answers to the most common questions about pet registration in Delhi with MCD.
+            </p>
           </div>
-          <div className="space-y-3">
+
+          {/* Dynamic FAQ Component - fetches from backend with pageId="delhi" */}
+          <FAQComponent
+            pageId="delhi"
+            title=""
+            subtitle=""
+            showSearch={true}
+            showCategories={true}
+            limit={20}
+            backgroundColor="transparent"
+            textColor="text-gray-900"
+            className="faq-delhi-page"
+          />
+
+          {/* Static fallback FAQs (hidden but kept for Schema and fallback) */}
+          <div style={{ display: 'none' }}>
             {faqData.map((faq, i) => (
-              <FaqItem key={i} question={faq.q} answer={faq.a} />
+              <div key={i} dangerouslySetInnerHTML={{ __html: `Q: ${faq.q} A: ${faq.a}` }} />
             ))}
           </div>
         </section>

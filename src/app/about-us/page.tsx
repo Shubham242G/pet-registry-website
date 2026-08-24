@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Footer from '../component/Footer';
 import Head from 'next/head';
+import FAQComponent from '../component/FAQ';
 
-// ✅ Add this metadata export at the top (outside the component)
 // Note: Since this is a client component, we use Head for client-side SEO
 // For server-side SEO, consider converting to server component with generateMetadata
 
@@ -880,6 +880,43 @@ export default function AboutPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* ── FAQ SECTION ───────────────────────────────────────────────────── */}
+        <div style={{ background: '#FAF6EF', width: '100%', boxSizing: 'border-box' }}>
+          <div style={{ maxWidth: 800, margin: '0 auto', padding: getResponsivePadding(), boxSizing: 'border-box', textAlign: 'center' }}>
+            <Badge text="Common questions" />
+            <div style={{ 
+              color: '#2C1A0E', 
+              fontSize: getResponsiveFontSize(38, 32, 28), 
+              fontFamily: F.fraunces, 
+              fontWeight: 900, 
+              marginTop: 16, 
+              marginBottom: 16 
+            }}>
+              About Tailio &amp; Pet Registration
+            </div>
+            <p style={{ 
+              color: '#7A5C40', 
+              fontSize: getResponsiveFontSize(14.5, 13, 12), 
+              marginBottom: 40 
+            }}>
+              Everything you need to know about Tailio, our mission, and how we make pet compliance simple.
+            </p>
+
+            {/* Dynamic FAQ Component - fetches from backend with pageId="about" */}
+            <FAQComponent
+              pageId="about"
+              title=""
+              subtitle=""
+              showSearch={true}
+              showCategories={true}
+              limit={20}
+              backgroundColor="transparent"
+              textColor="text-gray-900"
+              className="faq-about-page"
+            />
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import Footer from "../component/Footer";
 import RegisterModal from "../component/RegisterModal";
 import LoginModal from "../component/LoginModal";
 import Head from "next/head";
+import FAQComponent from "../component/FAQ";
 
 export default function LandingPage() {
   const [isMobile, setIsMobile] = useState(false);
@@ -65,12 +66,12 @@ export default function LandingPage() {
           name="keywords" 
           content="pet registration India, pet registration Delhi NCR, pet registration MCD, pet registration Noida, pet registration Ghaziabad, pet registration Gurugram, pet certificate, pet compliance, legal pet ownership India, pet registration online, dog registration India, pet vaccination certificate" 
         />
-        <link rel="canonical" href="https://tailio.com" />
+        <link rel="canonical" href="https://tailio.com/how-it-works" />
         <meta name="robots" content="index, follow" />
         
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://tailio.com" />
+        <meta property="og:url" content="https://tailio.com/how-it-works" />
         <meta property="og:title" content="Tailio | India's #1 Digital Pet Registration Platform" />
         <meta 
           property="og:description" 
@@ -84,7 +85,7 @@ export default function LandingPage() {
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://tailio.com" />
+        <meta name="twitter:url" content="https://tailio.com/how-it-works" />
         <meta name="twitter:title" content="Tailio | India's #1 Digital Pet Registration Platform" />
         <meta 
           name="twitter:description" 
@@ -97,49 +98,21 @@ export default function LandingPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         
-        {/* Schema.org structured data for homepage */}
+        {/* Schema.org structured data for how-it-works page */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "Tailio",
-              "description": "India's #1 digital pet registration platform. Register your pet legally in under 60 seconds.",
-              "url": "https://tailio.com",
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": "https://tailio.com/search?q={search_term_string}",
-                "query-input": "required name=search_term_string"
-              }
+              "@type": "WebPage",
+              "name": "How It Works - Tailio Pet Registration",
+              "description": "Learn how to register your pet in under 60 seconds with Tailio. Simple 3-step process for pet registration in Delhi NCR.",
+              "url": "https://tailio.com/how-it-works"
             })
           }}
         />
         
-        {/* Schema.org for local business */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              "name": "Tailio",
-              "description": "Digital pet registration platform serving Delhi NCR",
-              "url": "https://tailio.com",
-              "telephone": "+91-8796440840",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Delhi NCR",
-                "addressCountry": "IN"
-              },
-              "areaServed": ["Delhi", "Noida", "Ghaziabad", "Gurugram"],
-              "priceRange": "₹1000+",
-              "openingHours": "Mo-Su 09:00-21:00"
-            })
-          }}
-        />
-        
-        {/* FAQ Schema - CHANGED: certificate delivery to filing */}
+        {/* FAQ Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -822,7 +795,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          // {/* Pricing Section - CHANGED: Processed → Filed */}
+          {/* Pricing Section - CHANGED: Processed → Filed */}
           <div style={{ width: '100%', background: '#2B1F14', padding: getResponsivePadding() }}>
             <div style={{ maxWidth: 740, margin: '0 auto', textAlign: 'center' }}>
               <div style={{ display: 'inline-flex', padding: '6px 16px', background: 'rgba(212, 82, 26, 0.22)', borderRadius: 100, marginBottom: 24 }}>
@@ -946,7 +919,68 @@ export default function LandingPage() {
             </div>
           </div>
 
-          
+          {/* ── FAQ SECTION ───────────────────────────────────────────────────── */}
+          <div style={{ 
+            width: '100%', 
+            background: '#F5F0E8', 
+            padding: getResponsivePadding()
+          }}>
+            <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+              <div style={{ 
+                display: 'inline-flex', 
+                padding: '6px 16px', 
+                background: 'rgba(212, 82, 26, 0.10)', 
+                borderRadius: 100, 
+                marginBottom: 20 
+              }}>
+                <span style={{ 
+                  color: '#D4521A', 
+                  fontSize: 12, 
+                  fontFamily: 'DM Sans', 
+                  fontWeight: 700, 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '1.20px' 
+                }}>
+                  Got Questions?
+                </span>
+              </div>
+              
+              <h2 style={{ 
+                color: '#2B1F14', 
+                fontSize: getSubheadingFontSize(), 
+                fontFamily: 'Fraunces', 
+                fontWeight: 900, 
+                lineHeight: '63px', 
+                marginBottom: 16 
+              }}>
+                Frequently Asked <span style={{ color: '#D4521A', fontStyle: 'italic' }}>Questions</span>
+              </h2>
+              
+              <p style={{ 
+                color: '#7A6858', 
+                fontSize: 16, 
+                fontFamily: 'DM Sans', 
+                maxWidth: 540, 
+                margin: '0 auto 40px', 
+                lineHeight: '27.20px' 
+              }}>
+                Everything you need to know about registering your pet with Tailio
+              </p>
+
+              {/* Dynamic FAQ Component - fetches from backend with pageId="how-it-works" */}
+              <FAQComponent
+                pageId="how-it-works"
+                title=""
+                subtitle=""
+                showSearch={true}
+                showCategories={true}
+                limit={20}
+                backgroundColor="transparent"
+                textColor="text-gray-900"
+                className="faq-how-it-works-page"
+              />
+            </div>
+          </div>
 
           {/* Final CTA Section */}
           <div style={{
@@ -1030,123 +1064,3 @@ export default function LandingPage() {
     </>
   );
 }
-
-
-
-
-
-
-// {/* Pricing Section - CHANGED: Processed → Filed */}
-//           <div style={{ width: '100%', background: '#2B1F14', padding: getResponsivePadding() }}>
-//             <div style={{ maxWidth: 740, margin: '0 auto', textAlign: 'center' }}>
-//               <div style={{ display: 'inline-flex', padding: '6px 16px', background: 'rgba(212, 82, 26, 0.22)', borderRadius: 100, marginBottom: 24 }}>
-//                 <span style={{ color: '#F4A56A', fontSize: 12, fontFamily: 'DM Sans', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.20px' }}>One Price. Everything Included.</span>
-//               </div>
-//               <h2 style={{ color: '#F5F0E8', fontSize: getSubheadingFontSize(), fontFamily: 'Fraunces', fontWeight: 900, lineHeight: '63px', marginBottom: 20 }}>
-//                 Done.<br />
-//                 <span style={{ color: '#D4521A', fontStyle: 'italic' }}>You're at the end of the path.</span>
-//               </h2>
-//               <p style={{ color: 'rgba(245, 240, 232, 0.42)', fontSize: 16, fontFamily: 'DM Sans', maxWidth: 460, margin: '0 auto 40px', lineHeight: '27.20px' }}>
-//                 Sixty seconds from here to legally issued. Your certificate is filed within 24–72 hours — valid PAN India.
-//               </p>
-
-//               {/* Centered Pricing Box */}
-//               <div style={{
-//                 display: 'flex',
-//                 justifyContent: 'center',
-//                 alignItems: 'center',
-//                 width: '100%'
-//               }}>
-//                 <div style={{
-//                   background: 'rgba(255, 255, 255, 0.04)',
-//                   borderRadius: 24,
-//                   padding: '50px 46px 40px',
-//                   outline: '1px solid rgba(212, 82, 26, 0.28)',
-//                   position: 'relative',
-//                   maxWidth: 520,
-//                   width: '100%'
-//                 }}>
-//                   <div style={{ position: 'absolute', top: -1, left: -1, right: -1, bottom: -1, borderRadius: 23, pointerEvents: 'none' }} />
-                  
-//                   {/* Badge row - centered */}
-//                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 32, flexWrap: 'wrap' }}>
-//                     <div style={{ paddingLeft: 14, paddingRight: 14, paddingTop: 5, paddingBottom: 5, borderRadius: 999, outline: '1px solid rgba(255,255,255,0.25)', outlineOffset: -1 }}>
-//                       <span style={{ color: 'rgba(255,255,255,0.70)', fontSize: 10, fontFamily: 'Inter', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.20px' }}>All Inclusive</span>
-//                     </div>
-//                     <div style={{ paddingLeft: 12, paddingRight: 12, paddingTop: 5, paddingBottom: 5, background: '#E8C832', borderRadius: 999, display: 'flex', alignItems: 'center', gap: 6 }}>
-//                       <div style={{ width: 6, height: 6, background: '#1A0A00', borderRadius: 3 }} />
-//                       <span style={{ color: '#1A0A00', fontSize: 10, fontFamily: 'Inter', fontWeight: 700, letterSpacing: '0.60px' }}>LAUNCH OFFER — SAVE ₹300</span>
-//                     </div>
-//                   </div>
-                  
-//                   {/* Price Section - centered */}
-//                   <div style={{ marginBottom: 20, textAlign: 'center' }}>
-//                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
-//                       <span style={{ color: 'rgba(255,255,255,0.60)', fontSize: 28, fontFamily: 'Inter', fontWeight: 700, paddingBottom: 14 }}>₹</span>
-//                       <span style={{ color: 'white', fontSize: 88, fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1' }}>299</span>
-//                       <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 60, fontFamily: 'Playfair Display', fontWeight: 900, lineHeight: '1', paddingBottom: 6 }}>/—</span>
-//                     </div>
-//                     <div style={{ marginTop: 8 }}>
-//                       <span style={{ color: '#E07B20', fontSize: 13, fontFamily: 'Inter', fontWeight: 600 }}>+ Municipal fees (as applicable)</span>
-//                     </div>
-//                     <div style={{ marginTop: 4 }}>
-//                       <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter', textDecoration: 'line-through' }}>Regular price ₹599</span>
-//                     </div>
-//                     <div>
-//                       <span style={{ color: 'rgba(255,255,255,0.40)', fontSize: 12, fontFamily: 'Inter' }}>Applicable GST will be added as per government regulations</span>
-//                     </div>
-//                     <div style={{ marginTop: 4 }}>
-//                       <span style={{ color: '#E07B20', fontSize: 12, fontFamily: 'Inter', fontWeight: 600 }}>Per pet · Valid for 1 financial year</span>
-//                     </div>
-//                   </div>
-                  
-//                   {/* Checklist - left aligned for readability - CHANGED: Processed → Filed */}
-//                   <div style={{ marginTop: 24, marginBottom: 32, textAlign: 'left' }}>
-//                     {[
-//                       'Register in under 1 minute, from your phone',
-//                       'Legally secured Govt issued certificate',
-//                       'Vaccination tracker — schedule, record, share with any vet',
-//                       'Filed in 24–72 hours'
-//                     ].map((text, idx) => (
-//                       <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
-//                         <img src="/images/correct.png" alt="check mark" style={{ width: 18, height: 18, marginTop: 2 }} />
-//                         <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, fontFamily: 'Inter', lineHeight: '18.20px' }}>{text}</span>
-//                       </div>
-//                     ))}
-//                   </div>
-                  
-//                   {/* CTA Button */}
-//                   <button 
-//                     onClick={handleOpenRegisterModal}
-//                     style={{ 
-//                       width: '100%', 
-//                       background: '#D4521A',
-//                       boxShadow: '0px 6px 0px #A83E10',
-//                       border: 'none', 
-//                       borderRadius: 100, 
-//                       padding: '18px 20px', 
-//                       color: 'white', 
-//                       fontSize: 17, 
-//                       fontFamily: 'DM Sans', 
-//                       fontWeight: 700, 
-//                       cursor: 'pointer',
-//                       marginBottom: 20,
-//                       transition: 'all 0.2s ease'
-//                     }}
-//                     onMouseEnter={(e) => e.currentTarget.style.background = '#C06A18'}
-//                     onMouseLeave={(e) => e.currentTarget.style.background = '#D4521A'}
-//                     aria-label="Register your pet now"
-//                   >
-//                     Register Your Pet — ₹299 →
-//                   </button>
-                  
-//                   {/* Footer badges - CHANGED: approval → filing */}
-//                   <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap' }}>
-//                     {['Secure payment', 'Legally valid', '24–72 hr filing'].map((text) => (
-//                       <span key={text} style={{ color: 'rgba(255,255,255,0.30)', fontSize: 12, fontFamily: 'DM Sans' }}>{text}</span>
-//                     ))}
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>

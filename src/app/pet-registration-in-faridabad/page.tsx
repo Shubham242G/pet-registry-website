@@ -5,6 +5,7 @@ import Footer from "../component/Footer";
 import RegisterModal from "../component/RegisterModal";
 import LoginModal from "../component/LoginModal";
 import Head from 'next/head';
+import FAQComponent from '../component/FAQ';
 
 const F = {
   fraunces: "'Fraunces', Georgia, serif",
@@ -140,6 +141,16 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
     </div>
   );
 }
+
+// ─── Static FAQ Data ──────────────────────────────────────────────────────
+const faridabadFAQs = [
+  { q: 'Is pet registration mandatory in Faridabad?', a: 'Yes. Municipal Corporation Faridabad (MCF) requires all pet dogs to be registered under the Haryana Municipal Corporation Act and local bylaws. Pet owners must comply or face penalties.' },
+  { q: "Is Tailio's registration legally valid in Faridabad?", a: 'Yes, Tailio is an authorized platform that files directly with MCF. Your certificate is officially issued by the municipal corporation and is fully valid.' },
+  { q: 'What is the fine for not registering in Faridabad?', a: 'The fine for non-compliance can range from ₹500 to ₹5,000 under MCF regulations. Pet owners can also face legal action from municipal authorities.' },
+  { q: 'What documents do I need to register my pet in Faridabad?', a: 'You need six documents: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs, Sterilization Certificate, and Microchip Details.' },
+  { q: 'How much does pet registration cost in Faridabad on Tailio?', a: 'Registration costs ₹1,799 + GST one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate.' },
+  { q: 'How long does it take to get the MCF certificate in Faridabad?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission through Tailio.' },
+];
 
 export default function FaridabadPage() {
   const [mounted, setMounted] = useState(false);
@@ -308,56 +319,14 @@ export default function FaridabadPage() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Is pet registration mandatory in Faridabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes. Municipal Corporation Faridabad (MCF) requires all pet dogs to be registered under the Haryana Municipal Corporation Act and local bylaws. Pet owners must comply or face penalties."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Is Tailio's registration legally valid in Faridabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, Tailio is an authorized platform that files directly with MCF. Your certificate is officially issued by the municipal corporation and is fully valid."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What is the fine for not registering in Faridabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "The fine for non-compliance can range from ₹500 to ₹5,000 under MCF regulations. Pet owners can also face legal action from municipal authorities."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What documents do I need to register my pet in Faridabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "You need six documents: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs, Sterilization Certificate, and Microchip Details."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How much does pet registration cost in Faridabad on Tailio?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Registration costs ₹1,799 + GST one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How long does it take to get the MCF certificate in Faridabad?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Your official digital certificate arrives by email within 24–72 hours after submission through Tailio."
-                  }
+              "mainEntity": faridabadFAQs.map(faq => ({
+                "@type": "Question",
+                "name": faq.q,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": faq.a
                 }
-              ]
+              }))
             })
           }}
         />
@@ -874,7 +843,7 @@ export default function FaridabadPage() {
           </div>
         </section>
 
-        {/* FAQ - Faridabad specific */}
+        {/* ── DYNAMIC FAQ SECTION ───────────────────────────────────────────── */}
         <section className="py-20 px-4 max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-[#E8600A] text-xs font-medium uppercase tracking-widest">Common Questions</div>
@@ -882,17 +851,28 @@ export default function FaridabadPage() {
               Everything about Faridabad
               <span className="text-[#E8600A] italic block">registration.</span>
             </h2>
+            <p className="text-[#7A5C40] text-sm max-w-lg mx-auto mt-3">
+              Find answers to the most common questions about pet registration in Faridabad with MCF.
+            </p>
           </div>
-          <div className="space-y-3">
-            {[
-              { q: 'Is pet registration mandatory in Faridabad?', a: 'Yes. Municipal Corporation Faridabad (MCF) requires all pet dogs to be registered under the Haryana Municipal Corporation Act and local bylaws. Pet owners must comply or face penalties.' },
-              { q: "Is Tailio's registration legally valid in Faridabad?", a: 'Yes, Tailio is an authorized platform that files directly with MCF. Your certificate is officially issued by the municipal corporation and is fully valid.' },
-              { q: 'What is the fine for not registering in Faridabad?', a: 'The fine for non-compliance can range from ₹500 to ₹5,000 under MCF regulations. Pet owners can also face legal action from municipal authorities.' },
-              { q: 'What documents do I need to register my pet in Faridabad?', a: 'You need six documents: Proof of Identity, Proof of Address, Vaccination Record, Pet Photographs, Sterilization Certificate, and Microchip Details.' },
-              { q: 'How much does pet registration cost in Faridabad on Tailio?', a: 'Registration costs ₹1,799 + GST one-time, all-inclusive. This includes the MCF filing fee and your official digital certificate.' },
-              { q: 'How long does it take to get the MCF certificate in Faridabad?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission through Tailio.' },
-            ].map((faq, i) => (
-              <FaqItem key={i} question={faq.q} answer={faq.a} />
+
+          {/* Dynamic FAQ Component - fetches from backend with pageId="faridabad" */}
+          <FAQComponent
+            pageId="faridabad"
+            title=""
+            subtitle=""
+            showSearch={true}
+            showCategories={true}
+            limit={20}
+            backgroundColor="transparent"
+            textColor="text-gray-900"
+            className="faq-faridabad-page"
+          />
+
+          {/* Static fallback FAQs (hidden - kept for Schema and fallback) */}
+          <div style={{ display: 'none' }}>
+            {faridabadFAQs.map((faq, i) => (
+              <div key={i} dangerouslySetInnerHTML={{ __html: `Q: ${faq.q} A: ${faq.a}` }} />
             ))}
           </div>
         </section>

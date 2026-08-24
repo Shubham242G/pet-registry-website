@@ -4,6 +4,7 @@ import Footer from "../component/Footer";
 import RegisterModal from "../component/RegisterModal";
 import LoginModal from "../component/LoginModal";
 import Head from "next/head";
+import FAQComponent from '../component/FAQ';
 
 export default function WhyTailioSection() {
   const [isMobile, setIsMobile] = useState(false);
@@ -36,6 +37,30 @@ export default function WhyTailioSection() {
     setShowLoginModal(false);
     setShowRegisterModal(true);
   };
+
+  // ─── Static FAQ Data ──────────────────────────────────────────────────────
+  const whyTailioFAQs = [
+    {
+      q: 'Why should I choose Tailio for pet registration?',
+      a: 'Tailio offers pet registration in under 60 seconds, legally valid certificates, WhatsApp & email reminders, vaccination tracking, and support in under 2 hours — all from your phone.'
+    },
+    {
+      q: 'How is Tailio different from municipal portals?',
+      a: 'Tailio is 60 seconds vs 2-4 weeks on municipal portals, works on your phone, provides digital certificates, automatic renewal reminders, and vaccination tracking — all for just ₹999.'
+    },
+    {
+      q: 'How much does pet registration cost on Tailio?',
+      a: 'Tailio\'s launch offer is ₹999 one-time, all-inclusive. This covers the municipal filing fee and your official digital certificate.'
+    },
+    {
+      q: 'What are the fines for not registering my pet?',
+      a: 'Fines vary by city: Delhi ₹500+, Noida ₹10,000 (highest), Ghaziabad ₹5,000, and Gurugram pending announcement. Register now to avoid penalties.'
+    },
+    {
+      q: 'Is Tailio\'s registration legally valid?',
+      a: 'Yes, Tailio files directly with municipal corporations (MCD, Noida Authority, GMC, MCG). The certificate you receive is the official government-issued document.'
+    }
+  ];
 
   return (
     <>
@@ -138,48 +163,14 @@ export default function WhyTailioSection() {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "FAQPage",
-              "mainEntity": [
-                {
-                  "@type": "Question",
-                  "name": "Why should I choose Tailio for pet registration?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Tailio offers pet registration in under 60 seconds, legally valid certificates, WhatsApp & email reminders, vaccination tracking, and support in under 2 hours — all from your phone."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How is Tailio different from municipal portals?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Tailio is 60 seconds vs 2-4 weeks on municipal portals, works on your phone, provides digital certificates, automatic renewal reminders, and vaccination tracking — all for just ₹999."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "How much does pet registration cost on Tailio?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Tailio's launch offer is ₹999 one-time, all-inclusive. This covers the municipal filing fee and your official digital certificate."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "What are the fines for not registering my pet?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Fines vary by city: Delhi ₹500+, Noida ₹10,000 (highest), Ghaziabad ₹5,000, and Gurugram pending announcement. Register now to avoid penalties."
-                  }
-                },
-                {
-                  "@type": "Question",
-                  "name": "Is Tailio's registration legally valid?",
-                  "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, Tailio files directly with municipal corporations (MCD, Noida Authority, GMC, MCG). The certificate you receive is the official government-issued document."
-                  }
+              "mainEntity": whyTailioFAQs.map(faq => ({
+                "@type": "Question",
+                "name": faq.q,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": faq.a
                 }
-              ]
+              }))
             })
           }}
         />
@@ -401,20 +392,6 @@ export default function WhyTailioSection() {
                 </div>
 
                 {/* Stat 2 */}
-                {/* <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.07)', paddingBottom: 14 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ minWidth: 90 }}>
-                      <span style={{ color: '#FF8C3A', fontSize: 32, fontFamily: 'Fraunces', fontWeight: 900 }}>₹299</span>
-                    </div>
-                    <div>
-                      <span style={{ color: 'rgba(250, 246, 239, 0.60)', fontSize: 13, fontFamily: 'DM Sans', fontWeight: 400, lineHeight: '18.85px' }}>
-                        Launch offer. Municipal portal charges ₹100–500 and still sends you to the office
-                      </span>
-                    </div>
-                  </div>
-                </div> */}
-
-                {/* Stat 3 */}
                 <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.07)', paddingBottom: 14 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{ minWidth: 90 }}>
@@ -917,6 +894,63 @@ export default function WhyTailioSection() {
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── DYNAMIC FAQ SECTION ───────────────────────────────────────────── */}
+        <div style={{
+          alignSelf: 'stretch',
+          padding: isMobile ? '40px 20px' : '80px 40px',
+          background: '#FAF6EF'
+        }}>
+          <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+            <div style={{
+              display: 'inline-flex',
+              padding: '5px 14px',
+              background: '#FFF0E4',
+              borderRadius: 100,
+              outline: '1px solid #FFCCA0',
+              marginBottom: 20
+            }}>
+              <span style={{ color: '#C04E06', fontSize: 10, fontFamily: 'DM Sans', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.20px' }}>
+                Common Questions
+              </span>
+            </div>
+            
+            <h2 style={{
+              color: '#2C1A0E',
+              fontSize: isMobile ? 28 : 40,
+              fontFamily: 'Fraunces',
+              fontWeight: 900,
+              lineHeight: '44px',
+              marginBottom: 16
+            }}>
+              Why <span style={{ color: '#E8600A', fontStyle: 'italic' }}>Tailio?</span>
+            </h2>
+            
+            <p style={{ color: '#7A5C40', fontSize: 14.5, fontFamily: 'DM Sans', maxWidth: 540, margin: '0 auto 40px' }}>
+              Everything you need to know about choosing Tailio for your pet registration.
+            </p>
+
+            {/* Dynamic FAQ Component - fetches from backend with pageId="why-tailio" */}
+            <FAQComponent
+              pageId="why-tailio"
+              title=""
+              subtitle=""
+              showSearch={true}
+              showCategories={true}
+              limit={20}
+              backgroundColor="transparent"
+              textColor="text-gray-900"
+              className="faq-why-tailio-page"
+            />
+
+            {/* Static fallback FAQs (hidden - kept for Schema and fallback) */}
+            <div style={{ display: 'none' }}>
+              {whyTailioFAQs.map((faq, i) => (
+                <div key={i} dangerouslySetInnerHTML={{ __html: `Q: ${faq.q} A: ${faq.a}` }} />
               ))}
             </div>
           </div>
