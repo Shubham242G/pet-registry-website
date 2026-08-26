@@ -179,17 +179,17 @@ function getPrice(city: string, tagOption: string) {
     throw new Error(`Invalid city: "${city}". Please select a valid city from the list.`);
   }
   
-  // ✅ These are the FINAL prices including GST
+  // ✅ These are the FINAL prices including GST (with 10% discount on base)
   let finalPrice = 0;
   
   if (cityLower === 'ghaziabad') {
-    finalPrice = 1599;
+    finalPrice = 1439.10; // Base: 1350, GST: 18%, Discount: 10%
   } else if (cityLower === 'gurgaon') {
-    finalPrice = 1699;
+    finalPrice = 1529.10; // Base: 1350 + 90 = 1440, GST: 18%, Discount: 10%
   } else if (cityLower === 'jaipur') {
-    finalPrice = 1699;
+    finalPrice = 1529.10; // Base: 1350 + 90 = 1440, GST: 18%, Discount: 10%
   } else if (['delhi', 'noida', 'faridabad', 'mumbai', 'thane'].includes(cityLower)) {
-    finalPrice = 999;
+    finalPrice = 899.10; // Base: 846, GST: 18%, Discount: 10%
   }
   
   if (finalPrice === 0) {
