@@ -227,6 +227,15 @@ export default function HomePage() {
     setShowRegisterModal(true);
   };
 
+  // Smooth scroll to the "Know the Fines" section
+  const handleScrollToFines = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const section = document.getElementById('know-the-fines');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   // ─── Button hover styles ──────────────────────────────────────────────────
   const handleHeroCtaEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.style.background = '#C06A18';
@@ -523,7 +532,8 @@ export default function HomePage() {
                   Register Your Pet →
                 </button>
                 <Link 
-                  href="/why-register" 
+                  href="#know-the-fines"
+                  onClick={handleScrollToFines}
                   style={{
                     padding: isMobile ? '11px 20px' : '14.25px 20px 15.25px',
                     borderRadius: 9,
@@ -536,6 +546,7 @@ export default function HomePage() {
                     textDecoration: 'none',
                     display: 'inline-block',
                     transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    cursor: 'pointer',
                   }}
                   onMouseEnter={handleHeroLinkEnter}
                   onMouseLeave={handleHeroLinkLeave}
@@ -598,7 +609,7 @@ export default function HomePage() {
         {/* ══════════════════════════════════════
             KNOW THE FINES SECTION
         ══════════════════════════════════════ */}
-        <div style={{ background: '#2C1A0E', width: '100%' }}>
+        <div id="know-the-fines" style={{ background: '#2C1A0E', width: '100%', scrollMarginTop: '80px' }}>
           <div style={{ maxWidth: 1100, margin: '0 auto', padding: getResponsivePadding(), textAlign: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
               <div style={{
