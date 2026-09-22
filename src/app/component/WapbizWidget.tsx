@@ -50,7 +50,7 @@ export default function WapbizWidget() {
         font-family: 'Poppins', sans-serif;
         font-weight: 500;
         font-size: 14px;
-        bottom: 20px;
+        bottom: 80px;
         right: 20px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         transition: transform 0.2s;

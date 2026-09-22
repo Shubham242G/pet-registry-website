@@ -14,7 +14,6 @@ const NAV_LINKS = [
   { label: 'About Us',      href: '/about-us'    },
   { label: 'Why Tailio?',   href: '/why-tailio' },
   { label: 'How it Works',  href: '/how-it-works' },
-  // { label: 'Shop', href: '/products' },
 ];
 
 const CITY_LINKS = [
@@ -23,6 +22,14 @@ const CITY_LINKS = [
   { name: 'Ghaziabad', href: '/pet-registration-in-ghaziabad' },
   { name: 'Faridabad', href: '/pet-registration-in-faridabad' },
   { name: 'Gurugram', href: '/pet-registration-in-gurugram' },
+];
+
+// Mobile Bottom Nav Items
+const MOBILE_BOTTOM_NAV = [
+  { label: 'Home', href: '/', icon: 'home' },
+  { label: 'About', href: '/about-us', icon: 'info' },
+  { label: 'How it Works', href: '/how-it-works', icon: 'steps' },
+  { label: 'Cities', href: '#cities', icon: 'location', isDropdown: true },
 ];
 
 export default function Navbar() {
@@ -39,6 +46,7 @@ export default function Navbar() {
   const [isMobile,     setIsMobile]     = useState(false);
   const [isHovering,   setIsHovering]   = useState(false);
   const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
+  const [mobileCityDropdownOpen, setMobileCityDropdownOpen] = useState(false);
 
   const { user, logout, isAuthenticated, loading } = useAuth();
 
@@ -56,7 +64,10 @@ export default function Navbar() {
     else                setDisplayName('');
   }, [user]);
 
-  useEffect(() => { setMenuOpen(false); }, [pathname]);
+  useEffect(() => { 
+    setMenuOpen(false); 
+    setMobileCityDropdownOpen(false);
+  }, [pathname]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -104,15 +115,12 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
-  // Don't show navbar if user is logged in OR on dashboard page
   if (!isMounted || loading) return null;
-  
-  // Hide navbar completely when user is authenticated (logged in)
-  // This ensures navbar is ONLY visible when user is NOT logged in
   if (isAuthenticated) return null;
 
   return (
     <>
+      {/* ── TOP NAVBAR ── */}
       <div
         ref={menuRef}
         style={{
@@ -139,7 +147,7 @@ export default function Navbar() {
           position: 'relative',
         }}>
 
-          {/* LOGO with subtle animation - centered on mobile */}
+          {/* LOGO - Centered on mobile, left on desktop */}
           <Link 
             href="/" 
             style={{ 
@@ -158,7 +166,6 @@ export default function Navbar() {
               transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
               transform: isHovering ? 'scale(1.05) rotate(-2deg)' : 'scale(1) rotate(0deg)',
             }}>
-              {/* Glow effect on hover */}
               <div style={{
                 position: 'absolute',
                 inset: -8,
@@ -176,7 +183,7 @@ export default function Navbar() {
                 height={880}
                 style={{ 
                   width: 'auto', 
-                  height: isMobile ? 180 : 230, 
+                  height: isMobile ? 140 : 230, 
                   objectFit: 'contain',
                   position: 'relative',
                   transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
@@ -271,7 +278,6 @@ export default function Navbar() {
                   </svg>
                 </button>
 
-                {/* Dropdown Menu */}
                 {cityDropdownOpen && (
                   <div style={{
                     position: 'absolute',
@@ -323,15 +329,9 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* RIGHT SIDE - Auth Buttons + Hamburger */}
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: 12,
-            position: isMobile ? 'absolute' : 'relative',
-            right: isMobile ? 20 : 'auto',
-          }}>
-            {!isMobile && (
+          {/* DESKTOP AUTH BUTTONS */}
+          {!isMobile && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <button
                 onClick={() => setShowRegister(true)}
                 style={{
@@ -365,231 +365,145 @@ export default function Navbar() {
               >
                 Register Your Pet
               </button>
-            )}
-
-            {/* HAMBURGER — mobile only */}
-            <button
-              type="button"
-              onClick={() => setMenuOpen((p) => !p)}
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              style={{
-                display: isMobile ? 'flex' : 'none',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: '5px',
-                cursor: 'pointer',
-                background: 'transparent',
-                border: '1.5px solid rgba(44,26,14,0.18)',
-                padding: '9px 8px',
-                minWidth: 44,
-                minHeight: 44,
-                borderRadius: 8,
-                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#E8600A';
-                e.currentTarget.style.background = 'rgba(232,96,10,0.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(44,26,14,0.18)';
-                e.currentTarget.style.background = 'transparent';
-              }}
-            >
-              <span style={{
-                display: 'block', width: 18, height: 2,
-                background: menuOpen ? '#E8600A' : '#7A5C40',
-                borderRadius: 2,
-                transition: 'all 0.22s ease',
-                transform: menuOpen ? 'translateY(7px) rotate(45deg)' : 'none',
-              }} />
-              <span style={{
-                display: 'block', height: 2,
-                background: menuOpen ? '#E8600A' : '#7A5C40',
-                borderRadius: 2,
-                transition: 'all 0.22s ease',
-                opacity: menuOpen ? 0 : 1,
-                width: menuOpen ? 0 : 18,
-              }} />
-              <span style={{
-                display: 'block', width: 18, height: 2,
-                background: menuOpen ? '#E8600A' : '#7A5C40',
-                borderRadius: 2,
-                transition: 'all 0.22s ease',
-                transform: menuOpen ? 'translateY(-7px) rotate(-45deg)' : 'none',
-              }} />
-            </button>
-          </div>
-        </div>
-
-        {/* MOBILE MENU */}
-        {isMobile && menuOpen && (
-          <div style={{
-            position: 'fixed',
-            top: 68, left: 0, right: 0, bottom: 0,
-            background: '#FFFCF8',
-            borderTop: '1px solid rgba(44,26,14,0.10)',
-            overflowY: 'auto',
-            zIndex: 101,
-            paddingBottom: 20,
-          }}>
-            <ul style={{ listStyle: 'none', margin: 0, padding: '12px 20px 4px', display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {NAV_LINKS.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      minHeight: 48,
-                      padding: '12px 8px',
-                      borderRadius: 8,
-                      borderBottom: '1px solid rgba(44,26,14,0.07)',
-                      color: '#7A5C40',
-                      fontSize: 15,
-                      fontFamily: DM_SANS,
-                      fontWeight: 500,
-                      textDecoration: 'none',
-                      transition: 'all 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#E8600A';
-                      e.currentTarget.style.background = 'rgba(232,96,10,0.05)';
-                      e.currentTarget.style.paddingLeft = '16px';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#7A5C40';
-                      e.currentTarget.style.background = 'transparent';
-                      e.currentTarget.style.paddingLeft = '8px';
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-              
-              {/* Cities section in mobile menu */}
-              <li>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  minHeight: 48,
-                  padding: '8px',
-                  borderRadius: 8,
-                  borderBottom: '1px solid rgba(44,26,14,0.07)',
-                }}>
-                  <div style={{
-                    color: '#7A5C40',
-                    fontSize: 15,
-                    fontFamily: DM_SANS,
-                    fontWeight: 500,
-                    padding: '4px 0 8px 0',
-                  }}>
-                    Cities
-                  </div>
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '4px',
-                  }}>
-                    {CITY_LINKS.map((city) => (
-                      <Link
-                        key={city.name}
-                        href={city.href}
-                        onClick={() => setMenuOpen(false)}
-                        style={{
-                          padding: '8px 12px',
-                          borderRadius: 6,
-                          color: '#7A5C40',
-                          fontSize: 13,
-                          fontFamily: DM_SANS,
-                          fontWeight: 400,
-                          textDecoration: 'none',
-                          background: 'rgba(44,26,14,0.04)',
-                          transition: 'all 0.2s ease',
-                          textAlign: 'center',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(232,96,10,0.08)';
-                          e.currentTarget.style.color = '#E8600A';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(44,26,14,0.04)';
-                          e.currentTarget.style.color = '#7A5C40';
-                        }}
-                      >
-                        {city.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </li>
-            </ul>
-
-            <div style={{ padding: '12px 20px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <button
-                onClick={() => { setShowRegister(true); setMenuOpen(false); }}
-                style={{
-                  width: '100%', padding: '14px 20px',
-                  background: '#E8600A',
-                  boxShadow: '0px 2px 0px #C04E06',
-                  border: '1px solid #C04E06',
-                  borderRadius: 9, color: '#FFFFFF',
-                  fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#C06A18';
-                  e.currentTarget.style.transform = 'scale(1.02)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#E8600A';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                Register Your Pet
-              </button>
-              <button
-                onClick={() => { setShowLogin(true); setMenuOpen(false); }}
-                style={{
-                  width: '100%', padding: '14px 20px',
-                  background: 'transparent',
-                  border: '1px solid #E8600A',
-                  borderRadius: 9, color: '#E8600A',
-                  fontSize: 15, fontFamily: DM_SANS, fontWeight: 600, cursor: 'pointer',
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#E8600A';
-                  e.currentTarget.style.color = '#FFFFFF';
-                  e.currentTarget.style.transform = 'scale(1.02)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.color = '#E8600A';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                Login
-              </button>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Backdrop */}
-      {isMobile && menuOpen && (
-        <div
-          onClick={() => setMenuOpen(false)}
-          style={{
-            position: 'fixed', inset: 0,
-            background: 'rgba(44,26,14,0.35)',
-            zIndex: 99,
-            backdropFilter: 'blur(2px)',
-            animation: 'fadeIn 0.3s ease',
-          }}
-        />
+      {/* ── MOBILE BOTTOM NAVIGATION BAR ── */}
+      {isMobile && (
+        <div style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: '#FFFCF8',
+          borderTop: '1px solid rgba(44,26,14,0.10)',
+          boxShadow: '0px -2px 10px rgba(44,26,14,0.05)',
+          zIndex: 1000,
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          padding: '8px 0 calc(8px + env(safe-area-inset-bottom))', // Safe area for iPhone home bar
+          boxSizing: 'border-box',
+        }}>
+          {MOBILE_BOTTOM_NAV.map((item, index) => {
+            const isActive = pathname === item.href;
+            
+            if (item.isDropdown) {
+              return (
+                <div key={index} style={{ position: 'relative', flex: 1, display: 'flex', justifyContent: 'center' }}>
+                  <button
+                    onClick={() => setMobileCityDropdownOpen(!mobileCityDropdownOpen)}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 4,
+                      cursor: 'pointer',
+                      color: mobileCityDropdownOpen ? '#E8600A' : '#7A5C40',
+                      fontFamily: DM_SANS,
+                      fontSize: 11,
+                      fontWeight: 500,
+                      padding: '4px 0',
+                      transition: 'color 0.2s ease',
+                      width: '100%',
+                    }}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                    <span>{item.label}</span>
+                  </button>
+
+                  {/* Mobile City Dropdown Menu */}
+                  {mobileCityDropdownOpen && (
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '100%',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      marginBottom: 12,
+                      background: '#FFFCF8',
+                      borderRadius: 12,
+                      boxShadow: '0px 4px 20px rgba(44,26,14,0.15)',
+                      border: '1px solid rgba(44,26,14,0.08)',
+                      minWidth: 200,
+                      padding: '8px 0',
+                      zIndex: 1001,
+                      animation: 'slideUp 0.2s ease',
+                    }}>
+                      {CITY_LINKS.map((city) => (
+                        <Link
+                          key={city.name}
+                          href={city.href}
+                          onClick={() => setMobileCityDropdownOpen(false)}
+                          style={{
+                            display: 'block',
+                            padding: '10px 20px',
+                            color: '#7A5C40',
+                            fontSize: 14,
+                            fontFamily: DM_SANS,
+                            fontWeight: 400,
+                            textDecoration: 'none',
+                            transition: 'all 0.2s ease',
+                            borderBottom: '1px solid rgba(44,26,14,0.04)',
+                          }}
+                        >
+                          {city.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={index}
+                href={item.href}
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 4,
+                  textDecoration: 'none',
+                  color: isActive ? '#E8600A' : '#7A5C40',
+                  fontFamily: DM_SANS,
+                  fontSize: 11,
+                  fontWeight: 500,
+                  transition: 'color 0.2s ease',
+                }}
+              >
+                {/* Simple SVG Icons for Bottom Nav */}
+                {item.icon === 'home' && (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                )}
+                {item.icon === 'info' && (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                  </svg>
+                )}
+                {item.icon === 'steps' && (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
+                )}
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
       )}
 
       <style jsx>{`
@@ -601,6 +515,16 @@ export default function Navbar() {
           from {
             opacity: 0;
             transform: translateX(-50%) translateY(-8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+        }
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(8px);
           }
           to {
             opacity: 1;
