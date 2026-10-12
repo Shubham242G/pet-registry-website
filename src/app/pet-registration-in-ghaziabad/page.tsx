@@ -230,7 +230,7 @@ export default function GhaziabadPage() {
         <title>Pet Registration in Ghaziabad, UP | Dog Registration – Tailio</title>
         <meta 
           name="description" 
-          content="Register your pet with GMC Ghaziabad in under 60 seconds. Tailio files directly with Ghaziabad Municipal Corporation. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
+          content="Register your pet with GMC Ghaziabad in under 60 seconds. Tailio files directly with Ghaziabad Municipal Corporation. Get your official pet registration certificate filed in 24-72 hours. Starting at ₹999." 
         />
         <meta 
           name="keywords" 
@@ -259,7 +259,7 @@ export default function GhaziabadPage() {
         <meta name="twitter:title" content="Ghaziabad Pet Registration | GMC Pet Registration Online | Tailio" />
         <meta 
           name="twitter:description" 
-          content="Register your pet with GMC Ghaziabad in under 60 seconds. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
+          content="Register your pet with GMC Ghaziabad in under 60 seconds. Get your official pet registration certificate filed in 24-72 hours. Starting at ₹999." 
         />
         <meta name="twitter:image" content="https://tailio.com/images/og-ghaziabad.jpg" />
         
@@ -388,7 +388,7 @@ export default function GhaziabadPage() {
             </p>
 
             <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {['₹999 one-time, all-inclusive', 'GMC accepted', 'Certificate in 24–72 hrs', 'No office visit needed'].map((text) => (
+              {['₹999 one-time, all-inclusive', 'Delivered at your doorstep','GMC accepted', 'Certificate filed in 24–72 hrs', 'No office visit needed'].map((text) => (
                 <div key={text} className="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-[#2C1A0E]/20">
                   <div className="w-1.5 h-1.5 bg-[#E8600A] rounded-full" />
                   <span className="text-[#2C1A0E] text-sm font-medium">{text}</span>
@@ -795,7 +795,7 @@ export default function GhaziabadPage() {
               <div className="mt-8 space-y-3 text-left relative z-10">
                 {[
                   'GMC Municipal Filing — all paperwork end to end',
-                  'Official Govt Certificate — delivered within 24–72 hrs',
+                  'Official Govt Certificate — filed within 24–72 hrs',
                   'Vaccination Tracker — digital records + auto-reminders',
                   'Renewal Reminders — WhatsApp & email before expiry',
                   'Legal Pet Profile — proof of ownership always on record'

@@ -151,7 +151,7 @@ const gurugramFAQs = [
   { q: "Is Tailio's registration legally valid in Gurugram?", a: 'Yes, Tailio is an authorized platform that files directly with MCG. Your certificate is officially issued by the municipal corporation and is fully valid.' },
   { q: 'What is the fine for not registering in Gurugram?', a: 'Fines are pending announcement, but are expected to be among the highest in NCR once formally set. Register now to avoid penalties.' },
   { q: 'What documents do I need to register?', a: 'You need four documents: Anti-Rabies Certificate, Applicant ID Proof, Address Proof, and a Photo with Your Pet.' },
-  { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹999 one-time, all-inclusive. This includes the MCG filing fee and your official digital certificate.' },
+  { q: 'How much does registration cost on Tailio?', a: 'Registration costs ₹1699 one-time, all-inclusive. This includes the MCG filing fee and your official digital certificate.' },
   { q: 'How long does it take to get the certificate?', a: 'Your official digital certificate arrives by email within 24–72 hours after submission.' },
 ];
 
@@ -254,7 +254,7 @@ export default function GurugramPage() {
         <meta property="og:title" content="Dog Registration in Gurugram | MCG Pet Registration" />
         <meta 
           property="og:description" 
-          content="Register your pet with MCG Gurugram in under 60 seconds. Tailio files directly with Municipal Corporation of Gurugram. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
+          content="Register your pet with MCG Gurugram in under 60 seconds. Tailio files directly with Municipal Corporation of Gurugram. Get your official pet registration certificate filed in 24-72 hours. Starting at ₹1699." 
         />
         <meta property="og:image" content="https://tailio.com/images/og-gurugram.jpg" />
         <meta property="og:image:width" content="1200" />
@@ -268,7 +268,7 @@ export default function GurugramPage() {
         <meta name="twitter:title" content="Dog Registration in Gurugram | MCG Pet Registration" />
         <meta 
           name="twitter:description" 
-          content="Register your pet with MCG Gurugram in under 60 seconds. Get your official pet registration certificate in 24-72 hours. Starting at ₹999." 
+          content="Register your pet with MCG Gurugram in under 60 seconds. Get your official pet registration certificate filed in 24-72 hours. Starting at ₹1699." 
         />
         <meta name="twitter:image" content="https://tailio.com/images/og-gurugram.jpg" />
         
@@ -300,7 +300,7 @@ export default function GurugramPage() {
                   "@type": "City",
                   "name": "Gurugram"
                 },
-                "priceRange": "₹999",
+                "priceRange": "₹1699",
                 "openingHours": "Mo-Su 09:00-21:00",
                 "serviceType": "Pet Registration"
               }
@@ -414,7 +414,7 @@ export default function GurugramPage() {
         marginTop: 8,
         marginBottom: 8
       }}>
-        {['₹999 one-time, all-inclusive', 'Certificate in 24–72 hrs', 'MCG accepted', 'No office visit needed'].map((text) => (
+        {['₹1699 one-time, Deliver at your doorstep, all-inclusive', 'Filed in 24–72 hrs', 'MCG accepted', 'No office visit needed'].map((text) => (
           <div key={text} style={{
             display: 'flex',
             alignItems: 'center',
@@ -460,7 +460,7 @@ export default function GurugramPage() {
           onMouseEnter={handleHeroCtaEnter}
           onMouseLeave={handleHeroCtaLeave}
         >
-          Register Your Pet — ₹999 →
+          Register Your Pet — ₹1699 →
         </button>
       </div>
     </div>
@@ -713,7 +713,7 @@ export default function GurugramPage() {
                 { label: 'Works on your phone', sub: 'No office visit needed', tailio: true, portal: false },
                 { label: 'Digital certificate', sub: 'Stored on your profile', tailio: true, portal: false },
                 { label: 'Vaccination reminders', sub: 'WhatsApp, SMS & email', tailio: true, portal: false },
-                { label: 'Registration cost', sub: 'One-time, all-inclusive', tailio: '₹999', portal: '₹100–500' },
+                { label: 'Registration cost', sub: 'One-time, all-inclusive', tailio: '₹1699', portal: '₹100–500' },
                 { label: 'If you wait, the fine is…', sub: 'MCG enforcement active', tailio: 'None', portal: 'Pending' },
               ].map((row, i) => (
                 <div key={i} className="grid grid-cols-3 border-b border-[#2C1A0E]/10 last:border-0 bg-[#FFFCF8]">
@@ -858,7 +858,7 @@ export default function GurugramPage() {
               <div className="relative z-10 mt-6">
                 <div className="flex items-end justify-center gap-1">
                   <span className="text-[#E8600A] text-4xl font-black">₹</span>
-                  <span className="text-[#E8600A] text-6xl font-black">999</span>
+                  <span className="text-[#E8600A] text-6xl font-black">1699</span>
                 </div>
                 <div className="text-[#F4E4CF]/30 text-sm line-through">Regular price ₹1,999</div>
                 <div className="text-[#F4E4CF]/40 text-xs mt-1">Per pet · Valid 1 year · All taxes inclusive · MCG accepted</div>
@@ -866,7 +866,7 @@ export default function GurugramPage() {
               <div className="mt-8 space-y-3 text-left relative z-10">
                 {[
                   'MCG Municipal Filing — all paperwork end to end',
-                  'Official Govt Certificate — delivered within 24–72 hrs',
+                  'Official Govt Certificate — filed within 24–72 hrs',
                   'Vaccination Tracker — digital records + auto-reminders',
                   'Renewal Reminders — WhatsApp & email before expiry',
                   'Legal Pet Profile — proof of ownership always on record'
@@ -882,9 +882,9 @@ export default function GurugramPage() {
               <button 
                 onClick={handleOpenRegisterModal}
                 className="w-full mt-8 bg-[#E8600A] hover:bg-[#d45408] text-white py-4 rounded-full text-lg font-bold shadow-[0_4px_0_#C04E06] border-2 border-[#C04E06] transition-colors relative z-10"
-                aria-label="Register your pet with MCG Gurugram now for ₹999"
+                aria-label="Register your pet with MCG Gurugram now for ₹1699"
               >
-                Register Your Pet — ₹999 →
+                Register Your Pet — ₹1699 →
               </button>
               <div className="flex flex-wrap justify-center gap-6 mt-4 relative z-10">
                 {['Secure payment', 'Legally valid', '24–72 hr approval'].map((item) => (

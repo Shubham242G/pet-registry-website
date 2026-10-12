@@ -264,7 +264,7 @@ export default function DelhiPage() {
         <meta property="og:title" content="Delhi Pet Registration | MCD Pet Registration Online | Tailio" />
         <meta 
           property="og:description" 
-          content="Register your pet with MCD Delhi in under 60 seconds. Tailio files directly with Municipal Corporation of Delhi. Get your official pet registration certificate in 24-72 hours." 
+          content="Register your pet with MCD Delhi in under 60 seconds. Tailio files directly with Municipal Corporation of Delhi. Get your official pet registration certificate filed in 24-72 hours." 
         />
         <meta property="og:image" content="https://tailio.in/images/og-delhi.jpg" />
         <meta property="og:image:width" content="1200" />
@@ -391,7 +391,7 @@ export default function DelhiPage() {
             </p>
 
             <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {['Certificate in 24–72 hrs', '₹999 one-time, all-inclusive', 'MCD accepted', 'No office visit needed'].map((text) => (
+              {['Certificate filed in 24–72 hrs', 'Delivered at your doorstep', '₹999 one-time, all-inclusive', 'MCD accepted', 'No office visit needed'].map((text) => (
                 <div key={text} className="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-[#2C1A0E]/20">
                   <div className="w-1.5 h-1.5 bg-[#E8600A] rounded-full" />
                   <span className="text-[#2C1A0E] text-sm font-medium">{text}</span>

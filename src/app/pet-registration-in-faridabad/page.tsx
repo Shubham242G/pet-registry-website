@@ -245,7 +245,7 @@ export default function FaridabadPage() {
         <meta property="og:title" content="Faridabad Pet Registration | MCF Pet Registration Online | Tailio" />
         <meta 
           property="og:description" 
-          content="Register your pet with Municipal Corporation Faridabad (MCF) in under 60 seconds. Tailio files directly with MCF. Get your official pet registration certificate in 24-72 hours." 
+          content="Register your pet with Municipal Corporation Faridabad (MCF) in under 60 seconds. Tailio files directly with MCF. Get your official pet registration certificate filed in 24-72 hours." 
         />
         <meta property="og:image" content="https://tailio.com/images/og-faridabad.jpg" />
         <meta property="og:image:width" content="1200" />
@@ -388,7 +388,7 @@ export default function FaridabadPage() {
             </p>
 
             <div className="flex flex-wrap justify-center gap-2 mb-8">
-              {['Certificate in 24–72 hrs', '₹1,799 + GST one-time', 'MCF accepted', 'No office visit needed'].map((text) => (
+              {['Certificate in 24–72 hrs', 'Delivered at your doorstep', '₹1,799 + GST one-time', 'MCF accepted', 'No office visit needed'].map((text) => (
                 <div key={text} className="flex items-center gap-2 bg-white rounded-full px-4 py-2 border border-[#2C1A0E]/20">
                   <div className="w-1.5 h-1.5 bg-[#E8600A] rounded-full" />
                   <span className="text-[#2C1A0E] text-sm font-medium">{text}</span>
@@ -810,7 +810,7 @@ export default function FaridabadPage() {
               <div className="mt-8 space-y-3 text-left relative z-10">
                 {[
                   'MCF Municipal Filing — all paperwork end to end',
-                  'Official Govt Certificate — delivered within 24–72 hrs',
+                  'Official Govt Certificate — filed within 24–72 hrs',
                   'Vaccination Tracker — digital records + auto-reminders',
                   'Renewal Reminders — WhatsApp & email before expiry',
                   'Legal Pet Profile — proof of ownership always on record'

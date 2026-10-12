@@ -245,7 +245,7 @@ export default function NoidaPage() {
         <meta property="og:title" content="Noida Pet Registration | Noida Authority Pet Registration Online | Tailio" />
         <meta 
           property="og:description" 
-          content="Register your pet with Noida Authority in under 60 seconds. Tailio files directly with Noida Authority. Get your official pet registration certificate in 24-72 hours. Starting at ₹999. Avoid ₹10,000 fine." 
+          content="Register your pet with Noida Authority in under 60 seconds. Tailio files directly with Noida Authority. Get your official pet registration filed in 24-72 hours. Starting at ₹999. Avoid ₹10,000 fine." 
         />
         <meta property="og:image" content="https://tailio.com/images/og-noida.jpg" />
         <meta property="og:image:width" content="1200" />
@@ -259,7 +259,7 @@ export default function NoidaPage() {
         <meta name="twitter:title" content="Noida Pet Registration | Noida Authority Pet Registration Online | Tailio" />
         <meta 
           name="twitter:description" 
-          content="Register your pet with Noida Authority in under 60 seconds. Get your official pet registration certificate in 24-72 hours. Starting at ₹999. Avoid ₹10,000 fine." 
+          content="Register your pet with Noida Authority in under 60 seconds. Get your official pet registration filed in 24-72 hours. Starting at ₹999. Avoid ₹10,000 fine." 
         />
         <meta name="twitter:image" content="https://tailio.com/images/og-noida.jpg" />
         
@@ -443,7 +443,7 @@ export default function NoidaPage() {
                 marginTop: 8,
                 marginBottom: 8
               }}>
-                {['₹999 one-time, all-inclusive', 'Noida Authority accepted', 'Certificate in 24–72 hrs', 'No office visit needed'].map((text) => (
+                {['₹999 one-time, all-inclusive', 'Delivered at your doorstep', 'Noida Authority accepted', 'Certificate filed in 24–72 hrs', 'No office visit needed'].map((text) => (
                   <div key={text} style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -875,7 +875,7 @@ export default function NoidaPage() {
               <div className="mt-8 space-y-3 text-left relative z-10">
                 {[
                   'Noida Authority Municipal Filing — all paperwork end to end',
-                  'Official Govt Certificate — delivered within 24–72 hrs',
+                  'Official Govt Certificate — filed within 24–72 hrs',
                   'Vaccination Tracker — digital records + auto-reminders',
                   'Renewal Reminders — WhatsApp & email before expiry',
                   'Legal Pet Profile — proof of ownership always on record'
